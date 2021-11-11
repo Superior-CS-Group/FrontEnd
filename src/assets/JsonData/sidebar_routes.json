@@ -1,0 +1,46 @@
+[
+    {
+        "display_name": "Dashboard",
+        "route": "/"
+        
+    },
+    {
+        "display_name": "CRM",
+        "route": "/customers"
+        
+    },
+    {
+        "display_name": "Estimating",
+        "route": "/products"
+        
+    },
+    {
+        "display_name": "Job Organization",
+        "route": "/orders"                        
+        
+    },
+    {
+        "display_name": "Time Tracking",
+        "route": "/analytics"
+        
+    },
+    {
+        "display_name": "Job Costing",
+        "route": "/categories"
+    },
+    {
+        "display_name": "End of job process",
+        "route": "/discount"
+    },
+    {
+        "display_name": "Invoicing",
+        "route": "/inventory"
+        
+    },
+    {
+        "display_name": "Budgeting & settings",
+        "route": "/settings"                     
+        
+    }
+    
+]
