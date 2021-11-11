@@ -1,48 +1,46 @@
 [
     {
         "display_name": "Dashboard",
-        "route": "/",
-        "icon": "bx bx-category-alt"
+        "route": "/"
+        
     },
     {
         "display_name": "CRM",
-        "route": "/customers",
-        "icon": "bx bx-user-pin"
+        "route": "/customers"
+        
     },
     {
         "display_name": "Estimating",
-        "route": "/products",
-        "icon": "bx bx-package"
+        "route": "/products"
+        
     },
     {
         "display_name": "Job Organization",
-        "route": "/orders",                            
-        "icon": "bx bx-cart"
+        "route": "/orders"                        
+        
     },
     {
         "display_name": "Time Tracking",
-        "route": "/analytics",
-        "icon": "bx bx-bar-chart-alt"
+        "route": "/analytics"
+        
     },
     {
         "display_name": "Job Costing",
-        "route": "/categories",
-        "icon": "bx bx-list-ol"
+        "route": "/categories"
     },
     {
         "display_name": "End of job process",
-        "route": "/discount",
-        "icon": "bx bx-gift"
+        "route": "/discount"
     },
     {
         "display_name": "Invoicing",
-        "route": "/inventory",
-        "icon": "bx bx-store-alt"
+        "route": "/inventory"
+        
     },
     {
         "display_name": "Budgeting & settings",
-        "route": "/settings",                       
-        "icon": "bx bx-cog"
+        "route": "/settings"                     
+        
     }
     
 ]
