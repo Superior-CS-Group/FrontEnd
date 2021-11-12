@@ -3,7 +3,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
 import Dashboard from '../pages/Dashboard'
-import Customers from '../pages/Customers'
+import Customers from '../pages/CRM'
 
 const Routes = () => {
     return (

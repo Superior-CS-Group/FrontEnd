@@ -1,7 +1,9 @@
 [
     {
         "display_name": "Dashboard",
-        "route": "/"
+        "route": "/",
+        "icon":"fa-solid fa-house"
+        
         
     },
     {
@@ -11,35 +13,35 @@
     },
     {
         "display_name": "Estimating",
-        "route": "/products"
+        "route": "/estimates"
         
     },
     {
         "display_name": "Job Organization",
-        "route": "/orders"                        
+        "route": "/job"                        
         
     },
     {
         "display_name": "Time Tracking",
-        "route": "/analytics"
+        "route": "/time"
         
     },
     {
         "display_name": "Job Costing",
-        "route": "/categories"
+        "route": "/costs"
     },
     {
         "display_name": "End of job process",
-        "route": "/discount"
+        "route": "/end"
     },
     {
         "display_name": "Invoicing",
-        "route": "/inventory"
+        "route": "/Invoice"
         
     },
     {
         "display_name": "Budgeting & settings",
-        "route": "/settings"                     
+        "route": "/Settings"                     
         
     }
     
