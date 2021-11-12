@@ -63,7 +63,7 @@ export default class SignUp extends Component {
           </Form.Item>
           <Link to="/set-dashboard">
             <Button type="primary" type="submit" className="ant-btn-save">
-              Sign In
+              Sign Up
             </Button>
           </Link>
         </Form>
