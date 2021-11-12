@@ -189,7 +189,7 @@ export default class SetDashboard extends Component {
             </div>
           </Form.Item>
           <Button type="primary" type="submit" className="ant-btn-save">
-            Sign In
+            Sign Up
           </Button>
         </Form>
       </>
