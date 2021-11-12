@@ -579,3 +579,66 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   .ant-select-selection-placeholder {
   line-height: 50px;
 }
+
+.ant-modal-input {
+  background: #ffffff;
+  border: 1px solid #acacac;
+  box-sizing: border-box;
+  border-radius: 10px;
+  height: 50px;
+  text-align: left;
+}
+
+.ant-upload-full {
+  display: block;
+}
+
+.ant-upload-full .ant-upload.ant-upload-select.ant-upload-select-text {
+  display: block;
+}
+
+.add-variations {
+  font-weight: 500;
+  font-size: 30px;
+
+  text-transform: capitalize;
+  color: #000000;
+}
+
+.-mx-3 {
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.ant-modal-title-box .ant-modal-title {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 45px;
+  text-transform: capitalize;
+  color: #000000;
+}
+
+.ant-cancel-btn {
+  background: #dedede;
+  border-radius: 5px;
+  height: 70px;
+  font-size: 17px;
+  line-height: 25px;
+  text-align: center;
+  color: #646464;
+  width: 250px;
+}
+
+.ant-add-button {
+  background: #1a73e8;
+  border-radius: 5px;
+  font-weight: normal;
+  font-size: 17px;
+  line-height: 25px;
+
+  text-align: center;
+  color: #ffffff;
+  height: 70px;
+  width: 250px;
+}

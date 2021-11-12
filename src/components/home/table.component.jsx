@@ -32,7 +32,7 @@ const columns = [
           <span className="me-2">{Datel}</span>{" "}
           <span className="align-text">Delete</span>
         </Button>
-        <Button className="ant-edit-button ">
+        <Button className="ant-edit-button " >
           <span className="me-2">{edit}</span> Edit
         </Button>
       </>
@@ -56,6 +56,18 @@ for (let i = 0; i < 20; i++) {
 export default class TableData extends Component {
   state = {
     selectedRowKeys: [], // Check here to configure the default column
+    visible: false,
+  };
+  showModal1 = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  hideModal1 = () => {
+    this.setState({
+      visible: false,
+    });
   };
 
   onSelectChange = (selectedRowKeys) => {

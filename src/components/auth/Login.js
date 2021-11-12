@@ -111,7 +111,7 @@ export default class Login extends Component {
 
                 <button className="facebook-icon mb-4">Facebook</button>
               </div>
-              <Link to="/sign-up">
+              <Link to="/auth/sign-up">
                 <Button type="primary" type="submit" className="ant-btn-save">
                   Sign In
                 </Button>
