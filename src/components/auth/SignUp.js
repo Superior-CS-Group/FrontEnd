@@ -13,7 +13,7 @@ export default class SignUp extends Component {
       <>
         <div className="login-heading mb-4">
           <h1 className="mb-0 text-center position-relative">
-            <Link to="/auth/login" className="ant-arrow">
+            <Link to="/auth" className="ant-arrow">
               <img src={arrow} alt="" />
             </Link>{" "}
             Sign Up
@@ -61,7 +61,7 @@ export default class SignUp extends Component {
               placeholder="Confirm Password"
             />
           </Form.Item>
-          <Link to="/set-dashboard">
+          <Link to="/auth/set-dashboard">
             <Button type="primary" type="submit" className="ant-btn-save">
               Sign Up
             </Button>

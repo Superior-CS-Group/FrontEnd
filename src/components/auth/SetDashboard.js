@@ -35,7 +35,7 @@ export default class SetDashboard extends Component {
       <>
         <div className="login-heading mb-4">
           <h1 className="mb-0 text-center position-relative">
-            <Link to="/auth/login" className="ant-arrow">
+            <Link to="/auth" className="ant-arrow">
               <img src={arrow} alt="" />
             </Link>{" "}
             Sign Up

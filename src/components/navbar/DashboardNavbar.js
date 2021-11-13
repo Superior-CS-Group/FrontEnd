@@ -30,7 +30,7 @@ export default class DashboardNavbar extends Component {
             <NavLink to="/dashboard">Dashboard</NavLink>
           </Menu.Item>
           <Menu.Item key="2" icon={crm}>
-            <NavLink to="/dashboard">CRM</NavLink>
+            <NavLink to="/crm">CRM</NavLink>
           </Menu.Item>
           <Menu.Item key="3" icon={estimating}>
             <NavLink to="/estimating"> Estimating</NavLink>
@@ -64,7 +64,7 @@ export default class DashboardNavbar extends Component {
           <Menu.Item key="12" icon={calender}>
             <NavLink to="/calendar">Calendar</NavLink>
           </Menu.Item>
-          <Divider style={{margin:"10px 0px"}} />
+          <Divider style={{ margin: "10px 0px" }} />
           <Menu.Item key="13" icon={lead} className="no-color">
             <NavLink to="/new-lead">New Lead</NavLink>
           </Menu.Item>

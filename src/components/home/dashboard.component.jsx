@@ -1,53 +1,24 @@
 import React, { Component } from "react";
-import {
-  Breadcrumb,
-  Button,
-  Card,
-  Select,
-  Input,
-  Modal,
-  Form,
-  Row,
-  Col,
-  Upload,
-  message,
-} from "antd";
-import {
-  PlusCircleOutlined,
-  SearchOutlined,
-  LinkOutlined,
-} from "@ant-design/icons";
+import { Button, Card, Select, Input, Modal, message, Radio } from "antd";
+import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import fillter from "../../images/fillter.png";
 import TableData from "./table.component";
-import ModalPop from "../modal/modal.pages";
+import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
+import Material from "./material.components";
+import Services from "./services.components";
+
 const { Option } = Select;
-const { Dragger } = Upload;
 
 function handleChange(value) {
   console.log(`selected ${value}`);
 }
-const props = {
-  name: "file",
-  multiple: true,
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } 
-    // else if (status === "error") {
-    //   message.error(`${info.file.name} file upload failed.`);
-    // }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
+
 export default class Dashboard extends Component {
-  state = { visible: false };
+  constructor(props) {
+    super(props);
+    this.state = { visible: false, isMaterial: true };
+  }
+
   showModal = () => {
     this.setState({
       visible: true,
@@ -60,28 +31,11 @@ export default class Dashboard extends Component {
     });
   };
 
-  showModal1 = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  hideModal1 = () => {
-    this.setState({
-      visible: false,
-    });
-  };
-
   render() {
     return (
       <>
-        <Breadcrumb className="d-flex align-items-center justify-content-between mb-4">
-          <div>
-            <Breadcrumb.Item>ESTIMATING</Breadcrumb.Item>
-
-            <Breadcrumb.Item>CATELOG</Breadcrumb.Item>
-          </div>
-
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <BreadcrumbBar name="ESTIMATING" subname="CATELOG" />
           <Button
             onClick={this.showModal}
             type="primary"
@@ -90,7 +44,7 @@ export default class Dashboard extends Component {
           >
             <PlusCircleOutlined style={{ fontSize: "24px" }} /> Add New Material
           </Button>
-        </Breadcrumb>
+        </div>
 
         <Card
           bordered={false}
@@ -171,6 +125,7 @@ export default class Dashboard extends Component {
         </Card>
         <Modal
           title="Add New Material/Services "
+          showModal={this.state.showModal}
           visible={this.state.visible}
           onOk={this.hideModal}
           onCancel={this.hideModal}
@@ -180,178 +135,36 @@ export default class Dashboard extends Component {
           className="ant-modal-title-box"
           footer={false}
         >
-          <Form layout="vertical">
-            <Row gutter={[24, 0]}>
-              <Col span={24} lg={12}>
-                <Form.Item
-                  label="Material/Services Name"
-                  className="ant-select-large"
-                >
-                  <Input placeholder="Hard Pipe" className="ant-modal-input" />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Variations">
-                  <Input placeholder="Standard" className="ant-modal-input" />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Unit">
-                  <Input placeholder="2" className="ant-modal-input" />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Cost">
-                  <Input placeholder="$0.25" className="ant-modal-input" />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Per Hours">
-                  <Input placeholder="$2" className="ant-modal-input" />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Production Rate">
-                  <Input placeholder="$1.25" className="ant-modal-input" />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item label="Upload  Image">
-                  {/* <Upload className="ant-upload-full">
-                    <Button
-                      className="ant-modal-input w-100"
-                      icon={<LinkOutlined />}
-                    >
-                      Attach images
-                    </Button>
-                  </Upload> */}
-
-                  <Dragger {...props}>
-                    <p className="ant-upload-drag-icon">
-                      <LinkOutlined />
-                    </p>
-                    <p className="ant-upload-text">
-                      Click or drag file to this area to upload
-                    </p>
-                    <p className="ant-upload-hint">
-                      Support for a single or bulk upload. Strictly prohibit
-                      from uploading company data or other band files
-                    </p>
-                  </Dragger>
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item className="text-center mt-4 mb-0">
-                  <Button className="ant-cancel-btn me-3">Cancel</Button>
-                  <Button type="primary" className="ant-add-button">
-                    Add to Catalog
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
+          <Radio.Group
+            name="radiogroup"
+            defaultValue={1}
+            className="mb-4"
+            onChange={(e) =>
+              this.setState({ isMaterial: e.target.value === 1 })
+            }
+          >
+            <Radio value={1}>Material</Radio>
+            <Radio value={2}>Services</Radio>
+          </Radio.Group>
+          {this.state.isMaterial ? (
+            <Material
+              placeholder="Hard Pipe"
+              standard="Standard"
+              unitplaceholder="2"
+              costplaceholder="$0.25"
+              upload="Upload Image"
+            />
+          ) : (
+            <>
+              <Services
+                servicesNamePlaceholder="Run 3 downspouts underground roughly 10ft each"
+                hours="4.5"
+                days="0.11"
+                productionRate="0.15"
+              />
+            </>
+          )}
         </Modal>
-
-        {/* <Modal
-          title="Edit Material/Services"
-          visible={this.state.visible}
-          onOk={this.hideModal1}
-          onCancel={this.hideModal1}
-          okText="ok"
-          cancelText="Close"
-          width={800}
-          className="ant-modal-title-box"
-          footer={false}
-        >
-          <Form layout="vertical">
-            <Row gutter={[24, 0]}>
-              <Col span={24} lg={12}>
-                <Form.Item
-                  label="Material/Services Name"
-                  className="ant-select-large"
-                >
-                  <Input
-                    placeholder="Hard Pipe"
-                    value="Hard Pipe"
-                    className="ant-modal-input"
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Variations">
-                  <Input
-                    placeholder="Standard"
-                    value="Variations"
-                    className="ant-modal-input"
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Unit">
-                  <Input
-                    placeholder="2"
-                    value="Unit"
-                    className="ant-modal-input"
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Cost">
-                  <Input placeholder="$0.25" className="ant-modal-input" />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Per Hours">
-                  <Input
-                    placeholder="$2"
-                    value="Per Hours"
-                    className="ant-modal-input"
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={24} lg={12}>
-                <Form.Item label="Production Rate">
-                  <Input
-                    placeholder="$1.25"
-                    value="Production Rate"
-                    className="ant-modal-input"
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item label="Upload  Image">
-                  <Upload className="ant-upload-full">
-                    <Button
-                      className="ant-modal-input w-100"
-                      icon={<LinkOutlined />}
-                    >
-                      Attach images
-                    </Button>
-                  </Upload>
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item className="text-center mt-4 mb-0">
-                  <Button className="ant-cancel-btn me-3">Cancel</Button>
-                  <Button type="primary" className="ant-add-button">
-                    Edit to Catalog
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Modal> */}
-
-        {/* <ModalPop
-          visible={this.state.visible}
-          onOk={this.hideModal}
-          onCancel={this.hideModal}
-          okText="ok"
-          cancelText="Close"
-          width={800}
-          className="ant-modal-title-box"
-          footer={false}
-        /> */}
       </>
     );
   }

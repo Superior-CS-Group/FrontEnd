@@ -19,7 +19,7 @@ export default class Home extends Component {
   render() {
     return (
       <div>
-        <Layout style={{ background: "#fff" }}>
+        <Layout style={{ background: "#fff", height: "100vh" }}>
           <Sider
             collapsedWidth={80}
             trigger={null}
