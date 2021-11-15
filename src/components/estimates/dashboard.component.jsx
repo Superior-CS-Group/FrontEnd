@@ -6,6 +6,7 @@ import TableData from "./table.component";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import Material from "./material.components";
 import Services from "./services.components";
+import ServicesTable from "./services.table.components";
 
 const { Option } = Select;
 
@@ -16,7 +17,7 @@ function handleChange(value) {
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { visible: false, isMaterial: true };
+    this.state = { visible: false, isMaterial: true, isProduct: true };
   }
 
   showModal = () => {
@@ -96,8 +97,18 @@ export default class Dashboard extends Component {
             </div>
           </div>
           <div className="p-2 ant-table-seprate">
-            <TableData />
-
+            <Radio.Group
+              name="radiogroup"
+              defaultValue={1}
+              className="mb-4"
+              onChange={(e) =>
+                this.setState({ isProduct: e.target.value === 1 })
+              }
+            >
+              <Radio value={1}>Material</Radio>
+              <Radio value={2}>Services</Radio>
+            </Radio.Group>
+            {this.state.isProduct ? <TableData /> : <ServicesTable />}
             <div className="ant-action-box d-flex align-items-center mt-5 pb-3">
               <div className="ms-auto pe-3 ant-select-box ">
                 <span className="me-3">Action:</span>
