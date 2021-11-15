@@ -647,3 +647,58 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 .mt-50 {
   margin-top: 40px;
 }
+
+/*=========== estimates page css ===============*/
+.heading h1 {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 33.0347px;
+  line-height: 38px;
+  letter-spacing: 7px;
+
+  color: #717171;
+}
+
+.heading p {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 38px;
+  letter-spacing: 7px;
+  color: #717171;
+  margin: 0px;
+}
+.ant-estimate-text {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.ant-estimate-text h2 {
+  margin: 0px;
+  font-weight: 500;
+  font-size: 24px;
+  color: #092d5d;
+}
+
+.ant-estimate-text span {
+  display: block;
+  margin-bottom: 5px;
+}
+.ant-moving-button {
+  font-size: 16px;
+
+  color: #2ed47a;
+  border: 0.5px solid #2ed47a;
+  box-sizing: border-box;
+  border-radius: 53px;
+}
+.button-arrow {
+  font-size: 24px;
+  display: inline-flex;
+  height: 100%;
+  align-items: center;
+  cursor: pointer;
+}
+
+/*=========== estimates page css end ===============*/

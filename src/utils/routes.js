@@ -1,6 +1,6 @@
-import Dashboard from "../components/home/dashboard.component";
-import View from "../components/home/view.components";
-
+import Dashboard from "../components/estimates/dashboard.component";
+import View from "../components/estimates/view.components";
+import MainEstimates from "../components/estimates/estimates.components";
 
 const routes = [
   {
@@ -9,6 +9,13 @@ const routes = [
     name: "Dashboard",
     component: <Dashboard />,
   },
+  {
+    path: "/estimating",
+    exact: true,
+    name: "estimates",
+    component: <MainEstimates />,
+  },
+
   {
     path: "/view",
     exact: true,

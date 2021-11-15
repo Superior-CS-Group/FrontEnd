@@ -97,6 +97,7 @@ export default class Dashboard extends Component {
           </div>
           <div className="p-2 ant-table-seprate">
             <TableData />
+
             <div className="ant-action-box d-flex align-items-center mt-5 pb-3">
               <div className="ms-auto pe-3 ant-select-box ">
                 <span className="me-3">Action:</span>

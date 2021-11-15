@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Table, Button, Radio, Modal, Upload, message } from "antd";
-import { Link } from "react-router-dom";
-import { Datel, edit } from "../../utils/svg.file";
+// import { Link } from "react-router-dom";
+import { Datel, drag, edit } from "../../utils/svg.file";
 
 import Material from "./material.components";
 import Services from "./services.components";
+import ReactDragListView from "react-drag-listview";
 
 export default class TableData extends Component {
   constructor(props) {
@@ -12,6 +13,59 @@ export default class TableData extends Component {
     this.state = {
       selectedRowKeys: [], // Check here to configure the default column
       isMaterial: true,
+      columns: [
+        {
+          title: (
+            <>
+              Material Name <span className="float-end me-2">{drag}</span>
+            </>
+          ),
+          dataIndex: "descriptive",
+          sorter: true,
+        },
+        {
+          title: (
+            <>
+              Quantity <span className="float-end me-2">{drag}</span>
+            </>
+          ),
+          dataIndex: "quantity",
+          sorter: true,
+        },
+        {
+          title: (
+            <>
+              Cost <span className="float-end me-2">{drag}</span>
+            </>
+          ),
+          dataIndex: "cost",
+          sorter: true,
+        },
+        // {
+        //   title: "Variations",
+        //   dataIndex: "Variations",
+        //   render: () => (
+        //     <>
+        //       <Link to="/view">View</Link>
+        //     </>
+        //   ),
+        // },
+        {
+          title: "Action",
+          dataIndex: "action",
+          render: () => (
+            <>
+              <Button danger className="ant-danger-button me-3">
+                <span className="me-2">{Datel}</span>{" "}
+                <span className="align-text">Delete</span>
+              </Button>
+              <Button className="ant-edit-button " onClick={this.showModal}>
+                <span className="me-2">{edit}</span> Edit
+              </Button>
+            </>
+          ),
+        },
+      ],
     };
   }
   showModal = () => {
@@ -31,45 +85,6 @@ export default class TableData extends Component {
     this.setState({ selectedRowKeys });
   };
   render() {
-    const columns = [
-      {
-        title: "Material Name",
-        dataIndex: "descriptive",
-      },
-      {
-        title: "Quantity",
-        dataIndex: "quantity",
-      },
-      {
-        title: "Cost",
-        dataIndex: "cost",
-      },
-      // {
-      //   title: "Variations",
-      //   dataIndex: "Variations",
-      //   render: () => (
-      //     <>
-      //       <Link to="/view">View</Link>
-      //     </>
-      //   ),
-      // },
-      {
-        title: "Action",
-        dataIndex: "action",
-        render: () => (
-          <>
-            <Button danger className="ant-danger-button me-3">
-              <span className="me-2">{Datel}</span>{" "}
-              <span className="align-text">Delete</span>
-            </Button>
-            <Button className="ant-edit-button " onClick={this.showModal}>
-              <span className="me-2">{edit}</span> Edit
-            </Button>
-          </>
-        ),
-      },
-    ];
-
     const data = [];
     for (let i = 0; i < 40; i++) {
       data.push({
@@ -82,6 +97,19 @@ export default class TableData extends Component {
         action: "Delete",
       });
     }
+
+    const that = this;
+    this.dragProps = {
+      onDragEnd(fromIndex, toIndex) {
+        const columns = [...that.state.columns];
+        const item = columns.splice(fromIndex, 1)[0];
+        columns.splice(toIndex, 0, item);
+        that.setState({
+          columns,
+        });
+      },
+      nodeSelector: "th",
+    };
 
     const { Dragger } = Upload;
 
@@ -117,13 +145,16 @@ export default class TableData extends Component {
 
     return (
       <>
-        <Table
-          className="ant-table-color"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-          pagination={true}
-        />
+        <ReactDragListView.DragColumn {...this.dragProps}>
+          <Table
+            className="ant-table-color"
+            rowSelection={rowSelection}
+            columns={this.state.columns}
+            dataSource={data}
+            pagination={true}
+          />
+        </ReactDragListView.DragColumn>
+
         <Modal
           title="Edit Material/Services"
           visible={this.state.visible}

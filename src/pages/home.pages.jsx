@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Route, Routes } from "react-router-dom";
 import routes from "../utils/routes";
 import { Layout } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+// import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Menubar from "../components/navbar/menubar";
 import DashboardNavbar from "../components/navbar/DashboardNavbar";
 const { Header, Sider, Content } = Layout;
-export default class Home extends Component {
+export default class Estimates extends Component {
   state = {
     collapsed: true,
   };
@@ -19,7 +19,7 @@ export default class Home extends Component {
   render() {
     return (
       <div>
-        <Layout style={{ background: "#fff", height: "100vh" }}>
+        <Layout style={{ background: "#fff", minheight: "100vh" }}>
           <Sider
             collapsedWidth={80}
             trigger={null}
