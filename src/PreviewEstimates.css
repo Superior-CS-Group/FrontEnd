@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
+
+*{
+    margin: 0;
+    padding:0;
+}
+
+.HomeContainer__{
+    max-width: 1100px;
+    margin:auto;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+
+.MajorHeader_PreviewEstimate__{
+    width:257px;
+    height: 45px;
+    font-size: 25px;
+    margin-top: 20px;
+    margin-left: 9px;
+    font-weight: 800;
+}
+
+.MajorHeader_bg_Image__{
+    margin-top: 10px;
+    position: absolute;
+    width: 1077px;
+    height:305px;
+    background: url(previewHeaderBg2.png);
+}
+
+.RockImagebgHeader__{
+    margin-top: 320px;
+    margin-left: 140px;
+    float: left;
+    position: absolute;
+    width: 836px;
+    height: 456px;
+    background: url(mountain_sky.png) no-repeat;
+    left: -19px;
+}
+
+.MountainSky_Proposal__{
+    margin-top: 100px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.NameAreaForEstimates__{
+    float: right;
+    margin-top: 350px;
+    margin-right: 70px;
+}
+
+.NameAreaForEstimates__ .EstimatesCxfullNameArea__{
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.NameAreaForEstimates__ .EstimatesCxSalesArea__{
+    font-weight: bold;
+    font-size: 19px;
+}
+
+.NameAreaForEstimates__ .EstimatesCxDatesArea__{
+    font-weight: bold;
+    font-size: 19px;
+    margin-left: 45px;
+}
+
+.hr_Demacate__ .hrWebClass___{
+    margin-top: 475px;
+    border: 0.5px solid #C0C0C0;
+    margin-right: 3px;
+}
+
+.EstimateOverViewRect__{
+    margin-top: 9px;
+    margin-left: 19px;
+    width: 1045px;
+    height: 42px;
+    background: #F4F4F4;
+    border: 1px solid #C7C7C7;
+    border-radius: 6px;
+}
+
+.EstOverHeaderAreaNow__{
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 5px;
+    font-size: 15px;
+}
+
+.EstimateOverViewInputForm__{
+    margin-top: 19px;
+    margin-left: 19px;
+}
+
+.EstimateOverViewInputForm__ .InputExtArea1__{  
+    width:160px;
+    height:30px;
+    background: #FFFF;
+    border: 2px solid #84B36E;
+    border-radius: 6px;
+}
+
+.midgLabel__{
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+.midgLabel__ .toTheRight__{
+    float: right;
+    margin-right: 30px;
+}
+
+
+.DemolitionArea__{
+    margin-top: 10px;
+}
+
+.DemolitionArea__ .instructionText__{
+    margin-top: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 35px;
+    margin-bottom: 20px;
+}
+
+.GradingArea__ .GradingAreaText___{
+    margin-top: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 35px;
+    margin-bottom: 20px;
+}
+
+.SubTotalCalcRS__ .SubTotalCalcResults__{
+    margin-top: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 35px;
+    margin-bottom: 20px;
+}
+
+.ButtonEndArea__{
+    margin-top: 50px;
+    margin-bottom: 70px;
+}
+
+.ButtonEndArea__ .closeButton__{
+    font-family: 'Poppins';
+    font-weight: bold;
+    border:none;
+    color: #646464;
+    width: 249px;
+    height: 69.1px;
+    background: #DEDEDE;
+    border-radius: 5px;
+}
+
+.ButtonEndArea__ .sendCustomer__{
+    font-family: 'Poppins';
+    font-weight: bold;
+    font-size: 15px;
+    border: none;
+    color: #FFFF;
+    width: 249px;
+    height: 69.1px;
+    background: #1A73E8;
+    border-radius: 5px;
+}

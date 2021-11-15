@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
+*{
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 100;
+}
+
+.mainPage{
+background: url(home.png) no-repeat center fixed;
+background-position: center center;
+background-attachment: fixed;
+width: 100vw;
+height: 100vh;
+left:-50px;
+top:0px;
+background-size: cover;
+}
+
+.loginArea{
+    float: right;
+    margin-right: 30px;
+    position: absolute;
+    background: #FFF;
+    width: 320px;
+    height: 488px;
+    left:730px;
+    top:97.5px;
+    border-radius: 20px;
+    box-shadow: 62.2005px 24.9017px 45px rgba(0, 0, 0, 0.11), 36.6237px 14.6621px 23.472px rgba(0, 0, 0, 0.079552), 18.8094px 7.53027px 11.016px rgba(0, 0, 0, 0.061776), 7.56358px 3.02804px 4.824px rgba(0, 0, 0, 0.048224), 1.69185px 0.677326px 2.088px rgba(0, 0, 0, 0.030448);
+}
+
+.HomeLogo{
+    margin-top: 4px;
+    width: 151.22px;
+    height:71px;
+}
+
+.headerLoginArea{
+    float:left;
+    position:absolute;
+    font-weight: bold;
+    margin-left:20px;
+}
+
+.labelText{
+    color: #717171;
+    margin-top: 15px;
+    font-size: 10px;
+}
+
+.inputText{
+    font-family: 'Poppins',FontAwesome;
+    font-weight: bold;
+    font-size: 10px;
+    color: #717171;
+    width:280px;
+    height:35.37px;
+    left:14px;
+    border:1px solid #1a73e8;
+    box-sizing: border-box;
+    border-radius: 30px;
+}
+
+.chekckBoxInput{
+    float:left;
+    margin-top: 9px;
+    position: absolute;
+    width:9.36px;
+    height: 9.36px;
+    left:19.61px;
+    border:1.14342px solid #1a73e8;
+    box-sizing: border-box;
+}
+
+.checkboxTxt{
+    margin-left: 30px;
+}
+
+.forgotPassTxt{
+    font-size: 9.5px;
+    margin-right: 120px;
+}
+
+.fgPassUnderline{
+    text-align: end;
+    font-size: 9px;
+    margin-top: 10px;
+    color: #00CFE8;
+    text-decoration: none;
+}
+
+.SignUpText{
+    margin-top: 28px;
+    font-size: 16px;
+
+}
+
+.signUpChooseBtnClass{
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #717171;
+    margin-top: 15px;
+    left:19.61px;
+    width:280px;
+    height:22.37px;
+    background-color: #FFF;
+    border-radius: 10px;
+    border:  1px solid #A3A3A3;
+    box-sizing:border-box;
+}
+
+.LoginBtn{
+    margin-top: 25px;
+    font-family: 'Poppins', sans-serif;
+    color: #FFF;
+    border:none;
+    border-radius: 10px;
+    background-color: #1A73E8;
+    font-weight: bold;
+    left:19.61px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    width: 280px;
+    height: 29.37px;
+}
+
+.WelcomeTextArea{
+    font-weight: 900;
+    margin-top: 50px;
+    margin-left: 70px;
+    position:absolute;
+    position: absolute;
+    width: 456.09px;
+    height:22px;
+}
