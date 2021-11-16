@@ -14,7 +14,7 @@ function handleChange(value) {
   console.log(`selected ${value}`);
 }
 
-export default class Dashboard extends Component {
+export default class Catalog extends Component {
   constructor(props) {
     super(props);
     this.state = { visible: false, isMaterial: true, isProduct: true };
