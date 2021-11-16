@@ -1,6 +1,7 @@
 import View from "../components/estimates/view.components";
 import MainEstimates from "../components/estimates/estimates.components";
 import Catalog from "../components/estimates/catalog.component";
+import AddEstimates from "../components/estimates/add.estimates.components";
 
 const routes = [
   {
@@ -21,6 +22,12 @@ const routes = [
     exact: true,
     name: "view",
     component: <View />,
+  },
+  {
+    path: "/add-estimates",
+    exact: true,
+    name: "AddEstimates",
+    component: <AddEstimates />,
   },
 ];
 export default routes;

@@ -748,3 +748,229 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 }
 
 /*=========== estimates page css end ===============*/
+
+/* ============add esatimates start============================ */
+.ant-tabs-box {
+  background: #ffffff;
+  /* White */
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 300px;
+}
+
+.ant-tabs-box ul {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ant-tabs-box li {
+  width: 33%;
+  text-align: center;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 16px;
+}
+.ant-tabs-box li a {
+  color: #717171;
+  display: block;
+  padding: 15px;
+}
+
+.ant-tabs-box ul li a:hover,
+.ant-tabs-box ul li a.active {
+  background: #1a73e8;
+  box-shadow: inset 4.31193px 5.38992px 4.31193px rgb(6 88 196 / 50%);
+  border-radius: 41.8887px;
+  cursor: pointer;
+  color: #fff !important;
+}
+.ant-eye {
+  color: #092d5d;
+  cursor: pointer;
+}
+
+.ant-eye svg {
+  width: 30px;
+  height: 30px;
+}
+.bg-estimates {
+  background: url("../src/images/bg-es.png") no-repeat center top;
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
+}
+.bg-estimates {
+  margin: -1.5rem;
+  padding: 1.5rem;
+}
+.estimation-card {
+  background: rgb(113 113 113 / 10%);
+  border-radius: 12px;
+}
+.estimation-card {
+  background: rgb(113 113 113 / 10%);
+  border-radius: 12px;
+}
+
+.estimation-card .ant-collapse-content {
+  background: transparent;
+  border: 0px;
+}
+
+.estimation-card .ant-collapse {
+  background: transparent;
+  border: 0px;
+}
+
+.ant-card.estimation-card .ant-collapse-header {
+  background: #fff;
+  border-radius: 9.61762px;
+
+  border: 0px;
+  filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.25));
+}
+
+.estimation-card .ant-collapse-item:last-child,
+.estimation-card
+  .ant-collapse
+  > .ant-collapse-item:last-child
+  > .ant-collapse-header {
+  border-radius: 12px !important;
+  border: 0px;
+  color: #092d5d;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+}
+.estimation-card .ant-collapse-header {
+  position: relative;
+}
+
+.estimation-card .ant-collapse-header:before {
+  content: "";
+  background: #1a73e8;
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px 10px 0px 0px;
+  transform: rotate(90deg);
+  position: absolute;
+  left: -6px;
+  width: 17px;
+  height: 8px;
+  top: 50%;
+  margin-top: -4px;
+}
+.radius-12 {
+  border-radius: 12px;
+}
+.count-card span,
+.danger-card span,
+.blue-card span {
+  color: #717171;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  display: block;
+}
+.count-card input[type="text"] {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+
+  color: #2ed47a;
+  margin: 0px;
+  width: 100%;
+  border: 0px;
+  outline: none;
+}
+.count-card,
+.danger-card,
+.blue-card {
+  position: relative;
+}
+
+.count-card:before {
+  content: "";
+  background: #2ed47a;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 6px 0px 0px 6px;
+  position: absolute;
+  width: 7px;
+  height: 36px;
+  right: 0px;
+  top: 50%;
+  margin-top: -17px;
+}
+.danger-card h4 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+
+  color: #f7685b;
+  margin: 0px;
+}
+.danger-card:before {
+  content: "";
+  background: #f7685b;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 6px 0px 0px 6px;
+  position: absolute;
+  width: 7px;
+  height: 36px;
+  right: 0px;
+  top: 50%;
+  margin-top: -17px;
+}
+.blue-card:before {
+  content: "";
+  background: #6e6b7b;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 6px 0px 0px 6px;
+  position: absolute;
+  width: 7px;
+  height: 36px;
+  right: 0px;
+  top: 50%;
+  margin-top: -17px;
+}
+.blue-card h4 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+
+  color: #1a73e8;
+  margin: 0px;
+}
+@media (min-width: 992px) {
+  .height-half {
+    height: 130px;
+    align-items: center;
+    display: flex;
+  }
+}
+
+.ant-table-estmating.add-estimates-table table {
+  border-spacing: 0px 3px;
+}
+
+.ant-table-estmating.add-estimates-table
+  table
+  .ant-table-tbody
+  tr:nth-child(even) {
+  background: #fafcff;
+}
+
+.ant-table-estmating.add-estimates-table table th {
+  color: #092d5d;
+  font-weight: bold;
+}
+
+.ant-table-estmating .ant-table-tbody tr td {
+  color: #092d5d;
+  font-weight: 400;
+}
+
+/* ============add esatimates start============================ */

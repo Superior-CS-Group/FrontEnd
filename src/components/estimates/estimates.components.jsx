@@ -22,7 +22,7 @@ export default class MainEstimates extends Component {
         </div>
         <Carousel
           className="mb-3"
-          show={4.5}
+          show={3.5}
           slide={3}
           swiping={true}
           leftArrow={[
