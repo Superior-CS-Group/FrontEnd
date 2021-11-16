@@ -66,7 +66,7 @@ export default class DashboardNavbar extends Component {
           </Menu.Item>
           <Divider style={{ margin: "10px 0px" }} />
           <Menu.Item key="13" icon={lead} className="no-color">
-            <NavLink to="/new-lead">New Lead</NavLink>
+            <NavLink to="/customer-lead">New Lead</NavLink>
           </Menu.Item>
           <Menu.Item key="14" icon={add} className="no-color">
             <NavLink to="/add-task">Add Task</NavLink>

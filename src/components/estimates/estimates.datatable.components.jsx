@@ -12,7 +12,7 @@ export default class Datatable extends Component {
         {
           key: <Checkbox />,
           estimate: "Estimate #",
-          name: "Costumer Name",
+          name: <a href="customer-lead">Joseph</a>,
           software: "male",
           status: "12",
           date: "New York",
