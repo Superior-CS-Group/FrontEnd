@@ -1,14 +1,15 @@
-import Dashboard from "../components/estimates/dashboard.component";
 import View from "../components/estimates/view.components";
 import MainEstimates from "../components/estimates/estimates.components";
 import CustomerLeadInfo from "../components/estimates/customer/customerleadinfo.component";
+import Catalog from "../components/estimates/catalog.component";
+import AddEstimates from "../components/estimates/add.estimates.components";
 
 const routes = [
   {
-    path: "/dashboard",
+    path: "/Catalog",
     exact: true,
-    name: "Dashboard",
-    component: <Dashboard />,
+    name: "catalog",
+    component: <Catalog />,
   },
   {
     path: "/estimating",
@@ -28,6 +29,12 @@ const routes = [
     exact: true,
     name: "customer-lead",
     component: <CustomerLeadInfo />,
+  },
+  {
+    path: "/add-estimates",
+    exact: true,
+    name: "AddEstimates",
+    component: <AddEstimates />,
   },
 ];
 export default routes;

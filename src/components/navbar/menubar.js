@@ -6,7 +6,13 @@ import { Help, notifation, Message } from "../../utils/svg.file";
 import { DownOutlined } from "@ant-design/icons";
 import userProfile from "../../images/profile-top.png";
 export default class Menubar extends Component {
+  logout = async () => {
+    localStorage.clear();
+
+    window.location = "/auth";
+  };
   render() {
+    
     const menu = (
       <Menu>
         <Menu.Item key="0">
@@ -14,7 +20,7 @@ export default class Menubar extends Component {
         </Menu.Item>
 
         <Menu.Divider />
-        <Menu.Item key="3">Log Out</Menu.Item>
+        <Menu.Item key="3" onClick={this.logout}>Log Out</Menu.Item>
       </Menu>
     );
     return (

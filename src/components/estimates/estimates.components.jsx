@@ -22,7 +22,7 @@ export default class MainEstimates extends Component {
         </div>
         <Carousel
           className="mb-3"
-          show={4.5}
+          show={3.5}
           slide={3}
           swiping={true}
           leftArrow={[
@@ -95,6 +95,30 @@ export default class MainEstimates extends Component {
           </div>
           <div className="p-2 ant-table-seprate">
             <Datatable />
+            <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
+              <div className="ms-auto pe-3 ant-select-box ">
+                <span className="me-3">Action:</span>
+                <Select
+                  defaultValue="What do yo want to do?"
+                  onChange={handleChange}
+                  style={{ width: "300px" }}
+                >
+                  <Option value="jack">What do yo want to do?</Option>
+                  <Option value="lucy">Lucy</Option>
+
+                  <Option value="Yiminghe">yiminghe</Option>
+                </Select>
+                <div className="text-end mt-3">
+                  <Button
+                    type="primary"
+                    disabled
+                    className="ant-confirm-button"
+                  >
+                    Confirm
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </Card>
       </>

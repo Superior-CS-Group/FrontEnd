@@ -16,6 +16,7 @@ import {
   add,
 } from "../../utils/svg.file";
 import { NavLink } from "react-router-dom";
+const { SubMenu } = Menu;
 export default class DashboardNavbar extends Component {
   render() {
     return (
@@ -32,12 +33,26 @@ export default class DashboardNavbar extends Component {
           <Menu.Item key="2" icon={crm}>
             <NavLink to="/crm">CRM</NavLink>
           </Menu.Item>
-          <Menu.Item key="3" icon={estimating}>
+          {/* <Menu.Item key="3" icon={estimating}>
             <NavLink to="/estimating"> Estimating</NavLink>
-          </Menu.Item>
+          </Menu.Item> */}
+          <SubMenu key="sub1" icon={estimating} title=" Estimating">
+            <Menu.Item key="es1">
+              {" "}
+              <NavLink to="/catalog">Catalog</NavLink>
+            </Menu.Item>
+
+            <Menu.Item key="es2">
+              {" "}
+              <NavLink to="/service"></NavLink>Service
+            </Menu.Item>
+            <Menu.Item key="es3">
+              <NavLink to="/estimating">Estimation</NavLink>
+            </Menu.Item>
+          </SubMenu>
           <Menu.Item key="4" icon={jobOr}>
             <NavLink to="/job-organization">
-              Job Organization & Scheduling
+              Job Organization & SchedulingS
             </NavLink>
           </Menu.Item>
           <Menu.Item key="5" icon={time}>

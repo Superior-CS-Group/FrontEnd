@@ -18,8 +18,11 @@ export default class Estimates extends Component {
   };
   render() {
     return (
-      <div>
-        <Layout style={{ background: "#fff", minheight: "100vh" }}>
+      <>
+        <Layout
+          className="h-full"
+          style={{ background: "#fff", minheight: "100vh" }}
+        >
           <Sider
             collapsedWidth={80}
             trigger={null}
@@ -64,7 +67,7 @@ export default class Estimates extends Component {
             </Content>
           </Layout>
         </Layout>
-      </div>
+      </>
     );
   }
 }

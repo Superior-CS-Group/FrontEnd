@@ -12,7 +12,7 @@ export default class Datatable extends Component {
         {
           key: <Checkbox />,
           estimate: "Estimate #",
-          name: <a href="customer-lead">Joseph</a>,
+          name: <a href="/customer-lead">Joseph</a>,
           software: "male",
           status: "12",
           date: "New York",
@@ -98,6 +98,21 @@ export default class Datatable extends Component {
       nodeSelector: "th",
     };
   }
+  componentDidMount() {
+    const data = [];
+    for (let i = 0; i < 100; i++) {
+      data.push({
+        key: <Checkbox />,
+        estimate: "Estimate #",
+        name: <a href="/customer-lead">Joseph</a>,
+        software: "male",
+        status: "12",
+        date: "New York",
+        day: "day",
+      });
+    }
+    this.setState({ data });
+  }
   render() {
     return (
       <>
@@ -105,7 +120,7 @@ export default class Datatable extends Component {
           <Table
             className="ant-table-estmating"
             columns={this.state.columns}
-            pagination={false}
+            pagination={true}
             dataSource={this.state.data}
             bordered={false}
           />
