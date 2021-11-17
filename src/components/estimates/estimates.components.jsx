@@ -1,18 +1,57 @@
 import React, { Component } from "react";
 import { Carousel } from "@trendyol-js/react-carousel";
 import SlideItems from "./SlideItems.components";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Card, Select, Input, Modal, message, Radio } from "antd";
+import {
+  LeftOutlined,
+  RightOutlined,
+  DownloadOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Select,
+  Input,
+  Modal,
+  message,
+  Radio,
+  Row,
+  Col,
+  Form,
+  Divider,
+  Checkbox,
+  DatePicker,
+  Space,
+} from "antd";
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import fillter from "../../images/fillter.png";
 import Datatable from "./estimates.datatable.components";
+import FilterSorting from "./filter/filter.sorting.component";
 
 export default class MainEstimates extends Component {
+  state = {
+    ModalVisible: false,
+  };
+  showModal = () => {
+    this.setState({ ModalVisible: true });
+  };
+
+  handleOk = () => {
+    this.setState({ ModalVisible: false });
+  };
+
+  handleCancel = () => {
+    this.setState({ ModalVisible: false });
+  };
   render() {
+    const { RangePicker } = DatePicker;
     const { Option } = Select;
 
     function handleChange(value) {
       console.log(`selected ${value}`);
+    }
+    function onChange(e) {
+      console.log(`checked = ${e.target.checked}`);
     }
     return (
       <>
@@ -61,7 +100,10 @@ export default class MainEstimates extends Component {
           </div>
           <div className="p-3 card-shadow pe-4 ps-5">
             <div className="fillter d-lg-flex align-items-center">
-              <span className="inline-block me-5 fillter-btn">
+              <span
+                className="inline-block me-5 fillter-btn cursor-btn"
+                onClick={this.showModal}
+              >
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
               <span className="inline-block me-4">
@@ -121,6 +163,13 @@ export default class MainEstimates extends Component {
             </div>
           </div>
         </Card>
+
+        <FilterSorting
+          showModal={this.showModal}
+          ModalVisible={this.state.ModalVisible}
+          handleCancel={this.handleCancel}
+          handleOk={this.handleOk}
+        />
       </>
     );
   }
