@@ -243,7 +243,7 @@ export default class AddEstimates extends Component {
             <Col lg={16} span={24}>
               <Card
                 bordered={false}
-                className="estimation-card"
+                className="estimation-card mb-lg-0 mb-3"
                 bodyStyle={{ padding: "0px" }}
               >
                 <Collapse
