@@ -1093,7 +1093,6 @@ button.add-btn {
   color: #092d5d;
 }
 
-
 .ant-desc-box ul {
   margin: 0px;
   padding: 0px;
@@ -1193,7 +1192,7 @@ button.add-btn {
   line-height: 30px !important;
   color: #092d5d !important;
 }
-.ant-input-textbox {
+.ant-width {
   width: 100px;
 }
 .font-bold {
