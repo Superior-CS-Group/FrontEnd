@@ -30,11 +30,5 @@ const routes = [
     name: "customer-lead",
     component: <CustomerLeadInfo />,
   },
-  {
-    path: "/add-estimates",
-    exact: true,
-    name: "AddEstimates",
-    component: <AddEstimates />,
-  },
 ];
 export default routes;
