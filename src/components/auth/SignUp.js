@@ -1,209 +1,197 @@
-import React, { useState } from "react";
-
-import { Form, Upload, Button, message, Select } from "antd";
-import { Link, useLocation, Navigate } from "react-router-dom";
-
+import React, { Component } from "react";
+import InputField from "../inputField/inputField.component";
+import user from "../../images/user.png";
+import { Form, Input, Button } from "antd";
+import { Link, Navigate } from "react-router-dom";
 import arrow from "../../images/arrow.png";
-import upload from "../../images/upload.png";
-import arrowDwon from "../../images/chevron-down.png";
-import dollor from "../../images/dollor.png";
-import timezone from "../../images/timezone.png";
-const { Option } = Select;
+import company from "../../images/company.png";
+import lock from "../../images/lock.png";
+import { postData } from "../../utils/fetchApi";
 
-const props = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
-function SetDashboard() {
-  let history = useLocation();
-
-  const [redirectTo, setRedirectTo] = useState(null);
-
-  React.useEffect(() => {
-    console.log("history: ", history);
-    if (!history.state || !history.state.isStepOneComplete) {
-      console.log("redirectionb...");
-      setRedirectTo("/auth/sign-up");   
-    }
-  }, []);
-
-  if (redirectTo) {
-    return <Navigate to={redirectTo} />;
+export default class SignUp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      companyName: "",
+      message: "",
+      isRedirect: false,
+      isValidEmail: false,
+      isLoading: false,
+      errors: {},
+    };
   }
+  validateEmail = (email) => {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
 
-  return (
-    <>
-      <div className="login-heading mb-4">
-        <h1 className="mb-0 text-center position-relative">
-          <Link to="/auth" className="ant-arrow">
-            <img src={arrow} alt="" />
-          </Link>{" "}
-          Sign Up
-        </h1>
-      </div>
-      <Form>
-        <Form.Item className="mb-3">
-          <label className="ant-label-login">
-            Upload Profile Image <small>(max. 5MB)</small>
-          </label>
-          <Upload {...props} size="large" className="d-block upload-input">
-            <Button
-              className="w-100 text-start"
-              icon={<img src={upload} alt="" />}
-            >
-              <span>
-                Upload file <small>(i.e. png, jpg)</small>
-              </span>
-            </Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item className="mb-3">
-          <label className="ant-label-login">
-            Upload Company Logo <small>(max. 5MB)</small>
-          </label>
-          <Upload {...props} size="large" className="d-block upload-input">
-            <Button
-              className="w-100 text-start"
-              icon={<img src={upload} alt="" />}
-            >
-              <span>
-                Upload file <small>(i.e. png, jpg)</small>
-              </span>
-            </Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item className="mb-3">
-          <label className="ant-label-login">Select Currency</label>
-          <div className="position-relative">
-            <div className="dollor-icon">
-              <img src={dollor} alt="" />
-            </div>
-            <Select
-              size="large"
-              defaultValue="Select Currency"
-              // onChange={handleChange}
-              suffixIcon={<img src={arrowDwon} alt="" />}
-              className="ant-select-box"
-            >
-              <Option value="usd">USD</Option>
-              <Option value="inr">Inr</Option>
-              <Option value="euro">Euro</Option>
-            </Select>
+  validateFields = () => {
+    const errors = {};
+    if (!this.state.email) {
+      errors.email = "Email id is not blank";
+    }
+    if (!this.state.password) {
+      errors.password = "Password is not blank";
+    }
+    if (!this.state.confirmPassword) {
+      errors.confirmPassword = "Confirm Password is not blank";
+    }
+    if (this.state.password != this.state.confirmPassword) {
+      errors.confirmPassword = "Password and Confirm Password is not match";
+    }
+    if (!this.state.companyName) {
+      errors.companyName = "Company Name is not blank";
+    }
+    if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.state.email)) {
+      errors.email = "Email is not valid";
+      // this.setState({ isValidEmail:false})
+    }
+    return {
+      errors,
+      isValid: !Object.keys(errors).length,
+    };
+  };
+
+  handleAllChange = (e) => {
+    if (e.target.name === "email") {
+      this.setState({ isValidEmail: this.validateEmail(e.target.value) });
+    }
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    this.setState({ errors: {} });
+    const { errors, isValid } = this.validateFields();
+    if (!isValid) {
+      this.setState({ errors });
+      return;
+    }
+    this.setState({ isLoading: true });
+    const { email, password, companyName } = this.state;
+    const body = { email, password, companyName };
+    // console.log("body: ", body);
+
+    try {
+      const result = await postData(`auth/sign-up`, body);
+      // console.log("result: ", result);
+      localStorage.setItem("token", result.data.token);
+      setTimeout(() => {
+        this.setState({
+          email: "",
+          password: "",
+          message: "Successfully Sign-up!",
+          isRedirect: true,
+          isLoading: false,
+        });
+      }, 1000);
+    } catch (err) {
+      console.log("error", err, err.response);
+      setTimeout(() => {
+        this.setState({
+          errors: err.response.data.errors,
+          isLoading: false,
+        });
+      }, 1000);
+    }
+  };
+
+  render() {
+    if (this.state.isRedirect) {
+      return <Navigate to="/dashboard" />;
+    }
+    if (this.state.isToken) {
+      return <Navigate to="/dashboard" />;
+    }
+    return (
+      <>
+        <div className="login-heading mb-4">
+          <h1 className="mb-0 text-center position-relative">
+            <Link to="/auth" className="ant-arrow">
+              <img src={arrow} alt="" />
+            </Link>{" "}
+            Sign Up
+          </h1>
+        </div>
+        <Form>
+          <InputField
+            icon={<img src={user} alt="" />}
+            placeholder="Username / Email"
+            label="Email Address"
+            type="text"
+            name="email"
+            dclass="ant-icon-space mb-3"
+            onChange={this.handleAllChange}
+          />
+          <div role="alert" class="text-danger">
+            {this.state.errors.email}
           </div>
-        </Form.Item>
-        <Form.Item className="mb-5">
-          <label className="ant-label-login">Select Timezone</label>
-          <div className="position-relative">
-            <div className="dollor-icon">
-              <img src={timezone} alt="" />
-            </div>
-            <Select
-              size="large"
-              defaultValue="Choose a City"
-              // onChange={handleChange}
-              suffixIcon={<img src={arrowDwon} alt="" />}
-              className="ant-select-box"
-            >
-              <Option value="Etc/GMT+12">
-                (GMT-12:00) International Date Line West
-              </Option>
-              <Option value="Pacific/Midway">
-                (GMT-11:00) Midway Island, Samoa
-              </Option>
-              <Option value="Pacific/Honolulu">(GMT-10:00) Hawaii</Option>
-              <Option value="US/Alaska">(GMT-09:00) Alaska</Option>
-              <Option value="America/Los_Angeles">
-                (GMT-08:00) Pacific Time (US & Canada)
-              </Option>
-              <Option value="America/Tijuana">
-                (GMT-08:00) Tijuana, Baja California
-              </Option>
-              <Option value="US/Arizona">(GMT-07:00) Arizona</Option>
-              <Option value="America/Chihuahua">
-                (GMT-07:00) Chihuahua, La Paz, Mazatlan
-              </Option>
-              <Option value="US/Mountain">
-                (GMT-07:00) Mountain Time (US & Canada)
-              </Option>
-              <Option value="America/Managua">
-                (GMT-06:00) Central America
-              </Option>
-              <Option value="US/Central">
-                (GMT-06:00) Central Time (US & Canada)
-              </Option>
-              <Option value="America/Mexico_City">
-                (GMT-06:00) Guadalajara, Mexico City, Monterrey
-              </Option>
-              <Option value="Canada/Saskatchewan">
-                (GMT-06:00) Saskatchewan
-              </Option>
-              <Option value="America/Bogota">
-                (GMT-05:00) Bogota, Lima, Quito, Rio Branco
-              </Option>
-              <Option value="US/Eastern">
-                (GMT-05:00) Eastern Time (US & Canada)
-              </Option>
-              <Option value="US/East-Indiana">
-                (GMT-05:00) Indiana (East)
-              </Option>
-              <Option value="Canada/Atlantic">
-                (GMT-04:00) Atlantic Time (Canada)
-              </Option>
-              <Option value="America/Caracas">
-                (GMT-04:00) Caracas, La Paz
-              </Option>
-              <Option value="America/Manaus">(GMT-04:00) Manaus</Option>
-              <Option value="America/Santiago">(GMT-04:00) Santiago</Option>
-              <Option value="Canada/Newfoundland">
-                (GMT-03:30) Newfoundland
-              </Option>
-              <Option value="America/Sao_Paulo">(GMT-03:00) Brasilia</Option>
-              <Option value="America/Argentina/Buenos_Aires">
-                (GMT-03:00) Buenos Aires, Georgetown
-              </Option>
-              <Option value="America/Godthab">(GMT-03:00) Greenland</Option>
-              <Option value="America/Montevideo">(GMT-03:00) Montevideo</Option>
-              <Option value="America/Noronha">(GMT-02:00) Mid-Atlantic</Option>
-              <Option value="Atlantic/Cape_Verde">
-                (GMT-01:00) Cape Verde Is.
-              </Option>
-              <Option value="Atlantic/Azores">(GMT-01:00) Azores</Option>
-              <Option value="Africa/Casablanca">
-                (GMT+00:00) Casablanca, Monrovia, Reykjavik
-              </Option>
-              <Option value="Etc/Greenwich">
-                (GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon,
-                London
-              </Option>
-              <Option value="Europe/Amsterdam">
-                (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
-              </Option>
-              <Option value="Europe/Belgrade">
-                (GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague
-              </Option>
-            </Select>
+          <InputField
+            value=""
+            icon={<img src={company} alt="" />}
+            placeholder="Company Name"
+            label="company"
+            type="text"
+            name="companyName"
+            dclass="ant-icon-space mb-3"
+            onChange={this.handleAllChange}
+          />
+
+          <div role="alert" class="text-danger">
+            {this.state.errors.companyName}
           </div>
-        </Form.Item>
-        <Button type="primary" type="submit" className="ant-btn-save">
-          Sign Up
-        </Button>
-      </Form>
-    </>
-  );
+          <Form.Item className="mb-3">
+            <label className="ant-label-login">Password</label>
+            <Input.Password
+              size="large"
+              className="ant-login-input"
+              prefix={<img src={lock} alt="" />}
+              placeholder="Password"
+              name="password"
+              onChange={this.handleAllChange}
+            />
+            <div role="alert" class="text-danger">
+              {this.state.errors.password}
+            </div>
+          </Form.Item>
+          <Form.Item className="mb-5">
+            <label className="ant-label-login">Confirm Password</label>
+            <Input.Password
+              size="large"
+              className="ant-login-input"
+              prefix={<img src={lock} alt="" />}
+              placeholder="Confirm Password"
+              name="confirmPassword"
+              onChange={this.handleAllChange}
+            />
+            <div role="alert" class="text-danger">
+              {this.state.errors.confirmPassword}
+            </div>
+          </Form.Item>
+          <Link
+            to={{
+              pathname: "/auth/set-dashboard",
+            }}
+            state={{
+              email: this.state.email,
+              password: this.state.password,
+              companyName: this.state.companyName,
+              confirmPassword: this.state.confirmPassword,
+              isStepOneComplete: true,
+            }}
+          >
+            <Button type="primary" type="submit" className="ant-btn-save">
+              Sign Up
+            </Button>
+          </Link>
+        </Form>
+      </>
+    );
+  }
 }
-
-export default SetDashboard;
