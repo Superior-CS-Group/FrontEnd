@@ -25,7 +25,7 @@ export default function InputField({
           prefix={icon}
           size="large"
           className="ant-login-input"
-          name=""
+          name={name}
           suffix={showIcon}
         />
       </Form.Item>
