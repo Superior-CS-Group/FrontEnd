@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import InputField from "../inputField/inputField.component";
 import user from "../../images/user.png";
 import { Form, Input, Button } from "antd";
@@ -7,6 +7,7 @@ import arrow from "../../images/arrow.png";
 import company from "../../images/company.png";
 import lock from "../../images/lock.png";
 import { signUpStepOneSchema } from "../../validators/auth/auth.validator";
+import { signup } from "../../api/auth";
 function SignUp() {
   const [form, setForm] = useState({
     email: "",
@@ -18,11 +19,10 @@ function SignUp() {
   const [redirect, setRedirect] = useState(null);
 
   const handleAllChange = (e) => {
-    console.log("e.target: ", e.target.name, e.target.value);
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     const { isValid, errors } = signUpStepOneSchema(form);
@@ -30,7 +30,9 @@ function SignUp() {
       console.log("errors: ", errors);
       setErrors(errors);
     } else {
-      setRedirect("/auth/set-dashboard");
+      // setRedirect("/auth/set-dashboard");
+      const result = await signup(form);
+      console.log("result: ", result);
     }
   };
 

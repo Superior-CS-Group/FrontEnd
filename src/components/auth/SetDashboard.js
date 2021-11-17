@@ -9,6 +9,7 @@ import dollor from "../../images/dollor.png";
 import timezone from "../../images/timezone.png";
 
 import { signup } from "../../api/auth";
+import { fileToBase64 } from "../../utils/fileBase64";
 
 const props = {
   name: "file",
@@ -49,6 +50,12 @@ function SetDashboard() {
     console.log("result: ", result);
   };
 
+  const handleFileUpload = async (file) => {
+    const result = await fileToBase64(file);
+    console.log("result: ", result);
+    return result;
+  };
+
   if (redirect) {
     return <Navigate to={redirect} />;
   }
@@ -67,7 +74,12 @@ function SetDashboard() {
           <label className="ant-label-login">
             Upload Profile Image <small>(max. 5MB)</small>
           </label>
-          <Upload {...props} size="large" className="d-block upload-input">
+          <Upload
+            {...props}
+            size="large"
+            className="d-block upload-input"
+            onChange={(e) => console.log("event: ", e)}
+          >
             <Button
               className="w-100 text-start"
               icon={<img src={upload} alt="" />}

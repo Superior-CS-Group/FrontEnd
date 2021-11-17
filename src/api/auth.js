@@ -8,6 +8,7 @@ export const signup = async (data) => {
     data,
   });
   if (response.remote === "success") {
+    console.log("response: ", response);
     return {
       remote: response.remote,
       data: transformSignUpResponse(response),
