@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import { Row, Col, Select, Tabs, Button } from "antd";
+import { Row, Col, Select, Tabs, Button, Card } from "antd";
 
 import {
   UserOutlined,
   PhoneOutlined,
   ClockCircleOutlined,
-  PlusCircleOutlined,
 } from "@ant-design/icons";
 // import Button from "@restart/ui/esm/Button";
 import LeadInfo from "./lead.info.component";
+import AddEstimates from "../add.estimates.components";
 export default class CustomerLeadInfo extends Component {
   constructor(props) {
     super();
@@ -31,7 +31,6 @@ export default class CustomerLeadInfo extends Component {
     }
   };
   render() {
-    const { TabPane } = Tabs;
     const { Option } = Select;
     const { size } = this.state;
     function onChange(value) {
@@ -48,10 +47,14 @@ export default class CustomerLeadInfo extends Component {
           </div>
           <Row>
             <Col md={24}>
-              <div className="card-shadow p-3">
-                <div className="fillter d-lg-flex align-items-center">
+              <Card
+                bordered={false}
+                bodyStyle={{ padding: "0px" }}
+                className="radius-12"
+              >
+                <div className="fillter d-lg-flex align-items-center p-3">
                   <span className="inline-block me-5 fillter-btn d-lg-flex align-items-center">
-                    <UserOutlined /> UserName
+                    <UserOutlined className="me-2" /> UserName
                   </span>
                   <span className="inline-block me-4">
                     <b className="green-text">Follow up1</b>
@@ -59,23 +62,19 @@ export default class CustomerLeadInfo extends Component {
 
                   <div className="ms-auto col-lg-5 text-right">
                     <Select
-                      className=" me-4"
-                      showSearch
-                      style={{ width: 120 }}
-                      placeholder="Change Status"
-                      optionFilterProp="children"
+                      size="large"
+                      className="me-4 ant-bg-primary "
                       onChange={onChange}
-                      filterOption={(input, option) =>
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
+                      bordered={false}
+                      style={{ width: "150px" }}
+                      defaultValue="Active"
                     >
-                      <Option value="jack">Active</Option>
-                      <Option value="lucy">Deactive</Option>
+                      <Option value="Active">Active</Option>
+                      <Option value="Deactive">Deactive</Option>
                     </Select>
                     <Button
-                      className=" add-btn ant-btn-primary me-4"
+                      style={{ width: "150px" }}
+                      className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
                       type="primary"
                       shape="round"
                       size={size}
@@ -83,7 +82,8 @@ export default class CustomerLeadInfo extends Component {
                       <PhoneOutlined /> Contact
                     </Button>
                     <Button
-                      className=" add-btn ant-btn-primary"
+                      style={{ width: "150px" }}
+                      className="add-btn d-inline-flex align-items-center justify-content-center"
                       type="primary"
                       shape="round"
                       size={size}
@@ -92,36 +92,32 @@ export default class CustomerLeadInfo extends Component {
                     </Button>
                   </div>
                 </div>
-              </div>
+                <div className="tab-div border-top">
+                  <ul className="">
+                    <li
+                      onClick={() => this.onChangeTab("Lead")}
+                      className={this.state.tabShow ? "active" : ""}
+                    >
+                      Lead Info
+                    </li>
+                    <li
+                      onClick={() => this.onChangeTab("Estimate")}
+                      className={!this.state.tabShow ? "active" : ""}
+                    >
+                      Estimate
+                    </li>
+                  </ul>
+                </div>
+              </Card>
 
-              <div className="tab-div">
-                <ul className="">
-                  <li
-                    onClick={() => this.onChangeTab("Lead")}
-                    className={this.state.tabShow ? "active" : ""}
-                  >
-                    Lead Info
-                  </li>
-                  <li
-                    onClick={() => this.onChangeTab("Estimate")}
-                    className={!this.state.tabShow ? "active" : ""}
-                  >
-                    Estimate
-                  </li>
-                </ul>
-              </div>
               {this.state.tabShow === true ? (
                 <div className="card-show mt-3 pb-3">
                   <LeadInfo />
-                  <div className="text-center">
-                    {/* <Button type="primary" shape="circle">
-                      <PlusCircleOutlined />
-                    </Button>
-                    Add Information{" "} */}
-                  </div>
                 </div>
               ) : (
-                <div className="card-show mt-3">Coming Soon</div>
+                <div className="card-show mt-3">
+                  <AddEstimates />
+                </div>
               )}
             </Col>
           </Row>

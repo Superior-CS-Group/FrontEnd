@@ -54,9 +54,6 @@ export default class FilterSorting extends Component {
     }
     return (
       <>
-        {/* <Button type="primary" onClick={this.showModal}>
-          Open Modal
-        </Button> */}
         <Modal
           width={1000}
           className="modal-filter"
