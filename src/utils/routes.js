@@ -3,6 +3,7 @@ import MainEstimates from "../components/estimates/estimates.components";
 import CustomerLeadInfo from "../components/estimates/customer/customerleadinfo.component";
 import Catalog from "../components/estimates/catalog.component";
 import AddEstimates from "../components/estimates/add.estimates.components";
+import EmailSend from "../components/email/email.component";
 
 const routes = [
   {
@@ -35,6 +36,12 @@ const routes = [
     exact: true,
     name: "AddEstimates",
     component: <AddEstimates />,
+  },
+  {
+    path: "/view-email",
+    exact: true,
+    name: "EmailSend",
+    component: <EmailSend />,
   },
 ];
 export default routes;
