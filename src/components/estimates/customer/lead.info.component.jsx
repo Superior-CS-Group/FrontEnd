@@ -55,24 +55,26 @@ export default class LeadInfo extends Component {
                     <Input suffix={<CheckOutlined />} />
                   </Form.Item>
                   <Row>
-                    <Col md={12}>
+                    <Col md={11}>
                       <Form.Item name="url" label="City ">
                         <Input suffix={<CheckOutlined />} />
                       </Form.Item>
-                    </Col>{" "}
-                    <Col md={12}>
+                    </Col>
+                    <Col md={2}></Col>
+                    <Col md={11}>
                       <Form.Item name="url" label="State">
                         <Input suffix={<CheckOutlined />} />
                       </Form.Item>
                     </Col>
                   </Row>
                   <Row>
-                    <Col md={12}>
+                    <Col md={11}>
                       <Form.Item name="url" label="Address">
                         <Input suffix={<CheckOutlined />} />
                       </Form.Item>
-                    </Col>{" "}
-                    <Col md={12}>
+                    </Col>
+                    <Col md={2}></Col>
+                    <Col md={11}>
                       <Form.Item name="url" label="Zip code">
                         <Input suffix={<CheckOutlined />} />
                       </Form.Item>
