@@ -32,6 +32,12 @@ const routes = [
     component: <CustomerLeadInfo />,
   },
   {
+    path: "/customer-lead/:id",
+    exact: false,
+    name: "customer-lead",
+    component: <CustomerLeadInfo />,
+  },
+  {
     path: "/add-estimates",
     exact: true,
     name: "AddEstimates",
