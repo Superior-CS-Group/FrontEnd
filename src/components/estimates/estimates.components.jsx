@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Carousel } from "@trendyol-js/react-carousel";
 import SlideItems from "./SlideItems.components";
 import { Link } from "react-router-dom";
+
 import {
   LeftOutlined,
   RightOutlined,
@@ -28,6 +29,7 @@ import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import fillter from "../../images/fillter.png";
 import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
+import { Link } from "react-router-dom";
 
 export default class MainEstimates extends Component {
   state = {
@@ -64,6 +66,7 @@ export default class MainEstimates extends Component {
           className="mb-3"
           show={3.5}
           slide={3}
+          transition={0.5}
           swiping={true}
           leftArrow={[
             <div className="button-arrow">
@@ -76,8 +79,6 @@ export default class MainEstimates extends Component {
             </div>,
           ]}
         >
-          <SlideItems />
-          <SlideItems />
           <SlideItems />
           <SlideItems />
           <SlideItems />
