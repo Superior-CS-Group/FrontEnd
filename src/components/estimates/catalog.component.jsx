@@ -55,7 +55,7 @@ export default class Catalog extends Component {
         <div className="d-flex align-items-center justify-content-between mb-4">
           <BreadcrumbBar name="ESTIMATING" subname="CATELOG" />
           <Button
-            onClick={this.showModal}
+            onClick={this.showModalNew}
             type="primary"
             className="radius-30 ant-primary-btn font-15"
             size="large"

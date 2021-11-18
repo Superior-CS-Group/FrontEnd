@@ -8,6 +8,7 @@ import {
 import { Form, Input, Row, Col, Select, Menu, Dropdown, Button } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import RecipientList from "./recipientlist.component";
 export default class EmailSend extends Component {
   constructor(props) {
     super();
@@ -15,6 +16,7 @@ export default class EmailSend extends Component {
       size: "large",
       tabShow: true,
       editorHtml: "",
+      ModalVisible: false,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -36,6 +38,18 @@ export default class EmailSend extends Component {
     } else {
       console.log(null);
     }
+  };
+
+  showModal = () => {
+    this.setState({ ModalVisible: true });
+  };
+
+  handleOk = () => {
+    this.setState({ ModalVisible: false });
+  };
+
+  handleCancel = () => {
+    this.setState({ ModalVisible: false });
   };
   render() {
     const { Option } = Select;
@@ -132,7 +146,11 @@ export default class EmailSend extends Component {
                   <Col md={2}>
                     {" "}
                     <span className="d-lg-flex align-items-center mail-send-button">
-                      <Button type="primary" size="middle">
+                      <Button
+                        type="primary"
+                        size="middle"
+                        onClick={this.showModal}
+                      >
                         Send
                       </Button>
                       <Dropdown overlay={menu} trigger={["click"]}>
@@ -158,6 +176,7 @@ export default class EmailSend extends Component {
             </div>
           )}
         </div>
+        <RecipientList />
       </>
     );
   }
