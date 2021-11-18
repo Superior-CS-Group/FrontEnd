@@ -1342,3 +1342,6 @@ input[type="tel"] {
   color: #717171;
 }
 
+.mail-msg {
+  font-size: 20px;
+}
