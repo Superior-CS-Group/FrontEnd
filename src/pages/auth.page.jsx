@@ -36,10 +36,7 @@ export default class Auth extends Component {
                 <Routes>
                   <Route path="/" element={<Login />} />
                   <Route path="/sign-up" element={<SignUp />} />
-                  <Route
-                    path="/set-dashboard"
-                    element={<SetDashboard />}
-                  />
+                  <Route path="/set-dashboard" element={<SetDashboard />} />
                 </Routes>
               </Card>
             </Col>
