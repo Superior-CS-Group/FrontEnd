@@ -1322,3 +1322,26 @@ input[type="tel"] {
   color: #aaa;
   font-size: 20px;
 }
+
+.App {
+  min-height: 100vh;
+}
+
+.h-full {
+  min-height: 100vh;
+}
+
+.ant-breadcrumb-text {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 33.0347px;
+  line-height: 38px;
+
+  letter-spacing: 7px;
+
+  color: #717171;
+}
+
+.mail-msg {
+  font-size: 20px;
+}

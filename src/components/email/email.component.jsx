@@ -9,6 +9,10 @@ import { Form, Input, Row, Col, Select, Menu, Dropdown, Button } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import RecipientList from "./recipientlist.component";
+import ModalMain from "../modal/modal.component";
+import SimpleEMailSent from "./simple.emailsent.component";
+import ScheduleTimeDate from "./schedule.timedate.component";
+import ScheduleEmailSent from "./schedule.emailsent.component";
 export default class EmailSend extends Component {
   constructor(props) {
     super();
@@ -17,6 +21,10 @@ export default class EmailSend extends Component {
       tabShow: true,
       editorHtml: "",
       ModalVisible: false,
+      recipientListState: false,
+      toShow: "",
+
+      /////
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -43,19 +51,61 @@ export default class EmailSend extends Component {
   showModal = () => {
     this.setState({ ModalVisible: true });
   };
-
-  handleOk = () => {
-    this.setState({ ModalVisible: false });
+  mainModalShow = () => {
+    this.setState({ ModalVisible: true });
+    return <ModalMain content={<RecipientList />} />;
+    // alert("email simple show");
   };
+  ScheduleTimeDate = () => {
+    this.setState({ scheduleTimeDateState: true });
+  };
+  recipientList = () => {
+    this.setState({ ModalVisible: true });
+    // return <ModalMain content={<RecipientList />} />;
+  };
+  // handleOk = () => {
+  //   this.setState({ ModalVisible: false });
+  //   return
+  //     <ModalMain content={}  />
+
+  // };
 
   handleCancel = () => {
     this.setState({ ModalVisible: false });
+    this.setState({ recipientListState: false });
+  };
+
+  renderItem = () => {
+    switch (this.state.toShow) {
+      case "recipentList":
+        return (
+          <RecipientList
+            updateModel={() => this.setState({ toShow: "timeDate" })}
+          />
+        );
+      case "sendEmail":
+        return <SimpleEMailSent />;
+
+      case "timeDate":
+        return (
+          <ScheduleTimeDate
+            updateModel={() => this.setState({ toShow: "scheduleemailsent" })}
+          />
+        );
+      case "scheduleemailsent":
+        return <ScheduleEmailSent />;
+      default:
+        return "";
+    }
   };
   render() {
     const { Option } = Select;
     const menu = (
       <Menu>
-        <Menu.Item key="3">
+        <Menu.Item
+          key="3"
+          onClick={() => this.setState({ toShow: "recipentList" })}
+        >
           Schedule Send <SendOutlined />
         </Menu.Item>
       </Menu>
@@ -102,7 +152,11 @@ export default class EmailSend extends Component {
                   <Col md={2}>
                     {" "}
                     <span className="d-lg-flex align-items-center mail-send-button">
-                      <Button type="primary" size="middle">
+                      <Button
+                        type="primary"
+                        size="middle"
+                        onClick={() => this.setState({ toShow: "sendEmail" })}
+                      >
                         Send
                       </Button>
                       <Dropdown overlay={menu} trigger={["click"]}>
@@ -149,7 +203,7 @@ export default class EmailSend extends Component {
                       <Button
                         type="primary"
                         size="middle"
-                        onClick={this.showModal}
+                        onClick={() => this.setState({ toShow: "sendEmail" })}
                       >
                         Send
                       </Button>
@@ -176,7 +230,12 @@ export default class EmailSend extends Component {
             </div>
           )}
         </div>
-        <RecipientList />
+
+        <ModalMain
+          content={this.renderItem()}
+          handleCancel={() => this.setState({ toShow: "" })}
+          ModalVisible={this.state.toShow}
+        />
       </>
     );
   }

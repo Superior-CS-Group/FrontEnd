@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   Button,
   Card,
@@ -15,55 +15,46 @@ import {
   DatePicker,
   Space,
 } from "antd";
-
-// import FilterSorting from "./filter/filter.sorting.component";
 import {
   PlusCircleOutlined,
   SaveOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import RecipentTable from "./recipient.table.component";
+import ScheduleTimeDate from "./schedule.timedate.component";
+import ModalMain from "../modal/modal.component";
+export default function RecipientList(props) {
+  const [scheduleTimeDateState, setScheduleTimeDateState] = useState(false);
+  var ScheduleTimeDate = () => {
+    setScheduleTimeDateState(true);
+    console.log("props: ", props);
+    props.updateModel();
+  };
+  var handleCancel = () => {
+    setScheduleTimeDateState(false);
+  };
+  var handleOk = () => {
+    setScheduleTimeDateState(false);
+  };
 
-export default class RecipientList extends Component {
-  constructor(props) {
-    super();
-    this.state = {
-      ModalVisible: false,
-    };
-  }
-
-  //   showModal = () => {
-  //     this.setState({ ModalVisible: true });
-  //   };
-
-  //   handleOk = () => {
-  //     this.setState({ ModalVisible: false });
-  //   };
-
-  //   handleCancel = () => {
-  //     this.setState({ ModalVisible: false });
-  //   };
-  render() {
-    const { RangePicker } = DatePicker;
-    const { Option } = Select;
-    function handleChange(value) {
-      console.log(`selected ${value}`);
-    }
-    function onChange(e) {
-      console.log(`checked = ${e.target.checked}`);
-    }
-    return (
-      <>
-        <Modal
-          width={1000}
-          className="modal-filter"
-          visible={this.props.ModalVisible}
-          onOk={this.props.handleOk}
-          onCancel={this.props.handleCancel}
-          footer={null}
-        >
-          jhgjhghjghj
-        </Modal>
-      </>
-    );
-  }
+  return (
+    <>
+      <h5>Confirm the Email Recipeint’s List</h5>
+      <Row>
+        <Col md={24}>
+          <RecipentTable />
+        </Col>
+        <Col md={24}>
+          <div className="text-right">
+            <Button type="text" className="mr-1" onClick={props.handleCancel}>
+              Go Back
+            </Button>
+            <Button type="primary" shape="round" onClick={ScheduleTimeDate}>
+              Confirm
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    </>
+  );
 }
