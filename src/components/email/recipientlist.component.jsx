@@ -29,7 +29,6 @@ export default function RecipientList(props) {
     setScheduleTimeDateState(true);
     console.log("props: ", props);
     props.updateModel();
-    alert("check jdsfdsd");
   };
   var handleCancel = () => {
     setScheduleTimeDateState(false);

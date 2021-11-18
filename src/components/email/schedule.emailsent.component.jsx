@@ -1,6 +1,8 @@
 import React from "react";
 import sticky from "../../images/sticky.png";
-export default function ScheduleEmailSent() {
+import { DatePicker, Space, Row, Col, Button, Divider } from "antd";
+
+export default function ScheduleEmailSent(props) {
   return (
     <>
       <div className="">
@@ -29,7 +31,7 @@ export default function ScheduleEmailSent() {
         </Row>
       </div>
 
-      <ScheduleEmailSent />
+      {/* <ScheduleEmailSent /> */}
     </>
   );
 }

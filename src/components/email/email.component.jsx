@@ -12,6 +12,7 @@ import RecipientList from "./recipientlist.component";
 import ModalMain from "../modal/modal.component";
 import SimpleEMailSent from "./simple.emailsent.component";
 import ScheduleTimeDate from "./schedule.timedate.component";
+import ScheduleEmailSent from "./schedule.emailsent.component";
 export default class EmailSend extends Component {
   constructor(props) {
     super();
@@ -86,8 +87,13 @@ export default class EmailSend extends Component {
         return <SimpleEMailSent />;
 
       case "timeDate":
-        return <ScheduleTimeDate />;
-
+        return (
+          <ScheduleTimeDate
+            updateModel={() => this.setState({ toShow: "scheduleemailsent" })}
+          />
+        );
+      case "scheduleemailsent":
+        return <ScheduleEmailSent />;
       default:
         return "";
     }

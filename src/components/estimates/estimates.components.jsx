@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Carousel } from "@trendyol-js/react-carousel";
 import SlideItems from "./SlideItems.components";
+import { Link } from "react-router-dom";
 import {
   LeftOutlined,
   RightOutlined,
@@ -145,10 +146,13 @@ export default class MainEstimates extends Component {
                   onChange={handleChange}
                   style={{ width: "300px" }}
                 >
-                  <Option value="jack">What do yo want to do?</Option>
-                  <Option value="lucy">Lucy</Option>
-
-                  <Option value="Yiminghe">yiminghe</Option>
+                  <Option value="jack">
+                    <Link to="/view-email"> Export to Email </Link>
+                  </Option>
+                  <Option value="lucy">Export to Text</Option>
+                  <Option value="Yiminghe">Export to Video</Option>
+                  <Option value="Yiminghe">Export to Excel</Option>
+                  <Option value="Yiminghe">Delete</Option>
                 </Select>
                 <div className="text-end mt-3">
                   <Button
