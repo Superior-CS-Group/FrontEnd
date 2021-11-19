@@ -1358,3 +1358,10 @@ input[type="tel"] {
 .dropdown-div-mail span.ant-dropdown-menu-title-content span {
   margin-left: 5px;
 }
+.delete-div-mail {
+  cursor: pointer;
+}
+.remove-btn {
+  border: none;
+  background-color: transparent;
+}
