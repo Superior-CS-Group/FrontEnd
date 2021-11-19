@@ -8,7 +8,10 @@ import { useParams } from "react-router-dom";
 
 export default function LeadInfo() {
   const params = useParams();
+
+  // let [responseData, setResponseData] = useState({ name: "", email: "" });
   const [state, setState] = useState({
+    id: "",
     name: "",
     email: "",
     contactNo: "",
@@ -28,10 +31,51 @@ export default function LeadInfo() {
     value: "",
     setValue: "",
   });
-
   useEffect(() => {
-    console.log("params: ", params);
-  }, []);
+    // console.log("params: ", params.id);
+    const id = params.id;
+
+    if (id) {
+      const body = { id };
+      const fetchData = async () => {
+        const result = await postData(`customer/get-info`, body);
+
+        // setResponseData(result.data);
+        // console.log(responseData.Data.address);
+        setState({
+          ...state,
+          id: id,
+          name: result.data.Data.name,
+          email: result.data.Data.email,
+          contactNo: result.data.Data.contactNo,
+          country: result.data.Data.country,
+          states: result.data.Data.state,
+          city: result.data.Data.city,
+          postalCode: result.data.Data.postalCode,
+          address: result.data.Data.address,
+          otherNote: result.data.Data.otherNote,
+          otherInformation: result.data.Data.otherInformation,
+        });
+      };
+
+      fetchData();
+    } else {
+      setState({
+        ...state,
+        id: "",
+        name: "",
+        email: "",
+        contactNo: "",
+        country: "",
+        states: "",
+        city: "",
+        postalCode: "",
+        address: "",
+        otherNote: "",
+        otherInformation: "",
+      });
+    }
+  }, [params]);
 
   const validateFields = () => {
     const errors = {};
@@ -80,7 +124,7 @@ export default function LeadInfo() {
   };
 
   const handleSubmit = async (event) => {
-    // console.log(localStorage.getItem("token"))
+    // console.log(localStorage.getItem("token"));
 
     event.preventDefault();
     setState({ ...state, errors: {} });
@@ -142,6 +186,104 @@ export default function LeadInfo() {
       });
     }
   };
+
+  const updatehandleSubmit = async (event) => {
+    // console.log(localStorage.getItem("token"));
+    let id = state.id;
+
+    event.preventDefault();
+    setState({ ...state, errors: {} });
+    const { errors, isValid } = validateFields();
+    if (!isValid) {
+      setState({ ...state, errors });
+      return;
+    }
+    setState({ ...state, isLoading: true });
+    const {
+      name,
+      email,
+      contactNo,
+      country,
+      states,
+      city,
+      address,
+      postalCode,
+      otherInformation,
+    } = state;
+    const body = {
+      id,
+      name,
+      email,
+      contactNo,
+      country,
+      state: states,
+      city,
+      address,
+      postalCode,
+      otherInformation,
+    };
+    console.log("body: ", body);
+
+    try {
+      const result = await postData(`customer/update-info`, body);
+      console.log("result: ", result);
+      setState({
+        ...state,
+        errors:[],
+        message: "New Data Updated!",
+      });
+    } catch (err) {
+      console.log("error", err, err.response);
+
+      setState({
+        ...state,
+        errors: err.response.data.errors,
+        isLoading: false,
+      });
+    }
+  };
+
+  
+  const updateActiveStatushandleSubmit = async (event) => {
+    // console.log(localStorage.getItem("token"));
+    let id = state.id;
+
+    event.preventDefault();
+    setState({ ...state, errors: {} });
+    const { errors, isValid } = validateFields();
+    if (!isValid) {
+      setState({ ...state, errors });
+      return;
+    }
+    setState({ ...state, isLoading: true });
+
+    const {activeStatus } = state;
+    const body = {
+      id,
+      activeStatus,
+    };
+    // console.log("body: ", body);
+
+    try {
+      const result = await postData(`customer/update-info`, body);
+      // console.log("result: ", result);
+      setState({
+        ...state,
+        errors:[],
+        message: "Data Updated!",
+      });
+    } catch (err) {
+      console.log("error", err, err.response);
+
+      setState({
+        ...state,
+        errors: err.response.data.errors,
+        isLoading: false,
+      });
+    }
+  };
+
+
   const { value, setValue } = state;
   const { Panel } = Collapse;
   const { expandIconPosition } = state;
@@ -168,7 +310,12 @@ export default function LeadInfo() {
             <Row gutter={[24, 0]}>
               <Col md={12}>
                 <Form.Item label="Full Name">
-                  <Input size="large" name="name" onChange={handleAllChange} />
+                  <Input
+                    size="large"
+                    name="name"
+                    value={state.name}
+                    onChange={handleAllChange}
+                  />
                   <div role="alert" class="text-danger">
                     {state.errors.name}
                   </div>
@@ -178,6 +325,7 @@ export default function LeadInfo() {
                     size="large"
                     suffix={<CheckOutlined />}
                     name="email"
+                    value={state.email}
                     onChange={handleAllChange}
                   />
                   <div role="alert" class="text-danger">
@@ -192,6 +340,7 @@ export default function LeadInfo() {
                     suffix={<CheckOutlined />}
                     size="large"
                     name="contactNo"
+                    value={state.contactNo}
                     onChange={handleAllChange}
                   />
                   <div role="alert" class="text-danger">
@@ -206,6 +355,7 @@ export default function LeadInfo() {
                     size="large"
                     suffix={<CheckOutlined />}
                     name="country"
+                    value={state.country}
                     onChange={handleAllChange}
                   />
                   <div role="alert" class="text-danger">
@@ -219,6 +369,7 @@ export default function LeadInfo() {
                         size="large"
                         suffix={<CheckOutlined />}
                         name="city"
+                        value={state.city}
                         onChange={handleAllChange}
                       />
                       <div role="alert" class="text-danger">
@@ -232,6 +383,7 @@ export default function LeadInfo() {
                         size="large"
                         suffix={<CheckOutlined />}
                         name="state"
+                        value={state.states}
                         onChange={handleAllChange}
                       />
                       <div role="alert" class="text-danger">
@@ -247,6 +399,7 @@ export default function LeadInfo() {
                         size="large"
                         suffix={<CheckOutlined />}
                         name="address"
+                        value={state.address}
                         onChange={handleAllChange}
                       />
                       <div role="alert" class="text-danger">
@@ -260,6 +413,7 @@ export default function LeadInfo() {
                         size="large"
                         suffix={<CheckOutlined />}
                         name="postalCode"
+                        value={state.postalCode}
                         onChange={handleAllChange}
                       />
                       <div role="alert" class="text-danger">
@@ -275,6 +429,7 @@ export default function LeadInfo() {
                     size="large"
                     rows={4}
                     name="otherInformation"
+                    value={state.otherInformation}
                     onChange={handleAllChange}
                   />
                   <div role="alert" class="text-danger">
@@ -287,12 +442,25 @@ export default function LeadInfo() {
                   <div role="alert" class="text-success">
                     {state.message}
                   </div>
-                  <Button
-                    className="add-btn ant-btn-primary"
-                    onClick={handleSubmit}
-                  >
-                    Save Changes
-                  </Button>
+                  {state.id ? (
+                    <>
+                      <Button
+                        className="add-btn ant-btn-primary"
+                        onClick={updatehandleSubmit}
+                      >
+                        Update Changes
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        className="add-btn ant-btn-primary"
+                        onClick={handleSubmit}
+                      >
+                        Save Changes
+                      </Button>
+                    </>
+                  )}
                 </div>
               </Col>
             </Row>
@@ -321,6 +489,7 @@ export default function LeadInfo() {
 
               <Col md={24}>
                 <div className="text-right">
+                  {}
                   <Button className="add-btn ant-btn-primary">
                     Save Changes
                   </Button>
