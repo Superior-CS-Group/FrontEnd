@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import sticky from "../../images/sticky.png";
 import { DatePicker, Space, Row, Col, Button, Divider } from "antd";
-
+import ScheduleTimeDate from "./schedule.timedate.component";
 export default function ScheduleEmailSent(props) {
+  const [scheduleTimeDateState, setScheduleTimeDateState] = useState(false);
+  var ScheduleTimeDate = () => {
+    setScheduleTimeDateState(true);
+    console.log("props send: ", props);
+    props.updateModel();
+  };
   return (
     <>
       <div className="">
@@ -20,7 +26,7 @@ export default function ScheduleEmailSent(props) {
               </p>
             </div>
             <div className="text-right">
-              <Button type="text" className="mr-1">
+              <Button type="text" className="mr-1" onClick={ScheduleTimeDate}>
                 Edit
               </Button>
               <Button type="primary" shape="round" onClick={props.handleCancel}>

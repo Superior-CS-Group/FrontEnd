@@ -1,48 +1,70 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { DatePicker, Space, Row, Col, Button, Divider } from "antd";
+import {
+  DatePicker,
+  Input,
+  Row,
+  Col,
+  Button,
+  Divider,
+  Calendar,
+  Form,
+} from "antd";
 const { RangePicker } = DatePicker;
 
-function disabledDate(current) {
-  // Can not select days before today and today
-  return current && current < moment().endOf("day");
-}
-function range(start, end) {
-  const result = [];
-  for (let i = start; i < end; i++) {
-    result.push(i);
-  }
-  return result;
-}
-function disabledDateTime() {
-  return {
-    disabledHours: () => range(0, 24).splice(4, 20),
-    disabledMinutes: () => range(30, 60),
-    disabledSeconds: () => [55, 56],
-  };
+function onPanelChange(value, mode) {
+  console.log(value, mode);
 }
 export default function ScheduleTimeDate(props) {
   const [ScheduleEmailSentState, setScheduleEmailSentState] = useState(false);
+  const [state, setState] = useState({
+    time: "",
+    date: "",
+  });
   var ScheduleEmailSent = () => {
     setScheduleEmailSentState(true);
     console.log("props: ", props);
     props.updateModel();
   };
+
+  const handleAllChange = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
   return (
     <>
-      {" "}
       <h3>Schedule Email</h3>
-      <Row style={{ height: "400px" }}>
-        <Col md={24}>
-          {" "}
-          <Space direction="vertical" size={12}>
-            <DatePicker
-              format="YYYY-MM-DD HH:mm:ss"
-              disabledDate={disabledDate}
-              disabledTime={disabledDateTime}
-              showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
-            />
-          </Space>
+      <Divider />
+      <Row style={{ height: "400px" }} className="time-date-main-div">
+        <Col md={13}>
+          <span>Pick Date & Time</span>
+          <Calendar fullscreen={false} onPanelChange={onPanelChange} />
+        </Col>
+        <Col md={2}></Col>
+        <Col md={9}>
+          <Form className="mt-4">
+            <Form.Item name="username">
+              <Input
+                size="large"
+                name="date"
+                placeholder="12/11/21"
+                id="date"
+                defaultValue="12/11/21"
+              />
+            </Form.Item>
+
+            <Form.Item name="username">
+              <Input
+                size="large"
+                name="time"
+                placeholder="12:30 PM"
+                id="time"
+                defaultValue="12:30 PM"
+              />
+            </Form.Item>
+          </Form>
         </Col>
         <Col md={24}>
           <div className="text-right">

@@ -81,19 +81,33 @@ export default class EmailSend extends Component {
         return (
           <RecipientList
             updateModel={() => this.setState({ toShow: "timeDate" })}
+            handleCancel={() => this.setState({ toShow: "" })}
           />
         );
+      // case "sendEmail":
+      //   return <SimpleEMailSent />;
       case "sendEmail":
-        return <SimpleEMailSent />;
-
+        return (
+          <RecipientList
+            updateModel={() => this.setState({ toShow: "simpleSendEmail" })}
+            handleCancel={() => this.setState({ toShow: "" })}
+          />
+        );
       case "timeDate":
         return (
           <ScheduleTimeDate
             updateModel={() => this.setState({ toShow: "scheduleemailsent" })}
           />
         );
+      case "simpleSendEmail":
+        return <SimpleEMailSent />;
       case "scheduleemailsent":
-        return <ScheduleEmailSent />;
+        return (
+          <ScheduleEmailSent
+            handleCancel={() => this.setState({ toShow: "" })}
+            updateModel={() => this.setState({ toShow: "timeDate" })}
+          />
+        );
       default:
         return "";
     }
@@ -101,7 +115,7 @@ export default class EmailSend extends Component {
   render() {
     const { Option } = Select;
     const menu = (
-      <Menu>
+      <Menu className="dropdown-div-mail">
         <Menu.Item
           key="3"
           onClick={() => this.setState({ toShow: "recipentList" })}
@@ -171,8 +185,8 @@ export default class EmailSend extends Component {
                     </span>
                   </Col>
                   <Col md={20}></Col>
-                  <Col md={2}>
-                    <span className="d-lg-flex align-items-center delete-div-mail">
+                  <Col md={2} className="text-right">
+                    <span className="text-right delete-div-mail">
                       <MoreOutlined />
                       <DeleteOutlined />
                     </span>
@@ -220,7 +234,7 @@ export default class EmailSend extends Component {
                   </Col>
                   <Col md={20}></Col>
                   <Col md={2} className="text-right">
-                    <span className="d-lg-flex align-items-center delete-div-mail">
+                    <span className=" text-right delete-div-mail">
                       <MoreOutlined />
                       <DeleteOutlined />
                     </span>
