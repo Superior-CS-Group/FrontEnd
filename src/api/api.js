@@ -11,7 +11,6 @@ const axiosInstance = async () => {
 
 const parseResponse = (response) => {
   const data = JSON.parse(response);
-  console.log("data: ", data);
   if (data?.errors) {
     return {
       remote: "failure",
@@ -40,13 +39,10 @@ const request = async (config) => {
     const response = await instance.request({
       ...config,
       transformResponse: (res) => {
-        console.log("beforeResp: ", res);
         const resp = parseResponse(res);
-        console.log("resppp: ", resp);
         return resp.remote === "success" ? resp.data : resp;
       },
     });
-    console.log("resqu: ", response, response.data);
     return {
       remote: "success",
       data: response.data,

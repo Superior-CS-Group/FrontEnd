@@ -27,7 +27,7 @@ export default function RecipientList(props) {
   const [scheduleTimeDateState, setScheduleTimeDateState] = useState(false);
   var ScheduleTimeDate = () => {
     setScheduleTimeDateState(true);
-    console.log("props: ", props);
+    console.log("props send: ", props);
     props.updateModel();
   };
   var handleCancel = () => {
@@ -41,7 +41,7 @@ export default function RecipientList(props) {
     <>
       <h5>Confirm the Email Recipeint’s List</h5>
       <Row>
-        <Col md={24}>
+        <Col md={24} className="pb-4">
           <RecipentTable />
         </Col>
         <Col md={24}>
