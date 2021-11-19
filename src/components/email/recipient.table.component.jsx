@@ -52,7 +52,7 @@ export default class RecipentTable extends Component {
   }
   componentDidMount() {
     const data = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       data.push({
         key: <Checkbox />,
         name: "Joseph",
