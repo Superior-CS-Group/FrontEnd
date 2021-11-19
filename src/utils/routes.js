@@ -3,6 +3,8 @@ import MainEstimates from "../components/estimates/estimates.components";
 import CustomerLeadInfo from "../components/estimates/customer/customerleadinfo.component";
 import Catalog from "../components/estimates/catalog.component";
 import AddEstimates from "../components/estimates/add.estimates.components";
+import EmailSend from "../components/email/email.component";
+import Tree from "../components/tree/tree.components";
 
 const routes = [
   {
@@ -31,10 +33,28 @@ const routes = [
     component: <CustomerLeadInfo />,
   },
   {
+    path: "/customer-lead/:id",
+    exact: false,
+    name: "customer-lead",
+    component: <CustomerLeadInfo />,
+  },
+  {
     path: "/add-estimates",
     exact: true,
     name: "AddEstimates",
     component: <AddEstimates />,
+  },
+  {
+    path: "/view-email",
+    exact: true,
+    name: "EmailSend",
+    component: <EmailSend />,
+  },
+  {
+    path: "/tree",
+    exact: true,
+    name: "tree",
+    component: <Tree />,
   },
 ];
 export default routes;

@@ -58,7 +58,7 @@ export default class Estimates extends Component {
               )} */}
               <Menubar />
             </Header>
-            <Content className="pt-64 px-4 pb-4">
+            <Content className="pt-64 px-4 pb-4 h-full">
               <Routes>
                 {routes.map((route) => {
                   return <Route path={route.path} element={route.component} />;

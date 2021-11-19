@@ -4,7 +4,7 @@ export default class BreadcrumbBar extends Component {
   render() {
     return (
       <>
-        <Breadcrumb>
+        <Breadcrumb className={`ant-breadcrumb-text ${this.props.breaclass}`}>
           <Breadcrumb.Item>
             <a href="">{this.props.name}</a>
           </Breadcrumb.Item>

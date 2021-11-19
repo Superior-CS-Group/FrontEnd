@@ -762,9 +762,11 @@ button.add-btn {
   width: 50%;
   text-align: center;
   padding: 10px;
-  color: #000;
+  color: #6e6b7b;
   list-style: none;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 20px;
 }
 .tab-div ul {
   margin: 0;
@@ -775,12 +777,18 @@ button.add-btn {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
 }
-.ant-collapse-header {
+.ant-lead-card .ant-collapse-header {
   background-color: #fff;
   border-radius: 15px !important;
   box-shadow: 0px 4px 20px 14px rgba(0, 0, 0, 0.06);
 }
-.ant-collapse
+.ant-lead-card.ant-collapse
+  > .ant-collapse-item
+  > .ant-collapse-header
+  .ant-collapse-arrow
+  svg,
+.estimation-card
+  .ant-collapse
   > .ant-collapse-item
   > .ant-collapse-header
   .ant-collapse-arrow
@@ -805,27 +813,27 @@ button.add-btn {
 .ant-collapse.ant-collapse-icon-position-right {
   border-radius: 20px;
 }
-.ant-collapse {
+.ant-collapse.ant-lead-card {
   background-color: transparent;
 }
-.ant-collapse > .ant-collapse-item {
+.ant-lead-card .ant-collapse-item {
   margin-bottom: 20px;
 }
-.ant-collapse-content {
+.ant-lead-card .ant-collapse-content {
   margin-top: -10px;
 }
 .green-text {
   color: #2ed47a;
 }
 
-.ant-select-selector {
+/* .ant-select-selector {
   color: #fff;
   background-color: #1890ff !important;
   color: #fff;
 }
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
   height: 36px !important;
-}
+} */
 
 .tab-div li:nth-child(2) {
   border-bottom-right-radius: 15px;
@@ -836,7 +844,7 @@ button.add-btn {
 
 /* ============add esatimates start============================ */
 .ant-tabs-box {
-  background: #ffffff;
+  background: #f3f3f3;
   /* White */
   border: 1px solid #ffffff;
   box-sizing: border-box;
@@ -933,6 +941,7 @@ button.add-btn {
 }
 .estimation-card .ant-collapse-header {
   position: relative;
+  margin-bottom: 1rem;
 }
 
 .estimation-card .ant-collapse-header:before {
@@ -1057,5 +1066,295 @@ button.add-btn {
   color: #092d5d;
   font-weight: 400;
 }
+.ant-lead-card .ant-collapse-content {
+  border-radius: 0px 0px 12px 12px;
+}
+.ant-estimate-table-card {
+  position: relative;
+}
 
+.ant-estimate-table-card:before {
+  content: "";
+  background: #1a73e8;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 6px 0px 0px 6px;
+  position: absolute;
+  width: 7px;
+  height: 60px;
+  right: 0px;
+  top: 50%;
+  margin-top: -17px;
+}
+
+.ant-meta-title .ant-card-meta-title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  color: #092d5d;
+}
+
+.ant-desc-box ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+.ant-desc-box ul li {
+  list-style: none;
+  font-weight: 500;
+}
+
+.ant-overview-card {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #092d5d;
+}
+
+.ant-desc-box svg {
+  width: 24px;
+  height: 24px;
+}
+.ant-blue-rate-font {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 34px;
+}
+.ant-dager-rate {
+  color: #f7685b;
+}
+.ant-blue-rate {
+  color: #2ed47a;
+}
+
+.ant-list-bx {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+
+  /* GRAY I */
+}
+
+.danger-text {
+  color: #f7685b;
+}
+
+.warring-text {
+  color: #e3bf00;
+}
+
+.blue-text {
+  color: #1a73e8;
+}
+
+.ant-list-bx .ant-list-item-meta-description {
+  color: #717171;
+}
+.ant-bootom-line-effect {
+  position: relative;
+}
+
+.ant-bootom-line-effect:before {
+  content: "";
+  background: #1a73e8;
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px 10px 0px 0px;
+  width: 166px;
+  height: 8px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -60px;
+}
+.ant-bg-panel {
+  background: transparent;
+}
+
+.ant-bg-panel .ant-collapse-item {
+  background: #fff;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+}
+.ant-bg-panel {
+  background: transparent;
+}
+
+.ant-bg-panel .ant-collapse-item {
+  background: #fff;
+  margin-bottom: 1rem;
+  border-radius: 12px !important;
+}
+
+.ant-bg-panel .ant-collapse-header {
+  border-bottom: 0;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px !important;
+  color: #092d5d !important;
+}
+.ant-width {
+  width: 100px;
+}
+.font-bold {
+  font-weight: 600;
+}
+.gray-text {
+  color: #a3a3a3;
+}
+.radius-4 {
+  border-radius: 4px;
+}
+.font-d {
+  font-weight: 500;
+
+  color: #717171;
+}
+.ant-bg-panel .ant-collapse-content {
+  border-top: 1px solid #d0d0d0 !important;
+}
+.ant-bg-panel .ant-collapse-content {
+  border-top: 1px solid #d0d0d0 !important;
+}
+
+.addbtn-ant a {
+  color: #1a73e8;
+}
+
+.addbtn-ant a svg {
+  width: 20px;
+  height: 20px;
+}
+
+.PhoneInput {
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 16px;
+  line-height: 1.5715;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  transition: all 0.3s;
+  padding: 6.5px 11px;
+}
+
+input[type="tel"] {
+  border: 0px;
+  padding: 0;
+  width: 100%;
+  outline: none;
+}
+.ant-bg-primary.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  background: #1890ff !important;
+  color: #fff !important;
+}
+.ant-bg-primary .ant-select-arrow svg {
+  color: #fff;
+}
 /* ============add esatimates start============================ */
+/*=====================Filter and Sorting=====================*/
+.filter-section-modal-div .ant-select-selector {
+  background-color: transparent !important;
+  border-radius: 20px !important;
+  color: inherit;
+}
+.modal-filter .ant-modal-close-icon {
+  color: #1a73e8;
+  font-size: 23px;
+  border-radius: 100%;
+  border: 2px solid #1a73e8;
+  padding: 5px;
+}
+.filter-section-modal-div input {
+  border-radius: 20px;
+  height: 35px;
+}
+.ant-space-vertical .ant-space-item .ant-picker.ant-picker-range {
+  border-radius: 20px;
+  height: 35px;
+}
+.cursor-btn {
+  cursor: pointer;
+}
+/*==============================Email view section====================*/
+.tab-div-new-email {
+  background-color: #1890ff;
+  padding: 4px;
+  padding-bottom: 0;
+}
+.tab-div-new-email li {
+  display: inline-block;
+  padding: 6px 10px;
+  color: #fff;
+  background-color: transparent;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  cursor: pointer;
+}
+.tab-div-new-email li.active {
+  background-color: #fff;
+  color: #000;
+}
+.tab-div-new-email ul {
+  padding: 0;
+}
+.email-section-page .ql-editor {
+  min-height: 200px;
+}
+.mail-send-button {
+  border-radius: 20px;
+  background-color: #1890ff;
+}
+.mail-send-button a {
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 4px;
+}
+.mail-send-button {
+  border-radius: 20px;
+  background-color: #1a73e8;
+}
+.mail-send-button button {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.delete-div-mail svg {
+  color: #aaa;
+  font-size: 20px;
+}
+
+.App {
+  min-height: 100vh;
+}
+
+.h-full {
+  min-height: 100vh;
+}
+
+.ant-breadcrumb-text {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 33.0347px;
+  line-height: 38px;
+
+  letter-spacing: 7px;
+
+  color: #717171;
+}
+
+.mail-msg {
+  font-size: 20px;
+}
+.time-date-main-div input {
+  border: none;
+  border-bottom: 1px solid #d9d9d9;
+}
+.dropdown-div-mail .ant-dropdown-menu-title-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dropdown-div-mail span.ant-dropdown-menu-title-content span {
+  margin-left: 5px;
+}

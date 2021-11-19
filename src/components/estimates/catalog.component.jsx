@@ -7,6 +7,8 @@ import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import Material from "./material.components";
 import Services from "./services.components";
 import ServicesTable from "./services.table.components";
+import FilterSorting from "./filter/filter.sorting.component";
+import { Link } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -17,10 +19,26 @@ function handleChange(value) {
 export default class Catalog extends Component {
   constructor(props) {
     super(props);
-    this.state = { visible: false, isMaterial: true, isProduct: true };
+    this.state = {
+      ModalVisible: false,
+      visible: false,
+      isMaterial: true,
+      isProduct: true,
+    };
   }
 
   showModal = () => {
+    this.setState({ ModalVisible: true });
+  };
+
+  handleOk = () => {
+    this.setState({ ModalVisible: false });
+  };
+
+  handleCancel = () => {
+    this.setState({ ModalVisible: false });
+  };
+  showModalNew = () => {
     this.setState({
       visible: true,
     });
@@ -38,7 +56,7 @@ export default class Catalog extends Component {
         <div className="d-flex align-items-center justify-content-between mb-4">
           <BreadcrumbBar name="ESTIMATING" subname="CATELOG" />
           <Button
-            onClick={this.showModal}
+            onClick={this.showModalNew}
             type="primary"
             className="radius-30 ant-primary-btn font-15"
             size="large"
@@ -64,7 +82,10 @@ export default class Catalog extends Component {
           </div>
           <div className="p-3 card-shadow pe-4 ps-5">
             <div className="fillter d-lg-flex align-items-center">
-              <span className="inline-block me-5 fillter-btn">
+              <span
+                className="inline-block me-5 fillter-btn cursor-btn"
+                onClick={this.showModal}
+              >
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
               <span className="inline-block me-4">
@@ -117,10 +138,13 @@ export default class Catalog extends Component {
                   onChange={handleChange}
                   style={{ width: "300px" }}
                 >
-                  <Option value="jack">What do yo want to do?</Option>
-                  <Option value="lucy">Lucy</Option>
-
-                  <Option value="Yiminghe">yiminghe</Option>
+                  <Option>
+                    <Link to="/view-email"> Export to Email </Link>
+                  </Option>
+                  <Option value="lucy">Export to Text</Option>
+                  <Option value="Yiminghe">Export to Video</Option>
+                  <Option value="Yiminghe">Export to Excel</Option>
+                  <Option value="Yiminghe">Delete</Option>
                 </Select>
                 <div className="text-end mt-3">
                   <Button
@@ -137,7 +161,7 @@ export default class Catalog extends Component {
         </Card>
         <Modal
           title="Add New Material/Services "
-          showModal={this.state.showModal}
+          showModal={this.state.showModalNew}
           visible={this.state.visible}
           onOk={this.hideModal}
           onCancel={this.hideModal}
@@ -177,6 +201,13 @@ export default class Catalog extends Component {
             </>
           )}
         </Modal>
+
+        <FilterSorting
+          showModal={this.showModal}
+          ModalVisible={this.state.ModalVisible}
+          handleCancel={this.handleCancel}
+          handleOk={this.handleOk}
+        />
       </>
     );
   }
