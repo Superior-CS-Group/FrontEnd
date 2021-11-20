@@ -56,7 +56,7 @@ export default class TableData extends Component {
           render: () => (
             <>
               <Button danger className="ant-danger-button me-3">
-                <span className="me-2">{Datel}</span>{" "}
+                <span className="me-2">{Datel}</span>
                 <span className="align-text">Delete</span>
               </Button>
               <Button className="ant-edit-button " onClick={this.showModal}>

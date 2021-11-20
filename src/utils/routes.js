@@ -5,7 +5,7 @@ import Catalog from "../components/estimates/catalog.component";
 import AddEstimates from "../components/estimates/add.estimates.components";
 import EmailSend from "../components/email/email.component";
 import Tree from "../components/tree/tree.components";
-
+import EstimatePreview from "../components/estimates/estimatepreview.component";
 const routes = [
   {
     path: "/Catalog",
@@ -55,6 +55,12 @@ const routes = [
     exact: true,
     name: "tree",
     component: <Tree />,
+  },
+  {
+    path: "/estimate-preview",
+    exact: true,
+    name: "estimate-preview",
+    component: <EstimatePreview />,
   },
 ];
 export default routes;

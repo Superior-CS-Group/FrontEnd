@@ -375,6 +375,7 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   li {
   line-height: 37px;
   height: 37px;
+  padding: 0 17px;
 }
 
 .slide-shadow {
@@ -389,7 +390,9 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 .view-tabs {
   background: #1a73e8;
   box-shadow: 0px 1.9693px 39.3859px rgba(0, 0, 0, 0.05);
-  border-radius: 5.90789px 6px 0px 6px;
+  /* border-radius: 5.90789px 6px 0px 6px; */
+  border-top-left-radius: 25px;
+  border-top-right-radius: 20px;
 }
 
 .view-tabs ul {
@@ -411,10 +414,10 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 .view-tabs ul li.active {
   background: #fff;
   color: #1a73e8;
-  border-radius: 5px 5px 5px 0px;
+  border-radius: 25px 25px 5px 0px;
 }
 .card-shadow {
-  border-radius: 0px 9px 9px 9px;
+  border-radius: 0px 25px 25px 25px;
   background: #fff;
   position: relative;
   z-index: 1;
@@ -1440,4 +1443,53 @@ input[type="tel"] {
 .remove-btn {
   border: none;
   background-color: transparent;
+}
+.ant-siderbar-menu li.sidebar-btn {
+  border-radius: 20px !important;
+  border: 1px solid #1a73e8;
+  text-align: center;
+}
+/*----------------------Estimate preview css------------*/
+.estimateImg {
+  width: 100%;
+}
+.estimate-preview-detail {
+  padding: 10px 40px;
+}
+.estiamte-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.text-right-estimate-header p {
+  margin: 0;
+}
+.work-scope-top-left .work-scope-img {
+  width: 150px;
+  height: 120px;
+  border-radius: 25px;
+}
+
+.work-scope-div {
+  background-color: #3483fa;
+  border-radius: 25px;
+  display: flex;
+  width: 100%;
+}
+
+.work-scope-top-right {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.work-scope-top-right h4,
+.work-scope-top-right h5 {
+  color: #fff;
+}
+
+.work-scope-div-main{
+  background-color: #e8f1fd;
+  border-radius: 25px;
 }
