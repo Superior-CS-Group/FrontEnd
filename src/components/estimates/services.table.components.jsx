@@ -1,162 +1,198 @@
-import React, { Component } from "react";
+import React, { useEffect, useState, Component } from "react";
 import { Table, Checkbox, Button, Modal, Radio } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { Datel, drag, edit } from "../../utils/svg.file";
 import Material from "./material.components";
 import Services from "./services.components";
-export default class ServicesTable extends Component {
-  constructor(props) {
-    super(props);
+import { useParams } from "react-router-dom";
+import { getData, postData } from "../../utils/fetchApi.js";
+import { deleteCatalog } from "../../api/catalogue";
 
-    this.state = {
-      columns: [
-        {
-          title: <Checkbox />,
-          dataIndex: "key",
-        },
+export default function ServicesTable() {
+  const params = useParams();
 
-        {
-          title: (
-            <>
-              Services Name <span className="float-end me-2">{drag}</span>
-            </>
-          ),
-          dataIndex: "name",
-        },
-        {
-          title: (
-            <>
-              Hours <span className="float-end me-2">{drag}</span>
-            </>
-          ),
-          dataIndex: "software",
-        },
-        {
-          title: (
-            <>
-              Days <span className="float-end me-2">{drag}</span>
-            </>
-          ),
-          dataIndex: "status",
-        },
-        {
-          title: (
-            <>
-              Production Rate <span className="float-end me-2">{drag}</span>
-            </>
-          ),
-          dataIndex: "date",
-        },
-        {
-          title: "Action",
-          dataIndex: "action",
-          render: () => (
+  const [state, setState] = useState({
+    columns: [
+      {
+        title: <Checkbox />,
+        dataIndex: "key",
+      },
+
+      {
+        title: (
+          <>
+            Services Name <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "name",
+      },
+      {
+        title: (
+          <>
+            Hours <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "hours",
+      },
+      {
+        title: (
+          <>
+            Days <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "days",
+      },
+      {
+        title: (
+          <>
+            Production Rate <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "price",
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        
+      },
+    ],
+  });
+
+  const that = state;
+  const dragProps = {
+    onDragEnd(fromIndex, toIndex) {
+      const columns = [...that.state.columns];
+      const item = columns.splice(fromIndex, 1)[0];
+      columns.splice(toIndex, 0, item);
+      that.setState({
+        ...state,
+        columns,
+      });
+    },
+    nodeSelector: "th",
+  };
+
+  const deleteServiceHandleSubmit = async (id) => {
+    console.log(id);
+    
+    const body = {
+      _id: id,
+    };
+    console.log("body: ", body);
+    // const updateCustomer = await deleteCatalog(body);
+    // if (updateCustomer.remote === "success") {
+    //   setState({
+    //     ...state,
+    //     message: "Data Deleted!",
+    //   });
+    // } else {
+    //   setState({
+    //     ...state,
+    //     errors: updateCustomer.remote.data.errors,
+    //     isLoading: false,
+    //   });
+    // }
+  };
+
+  useEffect(() => {
+    const data = [];
+
+    const fetchData = async () => {
+      const body = { type: "service" };
+      const result = await postData(`services/list-by-type`, body);
+     
+      // console.log(result.data.Data);
+
+      for (let i = 0; i < result.data.Data.length; i++) {
+        let catalogueData = result.data.Data[i];
+        data.push({
+          key: <Checkbox />,
+
+          name: catalogueData.title,
+          hours: catalogueData.hours,
+          days: catalogueData.price,
+          price: catalogueData.price,
+          action: (
             <>
               <Button danger className="ant-danger-button me-3">
                 <span className="me-2">{Datel}</span>{" "}
-                <span className="align-text">Delete</span>
+                <span className="align-text" onClick={deleteServiceHandleSubmit(catalogueData._id)}>Delete</span>
               </Button>
-              <Button className="ant-edit-button " onClick={this.showModal}>
+              <Button className="ant-edit-button " onClick={showModal}>
                 <span className="me-2">{edit}</span> Edit
               </Button>
             </>
           ),
-        },
-      ],
-    };
-
-    const that = this;
-    this.dragProps = {
-      onDragEnd(fromIndex, toIndex) {
-        const columns = [...that.state.columns];
-        const item = columns.splice(fromIndex, 1)[0];
-        columns.splice(toIndex, 0, item);
-        that.setState({
-          columns,
         });
-      },
-      nodeSelector: "th",
+      }
+      // console.log("data: ", data);
+      setState({ ...state, data });
     };
-  }
-  componentDidMount() {
-    const data = [];
-    for (let i = 0; i < 20; i++) {
-      data.push({
-        key: <Checkbox />,
+    fetchData();
+  }, [params]);
 
-        name: "Run 3 downspouts underground roughly 10ft each",
-        software: "Hours",
-        status: "Day",
-        date: "Production Rate",
-      });
-    }
-    this.setState({ data });
-  }
-  showModal = () => {
-    this.setState({
+  const showModal = () => {
+    setState({
       visible: true,
     });
   };
 
-  hideModal = () => {
-    this.setState({
+  const hideModal = () => {
+    setState({
       visible: false,
     });
   };
-  render() {
-    return (
-      <>
-        <ReactDragListView.DragColumn {...this.dragProps}>
-          <Table
-            className="ant-table-color"
-            columns={this.state.columns}
-            pagination={true}
-            dataSource={this.state.data}
-            bordered={false}
-          />
-        </ReactDragListView.DragColumn>
-        <Modal
-          title="Edit Material/Services"
-          visible={this.state.visible}
-          onOk={this.hideModal}
-          onCancel={this.hideModal}
-          okText="ok"
-          cancelText="Close"
-          width={800}
-          className="ant-modal-title-box"
-          footer={false}
+
+  return (
+    <>
+      <ReactDragListView.DragColumn {...state.dragProps}>
+        <Table
+          className="ant-table-color"
+          columns={state.columns}
+          pagination={true}
+          dataSource={state.data}
+          bordered={false}
+        />
+      </ReactDragListView.DragColumn>
+      <Modal
+        title="Edit Material/Services"
+        visible={state.visible}
+        onOk={hideModal}
+        onCancel={hideModal}
+        okText="ok"
+        cancelText="Close"
+        width={800}
+        className="ant-modal-title-box"
+        footer={false}
+      >
+        <Radio.Group
+          name="radiogroup"
+          defaultValue={1}
+          className="mb-4"
+          onChange={(e) => setState({ isMaterial: e.target.value === 1 })}
         >
-          <Radio.Group
-            name="radiogroup"
-            defaultValue={1}
-            className="mb-4"
-            onChange={(e) =>
-              this.setState({ isMaterial: e.target.value === 1 })
-            }
-          >
-            <Radio value={1}>Material</Radio>
-            <Radio value={2}>Services</Radio>
-          </Radio.Group>
-          {this.state.isMaterial ? (
-            <Material
-              value1="Hard Pipe"
-              value2="Standard"
-              value3="2"
-              value4="$0.25"
-              upload="Upload Image"
+          <Radio value={1}>Material</Radio>
+          <Radio value={2}>Services</Radio>
+        </Radio.Group>
+        {state.isMaterial ? (
+          <Material
+            value1="Hard Pipe"
+            value2="Standard"
+            value3="2"
+            value4="$0.25"
+            upload="Upload Image"
+          />
+        ) : (
+          <>
+            <Services
+              valueService="Run 3 downspouts underground roughly 10ft each"
+              hoursValue="4.5"
+              daysValue="0.11"
+              rate="0.15"
             />
-          ) : (
-            <>
-              <Services
-                valueService="Run 3 downspouts underground roughly 10ft each"
-                hoursValue="4.5"
-                daysValue="0.11"
-                rate="0.15"
-              />
-            </>
-          )}
-        </Modal>
-      </>
-    );
-  }
+          </>
+        )}
+      </Modal>
+    </>
+  );
 }

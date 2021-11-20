@@ -5,6 +5,7 @@ import {
   PlusCircleOutlined,
   MinusCircleOutlined,
 } from "@ant-design/icons";
+import { postData } from "../../utils/fetchApi";
 
 const { Dragger } = Upload;
 
@@ -49,6 +50,7 @@ export default class Material extends Component {
       visible: false,
       isMaterial: true,
       isProduct: true,
+      ModalVisible: false,
       variation: [
         {
           name: "",
@@ -134,26 +136,25 @@ export default class Material extends Component {
     }
   };
 
-  validateEmail = (email) => {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  };
-
   validateFields = () => {
     const errors = {};
     if (!this.state.name) {
       errors.name = "Material Name is not blank";
     }
-    if (!this.state.vname) {
+    if (this.state.variation.length === 0) {
       errors.vname = "Variation Name is not blank";
-    }
-    if (!this.state.price) {
       errors.price = "Variation Price is not blank";
-    }
-    if (!this.state.unit) {
       errors.unit = "Variation Unit is not blank";
     }
+    // if (!this.state.vname) {
+    //   errors.vname = "Variation Name is not blank";
+    // }
+    // if (!this.state.price) {
+    //   errors.price = "Variation Price is not blank";
+    // }
+    // if (!this.state.unit) {
+    //   errors.unit = "Variation Unit is not blank";
+    // }
     return {
       errors,
       isValid: !Object.keys(errors).length,
@@ -176,19 +177,26 @@ export default class Material extends Component {
       this.setState({ errors });
       return;
     }
+    // let variations = this.state.variation;
 
-    const { name, hours, days, rate, type, variation } = this.state;
-    const body = { name, hours, days, rate, type, variation };
-    console.log("body: ", body);
+    const { name, type, variation } = this.state;
+    const body = { name, type, variation };
+    // console.log("body: ", body);
 
     try {
-      // const result = await postData(`services/add`, body);
-      // // console.log("result: ", result);
-      // this.setState({
-      //   message: "New Material Added!",
-      //   isRedirect: true,
-      //   isLoading: false,
-      // });
+      const result = await postData(`services/add`, body);
+      // console.log("result: ", result);
+      this.setState({
+        ...this.state,
+        message: "New Material Added!",
+        name: "",
+        vname: "",
+        price: "",
+        unit: "",
+        isRedirect: true,
+        isLoading: false,
+        ModalVisible: false,
+      });
     } catch (err) {
       console.log("error", err, err.response);
 
@@ -308,6 +316,9 @@ export default class Material extends Component {
 
             <Col span={24}>
               <Form.Item className="text-center mt-4 mb-0">
+                <div role="alert" class="text-success">
+                  {this.state.message}
+                </div>
                 <Button className="ant-cancel-btn me-3">Cancel</Button>
                 <Button
                   type="primary"

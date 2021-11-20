@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import { Button, Card, Select, Input, Modal, Radio } from "antd";
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import fillter from "../../images/fillter.png";
-import TableData from "./table.component";
+import TableData from "./material.table.component";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import Material from "./material.components";
 import Services from "./services.components";
 import ServicesTable from "./services.table.components";
 import FilterSorting from "./filter/filter.sorting.component";
 import { Link } from "react-router-dom";
+import MaterialTable from "./material.table.component";
 
 const { Option } = Select;
 
@@ -129,7 +130,7 @@ export default class Catalog extends Component {
               <Radio value={1}>Material</Radio>
               <Radio value={2}>Services</Radio>
             </Radio.Group>
-            {this.state.isProduct ? <TableData /> : <ServicesTable />}
+            {this.state.isProduct ? <MaterialTable /> : <ServicesTable />}
             <div className="ant-action-box d-flex align-items-center mt-5 pb-3">
               <div className="ms-auto pe-3 ant-select-box ">
                 <span className="me-3">Action:</span>
