@@ -1346,6 +1346,82 @@ input[type="tel"] {
 .mail-msg {
   font-size: 20px;
 }
+
+.serachbox .ant-input {
+  border: 0px;
+}
+
+.serachbox .ant-input-group-addon {
+  background: #1a73e8;
+  border-radius: 9.84648px;
+  border: 0px;
+}
+
+.serachbox .ant-input-group-addon .ant-select-selector {
+  color: #fff;
+}
+
+.serachbox .ant-select-arrow {
+  color: #fff;
+}
+
+.serachbox {
+  border: 1px solid #3483fa;
+  box-shadow: 0px 5px 16px rgba(0, 0, 0, 0.07);
+  border-radius: 9.84648px;
+  overflow: hidden;
+}
+
+.ant-blue-add-tree-box {
+  background: #ffffff;
+  border: 1px solid #3483fa;
+  box-shadow: 0px 5px 16px rgba(0, 0, 0, 0.07);
+  border-radius: 9.84648px;
+  min-height: 40px;
+  padding: 0px 8px;
+}
+
+.ant-blue-add-tree-box ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 8px 0px 0px;
+}
+
+.ant-blue-add-tree-box ul li {
+  width: auto;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 0 8px;
+  font-size: 14px;
+  list-style: none;
+  border-radius: 6px;
+  margin: 0 8px 8px 0;
+  background: #0052cc;
+}
+
+.tag-close-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  font-size: 14px;
+  margin-left: 8px;
+  color: #0052cc;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.ant-formulla.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #3483fa;
+  box-shadow: 0px 5px 16px rgba(0, 0, 0, 0.07);
+  border-radius: 9.84648px;
+}
 .time-date-main-div input {
   border: none;
   border-bottom: 1px solid #d9d9d9;

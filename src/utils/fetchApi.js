@@ -1,5 +1,5 @@
 import axios from "axios";
-const SERVER_URL = "http://localhost:5001/api";
+const SERVER_URL = "http://digimonk.net:1629/api";
 
 export const getData = async (api, data) => {
   try {
@@ -8,9 +8,9 @@ export const getData = async (api, data) => {
       url: `${SERVER_URL}/${api}`,
       headers: {
         accept: "application/json",
-        authorization: `Bearer ${localStorage.getItem("token")}`
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      data
+      data,
     });
     return result;
   } catch (error) {
@@ -25,9 +25,9 @@ export const postData = async (api, data) => {
       url: `${SERVER_URL}/${api}`,
       headers: {
         accept: "application/json",
-        authorization: `Bearer ${localStorage.getItem("token")}`
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      data
+      data,
     });
     return result;
   } catch (error) {
@@ -42,9 +42,9 @@ export const putData = async (api, data) => {
       url: `${SERVER_URL}/${api}`,
       headers: {
         accept: "application/json",
-        authorization: `Bearer ${localStorage.getItem("token")}`
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      data
+      data,
     });
     return result;
   } catch (error) {
