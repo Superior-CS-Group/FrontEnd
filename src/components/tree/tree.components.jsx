@@ -1,25 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import "./tree.css";
-import { Card, Row, Col, Form, Input, Button, Space, Select } from "antd";
+import { Card, Row, Col, Form, Input, Button, Select, Drawer } from "antd";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import { treeIcon } from "../../utils/svg.file";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 export default function Tree() {
   const { Option } = Select;
-  const selectAfter = (
-    <Select
-      size="large"
-      defaultValue=".com"
-      className="select-after"
-      style={{ color: "#fff" }}
-    >
-      <Option value=".com">.com</Option>
-      <Option value=".jp">.jp</Option>
-      <Option value=".cn">.cn</Option>
-      <Option value=".org">.org</Option>
-    </Select>
-  );
+
+  const [visible, setVisible] = useState(false);
+  const showDrawer = () => {
+    console.log("visible");
+    setVisible(true);
+  };
+  const onClose = () => {
+    console.log("close floter");
+    setVisible(false);
+  };
+
   return (
     <>
       <BreadcrumbBar name="Demolition and Prep" breaclass="mb-4" />
@@ -31,7 +29,9 @@ export default function Tree() {
                 Demolition & Prep. <EditOutlined />
               </a>
               <div className="d-flex align-items-center justify-content-center">
-                <span className="ant-cricle-add">{treeIcon}</span>
+                <span className="ant-cricle-add" onClick={showDrawer}>
+                  {treeIcon}
+                </span>
               </div>
               <ul>
                 <li>
@@ -71,77 +71,70 @@ export default function Tree() {
           </ul>
         </div>
 
-        <Form layout="vertical">
-          <Row gutter={[24, 0]} className="mb-3">
-            <Col lg={4}>
-              <Select
-                size="large"
-                className="ant-formulla"
-                defaultValue="User Input"
-                style={{ width: "100%", borderRadius: "9px" }}
-              >
-                <Option value="User Input">User Input</Option>
-                <Option value="User Input">User Input</Option>
-                <Option value="User Input">User Input</Option>
-                <Option value="User Input">User Input</Option>
-              </Select>
-            </Col>
-            <Col lg={16}>
-              <Input
-                placeholder="length of per
-pipe"
-                className="radius-9"
-                size="large"
-              />
-            </Col>
-            <Col lg={4}>
-              <Button type="primary" size="large" className="radius-9">
-                Add Element
-              </Button>
-            </Col>
-          </Row>
-          <Row gutter={[24, 0]}>
-            <Col lg={20}>
-              <Form.Item>
-                <div className="radius-9 ant-blue-add-tree-box">
-                  <ul>
-                    <li>
-                      <span>Perf pipe cost</span>{" "}
-                      <span className="tag-close-icon">x</span>
-                    </li>
-                    <li>
-                      <span>Multiply {"{*}"}</span>{" "}
-                      <span className="tag-close-icon">x</span>
-                    </li>
-                  </ul>
-                </div>
-              </Form.Item>
-            </Col>
-            <Col lg={4}>
-              <Button type="primary" size="large" className="radius-9">
-                Save Formula
-              </Button>
-            </Col>
-          </Row>
-          {/* <Row gutter={[24, 0]}>
-            <Col lg={8} className="mx-auto align-items-center d-flex">
-              <Space direction="vertical" className="serachbox me-3">
-                <Input
+        <Drawer
+          title={[
+            <>
+              <h5 className="text-center mb-0">Define Formula</h5>
+            </>,
+          ]}
+          placement="bottom"
+          onClose={onClose}
+          visible={visible}
+          className="bottom-modal"
+        >
+          <Form layout="vertical">
+            <Row gutter={[24, 0]} className="mb-3">
+              <Col lg={4}>
+                <Select
                   size="large"
-                  addonAfter={selectAfter}
-                  placeholder="mysite"
+                  className="ant-formulla"
+                  defaultValue="User Input"
+                  style={{ width: "100%", borderRadius: "9px" }}
+                >
+                  <Option value="User Input">User Input</Option>
+                  <Option value="User Input">User Input</Option>
+                  <Option value="User Input">User Input</Option>
+                  <Option value="User Input">User Input</Option>
+                </Select>
+              </Col>
+              <Col lg={16}>
+                <Input
+                  placeholder="length of per pipe"
+                  className="radius-9"
+                  size="large"
                 />
-              </Space>
-              <Button
-                type="primary"
-                shape="circle"
-                className="p-0 d-inline-flex align-items-center justify-content-center"
-              >
-                <PlusOutlined />
-              </Button>
-            </Col>
-          </Row> */}
-        </Form>
+              </Col>
+              <Col lg={4}>
+                <Button type="primary" size="large" className="radius-9">
+                  Add Element
+                </Button>
+              </Col>
+            </Row>
+            <Row gutter={[24, 0]}>
+              <Col lg={20}>
+                <Form.Item>
+                  <div className="radius-9 ant-blue-add-tree-box">
+                    <ul>
+                      <li>
+                        <span>Perf pipe cost</span>{" "}
+                        <span className="tag-close-icon">x</span>
+                      </li>
+                      <li>
+                        <span>Multiply {"{*}"}</span>{" "}
+                        <span className="tag-close-icon">x</span>
+                      </li>
+                    </ul>
+                  </div>
+                </Form.Item>
+              </Col>
+              <Col lg={4}>
+                <Button type="primary" size="large" className="radius-9">
+                  Save Formula
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Drawer>
       </Card>
     </>
   );

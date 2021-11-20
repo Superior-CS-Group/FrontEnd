@@ -1441,3 +1441,31 @@ input[type="tel"] {
   border: none;
   background-color: transparent;
 }
+
+.bottom-modal .ant-drawer-content-wrapper {
+  left: 7%;
+  right: 7%;
+  width: auto;
+}
+
+.bottom-modal .ant-drawer-content {
+  background: #e5fafd;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.bottom-modal .ant-drawer-header {
+  background: transparent;
+  border: 0px;
+}
+
+.bottom-modal .ant-drawer-header h5 {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 45px;
+  color: #000;
+}
+
+.ant-cover-b .anticon-edit {
+  color: #84b36e;
+  cursor: pointer;
+}
