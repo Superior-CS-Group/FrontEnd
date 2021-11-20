@@ -8,6 +8,7 @@ export const signup = async (data) => {
     data,
   });
   if (response.remote === "success") {
+    localStorage.setItem("auth-token", response.data.token);
     return {
       remote: response.remote,
       data: transformSignUpResponse(response),
