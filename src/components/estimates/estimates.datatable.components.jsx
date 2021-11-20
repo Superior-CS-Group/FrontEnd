@@ -193,7 +193,7 @@ export default class Datatable extends Component {
       data.push({
         key: <Checkbox />,
         // estimate: estimateData.leadInvoinceNo,
-        name: <Link to={`/customer-lead/${estimateData._id}`} >{customerData[0].name}</Link>,
+        name: <Link to={`/customer-lead/${customerData[0]._id}`} >{customerData[0].name}</Link>,
         email: customerData[0].email,
         contactNo: customerData[0].contactNo,
         date: customerData[0].createdAt.split("T")[0],

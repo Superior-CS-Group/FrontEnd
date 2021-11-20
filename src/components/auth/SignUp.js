@@ -8,6 +8,8 @@ import company from "../../images/company.png";
 import lock from "../../images/lock.png";
 import { signUpStepOneSchema } from "../../validators/auth/auth.validator";
 import { signup } from "../../api/auth";
+
+
 function SignUp() {
   const [form, setForm] = useState({
     email: "",

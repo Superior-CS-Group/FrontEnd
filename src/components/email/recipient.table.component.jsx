@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { drag } from "../../utils/svg.file";
-import { Table, Checkbox } from "antd";
+import { Table, Checkbox, Button } from "antd";
+import DeleteOutlined from "@ant-design/icons";
+import { Datel, edit } from "../../utils/svg.file";
 
 export default class RecipentTable extends Component {
   constructor(props) {
@@ -8,15 +10,6 @@ export default class RecipentTable extends Component {
 
     this.state = {
       data: [
-        {
-          key: <Checkbox />,
-
-          name: <a href="/customer-lead">Joseph</a>,
-          software: "male",
-          status: "12",
-          date: "New York",
-          day: "day",
-        },
         {
           key: <Checkbox />,
           name: "Costumer Name",
@@ -27,10 +20,6 @@ export default class RecipentTable extends Component {
         },
       ],
       columns: [
-        {
-          title: <Checkbox />,
-          dataIndex: "key",
-        },
         {
           title: (
             <>
@@ -47,6 +36,23 @@ export default class RecipentTable extends Component {
           ),
           dataIndex: "email",
         },
+        {
+          title: (
+            <>
+              action <span className="float-end me-2"></span>
+            </>
+          ),
+          dataIndex: "action",
+          render: () => (
+            <>
+              <Button className="me-3 remove-btn">
+                <span className="me-2 " style={{ color: "red" }}>
+                  {Datel}
+                </span>
+              </Button>
+            </>
+          ),
+        },
       ],
     };
   }
@@ -54,9 +60,9 @@ export default class RecipentTable extends Component {
     const data = [];
     for (let i = 0; i < 5; i++) {
       data.push({
-        key: <Checkbox />,
         name: "Joseph",
         email: "user@gmail.com",
+        action: "delete",
       });
     }
     this.setState({ data });

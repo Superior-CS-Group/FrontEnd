@@ -185,8 +185,8 @@ export default class EmailSend extends Component {
                     </span>
                   </Col>
                   <Col md={20}></Col>
-                  <Col md={2}>
-                    <span className="d-lg-flex align-items-center delete-div-mail">
+                  <Col md={2} className="text-right">
+                    <span className="text-right delete-div-mail">
                       <MoreOutlined />
                       <DeleteOutlined />
                     </span>
@@ -234,7 +234,7 @@ export default class EmailSend extends Component {
                   </Col>
                   <Col md={20}></Col>
                   <Col md={2} className="text-right">
-                    <span className="d-lg-flex align-items-center delete-div-mail">
+                    <span className=" text-right delete-div-mail">
                       <MoreOutlined />
                       <DeleteOutlined />
                     </span>
