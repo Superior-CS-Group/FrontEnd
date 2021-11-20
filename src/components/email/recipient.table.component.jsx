@@ -47,7 +47,7 @@ export default class RecipentTable extends Component {
             <>
               <Button className="me-3 remove-btn">
                 <span className="me-2 " style={{ color: "red" }}>
-                  {Datel}
+                  {Datel}git 
                 </span>
               </Button>
             </>
