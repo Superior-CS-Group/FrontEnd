@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Card, Select, Input, Modal, message, Radio } from "antd";
+import { Button, Card, Select, Input, Modal, Radio } from "antd";
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import fillter from "../../images/fillter.png";
 import TableData from "./table.component";
@@ -183,13 +183,7 @@ export default class Catalog extends Component {
             <Radio value={2}>Services</Radio>
           </Radio.Group>
           {this.state.isMaterial ? (
-            <Material
-              placeholder="Hard Pipe"
-              standard="Standard"
-              unitplaceholder="2"
-              costplaceholder="$0.25"
-              upload="Upload Image"
-            />
+            <Material placeholder="Hard Pipe" />
           ) : (
             <>
               <Services
