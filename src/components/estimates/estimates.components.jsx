@@ -113,7 +113,7 @@ export default class MainEstimates extends Component {
         <Card
           bordered={false}
           className="shadow estimate-card mb-4"
-          style={{ borderRadius: "10px" }}
+          style={{ borderRadius: "25px" }}
           bodyStyle={{ padding: "0px" }}
         >
           <div className="view-tabs">
@@ -134,7 +134,7 @@ export default class MainEstimates extends Component {
               >
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
-              <span className="inline-block me-4">
+              {/* <span className="inline-block me-4">
                 <Select
                   defaultValue="Filter"
                   style={{ width: 150 }}
@@ -145,7 +145,7 @@ export default class MainEstimates extends Component {
 
                   <Option value="Yiminghe">yiminghe</Option>
                 </Select>
-              </span>
+              </span> */}
               <span className="ant-blue-plus">
                 <PlusCircleOutlined
                   style={{ fontSize: "18px" }}
@@ -173,10 +173,16 @@ export default class MainEstimates extends Component {
                   onChange={handleChange}
                   style={{ width: "300px" }}
                 >
-                  <Option value="jack"><Link to="/view-email">Export to Email</Link></Option>
-                  <Option value="lucy"><Link to="/view-email">Export to Text</Link></Option>
+                  <Option value="jack">
+                    <Link to="/view-email">Export to Email</Link>
+                  </Option>
+                  <Option value="lucy">
+                    <Link to="/view-email">Export to Text</Link>
+                  </Option>
 
-                  <Option value="Yiminghe"><Link to="/view-email">Export to Excell</Link></Option>
+                  <Option value="Yiminghe">
+                    <Link to="/view-email">Export to Excell</Link>
+                  </Option>
                 </Select>
                 <div className="text-end mt-3">
                   <Button
