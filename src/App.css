@@ -1442,23 +1442,19 @@ input[type="tel"] {
   background-color: transparent;
 }
 
-.bottom-modal .ant-drawer-content-wrapper {
-  left: 7%;
-  right: 7%;
-  width: auto;
-}
-
-.bottom-modal .ant-drawer-content {
+.bottom-modal {
   background: #e5fafd;
   border-radius: 10px 10px 0px 0px;
+  position: fixed;
+  left: 105px;
+  bottom: 24px;
+  right: 24px;
+  box-shadow: 0px 0px 10px rgb(0 0 0 / 7%);
+  z-index: 15;
+  transition-duration: 5s;
 }
 
-.bottom-modal .ant-drawer-header {
-  background: transparent;
-  border: 0px;
-}
-
-.bottom-modal .ant-drawer-header h5 {
+.bottom-modal h5 {
   font-weight: 500;
   font-size: 30px;
   line-height: 45px;
@@ -1468,4 +1464,11 @@ input[type="tel"] {
 .ant-cover-b .anticon-edit {
   color: #84b36e;
   cursor: pointer;
+}
+
+.closeicon {
+  cursor: pointer;
+}
+.r-height {
+  min-height: calc(100vh - 170px);
 }
