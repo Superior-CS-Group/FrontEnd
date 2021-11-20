@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { Button, Select, Input, Form, Row, Col, Upload, message } from "antd";
-import { LinkOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { postData } from "../../utils/fetchApi";
+import { Button, Input, Form, Row, Col, Upload, message } from "antd";
+import {
+  LinkOutlined,
+  PlusCircleOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 
 const { Dragger } = Upload;
 
-function handleChange(value) {
-  console.log(`selected ${value}`);
-}
 const props = {
   name: "file",
   multiple: true,
@@ -49,9 +49,91 @@ export default class Material extends Component {
       visible: false,
       isMaterial: true,
       isProduct: true,
-      variation: [],
+      variation: [
+        {
+          name: "",
+          price: "",
+          unit: "",
+          error: {
+            name: "",
+            price: "",
+            unit: "",
+          },
+        },
+      ],
     };
   }
+
+  /**
+   * @author digimonk Technologies
+   * @developer Saral Shrivastava
+   * @description This methode is used to add new empty variation
+   */
+  handleVariationAdd = (e) => {
+    const newVariation = {
+      name: "",
+      price: "",
+      unit: "",
+      error: {
+        name: "",
+        price: "",
+        unit: "",
+      },
+    };
+    this.setState({ variation: [...this.state.variation, newVariation] });
+  };
+  /**
+   * @author digimonk Technologies
+   * @developer Saral Shrivastava
+   * @description This methode is used to remove variation
+   * @param {number} idx - index of variation to remove
+   */
+  handleVariationRemove = (idx) => {
+    const newVariation = [...this.state.variation];
+    newVariation.splice(idx, 1);
+    this.setState({ variation: newVariation });
+  };
+
+  /**
+   * @author digimonk Technologies
+   * @developer Saral Shrivastava
+   * @description This method is used to handle all the changes in the variations section
+   * @param {event} e - event object used to update field
+   * @param {number} idx - index of the selected variation
+   */
+  handleVariationChange = (idx) => (e) => {
+    const newVariation = this.state.variation.map((variation, sidx) => {
+      this.validateVariationInputFields(variation);
+      if (idx !== sidx) return variation;
+      return { ...variation, [e.target.name]: e.target.value };
+    });
+    this.setState({ variation: newVariation });
+  };
+
+  /**
+   * @author digimonk Technologies
+   * @developer Saral Shrivastava
+   * @description This method is used to validate input fields.
+   * @param {object} variation - variation object to be validated
+   */
+  validateVariationInputFields = (variation) => {
+    if (!variation.name) {
+      variation.error.name = "Name is required";
+    } else {
+      variation.error.name = "";
+    }
+    if (!variation.unit) {
+      variation.error.unit = "Unit is required";
+    } else {
+      variation.error.unit = "";
+    }
+    if (!variation.price) {
+      variation.error.price = "Price is required";
+    } else {
+      variation.error.price = "";
+    }
+  };
+
   validateEmail = (email) => {
     const re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -84,30 +166,6 @@ export default class Material extends Component {
     });
   };
 
-  handleVariationAdd = (e) => { 
-    e.preventDefault();
-    this.setState({ errors: {} });
-    const { errors, isValid } = this.validateFields();
-    if (!isValid) {
-      this.setState({ errors });
-      return;
-    }
-
-    const newVariation = {
-      name: this.state.vname,
-      price: this.state.price,
-      unit: this.state.unit,
-    };
-    this.setState({
-      variation: [newVariation, ...this.state.variation],
-      name: "",
-      price: "",
-      unit: "",
-    });
-    console.log(newVariation); 
-    console.log(this.state.variation); 
-  };
-  
   handleSubmit = async (event) => {
     // console.log(localStorage.getItem("token"))
 
@@ -118,7 +176,7 @@ export default class Material extends Component {
       this.setState({ errors });
       return;
     }
-    
+
     const { name, hours, days, rate, type, variation } = this.state;
     const body = { name, hours, days, rate, type, variation };
     console.log("body: ", body);
@@ -160,80 +218,102 @@ export default class Material extends Component {
                 </div>
               </Form.Item>
             </Col>
-            <div
-              className="d-flex justify-content-between align-items-start"
-              style={{ paddingLeft: "12px", paddingRight: "12px" }}
-            >
-              <Row gutter={[24, 0]} className="matrial">
-                <Col span={24} lg={8}>
-                  <Form.Item label="Variations">
-                    <Input
-                      placeholder={this.props.standard}
-                      value={this.props.value2}
-                      className="ant-modal-input"
-                      name="vname"
-                      onChange={this.handleAllChange}
-                    />
-                    <div role="alert" class="text-danger">
-                      {this.state.errors.vname}
-                    </div>
-                  </Form.Item>
-                </Col>
-                <Col span={24} lg={8}>
-                  <Form.Item label="unit">
-                    <Input
-                      placeholder={this.props.unitplaceholder}
-                      value={this.props.value3}
-                      className="ant-modal-input"
-                      name="unit"
-                      onChange={this.handleAllChange}
-                    />
-                    <div role="alert" class="text-danger">
-                      {this.state.errors.unit}
-                    </div>
-                  </Form.Item>
-                </Col>
-                <Col span={24} lg={8}>
-                  <Form.Item label="cost">
-                    <Input
-                      placeholder={this.props.costplaceholder}
-                      value={this.props.value4}
-                      className="ant-modal-input"
-                      name="price"
-                      onChange={this.handleAllChange}
-                    />{" "}
-                    <div role="alert" class="text-danger">
-                      {this.state.errors.price}
-                    </div>
-                  </Form.Item>
-                </Col>
+            {this.state.variation.map((variation, index) => {
+              return (
+                <div
+                  className="d-flex justify-content-between align-items-start"
+                  style={{ paddingLeft: "12px", paddingRight: "12px" }}
+                  key={index}
+                >
+                  <Row gutter={[24, 0]} className="matrial">
+                    <Col span={24} lg={8}>
+                      <Form.Item label="Variations">
+                        <Input
+                          placeholder="Variation"
+                          className="ant-modal-input"
+                          value={variation.name}
+                          onChange={this.handleVariationChange(index)}
+                          name="name"
+                        />
+                        <div role="alert" class="text-danger">
+                          {variation.error.name}
+                        </div>
+                      </Form.Item>
+                    </Col>
+                    <Col span={24} lg={8}>
+                      <Form.Item label="Unit">
+                        <Input
+                          placeholder="Unit"
+                          className="ant-modal-input"
+                          value={variation.unit}
+                          onChange={this.handleVariationChange(index)}
+                          name="unit"
+                        />
+                        <div role="alert" class="text-danger">
+                          {variation.error.unit}
+                        </div>
+                      </Form.Item>
+                    </Col>
+                    <Col span={24} lg={8}>
+                      <Form.Item label="Cost">
+                        <Input
+                          placeholder="Price"
+                          className="ant-modal-input"
+                          value={variation.price}
+                          onChange={this.handleVariationChange(index)}
+                          name="price"
+                          type="number"
+                        />{" "}
+                        <div role="alert" class="text-danger">
+                          {variation.error.price}
+                        </div>
+                      </Form.Item>
+                    </Col>
 
-                <Col span={24}>
-                  <Form.Item label={this.props.upload}>
-                    <Dragger {...props}>
-                      <p className="ant-upload-drag-icon">
-                        <LinkOutlined />
-                      </p>
-                      <p className="ant-upload-text">
-                        Click or drag file to this area to upload
-                      </p>
-                      <p className="ant-upload-hint">
-                        Support for a single or bulk upload. Strictly prohibit
-                        from uploading company data or other band files
-                      </p>
-                    </Dragger>
-                  </Form.Item>
-                </Col>
-              </Row>
+                    <Col span={24}>
+                      <Form.Item label="Upload Image">
+                        <Dragger {...props}>
+                          <p className="ant-upload-drag-icon">
+                            <LinkOutlined />
+                          </p>
+                          <p className="ant-upload-text">
+                            Click or drag file to this area to upload
+                          </p>
+                          <p className="ant-upload-hint">
+                            Support for a single or bulk upload. Strictly
+                            prohibit from uploading company data or other band
+                            files
+                          </p>
+                        </Dragger>
+                      </Form.Item>
+                    </Col>
+                  </Row>
 
-              <span className="text-primary rounded-circle ms-2 mt-50">
-                <PlusCircleOutlined style={{ fontSize: "24px" }} onClick={this.handleVariationAdd}/>
-              </span>
-            </div>
+                  <span className="text-primary rounded-circle ms-2 mt-50">
+                    {index + 1 === this.state.variation.length ? (
+                      <PlusCircleOutlined
+                        style={{ fontSize: "24px" }}
+                        onClick={this.handleVariationAdd}
+                      />
+                    ) : (
+                      <MinusCircleOutlined
+                        style={{ fontSize: "24px" }}
+                        onClick={this.handleVariationRemove}
+                      />
+                    )}
+                  </span>
+                </div>
+              );
+            })}
+
             <Col span={24}>
               <Form.Item className="text-center mt-4 mb-0">
                 <Button className="ant-cancel-btn me-3">Cancel</Button>
-                <Button type="primary" className="ant-add-button" onClick={this.handleSubmit}>
+                <Button
+                  type="primary"
+                  className="ant-add-button"
+                  onClick={this.handleSubmit}
+                >
                   Add to Catalog
                 </Button>
               </Form.Item>

@@ -32,7 +32,7 @@ function SignUp() {
       console.log("errors: ", errors);
       setErrors(errors);
     } else {
-      // setRedirect("/auth/set-dashboard");
+      setRedirect("/dashboard");
       const result = await signup(form);
       console.log("result: ", result);
     }
