@@ -7,19 +7,20 @@ import EditNode from "./editBar/edit.component";
 function Formula() {
   const [formulaTree, setFormulaTree] = React.useState({
     customId: 1,
-    name: "Formula 1",
-    type: "calculation",
+    name: "Grading",
+    type: "preBuiltService",
     root: true,
+    children: [],
   });
   const [selectedNode, setSelectedNode] = React.useState({});
   const [isTreeUpdate, setIsTreeUpdate] = React.useState(false);
 
-  const handleUpdateTree = () => {
+  const handleUpdateTree = (parent) => {
     setIsTreeUpdate(true);
+    setFormulaTree(parent);
+
     setTimeout(() => setIsTreeUpdate(false), 100);
   };
-
-  // TODO: Add a function to update the tree node
 
   /**
    * @author digimonk Technologies
@@ -50,15 +51,14 @@ function Formula() {
           const newChildren = [newChild];
           at.children = newChildren;
         }
+        break;
       }
       const children = at.children || [];
       for (let i = 0; i < children.length; i++) {
         queue.push(children[i]);
       }
     }
-    setFormulaTree(parent);
-    handleUpdateTree();
-    console.log("updating: ", isTreeUpdate);
+    handleUpdateTree(parent);
   };
 
   /**
@@ -68,14 +68,14 @@ function Formula() {
    * @param {event} e
    * @param {string} type type of node (one of [constant, variable, calculation])
    */
-  const onAddElement = (e, type) => {
-    console.log("addingElement: ", type);
+  const onAddElement = (e) => {
     e.preventDefault();
     const newChild = {
       customId: Date.now() * Math.floor(Math.random() * 10000),
       name: "",
-      type,
+      type: "preBuiltService",
       formula: "",
+      formulaToShow: "",
     };
     handleAddNewChild(newChild);
   };
@@ -99,8 +99,7 @@ function Formula() {
   ) => {
     if (parent.customId === id) {
       parent.name = e.target.value;
-      setFormulaTree(tree);
-      handleUpdateTree();
+      handleUpdateTree(tree);
       return;
     }
     const children = parent.children || [];
@@ -124,6 +123,60 @@ function Formula() {
     setSelectedNode({});
   };
 
+  /**
+   * @author digimonk Technologies
+   * @develover Saral Shrivastava
+   * @description This function is used to update the selected node
+   * @param {object} node - updated selected node
+   * @param {object} parent - tree
+   * @returns
+   */
+  const handleUpdateNode = (node, parent = formulaTree) => {
+    console.log("node: ", node);
+    if (!parent) {
+      return;
+    }
+    const queue = [];
+    queue.push(parent);
+    while (queue.length > 0) {
+      const currentNode = queue.shift();
+      if (currentNode.customId === node.customId) {
+        currentNode.formula = node.formula;
+        currentNode.formulaToShow = node.formulaToShow;
+        if (node.children?.length) {
+          currentNode.children = node.children;
+        } else {
+          currentNode.children = null;
+        }
+        currentNode.formulaArray = node.formulaArray;
+        console.log("currentNode: ", node, currentNode);
+        break;
+      }
+      const children = currentNode.children || [];
+      for (let i = 0; i < children.length; i++) {
+        queue.push(children[i]);
+      }
+    }
+    handleUpdateTree(parent);
+    handleDeselectNode();
+  };
+
+  const saveToDB = (e, parent) => {
+    e.preventDefault();
+    if (!parent) {
+      return;
+    }
+    const stack = [];
+    stack.push(parent);
+    while (stack.length > 0) {
+      const currentNode = stack.pop();
+      console.log("currentNode: ", currentNode);
+      const children = currentNode.children || [];
+      for (let i = 0; i < children.length; i++) {
+        stack.push(children[i]);
+      }
+    }
+  };
   return (
     <>
       <BreadcrumbBar name="Demolition and Prep" breaclass="mb-4" />
@@ -132,13 +185,17 @@ function Formula() {
           formula={formulaTree}
           addNewChildren={onAddElement}
           handleTitleChange={handleTitleChange}
-          // handleDefineNewFormula={this.handleDefineNewFormula}
           handleSelectNode={handleSelectNode}
         />
         {selectedNode.customId && (
-          <EditNode handleClose={handleDeselectNode} node={selectedNode} />
+          <EditNode
+            handleClose={handleDeselectNode}
+            node={selectedNode}
+            handleUpdateNode={handleUpdateNode}
+          />
         )}
       </Card>
+      <button onClick={(e) => saveToDB(e, formulaTree)}>Save TO DB</button>
     </>
   );
 }

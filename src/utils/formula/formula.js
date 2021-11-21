@@ -40,36 +40,60 @@ export const handleGenerateFormula = (formulaArray) => {
         formulaToShow += formulaArray[i].name;
       }
     }
-    // let isValid = validateArthmaticString(tempFormula);
-    // if (e && isValid.validate) {
-    //   const newService = { ...this.state.newService };
-    //   newService.id = randomId();
-    //   newService.value = formula;
-    //   newService.formula = tempFormula;
-    //   newService.dependsOn = dependsOn;
-    //   console.log({ newService });
-    //   this.setState({
-    //     services: [...this.state.services, newService],
-    //     newService: {
-    //       id: null,
-    //       name: "",
-    //       value: "",
-    //       formula: "",
-    //       dependsOn: [],
-    //     },
-    //     serviceTempArray: [],
-    //     serviceValue: [],
-    //     tempServiceToShow: "",
-    //   });
-    // }
-    // if (!isValid.validate) {
-    //   this.setState({ error: true });
-    // } else {
-    //   this.setState({ error: false });
-    // }
-    console.log("formula: ", { formula, formulaToShow });
-    console.table({ formula, formulaToShow });
-    return { formula, formulaToShow };
+    return { formula, formulaToShow, dependsOn };
   }
   return "";
+};
+
+const sign = ["+", "-", "*", "/"];
+export const validateArthmaticString = (str) => {
+  if (!str) {
+    return { isValid: false, idx: 0 };
+  }
+  const validBracket = validateBrackets(str);
+  if (!validBracket.isValid) {
+    return {
+      isValid: false,
+      message: "invalid breacket",
+      idx: validBracket.idx,
+    };
+  }
+  const isValid = validateSign(str);
+  return isValid;
+};
+
+const validateBrackets = (str) => {
+  const bracketStack = [];
+  for (let i = 0; i < str.length; i++) {
+    let val = str[i];
+    if (val === "(") {
+      bracketStack.push({ val, idx: i });
+    } else if (val === ")") {
+      if (bracketStack.length) {
+        bracketStack.pop();
+        continue;
+      } else {
+        return { isValid: false, idx: i };
+      }
+    }
+  }
+  if (bracketStack.length) {
+    return { isValid: false, idx: bracketStack[bracketStack.length - 1].idx };
+  } else {
+    return { isValid: true };
+  }
+};
+
+const validateSign = (str) => {
+  if (sign.includes(str[0]) || sign.includes(str[str.length - 1])) {
+    return { isValid: false };
+  }
+  let prev = "";
+  for (let i = 0; i < str.length; i++) {
+    if (sign.includes(prev) && sign.includes(str[i])) {
+      return { isValid: false };
+    }
+    prev = str[i];
+  }
+  return { isValid: true };
 };

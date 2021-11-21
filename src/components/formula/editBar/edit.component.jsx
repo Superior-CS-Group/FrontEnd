@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { Row, Col, Form, Input, Button, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
@@ -5,11 +6,14 @@ import CustomTag from "../tag/tag.component";
 import {
   generateRandomId,
   handleGenerateFormula,
+  validateArthmaticString,
 } from "../../../utils/formula/formula";
+import { getSuggestions } from "../../../api/formula";
 
 const inputs = [
   { title: "User Input", value: "userInput" },
-  { title: "Materails", value: "materials" },
+  { title: "Materails", value: "material" },
+  { title: "Numbers", value: "numbers" },
   { title: "Arthmatic", value: "arthmatic" },
   { title: "Prebuilt Service", value: "preBuiltService" },
   { title: "MISC", value: "misc" },
@@ -34,20 +38,39 @@ function EditNode(props) {
   const [inputType, setInputType] = React.useState(inputs[0].value);
   const [inputValue, setInputValue] = React.useState("");
   const [suggestions, setSuggestions] = React.useState([]);
-
+  const [isValidFormula, setIsValidFormula] = React.useState(false);
+  const [updatedNode, setUpdatedNode] = React.useState({});
   const [formula, setFormula] = React.useState({
     formula: "",
     formulaToShow: "",
     formulaDepenedencies: [],
     formulaArray: [],
+    children: [],
   });
-
   React.useEffect(() => {
+    console.log("nodes: ", props.node);
+    setFormula({ ...formula, ...(props.node || {}) });
+  }, [props.node.formulaArray?.length]);
+  React.useEffect(() => {
+    if (props.node) {
+      setUpdatedNode({ ...props.node, ...formula });
+    }
+  }, [props.node.customId, formula.formulaToShow]);
+
+  React.useEffect(async () => {
     switch (inputType) {
       case "arthmatic":
         setSuggestions(arthmaticOperations);
         break;
+
       default:
+        const response = await getSuggestions(inputType, inputValue);
+        console.log("response: ", response);
+        if (response.remote === "success") {
+          setSuggestions(response.data);
+        } else {
+          setSuggestions([]);
+        }
         break;
     }
     // TODO: fetch suggestions from server according to inputType and store in suggestions
@@ -56,14 +79,51 @@ function EditNode(props) {
   React.useEffect(() => {
     const string = handleGenerateFormula(formula.formulaArray);
     console.log("UPDATE: ", string);
+
+    const childrens =
+      string.dependsOn?.filter((item) => {
+        console.log("imte: ", item);
+        return item.type === "preBuiltService";
+      }) || [];
     setFormula({
       ...formula,
       formulaToShow: string.formulaToShow,
       formula: string.formula,
+      formulaDepenedencies: string.dependsOn,
+      children: childrens,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formula.formulaArray.length]);
+    const expressionValidaty = validateArthmaticString(string.formulaToShow);
+    setIsValidFormula(expressionValidaty.isValid);
+    if (
+      string.formulaToShow &&
+      !arthmaticOperations.find(
+        (item) =>
+          item.value === string.formulaToShow[string.formulaToShow.length - 1]
+      )
+    ) {
+      setInputType("arthmatic");
+    } else {
+      setInputType("userInput");
+    }
 
+    console.log(
+      {
+        ...formula,
+        formulaToShow: string.formulaToShow,
+        formula: string.formula,
+        formulaDepenedencies: string.dependsOn,
+        children: childrens,
+      },
+      props.node
+    );
+    console.log("final node", {
+      ...props.node,
+      formulaToShow: string.formulaToShow,
+      formula: string.formula,
+      children: childrens,
+      formulaDepenedencies: string.dependsOn,
+    });
+  }, [formula.formulaArray.length]);
   const handleInputValueChange = (e) => setInputValue(e.target.value);
 
   const handleInputTypeChange = (value) => setInputType(value);
@@ -133,6 +193,7 @@ function EditNode(props) {
       ...formula,
       formulaArray: newFormula,
     });
+    setInputValue("");
   };
   return (
     <div className="bottom-modal p-4 pt-3">
@@ -153,14 +214,26 @@ function EditNode(props) {
               defaultValue="User Input"
               style={{ width: "100%", borderRadius: "9px" }}
               onChange={handleInputTypeChange}
-              selected={inputType}
+              value={inputType}
             >
               {inputs.map((input) => {
-                return (
-                  <Select.Option key={input.value} value={input.value}>
-                    {input.title}
-                  </Select.Option>
-                );
+                if (input.value === "arthmatic") {
+                  if (inputType === "arthmatic") {
+                    return (
+                      <Select.Option key={input.value} value={input.value}>
+                        {input.title}
+                      </Select.Option>
+                    );
+                  } else {
+                    return null;
+                  }
+                } else {
+                  return (
+                    <Select.Option key={input.value} value={input.value}>
+                      {input.title}
+                    </Select.Option>
+                  );
+                }
               })}
             </Select>
           </Col>
@@ -171,6 +244,11 @@ function EditNode(props) {
               size="large"
               onChange={handleInputValueChange}
               value={inputValue}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleAddElement(e);
+                }
+              }}
             />
             <div>
               {suggestions.map((suggestion) => {
@@ -201,7 +279,10 @@ function EditNode(props) {
         <Row gutter={[24, 0]}>
           <Col lg={20}>
             <Form.Item>
-              <div className="radius-9 ant-blue-add-tree-box">
+              <div
+                className="radius-9 ant-blue-add-tree-box"
+                style={{ border: isValidFormula ? "" : "2px solid red" }}
+              >
                 <ul>
                   {formula.formulaArray.map((element, idx) => {
                     return <CustomTag title={element.name} key={idx} />;
@@ -211,7 +292,14 @@ function EditNode(props) {
             </Form.Item>
           </Col>
           <Col lg={4}>
-            <Button type="primary" size="large" className="radius-9" block>
+            <Button
+              type="primary"
+              size="large"
+              className="radius-9"
+              block
+              disabled={!isValidFormula}
+              onClick={() => props.handleUpdateNode(updatedNode)}
+            >
               Save Formula
             </Button>
           </Col>

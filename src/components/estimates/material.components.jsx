@@ -168,8 +168,6 @@ export default class Material extends Component {
   };
 
   handleSubmit = async (event) => {
-    // console.log(localStorage.getItem("token"))
-
     event.preventDefault();
     this.setState({ errors: {} });
     const { errors, isValid } = this.validateFields();
@@ -177,15 +175,12 @@ export default class Material extends Component {
       this.setState({ errors });
       return;
     }
-    // let variations = this.state.variation;
 
     const { name, type, variation } = this.state;
     const body = { name, type, variation };
-    // console.log("body: ", body);
 
     try {
-      const result = await postData(`services/add`, body);
-      // console.log("result: ", result);
+      await postData(`services/add`, body);
       this.setState({
         ...this.state,
         message: "New Material Added!",
