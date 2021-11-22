@@ -752,10 +752,16 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 
 /*=========== estimates page css end ===============*/
 /*----------------------Customer lead page----------*/
-button.add-btn {
-  padding: 5px 8px !important;
+.add-btn {
+  padding: 5px 22px !important;
   border-radius: 20px !important;
+  background-color: #1a73e8;
+  color: #fff;
 }
+.add-btn:hover {
+  color: #fff;
+}
+
 .tab-div li.active {
   background-color: #1890ff;
   color: #fff;
@@ -1465,8 +1471,8 @@ input[type="tel"] {
   margin: 0;
 }
 .work-scope-top-left .work-scope-img {
-  width: 150px;
-  height: 120px;
+  width: 130px;
+  height: 80px;
   border-radius: 25px;
 }
 
@@ -1522,4 +1528,37 @@ input[type="tel"] {
 }
 .r-height {
   min-height: calc(100vh - 170px);
+}
+.edit-preview-list {
+  cursor: pointer;
+}
+ul.work-scope-list img {
+  width: 200px;
+  border-radius: 20px;
+}
+
+ul.work-scope-list li {
+  padding: 6px 0;
+}
+.contract-preview-form input {
+  border-bottom: 1px solid #ddd !important;
+  border: none;
+}
+.term-for-project li {
+  padding: 4px 0;
+  list-style: none;
+}
+.team-pic {
+  width: 100%;
+  border-radius: 25px;
+}
+.sub-total-div li {
+  list-style: none;
+}
+.edit-preview-text {
+  margin-right: 5px;
+  width: 100%;
+}
+.term-for-project ul {
+  padding: 0;
 }

@@ -6,6 +6,8 @@ import AddEstimates from "../components/estimates/add.estimates.components";
 import EmailSend from "../components/email/email.component";
 import Tree from "../components/tree/tree.components";
 import EstimatePreview from "../components/estimates/estimatepreview.component";
+import ContractPreview from "../components/estimates/contractpreview.component";
+
 import Formula from "../components/formula/formula.component";
 
 const routes = [
@@ -63,6 +65,12 @@ const routes = [
     exact: true,
     name: "estimate-preview",
     component: <EstimatePreview />,
+  },
+  {
+    path: "/contract-preview",
+    exact: true,
+    name: "contract-preview",
+    component: <ContractPreview />,
   },
   {
     path: "/formula-tree",
