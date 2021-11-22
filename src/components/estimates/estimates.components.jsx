@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { Carousel } from "@trendyol-js/react-carousel";
 import { Link } from "react-router-dom";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  RightOutlined,
+  PlusCircleOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { Button, Card, Select, Input, DatePicker } from "antd";
-import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+
 import fillter from "../../images/fillter.png";
 import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
@@ -173,10 +178,16 @@ export default class MainEstimates extends Component {
                   onChange={handleChange}
                   style={{ width: "300px" }}
                 >
-                  <Option value="jack"><Link to="/view-email">Export to Email</Link></Option>
-                  <Option value="lucy"><Link to="/view-email">Export to Text</Link></Option>
+                  <Option value="jack">
+                    <Link to="/view-email">Export to Email</Link>
+                  </Option>
+                  <Option value="lucy">
+                    <Link to="/view-email">Export to Text</Link>
+                  </Option>
 
-                  <Option value="Yiminghe"><Link to="/view-email">Export to Excell</Link></Option>
+                  <Option value="Yiminghe">
+                    <Link to="/view-email">Export to Excell</Link>
+                  </Option>
                 </Select>
                 <div className="text-end mt-3">
                   <Button
@@ -191,7 +202,7 @@ export default class MainEstimates extends Component {
             </div>
           </div>
         </Card>
-
+       
         <FilterSorting
           showModal={this.showModal}
           ModalVisible={this.state.ModalVisible}

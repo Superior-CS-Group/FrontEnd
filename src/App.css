@@ -334,6 +334,7 @@ img {
 
 .ant-siderbar-menu li {
   border-radius: 0px 30px 30px 0px !important;
+  color: #717171;
 }
 
 .ant-siderbar-menu.ant-menu:not(.ant-menu-horizontal)
@@ -1337,7 +1338,7 @@ input[type="tel"] {
   font-weight: 300;
   font-size: 33.0347px;
   line-height: 38px;
-
+  text-transform: uppercase;
   letter-spacing: 7px;
 
   color: #717171;
@@ -1462,7 +1463,6 @@ input[type="tel"] {
 }
 
 .ant-cover-b .anticon-edit {
-  color: #84b36e;
   cursor: pointer;
 }
 
@@ -1471,4 +1471,245 @@ input[type="tel"] {
 }
 .r-height {
   min-height: calc(100vh - 170px);
+}
+
+.ant-th-style .ant-table-thead tr th:before {
+  display: none;
+}
+
+.radius-20 .ant-modal-content {
+  border-radius: 20px;
+}
+
+.radius-20 .ant-modal-content .ant-modal-header {
+  border-radius: 20px 20px 0 0;
+}
+/*======================== furmull tree======================= */
+.furmulla-tree-box {
+  font-weight: 500;
+  font-size: 10.9627px;
+  line-height: 16px;
+  border: 1px solid #1a73e8;
+  /* display: inline-flex; */
+  color: #000;
+  border-radius: 12px;
+
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.ant-furmulla-input {
+  border: 1px solid #b0b7c3;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.ant-cover-b {
+  position: relative;
+}
+
+.ant-cover-b:before {
+  box-shadow: inset 4px -2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 0px 100px 100px;
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: 40%;
+  height: 8px;
+  transform: translatex(-50%);
+}
+
+.ant-cover-primary:before {
+  background: #1a73e8;
+}
+
+.ant-cover-success:before {
+  background: #00ac07;
+}
+.ant-cricle-add {
+  font-size: 32px;
+  color: #3483fa;
+  line-height: 22px;
+  background: #ffffff;
+  border-radius: 100%;
+  display: inline-block;
+  padding: 5px 5px 0px;
+  margin-top: -15px;
+  position: relative;
+}
+
+.ant-cricle-add:before {
+  content: "";
+  background: #3483fa;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0;
+  border-radius: 100%;
+}
+
+.ant-cricle-add svg {
+  position: relative;
+  z-index: 1;
+}
+
+.ant-cricle-add:after {
+  content: "";
+  height: 100%;
+  position: absolute;
+  top: 3px;
+  left: 0;
+  border-radius: 100%;
+  background: #fff;
+  right: 0;
+}
+
+.radius-9 {
+  border-radius: 9.84648px;
+}
+
+.ant-btn-primary {
+  background: #1a73e8;
+}
+
+.select-w.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #b0b7c3;
+  border-radius: 5px;
+}
+
+.furmulla-tree-box label {
+  display: block;
+  text-align: center;
+}
+
+.tree-line-furmulla {
+  border-top: 1px solid #1a73e8;
+  margin-top: 20px;
+  position: relative;
+}
+
+.tree-line-furmulla:before {
+  content: "";
+  height: 21px;
+  width: 1px;
+  background: #1a73e8;
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translatex(-50%);
+}
+
+.ant-edit-furmulla {
+  position: absolute;
+  right: 70px;
+  top: -3px;
+  color: #717171;
+  font-size: 14px;
+  transform: translatex(-50%);
+}
+.ant-automic {
+  text-align: center;
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translatex(-50%);
+}
+
+.table.ant-furmulla-table tr {
+  position: relative;
+}
+.table.ant-furmulla-table thead tr th {
+  border: 0px;
+}
+
+.table.ant-furmulla-table thead tr:after {
+  content: "";
+  width: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  z-index: 0;
+  background: #cecece;
+  border: 1px solid #b0b7c3;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.table.ant-furmulla-table thead tr th {
+  border: 0px;
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.ant-furmulla-table.table > :not(:first-child) {
+  border-top: 0;
+}
+
+.ant-furmulla-table.table > :not(caption) > * > * {
+  border: 0px;
+}
+
+.ant-furmulla-table tbody tr:nth-child(odd) {
+  background: #fff;
+  position: relative;
+}
+
+.ant-furmulla-table tbody tr:nth-child(even):after {
+  content: "";
+  width: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  z-index: 0;
+  background: #eaeaea;
+  border: 1px solid #b0b7c3;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.ant-furmulla-table tbody tr td {
+  position: relative;
+  z-index: 1;
+}
+.ant-add-material {
+  cursor: pointer;
+}
+
+.line-height-40 {
+  line-height: 40px;
+}
+
+.ant-optional {
+  border: 1px solid #b0b7c3;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.ant-floating {
+  position: fixed;
+  right: 11px;
+  bottom: 5%;
+}
+
+.ant-floating button {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  font-size: 30px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0px 4px 11px 14px rgb(0 0 0 / 4%);
 }

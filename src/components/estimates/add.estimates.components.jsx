@@ -11,8 +11,9 @@ import {
   List,
   Select,
 } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import { arrowdown, arrowup, eye } from "../../utils/svg.file";
+import { Link } from "react-router-dom";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -221,7 +222,18 @@ export default class AddEstimates extends Component {
                 Add Service
               </Button>
             </Col>
-            <Col span="8" className="ms-auto d-lg-flex align-items-center">
+            <Col span={8} className="text-end pe-5">
+              <Link to="/contract-preview">
+                <Button
+                  type="primary"
+                  className="radius-30 ant-primary-btn font-15 ps-4"
+                  size="large"
+                >
+                  Contract Preview
+                </Button>
+              </Link>
+            </Col>
+            <Col span="8" className="d-lg-flex align-items-center">
               <div className="ant-tabs-box w-100 me-2">
                 <ul>
                   <li>
@@ -422,6 +434,11 @@ export default class AddEstimates extends Component {
               </Collapse>
             </Col>
           </Row>
+        </div>
+        <div className="ant-floating">
+          <Button type="primary">
+            <SaveOutlined />
+          </Button>
         </div>
       </>
     );

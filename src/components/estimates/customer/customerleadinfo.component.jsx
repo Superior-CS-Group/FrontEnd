@@ -188,6 +188,7 @@ export default function CustomerLeadInfo() {
           </Col>
         </Row>
       </div>
+     
     </>
   );
 }
