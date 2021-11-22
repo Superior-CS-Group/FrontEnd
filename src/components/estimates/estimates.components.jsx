@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { Carousel } from "@trendyol-js/react-carousel";
 import { Link } from "react-router-dom";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  RightOutlined,
+  PlusCircleOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { Button, Card, Select, Input, DatePicker } from "antd";
-import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+
 import fillter from "../../images/fillter.png";
 import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
@@ -290,6 +295,7 @@ export default class MainEstimates extends Component {
             </div>
           </div>
         </Card>
+       
         <FilterSorting
           showModal={this.showModal}
           ModalVisible={this.state.ModalVisible}

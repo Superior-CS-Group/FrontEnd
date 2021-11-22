@@ -4,7 +4,10 @@ import CustomerLeadInfo from "../components/estimates/customer/customerleadinfo.
 import Catalog from "../components/estimates/catalog.component";
 import AddEstimates from "../components/estimates/add.estimates.components";
 import EmailSend from "../components/email/email.component";
-import Tree from "../components/tree/tree.components";
+// import Tree from "../components/tree/tree.components";
+import Services from "../components/estimates/services/Services.components";
+import FormullaTree from "../components/tree/formullaTree.components";
+// import Tree from "../components/tree/tree.components";
 import EstimatePreview from "../components/estimates/estimatepreview.component";
 import ContractPreview from "../components/estimates/contractpreview.component";
 
@@ -58,7 +61,13 @@ const routes = [
     path: "/tree",
     exact: true,
     name: "tree",
-    component: <Tree />,
+    component: <FormullaTree />,
+  },
+  {
+    path: "/services",
+    exact: true,
+    name: "services",
+    component: <Services />,
   },
   {
     path: "/estimate-preview",

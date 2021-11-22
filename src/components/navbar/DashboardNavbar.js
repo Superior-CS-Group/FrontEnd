@@ -44,7 +44,7 @@ export default class DashboardNavbar extends Component {
 
             <Menu.Item key="es2">
               {" "}
-              <NavLink to="/service"></NavLink>Service
+              <NavLink to="/services"></NavLink>Service
             </Menu.Item>
             <Menu.Item key="es3">
               <NavLink to="/estimating">Estimation</NavLink>

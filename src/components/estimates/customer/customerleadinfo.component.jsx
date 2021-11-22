@@ -18,19 +18,21 @@ export default function CustomerLeadInfo() {
     tabShow: true,
     activeStatus: "Active",
     customerid: "",
-    customerName:"",
+    customerName: "",
     autoReminderEmail: true,
     statusList: [],
-    estimaitonStatus:""
+    estimaitonStatus: "",
   });
 
   const onChangeTab = (val) => {
     if (val === "Lead") {
       setState({
+        ...state,
         tabShow: true,
       });
     } else if (val === "Estimate") {
       setState({
+        ...state,
         tabShow: false,
       });
     } else {
@@ -108,22 +110,22 @@ export default function CustomerLeadInfo() {
         let autoReminderEmail;
 
         if (result.data.Data.activeStatus === true) {
-          userstatus = "Active"; 
+          userstatus = "Active";
         } else {
-          userstatus = "Deactive"; 
+          userstatus = "Deactive";
         }
-        if (result.data.Data.autoReminderEmail === true) { 
-          autoReminderEmail= "checked"
-        } else { 
-          autoReminderEmail= "unchecked"
+        if (result.data.Data.autoReminderEmail === true) {
+          autoReminderEmail = "checked";
+        } else {
+          autoReminderEmail = "unchecked";
         }
         setState({
           ...state,
           id: id,
           customerName: result.data.Data.name,
           activeStatus: userstatus,
-          estimaitonStatus:result.data.Data.estimaitonStatus,
-          autoReminderEmail:autoReminderEmail
+          estimaitonStatus: result.data.Data.estimaitonStatus,
+          autoReminderEmail: autoReminderEmail,
         });
       };
 
@@ -206,7 +208,7 @@ export default function CustomerLeadInfo() {
                   <div className="float-start d-inline-flex align-items-center">
                     <span className="me-2">Auto Reminder Email </span>
                     <Switch
-                      value = {state.autoReminderEmail}
+                      value={state.autoReminderEmail}
                       onChange={autoReminderEmailHandleSubmit}
                       className="me-2"
                     />
@@ -226,9 +228,8 @@ export default function CustomerLeadInfo() {
                         <option value={Datalist.name}>{Datalist.name}</option>
                       );
                     })}
-                     
                   </Select>
-{/* 
+                  {/* 
                   <Select
                     size="large"
                     className="me-4 ant-bg-primary "
