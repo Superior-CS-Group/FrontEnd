@@ -14,7 +14,7 @@ export default class Services extends Component {
       hours: "",
       days: "",
       rate: "",
-      type:"service",
+      type: "service",
       message: "",
       isRedirect: false,
       isValidEmail: false,
@@ -23,6 +23,14 @@ export default class Services extends Component {
       visible: false,
       isMaterial: true,
       isProduct: true,
+      ModalVisible: false,
+      variation: [
+        {
+          name: "",
+          price: "",
+          unit: "",
+        },
+      ],
     };
   }
   validateEmail = (email) => {
@@ -58,9 +66,8 @@ export default class Services extends Component {
   };
 
   handleSubmit = async (event) => {
-
     // console.log(localStorage.getItem("token"))
-    
+
     event.preventDefault();
     this.setState({ errors: {} });
     const { errors, isValid } = this.validateFields();
@@ -69,17 +76,24 @@ export default class Services extends Component {
       return;
     }
     this.setState({ isLoading: true });
-    const { name, hours, days, rate,type } = this.state;
-    const body = { name, hours, days, rate,type };
+
+    const { name, hours, days, rate, type } = this.state;
+    const body = { name, hours, days, rate, type };
     // console.log("body: ", body);
 
     try {
       const result = await postData(`services/add`, body);
       // console.log("result: ", result);
-      this.setState({ 
+      this.setState({
+        ...this.state,
+        name: "",
+        hours: "",
+        days: "",
+        rate: "",
         message: "New Service Added!",
         isRedirect: true,
         isLoading: false,
+        ModalVisible: false,
       });
     } catch (err) {
       console.log("error", err, err.response);
@@ -156,7 +170,7 @@ export default class Services extends Component {
 
             <Col span={24}>
               <Form.Item className="text-center mt-4 mb-0">
-              <div role="alert" class="text-success">
+                <div role="alert" class="text-success">
                   {this.state.message}
                 </div>
                 <Button className="ant-cancel-btn me-3">Cancel</Button>

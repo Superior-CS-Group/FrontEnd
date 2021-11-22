@@ -40,9 +40,18 @@ export default function Services() {
       width: 300,
     },
     {
-      title: "",
+      title: (
+        <Button onClick={showModal} type="primary">
+          Add
+        </Button>
+      ),
       dataIndex: "view",
       className: "text-end",
+      render: (text) => (
+        <Link to="/tree" style={{ color: "inherit" }}>
+          {text}
+        </Link>
+      ),
     },
   ];
 
@@ -52,7 +61,7 @@ export default function Services() {
       key: i,
       name: `Demolition ${i}`,
       formula: "Formula one",
-      view: <EyeOutlined onClick={showModal} />,
+      view: <EyeOutlined />,
     });
   }
 

@@ -1,4 +1,5 @@
 import axios from "axios";
+// const SERVER_URL = "http://digimonk.net:1629/api";
 const SERVER_URL = "http://digimonk.net:1629/api";
 
 export const getData = async (api, data) => {

@@ -118,7 +118,7 @@ export default class MainEstimates extends Component {
         <Card
           bordered={false}
           className="shadow estimate-card mb-4"
-          style={{ borderRadius: "10px" }}
+          style={{ borderRadius: "25px" }}
           bodyStyle={{ padding: "0px" }}
         >
           <div className="view-tabs">
@@ -139,7 +139,7 @@ export default class MainEstimates extends Component {
               >
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
-              <span className="inline-block me-4">
+              {/* <span className="inline-block me-4">
                 <Select
                   defaultValue="Filter"
                   style={{ width: 150 }}
@@ -150,7 +150,7 @@ export default class MainEstimates extends Component {
 
                   <Option value="Yiminghe">yiminghe</Option>
                 </Select>
-              </span>
+              </span> */}
               <span className="ant-blue-plus">
                 <PlusCircleOutlined
                   style={{ fontSize: "18px" }}

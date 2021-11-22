@@ -60,6 +60,7 @@ export default function FillterTabs(props) {
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
             Add Column
           </span>
+         
           <div className="ms-auto col-lg-3">
             <Input
               placeholder="Search customers by name"
