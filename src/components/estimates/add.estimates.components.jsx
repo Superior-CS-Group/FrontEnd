@@ -10,9 +10,18 @@ import {
   Table,
   List,
   Select,
+  DatePicker,
+  Form,
 } from "antd";
-import { PlusCircleOutlined, SaveOutlined } from "@ant-design/icons";
-import { arrowdown, arrowup, eye } from "../../utils/svg.file";
+// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+  PlusCircleOutlined,
+  SaveOutlined,
+  EditOutlined,
+  InfoCircleOutlined,
+  CloseCircleFilled,
+} from "@ant-design/icons";
+import { arrowdown, arrowup, drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 const { Panel } = Collapse;
 
@@ -29,40 +38,90 @@ export default class AddEstimates extends Component {
   render() {
     const box = [
       {
-        title: "Disposal Fee",
-        rate: <Input placeholder="$1,500" value="$1,500" className="p-0" />,
-        columbtn: "count-card",
-      },
-      {
         title: "Hours",
-        rate: <Input value="30" className="p-0" />,
+        rate: <h4>16</h4>,
+        editIcon: <EditOutlined />,
         columbtn: "count-card",
       },
       {
-        title: "Days w/3 guys",
-        rate: <Input value="30" className="p-0" />,
+        title: "Tons Of Fill Dirt",
+        rate: <h4>10</h4>,
+        editIcon: <EditOutlined />,
+        columbtn: "count-card",
+      },
+      {
+        title: "Yards Of Topsoil",
+        rate: <h4>5</h4>,
+        editIcon: <EditOutlined />,
         columbtn: "count-card",
       },
 
       {
-        title: "Sqft of concrete demo",
-        rate: <Input value="$3,500" className="p-0" />,
+        title: "Haul Off Cost",
+        rate: <h4>$1,500.00</h4>,
+        editIcon: <EditOutlined />,
         columbtn: "count-card",
       },
       {
-        title: "Total Cost",
-        rate: <h4>$2,430.00</h4>,
-        columbtn: "danger-card",
-      },
-      {
-        title: "Gross Profit",
-        rate: <h4>49.22%</h4>,
+        title: (
+          <>
+            Days with<span className="tree-box">3</span> guys
+          </>
+        ),
+        rate: <h4>0.67</h4>,
+        editIcon: <InfoCircleOutlined />,
         columbtn: "blue-card",
       },
       {
-        title: "Markup",
-        rate: <Input value="1.69" className="p-0" />,
+        title: "Rental Equipment",
+        rate: (
+          <div className="d-flex align-items-center justify-content-between ">
+            <h4 className="trencher">Trencher</h4>
+            <Select
+              defaultValue="$150.00"
+              style={{ width: "100%" }}
+              onChange={handleChange}
+              className="ms-2"
+              size="small"
+            >
+              <Option value="rate">$150.00</Option>
+              <Option value="ss">$151.00</Option>
+            </Select>
+          </div>
+        ),
         columbtn: "count-card",
+      },
+      {
+        title: "Days Of Rental",
+        rate: <h4>2</h4>,
+        columbtn: "count-card",
+        editIcon: <EditOutlined />,
+      },
+      {
+        title: "Misc Cost",
+        rate: <h4>$100.00</h4>,
+
+        editIcon: <EditOutlined />,
+        columbtn: "yellow-card",
+      },
+      {
+        title: "Total Cost",
+        rate: <h4>$2,871.00</h4>,
+        columbtn: "danger-card",
+        editIcon: <InfoCircleOutlined />,
+      },
+      {
+        title: "Gross Profit",
+        rate: <h4>44.93%</h4>,
+        columbtn: "blue-card",
+        editIcon: <InfoCircleOutlined />,
+      },
+      {
+        title: "Markup",
+        rate: <h4>1.69</h4>,
+        columbtn: "count-card",
+        editIcon: <EditOutlined />,
+        columbtn: "blue-card",
       },
     ];
     const columns = [
@@ -207,9 +266,94 @@ export default class AddEstimates extends Component {
         ),
       },
     ];
+    function onChange(date, dateString) {
+      console.log(date, dateString);
+    }
     return (
       <>
         <div className="">
+          <Card
+            className="radius-12"
+            bordered={false}
+            title="Customer Information"
+            extra={[
+              <>
+                <div className="ant-calnder">
+                  Estimate Issue Date:{" "}
+                  <DatePicker
+                    className="ant-furmulla-input radius-30"
+                    onChange={onChange}
+                  />
+                </div>
+              </>,
+            ]}
+          >
+            <Form layout="vertical">
+              <Row gutter={[24, 0]}>
+                <Col lg={8}>
+                  <Form.Item label="Name" className="ant-floting-input">
+                    <Input
+                      placeholder=""
+                      size="large"
+                      className="ant-furmulla-input radius-30"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item
+                    label="City, State, Zip"
+                    className="ant-floting-input"
+                  >
+                    <Input
+                      placeholder=""
+                      size="large"
+                      className="ant-furmulla-input radius-30"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item label="Email" className="ant-floting-input">
+                    <Input
+                      placeholder=""
+                      type="email"
+                      size="large"
+                      className="ant-furmulla-input radius-30"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item label="Adress" className="ant-floting-input">
+                    <Input
+                      placeholder=""
+                      size="large"
+                      className="ant-furmulla-input radius-30"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item label="" className="ant-floting-input">
+                    <Input
+                      placeholder=""
+                      size="large"
+                      className="ant-furmulla-input radius-30"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item
+                    label=" Link to video"
+                    className="ant-floting-input "
+                  >
+                    <Input
+                      placeholder=""
+                      size="large"
+                      className="ant-furmulla-input radius-30"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
           {/* <BreadcrumbBar name="Estimates" subname="Add Estimate" /> */}
           <Row className="mt-4 mb-4">
             <Col span="8">
@@ -266,18 +410,33 @@ export default class AddEstimates extends Component {
                   <Panel
                     header="Demolition & Prep"
                     key="1"
-                    extra={[<>$4,785.00</>]}
+                    extra={[
+                      <>
+                        $4,785.00{" "}
+                        <span className="closeicon-panel">
+                          <CloseCircleFilled />
+                        </span>
+                      </>,
+                    ]}
                   >
                     <Row gutter={[24, 0]}>
                       {box.map((c, index) => (
-                        <Col lg={5} span={24} key={index}>
+                        <Col lg={6} span={24} key={index}>
                           <Card
                             bordered={false}
-                            className={`radius-12 mb-3 height-half ${c.columbtn}`}
+                            className={`radius-12 mb-3  ${c.columbtn}`}
+                            bodyStyle={{ padding: "16px" }}
                           >
+                            <div className="text-end drgicon">
+                              <span className="me-1">{drag}</span>{" "}
+                              <span>{ellps}</span>
+                            </div>
                             <span>{c.title}</span>
 
-                            {c.rate}
+                            <div className="d-flex align-items-center justify-content-between">
+                              {c.rate}
+                              {c.editIcon}
+                            </div>
                           </Card>
                         </Col>
                       ))}
@@ -293,17 +452,36 @@ export default class AddEstimates extends Component {
                       />
                     </Card>
                   </Panel>
-                  <Panel header="Paver Patio" key="2" extra={[<>$4,785.00</>]}>
+                  <Panel
+                    header="Paver Patio"
+                    key="2"
+                    extra={[
+                      <>
+                        $4,785.00{" "}
+                        <span className="closeicon-panel">
+                          <CloseCircleFilled />
+                        </span>{" "}
+                      </>,
+                    ]}
+                  >
                     <Row gutter={[24, 0]}>
                       {box.map((c, index) => (
-                        <Col lg={5} span={24} key={index}>
+                        <Col lg={6} span={24} key={index}>
                           <Card
                             bordered={false}
-                            className={`radius-12 mb-3 height-half ${c.columbtn}`}
+                            className={`radius-12 mb-3  ${c.columbtn}`}
+                            bodyStyle={{ padding: "16px" }}
                           >
+                            <div className="text-end drgicon">
+                              <span className="me-1">{drag}</span>{" "}
+                              <span>{ellps}</span>
+                            </div>
                             <span>{c.title}</span>
 
-                            {c.rate}
+                            <div className="d-flex align-items-center justify-content-between">
+                              {c.rate}
+                              {c.editIcon}
+                            </div>
                           </Card>
                         </Col>
                       ))}

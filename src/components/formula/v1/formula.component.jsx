@@ -1,5 +1,5 @@
 import React from "react";
-import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
+import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import { Card } from "antd";
 import Tree from "./tree/tree.component";
 import EditNode from "./editBar/edit.component";
