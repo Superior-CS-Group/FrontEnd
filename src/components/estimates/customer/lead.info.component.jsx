@@ -382,7 +382,7 @@ export default function LeadInfo() {
                       <Input
                         size="large"
                         suffix={<CheckOutlined />}
-                        name="state"
+                        name="states"
                         value={state.states}
                         onChange={handleAllChange}
                       />
