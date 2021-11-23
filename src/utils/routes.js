@@ -9,7 +9,7 @@ import Services from "../components/estimates/services/Services.components";
 import FormullaTree from "../components/tree/formullaTree.components";
 import EstimatePreview from "../components/estimates/estimatepreview.component";
 import ContractPreview from "../components/estimates/contractpreview.component";
-
+import Dashboard from "../components/dashboard.component";
 import Formula from "../components/formula/formula.component";
 
 const routes = [
@@ -19,7 +19,12 @@ const routes = [
     name: "catalog",
     component: <Catalog />,
   },
-
+  {
+    path: "/dashboard",
+    excat: true,
+    name: "dashbaord",
+    component: <Dashboard />,
+  },
   {
     path: "/estimating",
     exact: true,

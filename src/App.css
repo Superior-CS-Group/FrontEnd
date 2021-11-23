@@ -318,7 +318,14 @@ img {
 .rightside ul li svg {
   color: #717171;
 }
-
+.sidebar-btn-disable:hover {
+  color: #ccc !important;
+  cursor: not-allowed;
+  background-color: transparent !important;
+}
+.sidebar-btn-disable:hover a {
+  cursor: not-allowed !important;
+}
 .ant-siderbar-menu.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background: #1a73e8;
   border-radius: 0px 30px 30px 0px;
@@ -1801,4 +1808,12 @@ ul.work-scope-list li {
   display: inline-flex;
   align-items: center;
   box-shadow: 0px 4px 11px 14px rgb(0 0 0 / 4%);
+}
+
+/*--------------------------------responsive css------------------*/
+@media only screen and (min-width: 375px) and (max-width: 969px) {
+  body {
+    background: green;
+    font-size: 16px;
+  }
 }
