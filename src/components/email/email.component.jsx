@@ -13,6 +13,7 @@ import ModalMain from "../modal/modal.component";
 import SimpleEMailSent from "./simple.emailsent.component";
 import ScheduleTimeDate from "./schedule.timedate.component";
 import ScheduleEmailSent from "./schedule.emailsent.component";
+
 export default class EmailSend extends Component {
   constructor(props) {
     super();

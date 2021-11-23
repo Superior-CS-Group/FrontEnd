@@ -12,6 +12,7 @@ export default function Datatable() {
   const [state, setState] = useState({
     estimateResults: [],
     data: [],
+    estimateResults: [],
     columns: [
       {
         title: <Checkbox />,
@@ -167,6 +168,9 @@ export default function Datatable() {
     ],
   });
 
+  const [newEstimateData, setnewEstimateData]= useState([])
+  const [isSetData, setData]= useState(false)
+
   // const that = state;
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
@@ -174,15 +178,39 @@ export default function Datatable() {
       const item = columns.splice(fromIndex, 1)[0];
       columns.splice(toIndex, 0, item);
       setState({
-        ...state,columns,
+        ...state,
+        columns,
       });
     },
     nodeSelector: "th",
   };
+ 
+  function handleAllChecked(e, id, name, email) {
+    
+    let newEstimateData1;
+    if (e.target.checked) {
+      let leaddata = newEstimateData;
+      newEstimateData1 = {
+        leadId: id,
+        leadName: name,
+        leadEmail: email,
+      };
 
-  const updateShow = async (e) => {
-    console.log(`selected ${e.target}`);
-  };
+    //  setnewEstimateData([...newEstimateData, newEstimateData1])
+      leaddata.push(newEstimateData1)
+      setnewEstimateData(leaddata)
+      setData(!isSetData)
+      console.log("newEstimateData", newEstimateData);
+     
+    } else {
+      var newEstimateData2 = newEstimateData.filter(item=> item.leadId!==id)
+      console.log("uncheck", newEstimateData2)
+      setnewEstimateData(newEstimateData2)
+      setData(!isSetData)
+      // console.log("newEstimateData2",newEstimateData);
+    }
+    
+  }
 
   useEffect(() => {
     const data = [];
@@ -191,7 +219,7 @@ export default function Datatable() {
       setState({
         estimateResults: result.data,
       });
-      // console.log(state.estimateResults.Data.length);
+      // console.log(localStorage.getItem("token"));
 
       for (let i = 0; i < result.data.Data.length; i++) {
         let estimateData = result.data.Data[i];
@@ -199,7 +227,18 @@ export default function Datatable() {
         let customerData = estimateData.customerLeadId;
 
         data.push({
-          key: <Checkbox onChange={updateShow(customerData[0]._id)} />,
+          key: (
+            <Checkbox
+              onChange={(e) =>
+                handleAllChecked(
+                  e,
+                  customerData[0]._id,
+                  customerData[0].name,
+                  customerData[0].email
+                )
+              }
+            />
+          ),
           // estimate: estimateData.leadInvoinceNo,
           name: (
             <Link to={`/customer-lead/${customerData[0]._id}`}>
@@ -224,11 +263,13 @@ export default function Datatable() {
           estimaitonCloseDate: estimateData.estimaitonCloseDate,
         });
       }
-      console.log("data: ", data);
+      // console.log("data: ", data);
       setState({ ...state, data });
     };
     fetchData();
   }, [params]);
+
+  console.log("newEstimateData1", newEstimateData)
 
   return (
     <>

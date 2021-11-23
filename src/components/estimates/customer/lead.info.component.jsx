@@ -106,7 +106,7 @@ export default function LeadInfo() {
     // if (!this.state.otherInformation) {
     //   errors.otherInformation = "Address is not blank";
     // }
-    if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
+    if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
       errors.email = "Email is not valid";
       // this.setState({ isValidEmail:false})
     }
