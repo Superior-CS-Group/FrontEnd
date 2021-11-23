@@ -3,7 +3,7 @@ import React from "react";
 
 import { EditOutlined } from "@ant-design/icons";
 import { Input } from "antd";
-import { treeIcon } from "../../../utils/svg.file";
+import { treeIcon } from "../../../../utils/svg.file";
 // import "./tree.css";
 
 function Tree(props) {

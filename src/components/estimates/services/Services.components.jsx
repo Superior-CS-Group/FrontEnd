@@ -48,7 +48,7 @@ export default function Services() {
       dataIndex: "view",
       className: "text-end",
       render: (text) => (
-        <Link to="/tree" style={{ color: "inherit" }}>
+        <Link to="/v2/formula-tree" style={{ color: "inherit" }}>
           {text}
         </Link>
       ),

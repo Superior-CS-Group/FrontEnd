@@ -10,7 +10,8 @@ import FormullaTree from "../components/tree/formullaTree.components";
 import EstimatePreview from "../components/estimates/estimatepreview.component";
 import ContractPreview from "../components/estimates/contractpreview.component";
 
-import Formula from "../components/formula/formula.component";
+import Formula from "../components/formula/v1/formula.component";
+import FormulaV2 from "../components/formula/v2/formula.v2.component";
 
 const routes = [
   {
@@ -82,10 +83,16 @@ const routes = [
     component: <ContractPreview />,
   },
   {
-    path: "/formula-tree",
+    path: "/v1/formula-tree",
     exact: true,
     name: "Formula Tree",
     component: <Formula />,
+  },
+  {
+    path: "/v2/formula-tree",
+    exact: true,
+    name: "Formula Tree v2",
+    component: <FormulaV2 />,
   },
 ];
 export default routes;
