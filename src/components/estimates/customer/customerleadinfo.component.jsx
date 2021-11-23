@@ -201,7 +201,7 @@ export default function CustomerLeadInfo() {
                   <b className="green-text">{state.estimaitonStatus}</b>
                 </span>
 
-                <div className="ms-auto col-lg-5 text-end d-inline-flex align-items-center justify-content-end">
+                <div className="ms-auto col-lg-6 text-end d-inline-flex align-items-center justify-content-end">
                   <div role="alert" class="text-success">
                     {state.message}
                   </div>

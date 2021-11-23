@@ -7,8 +7,8 @@ import {
   generateRandomId,
   handleGenerateFormula,
   validateArthmaticString,
-} from "../../../utils/formula/formula";
-import { getSuggestions } from "../../../api/formula";
+} from "../../../../utils/formula/formula";
+import { getSuggestions } from "../../../../api/formula";
 
 const inputs = [
   { title: "User Input", value: "userInput" },
