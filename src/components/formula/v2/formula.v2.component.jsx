@@ -22,7 +22,6 @@ function FormulaV2() {
   const [title, setTitle] = React.useState("");
   const [elementList, setElementList] = React.useState([
     {
-      customId: generateRandomId(),
       name: "Total Cost",
       type: "result_locked",
       unit: "",
@@ -30,7 +29,6 @@ function FormulaV2() {
       view: "client",
     },
     {
-      customId: generateRandomId(),
       name: "Gross Profit",
       type: "result_locked",
       unit: "",
@@ -38,7 +36,6 @@ function FormulaV2() {
       view: "client",
     },
     {
-      customId: generateRandomId(),
       name: "Markup",
       type: "result_editable",
       unit: "",
@@ -73,8 +70,8 @@ function FormulaV2() {
       setFormulaDetails(formulaDetails.data.data);
       setTitle(formulaDetails.data.data.title);
       setClientContract(formulaDetails.data.data.clientContract);
-      setElementList([...formulaDetails.data.data.elements]);
-      setMaterials([...formulaDetails.data.data.materials]);
+      // setElementList([...formulaDetails.data.data.elements]);
+      // setMaterials([...formulaDetails.data.data.materials]);
     }
   }
   /**
@@ -101,6 +98,13 @@ function FormulaV2() {
     }
   }
 
+  React.useEffect(() => {
+    if (Object.keys(formulaDetails).length) {
+      setElementList([...formulaDetails.elements]);
+      setMaterials([...formulaDetails.materials]);
+    }
+  }, [formulaDetails]);
+
   const handleChange = (value, name, index) => {
     const newElementList = [...elementList];
     newElementList[index][name] = value;
@@ -108,7 +112,6 @@ function FormulaV2() {
   };
   const handleNewElement = () => {
     const newElement = {
-      customId: generateRandomId(),
       name: "",
       type: "manual",
       unit: "",
@@ -116,6 +119,7 @@ function FormulaV2() {
       view: "client",
     };
     setElementList([newElement, ...elementList]);
+    setIsUpdated("Update");
   };
 
   const handleMaterialChange = (e, index) => {
@@ -246,14 +250,17 @@ function FormulaV2() {
                 <td className="p-0">
                   <div className="border p-3 radius-4 line-height-40 min-height">
                     <ReactMentionInput
-                      className="ant-furmulla-input px-2 outline height-150"
-                      valuesList={[
-                        { id: "1", display: "John Doe" },
-                        { id: "2", display: "test " },
-                      ]}
-                      onChange={(e) => setClientContract(e.target.value)}
+                    className="ant-furmulla-input px-2 outline height-150"
+                      elementList={elementList.map((element) => ({
+                        display: element.name,
+                        id: element._id,
+                      }))}
+                      onChange={(e) => {
+                        setClientContract(e.target.value);
+                      }}
                       placeholder="Enter Client Contract use '{' for the dynamic values"
                       value={clientContract}
+                      onBlur={onFocusOut}
                     />
                   </div>
                 </td>

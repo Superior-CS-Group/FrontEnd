@@ -8,12 +8,15 @@ import planting from "../../images/planting.jpg";
 import TeamPic from "../../images/team.jpg";
 import { Link } from "react-router-dom";
 import ReactQuill from "react-quill";
+import SimpleEMailSent from "../email/simple.emailsent.component";
+import ModalMain from "../modal/modal.component";
 
 export default function ContractPreview(props) {
   const [editPreviewDiv, setEditPreviewDiv] = useState(false);
   const [editPreviewText, setEditPreviewText] = useState(false);
   const [editorHtml, setEditorHtml] = useState("");
-
+  const [ModalVisible, setModalVisible] = useState(false);
+  const [state, setState] = useState({ activeStatus: "Active" });
   let handleEdit = () => {
     setEditPreviewDiv(true);
     setEditPreviewText(false);
@@ -24,6 +27,13 @@ export default function ContractPreview(props) {
   };
   let handleChange = (html) => {
     setEditorHtml(html);
+  };
+  let handleCancel = () => {
+    setModalVisible(false);
+  };
+  let modalShow = () => {
+    alert("heck pop");
+    setModalVisible(true);
   };
   return (
     <>
@@ -699,11 +709,19 @@ export default function ContractPreview(props) {
           </div>
         </div>
         <div className="text-right">
-          <Link to="/view-email" className="add-btn">
+          <span onClick={modalShow} className="add-btn">
             Send to Customer
-          </Link>
+          </span>
         </div>
       </div>
+      <ModalMain
+        modalShow={modalShow}
+        content={
+          <SimpleEMailSent handleCancel={() => setModalVisible(false)} />
+        }
+        handleCancel={handleCancel}
+        ModalVisible={ModalVisible}
+      />
     </>
   );
 }
