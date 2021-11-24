@@ -9,6 +9,8 @@ import Services from "../components/estimates/services/Services.components";
 import FormullaTree from "../components/tree/formullaTree.components";
 import EstimatePreview from "../components/estimates/estimatepreview.component";
 import ContractPreview from "../components/estimates/contractpreview.component";
+import Dashboard from "../components/dashboard.component";
+// import Formula from "../components/formula/formula.component";
 
 import Formula from "../components/formula/v1/formula.component";
 import FormulaV2 from "../components/formula/v2/formula.v2.component";
@@ -20,7 +22,12 @@ const routes = [
     name: "catalog",
     component: <Catalog />,
   },
-
+  {
+    path: "/dashboard",
+    excat: true,
+    name: "dashbaord",
+    component: <Dashboard />,
+  },
   {
     path: "/estimating",
     exact: true,

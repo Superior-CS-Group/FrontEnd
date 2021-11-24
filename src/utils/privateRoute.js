@@ -10,7 +10,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         isLogin ? (
           <Component {...props} currentUser={JSON.parse(isLogin)} />
         ) : (
-          <Redirect to="/" />
+          <Redirect to="/dashboard" />
         )
       }
     />

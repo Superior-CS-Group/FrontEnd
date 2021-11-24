@@ -9,7 +9,6 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
   const [typeOfElement, setTypeOfElement] = React.useState("");
   React.useEffect(() => {
     setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
-    console.log("element: ", element);
     setTypeOfElement(element.type || "manual");
     setView([
       { type: "client", title: "Client view" },
@@ -23,7 +22,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
       case "prefilled":
         return (
           <>
-            <Col md={8}>
+            <Col md={8} className="mb-3">
               <label>Enter Prefilled Amount</label>
             </Col>
             <Col md={16}>
@@ -142,6 +141,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
               style={{ width: "100%" }}
               selected={element.value}
               onBlur={onFocusOut}
+              listHeight={150}
             >
               <Option>Unit</Option>
               {unit.map((item, index) => {
@@ -154,9 +154,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
             </Select>
           </Col>
         </Row>
-        <Row gutter={[8, 0]} className="align-items-center mb-3">
-          {renderSection()}
-        </Row>
+        <Row gutter={[8, 0]}>{renderSection()}</Row>
         <Row gutter={[8, 0]} className="align-items-center">
           <Col md={8}>
             <label>View</label>

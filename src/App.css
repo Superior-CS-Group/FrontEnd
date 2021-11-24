@@ -318,7 +318,14 @@ img {
 .rightside ul li svg {
   color: #717171;
 }
-
+.sidebar-btn-disable:hover {
+  color: #ccc !important;
+  cursor: not-allowed;
+  background-color: transparent !important;
+}
+.sidebar-btn-disable:hover a {
+  cursor: not-allowed !important;
+}
 .ant-siderbar-menu.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background: #1a73e8;
   border-radius: 0px 30px 30px 0px;
@@ -1575,7 +1582,7 @@ ul.work-scope-list li {
   font-size: 10.9627px;
   line-height: 16px;
   border: 1px solid #1a73e8;
-  /* display: inline-flex; */
+  height: 100%;
   color: #000;
   border-radius: 12px;
 
@@ -1749,7 +1756,7 @@ ul.work-scope-list li {
   position: relative;
 }
 
-.ant-furmulla-table tbody tr:nth-child(even):after {
+/* .ant-furmulla-table tbody tr:nth-child(even):after {
   content: "";
   width: 100%;
   position: absolute;
@@ -1761,11 +1768,23 @@ ul.work-scope-list li {
   border: 1px solid #b0b7c3;
   box-sizing: border-box;
   border-radius: 5px;
+} */
+.ant-furmulla-table tbody tr:nth-child(even) {
+  background: #eaeaea;
 }
-
+.ant-furmulla-table tbody tr:nth-child(even) td:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background-color: #eaeaea;
+}
+.ant-furmulla-table tbody tr:nth-child(even) td:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: #eaeaea;
+}
 .ant-furmulla-table tbody tr td {
   position: relative;
-  z-index: 1;
+  /* z-index: 1; */
 }
 .ant-add-material {
   cursor: pointer;
@@ -1850,4 +1869,37 @@ ul.work-scope-list li {
   color: #1890ff;
   font-size: 20px;
   margin-right: 9px;
+}
+
+.sagision ul {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+.sagision {
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
+    0 9px 28px 8px rgb(0 0 0 / 5%);
+  border-radius: 2px;
+  background: #fff;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+}
+
+.sagision ul li {
+  position: relative;
+  display: block;
+  min-height: 32px;
+  padding: 5px 12px;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.sagision ul li:hover {
+  background: #f5f5f5;
 }
