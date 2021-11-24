@@ -111,7 +111,7 @@ function MaterialCard({
                 className="ant-furmulla-input"
                 name="cost"
                 onChange={(e) => {
-                  handleChange(e, index);
+                  handleChange(e, index, "cost", material);
                   setValue(e.target.value);
                 }}
                 value={material.cost}
@@ -126,8 +126,15 @@ function MaterialCard({
                       key={idx}
                       onClick={() => {
                         handleChange(
-                          { target: { value: cat.name, name: "cost" } },
-                          index
+                          {
+                            target: {
+                              value: cat.name,
+                              name: "cost",
+                              suggestion: true,
+                            },
+                          },
+                          index,
+                          cat
                         );
                         setCatalog([]);
                         setValue("");

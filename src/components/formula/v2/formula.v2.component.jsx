@@ -122,7 +122,7 @@ function FormulaV2() {
     setIsUpdated("Update");
   };
 
-  const handleMaterialChange = (e, index) => {
+  const handleMaterialChange = (e, index, material) => {
     const newMaterials = [...materials];
     if (e.target.name === "cost") {
       console.log(e.target.value);
@@ -133,9 +133,16 @@ function FormulaV2() {
       } else {
         newMaterials[index][e.target.name] = `{Quantity} * ${e.target.value}`;
       }
+      if (e.target.suggestion) {
+        newMaterials[index].formula = [
+          material,
+          ...(newMaterials[index].formula || []),
+        ];
+      }
     } else {
       newMaterials[index][e.target.name] = e.target.value;
     }
+    console.log(newMaterials, "newMaterials");
     setMaterials([...newMaterials]);
   };
 
@@ -149,6 +156,7 @@ function FormulaV2() {
       quantity: "",
       cost: "",
       charge: "",
+      formula: [],
     };
     setMaterials([...materials, newMaterial]);
   };
@@ -260,7 +268,7 @@ function FormulaV2() {
                       onChange={(e) => {
                         setClientContract(e.target.value);
                       }}
-                      placeholder="Enter Client Contract use '{' for the dynamic values"
+                      placeholder="Enter Client Contract use '{E' for the dynamic values"
                       value={clientContract}
                       onBlur={onFocusOut}
                     />
