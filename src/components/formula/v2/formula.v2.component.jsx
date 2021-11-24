@@ -246,7 +246,7 @@ function FormulaV2() {
           Add New Material: {treeIcon}
         </span>
 
-        <div>
+        <div className="">
           <table className="table ant-furmulla-table">
             <thead>
               <tr>
@@ -256,11 +256,9 @@ function FormulaV2() {
             <tbody>
               <tr>
                 <td className="p-0">
-                  <div
-                    contentEditable
-                    className="border p-3 radius-4 line-height-40"
-                  >
+                  <div className="border p-3 radius-4 line-height-40 min-height">
                     <ReactMentionInput
+                    className="ant-furmulla-input px-2 outline height-150"
                       elementList={elementList.map((element) => ({
                         display: element.name,
                         id: element._id,
