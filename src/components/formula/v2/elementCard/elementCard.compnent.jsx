@@ -7,6 +7,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
   const [unit, setUnit] = React.useState([]);
   const [view, setView] = React.useState([]);
   const [typeOfElement, setTypeOfElement] = React.useState("");
+
   React.useEffect(() => {
     setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
     setTypeOfElement(element.type || "manual");
