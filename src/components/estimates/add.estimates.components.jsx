@@ -20,6 +20,7 @@ import {
   EditOutlined,
   InfoCircleOutlined,
   CloseCircleFilled,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import { arrowdown, arrowup, drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
@@ -372,21 +373,27 @@ export default function AddEstimates() {
         </Card>
         {/* <BreadcrumbBar name="Estimates" subname="Add Estimate" /> */}
         <Row className="mt-4 mb-4">
-          <Col span="8">
+          <Col span="4">
             {isSearchingFormula ? (
-              <div style={{ display: "flex" }}>
-                <input onChange={(e) => handleFormulaSearch(e.target.value)} />
-                <div>
-                  {formulas.map((formula) => (
-                    <>
-                      <span onClick={() => handleSelectFormula(formula)}>
+              <div>
+                <Input
+                  className="radius-4 me-2"
+                  onChange={(e) => handleFormulaSearch(e.target.value)}
+                  suffix={[
+                    <span onClick={() => setIsSearchingFormula(false)}>
+                      <CloseCircleOutlined />
+                    </span>,
+                  ]}
+                />
+                <div className="sagision">
+                  <ul>
+                    {formulas.map((formula) => (
+                      <li onClick={() => handleSelectFormula(formula)}>
                         {formula.title}
-                      </span>
-                      <br />
-                    </>
-                  ))}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <span onClick={() => setIsSearchingFormula(false)}>X</span>
               </div>
             ) : (
               <Button
