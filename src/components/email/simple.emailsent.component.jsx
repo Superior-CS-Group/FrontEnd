@@ -1,7 +1,14 @@
 import { Divider, Row, Col, Button } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import globe from "../../images/globe.png";
 export default function SimpleEMailSent(props) {
+  const [ScheduleEmailSentState, setScheduleEmailSentState] = useState(false);
+
+  var ScheduleEmailSent = () => {
+    setScheduleEmailSentState(true);
+    console.log("props: ", props);
+    props.updateModel();
+  };
   return (
     <>
       <div className="">

@@ -765,6 +765,7 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   border-radius: 20px !important;
   background-color: #1a73e8;
   color: #fff;
+  cursor: pointer;
 }
 .add-btn:hover {
   color: #fff;
