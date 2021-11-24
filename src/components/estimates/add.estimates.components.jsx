@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 // import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import {
@@ -137,7 +138,7 @@ export default function AddEstimates() {
     },
     {
       title: "QTY",
-      dataIndex: "age",
+      dataIndex: "quantity",
     },
     {
       title: "Units",
@@ -285,6 +286,12 @@ export default function AddEstimates() {
   function handleSelectFormula(formula) {
     console.log("formula: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
+  }
+  function handleEditField(e, index, subField, subIndex) {
+    const newSelectedFormulas = [...selectedFormulas];
+    newSelectedFormulas[index][subField][subIndex][e.target.name] =
+      e.target.value;
+    setSelectedFormulas(newSelectedFormulas);
   }
   return (
     <>
@@ -449,7 +456,6 @@ export default function AddEstimates() {
                 expandIconPosition="right"
               >
                 {selectedFormulas.map((formula, index) => {
-                  console.log("formula: ", formula);
                   return (
                     <Panel
                       header={formula.title}
@@ -464,9 +470,9 @@ export default function AddEstimates() {
                       ]}
                     >
                       <Row gutter={[24, 0]}>
-                        {formula.elements.map((element, index) => {
+                        {formula.elements.map((element, idx) => {
                           return (
-                            <Col lg={6} span={24} key={index}>
+                            <Col lg={6} span={24} key={idx}>
                               <Card
                                 bordered={false}
                                 className={`radius-12 mb-3  count-card`}
@@ -479,8 +485,20 @@ export default function AddEstimates() {
                                 <span>{element.name}</span>
 
                                 <div className="d-flex align-items-center justify-content-between">
-                                  {element.type === "manual" ? (
-                                    <Input />
+                                  {element.type === "manual" ||
+                                  element.type === "prefilled" ? (
+                                    <Input
+                                      onChange={(e) => {
+                                        handleEditField(
+                                          e,
+                                          index,
+                                          "elements",
+                                          idx
+                                        );
+                                      }}
+                                      name="value"
+                                      value={element.value}
+                                    />
                                   ) : (
                                     <h4>{element.value}</h4>
                                   )}
@@ -496,7 +514,7 @@ export default function AddEstimates() {
                         <Table
                           className="ant-table-estmating add-estimates-table"
                           columns={columns}
-                          dataSource={data}
+                          dataSource={formula.materials}
                           size="middle"
                           pagination={false}
                         />
