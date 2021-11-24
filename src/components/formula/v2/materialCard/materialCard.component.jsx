@@ -6,6 +6,7 @@ function MaterialCard({ material, handleChange, index, elementList }) {
   const [catalog, setCatalog] = React.useState([]);
   const [value, setValue] = React.useState("");
   const [isNumaric, setIsNumaric] = React.useState(false);
+
   React.useEffect(() => {
     async function fetchData() {
       const newValue =
@@ -37,10 +38,13 @@ function MaterialCard({ material, handleChange, index, elementList }) {
         </Row>
       </td>
       <td>
-        <Row className="align-items-center">
+        <Row>
           <Col md={8}>
             <label>Enter Quantity:</label>
-            <Checkbox value={isNumaric} onChange={(e) => setIsNumaric(e)}>
+            <Checkbox
+              value={isNumaric}
+              onChange={(e) => setIsNumaric(e.target.checked)}
+            >
               use numaric
             </Checkbox>
           </Col>
@@ -57,8 +61,8 @@ function MaterialCard({ material, handleChange, index, elementList }) {
             ) : (
               <Select
                 showSearch
-                style={{ width: 200 }}
-                className="ant-furmulla-input"
+                className="select-w"
+                style={{ width: "100%" }}
                 placeholder="Select a element"
                 optionFilterProp="children"
                 onChange={(e) => {
@@ -92,35 +96,41 @@ function MaterialCard({ material, handleChange, index, elementList }) {
             <label>Cost:</label>
           </Col>
           <Col md={16}>
-            <Input
-              className="ant-furmulla-input"
-              name="cost"
-              onChange={(e) => {
-                handleChange(e, index);
-                setValue(e.target.value);
-              }}
-              value={material.cost}
-            />
+            <div className="d-flex align-items-center">
+              <Input
+                className="ant-furmulla-input"
+                name="cost"
+                onChange={(e) => {
+                  handleChange(e, index);
+                  setValue(e.target.value);
+                }}
+                value={material.cost}
+                disabled
+              />
+              <Checkbox className="ms-2"></Checkbox>
+            </div>
+            <div className="sagision">
+              <ul>
+                {catalog.map((cat, idx) => {
+                  return (
+                    <li
+                      key={idx}
+                      onClick={() => {
+                        handleChange(
+                          { target: { value: cat.name, name: "cost" } },
+                          index
+                        );
+                        setCatalog([]);
+                        setValue("");
+                      }}
+                    >
+                      {cat.name}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </Col>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {catalog.map((cat, idx) => {
-              return (
-                <span
-                  key={idx}
-                  onClick={() => {
-                    handleChange(
-                      { target: { value: cat.name, name: "cost" } },
-                      index
-                    );
-                    setCatalog([]);
-                    setValue("");
-                  }}
-                >
-                  {cat.name}
-                </span>
-              );
-            })}
-          </div>
         </Row>
       </td>
       <td>

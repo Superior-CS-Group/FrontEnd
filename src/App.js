@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.css";
 import "./App.css";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Auth from "./pages/auth.page";
 import Estimates from "./pages/home.pages";
 
@@ -11,7 +11,6 @@ function App() {
       <Routes>
         <Route path="/auth/*" element={<Auth />} />
         <Route path="/*" element={<Estimates />} />
-      
       </Routes>
     </div>
   );

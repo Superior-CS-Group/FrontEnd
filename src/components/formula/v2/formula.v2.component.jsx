@@ -132,7 +132,7 @@ function FormulaV2() {
           })}
         </Row>
 
-        <div className="table-responsive">
+        <div className="">
           <table className="table ant-furmulla-table table-hover">
             <thead>
               <tr>

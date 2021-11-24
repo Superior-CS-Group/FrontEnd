@@ -9,6 +9,7 @@ function ElementCard({ element, handleChange, idx }) {
   const [typeOfElement, setTypeOfElement] = React.useState("");
   React.useEffect(() => {
     setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
+
     setTypeOfElement("manual");
     setView([
       { type: "client", title: "Client view" },
