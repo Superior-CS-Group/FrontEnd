@@ -88,7 +88,7 @@ function FormulaV2() {
   };
   return (
     <>
-      <BreadcrumbBar name="Add Service" breaclass="md-3" />
+      <BreadcrumbBar name="Add Service" breaclass="mb-3" />
       <Card
         className="shadow estimate-card mb-4"
         style={{ borderRadius: "10px" }}

@@ -22,7 +22,7 @@ function ElementCard({ element, handleChange, idx }) {
       case "prefilled":
         return (
           <>
-            <Col md={8}>
+            <Col md={8} className="mb-3">
               <label>Enter Prefilled Amount</label>
             </Col>
             <Col md={16}>
@@ -136,6 +136,7 @@ function ElementCard({ element, handleChange, idx }) {
               className="select-w"
               style={{ width: "100%" }}
               selected={element.value}
+              listHeight={150}
             >
               <Option>Unit</Option>
               {unit.map((item, index) => {
@@ -148,9 +149,7 @@ function ElementCard({ element, handleChange, idx }) {
             </Select>
           </Col>
         </Row>
-        <Row gutter={[8, 0]} className="align-items-center mb-3">
-          {renderSection()}
-        </Row>
+        <Row gutter={[8, 0]}>{renderSection()}</Row>
         <Row gutter={[8, 0]} className="align-items-center">
           <Col md={8}>
             <label>View</label>

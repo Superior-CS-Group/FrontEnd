@@ -1582,7 +1582,7 @@ ul.work-scope-list li {
   font-size: 10.9627px;
   line-height: 16px;
   border: 1px solid #1a73e8;
-  /* display: inline-flex; */
+  height: 100%;
   color: #000;
   border-radius: 12px;
 

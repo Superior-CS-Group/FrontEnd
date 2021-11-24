@@ -139,7 +139,7 @@ export default function Services() {
             />
           </Form.Item>
           <Form.Item className="text-end mb-0">
-            <Link to="/tree">
+            <Link to="/v2/formula-tree">
               <Button
                 type="primary"
                 size="large"
