@@ -32,7 +32,32 @@ export default function ContractPreview(props) {
     setModalVisible(false);
   };
   let modalShow = () => {
-    alert("heck pop");
+    var axios = require("axios");
+    var data = JSON.stringify({
+      customerLeadId: ["6195fce7f8a35249b02d246d"],
+    });
+
+    var config = {
+      method: "post",
+      url: "digimonk.net:1629/api/estimation/sent-estimate-contract",
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MThjZGM5ZjQ0MGE1YzY0MWUwYTI3M2IiLCJlbWFpbCI6ImFkbWluQG9uZXBlcmNlbnRjcm0uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjM2NjIzMjg2LCJleHAiOjE2NjgxODAyMTJ9.YWUaTHpsKkjMFJe44BX5D7fLDXz4Omard3pz6J5l0fo",
+        "Content-Type": "application/json",
+        Cookie:
+          "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNTRhMGE1YTNjY2VmMjMwOGVlZjVjNCIsImlhdCI6MTYzNTU4ODAxMSwiZXhwIjoxNjQzMzY0MDExfQ.MLQGmFDL8r9CVUi_EuP-9DiiWr195YwV0Y_z5aVYgkY",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
     setModalVisible(true);
   };
   return (
