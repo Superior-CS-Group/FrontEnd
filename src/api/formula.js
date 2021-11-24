@@ -23,3 +23,37 @@ export const getSuggestions = async (type, searchString) => {
       };
   }
 };
+
+export const getAllFormula = async () => {
+  const response = await api.request({
+    url: "/v2/formula/get-all-formula",
+    method: "GET",
+  });
+  return response;
+};
+
+export const createFormula = async (formula) => {
+  const response = await api.request({
+    url: "/v2/formula/add-new-formula",
+    method: "POST",
+    data: formula,
+  });
+  return response;
+};
+
+export const getFormulaById = async (formulaId) => {
+  const response = await api.request({
+    url: `/v2/formula/get-formula-by-id/${formulaId}`,
+    method: "GET",
+  });
+  return response;
+};
+
+export const updateFormula = async (formulaId, data) => {
+  const response = await api.request({
+    url: `/v2/formula/update-formula-by-id/${formulaId}`,
+    method: "PUT",
+    data,
+  });
+  return response;
+};

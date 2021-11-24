@@ -4,6 +4,9 @@ import { treeIcon } from "../../../utils/svg.file";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import ElementCard from "./elementCard/elementCard.compnent";
 import MaterialCard from "./materialCard/materialCard.component";
+import ReactMentionInput from "../../../utils/mentionInput/mentionInput";
+import { useLocation, Navigate } from "react-router-dom";
+import { getFormulaById, updateFormula } from "../../../api/formula";
 
 const generateRandomId = () => {
   return Date.now() + Math.floor(Math.random() * 1000000);
@@ -15,6 +18,8 @@ const generateRandomId = () => {
  * @version 2.0.0
  */
 function FormulaV2() {
+  const [formulaDetails, setFormulaDetails] = React.useState({});
+  const [title, setTitle] = React.useState("");
   const [elementList, setElementList] = React.useState([
     {
       customId: generateRandomId(),
@@ -42,6 +47,60 @@ function FormulaV2() {
     },
   ]);
   const [materials, setMaterials] = React.useState([]);
+  const [isUpdated, setIsUpdated] = React.useState(false);
+  const [clientContract, setClientContract] = React.useState("");
+  const [redirect, setRedirect] = React.useState(null);
+
+  const params = useLocation();
+  React.useEffect(() => {
+    const searchQuery = params.search.trim();
+    console.log("searchQury: ", searchQuery);
+    const query = new URLSearchParams(searchQuery);
+    const formulaId = query.get("formulaId");
+    if (!formulaId) {
+      setRedirect("/services");
+    } else {
+      console.log("formulaId: ", formulaId);
+      getFormulaDetails(formulaId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
+
+  async function getFormulaDetails(formulaId) {
+    const formulaDetails = await getFormulaById(formulaId);
+    console.log("formulaDetails: ", formulaDetails);
+    if (formulaDetails.remote === "success") {
+      setFormulaDetails(formulaDetails.data.data);
+      setTitle(formulaDetails.data.data.title);
+      setClientContract(formulaDetails.data.data.clientContract);
+      setElementList([...formulaDetails.data.data.elements]);
+      setMaterials([...formulaDetails.data.data.materials]);
+    }
+  }
+  /**
+   * @description This useEffect will be called whenever `isUpdate` change to save data in db
+   */
+  React.useEffect(() => {
+    if (isUpdated) {
+      const body = {
+        elements: elementList,
+        materials: materials,
+        clientContract: clientContract,
+        title: title,
+      };
+      updateFormulaDetails(body);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdated]);
+
+  async function updateFormulaDetails(data) {
+    const updatedFormulaDetails = await updateFormula(formulaDetails._id, data);
+    console.log(updatedFormulaDetails, "updated details");
+    if (updatedFormulaDetails.remote === "success") {
+      setFormulaDetails(updatedFormulaDetails.data.data);
+    }
+  }
+
   const handleChange = (value, name, index) => {
     const newElementList = [...elementList];
     newElementList[index][name] = value;
@@ -73,8 +132,11 @@ function FormulaV2() {
     } else {
       newMaterials[index][e.target.name] = e.target.value;
     }
-    console.log(newMaterials, index);
     setMaterials([...newMaterials]);
+  };
+
+  const onFocusOut = () => {
+    setIsUpdated(!isUpdated);
   };
 
   const handleAddMaterial = () => {
@@ -86,6 +148,11 @@ function FormulaV2() {
     };
     setMaterials([...materials, newMaterial]);
   };
+
+  if (redirect) {
+    return <Navigate to={redirect} />;
+  }
+
   return (
     <>
       <BreadcrumbBar name="Add Service" breaclass="md-3" />
@@ -100,7 +167,13 @@ function FormulaV2() {
                 <label>Name Service:</label>
               </Col>
               <Col span={16}>
-                <Input placeholder="Granding" className="ant-furmulla-input" />
+                <Input
+                  placeholder="Title"
+                  className="ant-furmulla-input"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  onBlur={onFocusOut}
+                />
               </Col>
             </Row>
             <Row gutter={[24, 0]} className="align-items-center">
@@ -127,6 +200,7 @@ function FormulaV2() {
                 handleChange={handleChange}
                 key={index}
                 idx={index}
+                onFocusOut={onFocusOut}
               />
             );
           })}
@@ -147,6 +221,7 @@ function FormulaV2() {
                   handleChange={handleMaterialChange}
                   index={index}
                   elementList={elementList}
+                  onFocusOut={onFocusOut}
                 />
               ))}
             </tbody>
@@ -158,6 +233,36 @@ function FormulaV2() {
         >
           Add New Material: {treeIcon}
         </span>
+
+        <div className="table-responsive">
+          <table className="table ant-furmulla-table">
+            <thead>
+              <tr>
+                <th>Enter Wording - Client Contract</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="p-0">
+                  <div
+                    contentEditable
+                    className="border p-3 radius-4 line-height-40"
+                  >
+                    <ReactMentionInput
+                      valuesList={[
+                        { id: "1", display: "John Doe" },
+                        { id: "2", display: "test " },
+                      ]}
+                      onChange={(e) => setClientContract(e.target.value)}
+                      placeholder="Enter Client Contract use '{' for the dynamic values"
+                      value={clientContract}
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </Card>
     </>
   );

@@ -2,7 +2,13 @@ import { Checkbox, Col, Input, Row, Select } from "antd";
 import React from "react";
 import { getSuggestions } from "../../../../api/formula";
 
-function MaterialCard({ material, handleChange, index, elementList }) {
+function MaterialCard({
+  material,
+  handleChange,
+  index,
+  elementList,
+  onFocusOut,
+}) {
   const [catalog, setCatalog] = React.useState([]);
   const [value, setValue] = React.useState("");
   const [isNumaric, setIsNumaric] = React.useState(false);
@@ -19,6 +25,7 @@ function MaterialCard({ material, handleChange, index, elementList }) {
       fetchData();
     }
   }, [value]);
+
   return (
     <tr>
       <td>
@@ -32,6 +39,7 @@ function MaterialCard({ material, handleChange, index, elementList }) {
               name="name"
               onChange={(e) => handleChange(e, index)}
               value={material.name}
+              onBlur={onFocusOut}
             />
           </Col>
         </Row>
@@ -52,6 +60,7 @@ function MaterialCard({ material, handleChange, index, elementList }) {
                 type="number"
                 onChange={(e) => handleChange(e, index)}
                 name="quantity"
+                onBlur={onFocusOut}
                 min={1}
               />
             ) : (
@@ -67,6 +76,7 @@ function MaterialCard({ material, handleChange, index, elementList }) {
                     index
                   );
                 }}
+                onBlur={onFocusOut}
                 filterOption={(input, option) => {
                   console.log("input: ", { input, option });
                   return (
@@ -99,6 +109,7 @@ function MaterialCard({ material, handleChange, index, elementList }) {
                 handleChange(e, index);
                 setValue(e.target.value);
               }}
+              onBlur={onFocusOut}
               value={material.cost}
             />
           </Col>
@@ -133,6 +144,7 @@ function MaterialCard({ material, handleChange, index, elementList }) {
               className="ant-furmulla-input"
               name="charge"
               onChange={(e) => handleChange(e, index)}
+              onBlur={onFocusOut}
               value={material.charge}
             />
           </Col>
