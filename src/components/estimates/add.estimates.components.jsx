@@ -23,7 +23,6 @@ import {
 } from "@ant-design/icons";
 import { arrowdown, arrowup, drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
-import { postData } from "../../utils/fetchApi";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -36,15 +35,6 @@ function handleChange(value) {
   console.log(`selected ${value}`);
 }
 export default class AddEstimates extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      custData: [],
-    };
-    // console.log(props.custInfo);
-  }
- 
-
   render() {
     const box = [
       {
@@ -302,12 +292,10 @@ export default class AddEstimates extends Component {
               <Row gutter={[24, 0]}>
                 <Col lg={8}>
                   <Form.Item label="Name" className="ant-floting-input">
-                    
                     <Input
                       placeholder=""
                       size="large"
                       className="ant-furmulla-input radius-30"
-                      value={this.props.custInfo.name}
                     />
                   </Form.Item>
                 </Col>
@@ -320,7 +308,6 @@ export default class AddEstimates extends Component {
                       placeholder=""
                       size="large"
                       className="ant-furmulla-input radius-30"
-                      value={this.props.custInfo.address1}
                     />
                   </Form.Item>
                 </Col>
@@ -331,7 +318,6 @@ export default class AddEstimates extends Component {
                       type="email"
                       size="large"
                       className="ant-furmulla-input radius-30"
-                      value={this.props.custInfo.email}
                     />
                   </Form.Item>
                 </Col>
@@ -341,7 +327,6 @@ export default class AddEstimates extends Component {
                       placeholder=""
                       size="large"
                       className="ant-furmulla-input radius-30"
-                      value={this.props.custInfo.address}
                     />
                   </Form.Item>
                 </Col>
@@ -351,7 +336,6 @@ export default class AddEstimates extends Component {
                       placeholder=""
                       size="large"
                       className="ant-furmulla-input radius-30"
-                     
                     />
                   </Form.Item>
                 </Col>
