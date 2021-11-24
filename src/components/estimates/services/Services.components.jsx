@@ -1,13 +1,37 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import FillterTabs from "../fillterTabs.components";
 import { Card, Table, Modal, Form, Input, Button, Select } from "antd";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
 import { ellps } from "../../../utils/svg.file";
+import { createFormula, getAllFormula } from "../../../api/formula";
 
 export default function Services() {
   const [ismadalvisable, setMadalvisable] = useState(false);
+  const [data, setData] = useState([]);
+  const [title, setTitle] = useState("");
+  const [redirect, setRedirect] = useState(false);
+  React.useEffect(() => {
+    fetchFormula();
+  }, []);
+
+  async function fetchFormula() {
+    const result = await getAllFormula();
+    if (result.remote === "success") {
+      console.log(result.data.data);
+      const data = result.data.data.map((item, idx) => {
+        return {
+          key: idx,
+          ...item,
+          view: <EyeOutlined />,
+        };
+      });
+      setData(data);
+    }
+    console.log(result);
+  }
   const showModal = () => {
     setMadalvisable(true);
   };
@@ -19,6 +43,21 @@ export default function Services() {
   function handleChange(value) {
     console.log(`selected ${value}`);
   }
+
+  async function handleCreateFormula(e) {
+    e.preventDefault();
+    const body = {
+      title,
+    };
+    console.log(body);
+    const result = await createFormula(body);
+    console.log(result);
+    if (result.remote === "success") {
+      console.log("result", result);
+      setRedirect(`/v2/formula-tree?formulaId=${result.data.data._id}`);
+    }
+  }
+
   const columns = [
     {
       title: (
@@ -26,7 +65,7 @@ export default function Services() {
           Service Name <span className="float-end">{ellps}</span>
         </>
       ),
-      dataIndex: "name",
+      dataIndex: "title",
       render: (text) => <a>{text} </a>,
       width: 300,
     },
@@ -40,6 +79,7 @@ export default function Services() {
       width: 300,
     },
     {
+      key: "_id",
       title: (
         <Button onClick={showModal} type="primary">
           Add
@@ -47,23 +87,18 @@ export default function Services() {
       ),
       dataIndex: "view",
       className: "text-end",
-      render: (text) => (
-        <Link to="/v2/formula-tree" style={{ color: "inherit" }}>
-          {text}
-        </Link>
-      ),
+      render: (view, tags) => {
+        return (
+          <Link
+            to={`/v2/formula-tree?formulaId=${tags._id}`}
+            style={{ color: "inherit" }}
+          >
+            {view}
+          </Link>
+        );
+      },
     },
   ];
-
-  const data = [];
-  for (let i = 0; i < 50; i++) {
-    data.push({
-      key: i,
-      name: `Demolition ${i}`,
-      formula: "Formula one",
-      view: <EyeOutlined />,
-    });
-  }
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -75,6 +110,9 @@ export default function Services() {
     },
   };
 
+  if (redirect) {
+    return <Navigate to={redirect} />;
+  }
   return (
     <>
       <BreadcrumbBar name="SERVICES" breaclass="mb-3" />
@@ -136,18 +174,18 @@ export default function Services() {
               placeholder="Grading"
               size="large"
               className="ant-modal-input"
+              onChange={(e) => setTitle(e.target.value)}
             />
           </Form.Item>
           <Form.Item className="text-end mb-0">
-            <Link to="/tree">
-              <Button
-                type="primary"
-                size="large"
-                className="radius-30 ant-primary-btn font-15 px-5"
-              >
-                Next
-              </Button>
-            </Link>
+            <Button
+              type="primary"
+              size="large"
+              className="radius-30 ant-primary-btn font-15 px-5"
+              onClick={handleCreateFormula}
+            >
+              Next
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
