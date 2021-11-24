@@ -13,6 +13,7 @@ import ModalMain from "../modal/modal.component";
 import SimpleEMailSent from "./simple.emailsent.component";
 import ScheduleTimeDate from "./schedule.timedate.component";
 import ScheduleEmailSent from "./schedule.emailsent.component";
+import { getData } from "../../utils/fetchApi";
 
 export default class EmailSend extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ export default class EmailSend extends Component {
       ModalVisible: false,
       recipientListState: false,
       toShow: "",
+      templateData: [],
 
       /////
     };
@@ -74,6 +76,15 @@ export default class EmailSend extends Component {
   handleCancel = () => {
     this.setState({ ModalVisible: false });
     this.setState({ recipientListState: false });
+  };
+
+  componentDidMount = async () => {
+    const result = await getData(`email-template/list`);
+    this.setState({
+      templateResults: result.data,
+      templateData: result.data.Data,
+    });
+    // console.log("templateData:", this.state.templateData);
   };
 
   renderItem = () => {
@@ -134,35 +145,45 @@ export default class EmailSend extends Component {
           <h5>Mail</h5>
           <div className="tab-div-new-email">
             <ul className="">
-              <li
-                onClick={() => this.onChangeTab("still-interested")}
-                className={this.state.tabShow ? "active" : ""}
-              >
-                Still interested? <MoreOutlined />
-              </li>
-              <li
-                onClick={() => this.onChangeTab("template2")}
-                className={!this.state.tabShow ? "active" : ""}
-              >
-                Template 2 <MoreOutlined />
-              </li>
+              {this.state.templateData.map((datavalue) => {
+                return (
+                  <li
+                    onClick={() => this.onChangeTab("still-interested")}
+                    className={this.state.tabShow ? "active" : ""}
+                  >
+                    {datavalue.name} <MoreOutlined />
+                  </li>
+                );
+              })}
             </ul>
           </div>
           {this.state.tabShow === true ? (
             <div className="card-show pt-2 pb-3">
               <Form layout="vertical">
-                <Form.Item name="Column" label="Email Subject">
-                  <Input type="text" placeholder="Still Interested" />
-                </Form.Item>
-                <Form.Item label="Description">
-                  <ReactQuill
-                    theme={this.state.theme}
-                    onChange={this.handleChange}
-                    value={this.state.editorHtml}
-                    bounds={".app"}
-                    placeholder={this.props.placeholder}
-                  />
-                </Form.Item>
+                {this.state.templateData.map((datavalue) => {
+                  // console.log(datavalue, "values");
+                  return (
+                    <>
+                      <Form.Item name="Column" label="Email Subject">
+                        <Input
+                          type="text"
+                          onChange={this.handleChange}
+                          value={datavalue.subject}
+                          
+                          placeholder="Still Interested"
+                        />
+                      </Form.Item>
+                      <Form.Item label="Description">
+                        <ReactQuill 
+                          onChange={this.handleChange}
+                          value={datavalue.bodyPart}
+                          bounds={".app"}
+                          placeholder={this.props.placeholder}
+                        />
+                      </Form.Item>
+                    </>
+                  );
+                })}
                 <Row>
                   <Col md={2}>
                     {" "}

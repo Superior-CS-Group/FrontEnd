@@ -19,9 +19,12 @@ export default function CustomerLeadInfo() {
     activeStatus: "Active",
     customerid: "",
     customerName: "",
-    autoReminderEmail: true,
+    customerAddress:"",
+    customerAddress1:"",
+    autoReminderEmail: "",
     statusList: [],
     estimaitonStatus: "",
+    resultData: [],
   });
 
   const onChangeTab = (val) => {
@@ -107,25 +110,25 @@ export default function CustomerLeadInfo() {
         const result = await postData(`customer/get-info`, body);
         // console.log("result.data.Data",result.data.Data)
         let userstatus;
-        let autoReminderEmail;
+        let autoReminder;
 
         if (result.data.Data.activeStatus === true) {
           userstatus = "Active";
         } else {
           userstatus = "Deactive";
         }
-        if (result.data.Data.autoReminderEmail === true) {
-          autoReminderEmail = "checked";
-        } else {
-          autoReminderEmail = "unchecked";
-        }
+
         setState({
           ...state,
           id: id,
           customerName: result.data.Data.name,
+          customerEmail: result.data.Data.email,
+          customerAddress: result.data.Data.address,
+          customerAddress1: result.data.Data.city+' '+result.data.Data.state+ +result.data.Data.postalCode,
           activeStatus: userstatus,
           estimaitonStatus: result.data.Data.estimaitonStatus,
-          autoReminderEmail: autoReminderEmail,
+          autoReminderEmail: result.data.Data.autoReminderEmail,
+          resultData: result.data.Data,
         });
       };
 
@@ -179,7 +182,6 @@ export default function CustomerLeadInfo() {
       });
     }
   };
-
   return (
     <>
       <div className="bg-estimates">
@@ -206,11 +208,18 @@ export default function CustomerLeadInfo() {
                     {state.message}
                   </div>
                   <div className="float-start d-inline-flex align-items-center">
-                    <span className="me-2">Auto Reminder Email </span>
+                    <span className="me-2">
+                      {console.log(
+                        state.autoReminderEmail,
+                        "111state.autoReminderEmail"
+                      )}
+                      Auto Reminder Email{" "}
+                    </span>
                     <Switch
                       value={state.autoReminderEmail}
                       onChange={autoReminderEmailHandleSubmit}
                       className="me-2"
+                      checked={state.autoReminderEmail}
                     />
                   </div>
 
@@ -219,7 +228,7 @@ export default function CustomerLeadInfo() {
                     className="me-4 ant-bg-primary "
                     bordered={false}
                     style={{ width: "150px" }}
-                    value={state.estimaitonStatus}
+                    // value={state.estimaitonStatus}
                     name="estimaitonStatus"
                     onChange={updateStatusHandleSubmit}
                   >
@@ -286,7 +295,15 @@ export default function CustomerLeadInfo() {
               </div>
             ) : (
               <div className="card-show mt-3">
-                <AddEstimates />
+                {console.log("state.resultData", state.resultData)}
+                <AddEstimates
+                  custInfo={{
+                    name: state.customerName,
+                    email: state.customerEmail,
+                    address1: state.customerAddress1,
+                    address: state.customerAddress, 
+                  }}
+                />
               </div>
             )}
           </Col>
