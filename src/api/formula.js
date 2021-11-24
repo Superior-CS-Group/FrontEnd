@@ -57,3 +57,11 @@ export const updateFormula = async (formulaId, data) => {
   });
   return response;
 };
+
+export const searchFormulaByName = async (searchString) => {
+  const response = await api.request({
+    url: `/v2/formula/search-formula-by-name/${searchString}`,
+    method: "GET",
+  });
+  return response;
+};

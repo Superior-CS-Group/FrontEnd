@@ -1,11 +1,13 @@
 import { MentionsInput, Mention } from "react-mentions";
 
 function ReactMentionInput({
-  valuesList,
+  elementList,
+  catalogList,
   onChange,
   value,
   placeholder,
   className,
+  onBlur,
 }) {
   return (
     <MentionsInput
@@ -13,13 +15,20 @@ function ReactMentionInput({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      onBlur={onBlur}
     >
       <Mention
-        trigger="{"
-        data={valuesList}
+        trigger="{E"
+        data={elementList || []}
         displayTransform={(id, title) => `{Element: "${title}"}`}
-        markup="###____id__^^^____display__###^^^"
+        markup="###____id__^^^__element^^^____display__###^^^"
       />
+      {/* <Mention
+        trigger="{C"
+        data={catalogList || []}
+        displayTransform={(id, title) => `{Catalog: "${title}"}`}
+        markup="###____id__^^^__catalog^^^____display__###^^^"
+      /> */}
     </MentionsInput>
   );
 }

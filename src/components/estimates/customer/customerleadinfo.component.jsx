@@ -229,19 +229,6 @@ export default function CustomerLeadInfo() {
                       );
                     })}
                   </Select>
-                  {/* 
-                  <Select
-                    size="large"
-                    className="me-4 ant-bg-primary "
-                    bordered={false}
-                    style={{ width: "150px" }}
-                    value={state.activeStatus}
-                    name="activeStatus"
-                    onChange={updateActiveStatushandleSubmit}
-                  >
-                    <Option value="Active">Active</Option>
-                    <Option value="Deactive">Deactive</Option>
-                  </Select> */}
                   <Button
                     style={{ width: "150px" }}
                     className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
@@ -251,15 +238,6 @@ export default function CustomerLeadInfo() {
                   >
                     <PhoneOutlined /> Contact
                   </Button>
-                  {/* <Button
-                    style={{ width: "150px" }}
-                    className="add-btn d-inline-flex align-items-center justify-content-center"
-                    type="primary"
-                    shape="round"
-                    size={size}
-                  >
-                    <ClockCircleOutlined /> Download
-                  </Button> */}
                 </div>
               </div>
               <div className="tab-div border-top">

@@ -12,6 +12,7 @@ function MaterialCard({
   const [catalog, setCatalog] = React.useState([]);
   const [value, setValue] = React.useState("");
   const [isNumaric, setIsNumaric] = React.useState(false);
+  const [isEditable, setIsEditable] = React.useState(false);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -145,6 +146,12 @@ function MaterialCard({
         <Row className="align-items-center">
           <Col md={8}>
             <label>Charge:</label>
+            <Checkbox
+              value={isEditable}
+              onChange={(e) => setIsEditable(e.target.checked)}
+            >
+              Edit
+            </Checkbox>
           </Col>
           <Col md={16}>
             <Input
@@ -153,6 +160,7 @@ function MaterialCard({
               onChange={(e) => handleChange(e, index)}
               onBlur={onFocusOut}
               value={material.charge}
+              disabled
             />
           </Col>
         </Row>
