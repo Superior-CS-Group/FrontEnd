@@ -1,6 +1,7 @@
 import { Checkbox, Col, Input, Row, Select } from "antd";
 import React from "react";
 import { getSuggestions } from "../../../../api/formula";
+import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 
 function MaterialCard({
   material,
@@ -106,7 +107,23 @@ function MaterialCard({
             <label>Cost:</label>
           </Col>
           <Col md={16}>
-            <div className="d-flex align-items-center">
+            <ReactMentionInput
+              className="ant-furmulla-input px-2 outline height-150"
+              elementList={elementList.map((element) => ({
+                display: element.name,
+                id: element._id,
+              }))}
+              onChange={(e) => {
+                e = { target: { ...e.target, name: "cost" } };
+                handleChange(e, index);
+                setValue(e.target.value);
+              }}
+              placeholder="Enter Client Contract use '{E' for the dynamic values"
+              value={material.cost}
+              onBlur={onFocusOut}
+            />
+            <>
+              {/* <div className="d-flex align-items-center">
               <Input
                 className="ant-furmulla-input"
                 name="cost"
@@ -128,7 +145,7 @@ function MaterialCard({
                         handleChange(
                           {
                             target: {
-                              value: cat.name,
+                              value: cat.title,
                               name: "cost",
                               suggestion: true,
                             },
@@ -140,12 +157,13 @@ function MaterialCard({
                         setValue("");
                       }}
                     >
-                      {cat.name}
+                      {cat.title}
                     </li>
                   );
                 })}
               </ul>
-            </div>
+            </div> */}
+            </>
           </Col>
         </Row>
       </td>

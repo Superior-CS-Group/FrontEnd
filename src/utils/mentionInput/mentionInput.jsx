@@ -1,4 +1,5 @@
 import { MentionsInput, Mention } from "react-mentions";
+import { getSuggestions } from "../../api/formula";
 
 function ReactMentionInput({
   elementList,
@@ -9,6 +10,22 @@ function ReactMentionInput({
   className,
   onBlur,
 }) {
+  const handleCatalog = (query, callback) => {
+    return getSuggestions("material", query)
+      .then((res) => {
+        if (res.remote === "success") {
+          return res.data.map((item) => {
+            return {
+              display: item.title,
+              id: item._id,
+            };
+          });
+        } else {
+          return [];
+        }
+      })
+      .then(callback);
+  };
   return (
     <MentionsInput
       class={className || ""}
@@ -23,12 +40,12 @@ function ReactMentionInput({
         displayTransform={(id, title) => `{Element: "${title}"}`}
         markup="###____id__^^^__element^^^____display__###^^^"
       />
-      {/* <Mention
+      <Mention
         trigger="{C"
-        data={catalogList || []}
+        data={handleCatalog}
         displayTransform={(id, title) => `{Catalog: "${title}"}`}
         markup="###____id__^^^__catalog^^^____display__###^^^"
-      /> */}
+      />
     </MentionsInput>
   );
 }

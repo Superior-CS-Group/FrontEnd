@@ -8,10 +8,6 @@ import ReactMentionInput from "../../../utils/mentionInput/mentionInput";
 import { useLocation, Navigate } from "react-router-dom";
 import { getFormulaById, updateFormula } from "../../../api/formula";
 
-const generateRandomId = () => {
-  return Date.now() + Math.floor(Math.random() * 1000000);
-};
-
 /**
  * @author digimonk Technologies
  * @developer Saral Shrivastava
@@ -124,25 +120,24 @@ function FormulaV2() {
 
   const handleMaterialChange = (e, index, material) => {
     const newMaterials = [...materials];
-    if (e.target.name === "cost") {
-      console.log(e.target.value);
-      if (e.target.value.startsWith("{Quantity} *")) {
-        newMaterials[index][e.target.name] = `{Quantity} * ${e.target.value
-          .split("{Quantity} *")[1]
-          .trimLeft()}`;
-      } else {
-        newMaterials[index][e.target.name] = `{Quantity} * ${e.target.value}`;
-      }
-      if (e.target.suggestion) {
-        newMaterials[index].formula = [
-          material,
-          ...(newMaterials[index].formula || []),
-        ];
-      }
-    } else {
-      newMaterials[index][e.target.name] = e.target.value;
-    }
-    console.log(newMaterials, "newMaterials");
+    // if (e.target.name === "cost") {
+    //   console.log(e.target.value);
+    //   if (e.target.value.startsWith("{Quantity} *")) {
+    //     newMaterials[index][e.target.name] = `{Quantity} * ${e.target.value
+    //       .split("{Quantity} *")[1]
+    //       .trimLeft()}`;
+    //   } else {
+    //     newMaterials[index][e.target.name] = `{Quantity} * ${e.target.value}`;
+    //   }
+    //   if (e.target.suggestion) {
+    //     newMaterials[index].formula = [
+    //       material,
+    //       ...(newMaterials[index].formula || []),
+    //     ];
+    //   }
+    // } else {
+    newMaterials[index][e.target.name] = e.target.value;
+    // }
     setMaterials([...newMaterials]);
   };
 
@@ -258,7 +253,7 @@ function FormulaV2() {
                 <td className="p-0">
                   <div className="border p-3 radius-4 line-height-40 min-height">
                     <ReactMentionInput
-                    className="ant-furmulla-input px-2 outline height-150"
+                      className="ant-furmulla-input px-2 outline height-150"
                       elementList={elementList.map((element) => ({
                         display: element.name,
                         id: element._id,
