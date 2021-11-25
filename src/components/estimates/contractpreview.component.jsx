@@ -97,39 +97,8 @@ export default function ContractPreview(props) {
     const result = await sendEstimateContract(body);
     if (result.remote === "success") {
       console.log(result.data.data);
-    }
-
-    // const custId = params.id;
-    // let custLeadId = [];
-    // custLeadId.push(custId);
-    // // console.log(custLeadId,"custLeadId")
-
-    // var axios = require("axios");
-    // var data = JSON.stringify({
-    //   customerLeadId: custLeadId,
-    // });
-
-    // var config = {
-    //   method: "post",
-    //   url: "digimonk.net:1629/api/estimation/sent-estimate-contract",
-    //   headers: {
-    //     Authorization:
-    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MThjZGM5ZjQ0MGE1YzY0MWUwYTI3M2IiLCJlbWFpbCI6ImFkbWluQG9uZXBlcmNlbnRjcm0uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjM2NjIzMjg2LCJleHAiOjE2NjgxODAyMTJ9.YWUaTHpsKkjMFJe44BX5D7fLDXz4Omard3pz6J5l0fo",
-    //     "Content-Type": "application/json",
-    //     Cookie:
-    //       "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNTRhMGE1YTNjY2VmMjMwOGVlZjVjNCIsImlhdCI6MTYzNTU4ODAxMSwiZXhwIjoxNjQzMzY0MDExfQ.MLQGmFDL8r9CVUi_EuP-9DiiWr195YwV0Y_z5aVYgkY",
-    //   },
-    //   data: data,
-    // };
-
-    // axios(config)
-    //   .then(function (response) {
-    //     console.log(JSON.stringify(response.data));
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-
+      
+    } 
     setModalVisible(true);
   };
 
@@ -142,7 +111,7 @@ export default function ContractPreview(props) {
             <img src={MountSky} />
             <div className="text-right-estimate-header">
               <h5>Mountain Sky Proposal</h5>
-              <span>Sales: {state.resultData.name} </span>
+              <span>Sales: Admin </span>
               <br></br>
               <span>Dates: {new Date().toLocaleString()}</span>
             </div>
