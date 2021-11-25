@@ -219,11 +219,10 @@ export default function Datatable() {
         // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
         let customerData = estimateData.customerLeadId;
         let followRemind;
-        if(customerData[0].autoReminderEmail ===true){
-          followRemind = "Yes"
-        }
-        else{
-          followRemind = "No"
+        if (customerData[0].autoReminderEmail === true) {
+          followRemind = "Yes";
+        } else {
+          followRemind = "No";
         }
         data.push({
           key: (
@@ -247,7 +246,7 @@ export default function Datatable() {
           contactNo: customerData[0].contactNo,
           date: customerData[0].createdAt.split("T")[0],
           address: customerData[0].address,
-          autoFollowUp:  followRemind,
+          autoFollowUp: followRemind,
           estimaitonSent: estimateData.estimaitonSent,
           estimaitonStatus: customerData[0].estimaitonStatus,
           estimaitonSentDate: estimateData.estimaitonSentDate,

@@ -683,7 +683,10 @@ export default function ContractPreview(props) {
                       name="Contractor Signature"
                       label="Contractor Signature"
                     >
-                      <Input placeholder="input placeholder" />
+                      <Input
+                        placeholder="input placeholder"
+                        defaultValue="suni"
+                      />
                     </Form.Item>
                   </Col>
                   <Col md={2}></Col>

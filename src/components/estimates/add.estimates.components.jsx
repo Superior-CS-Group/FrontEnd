@@ -446,7 +446,7 @@ export default function AddEstimates() {
               </Button>
             </Link>
           </Col>
-          <Col span="8" className="d-lg-flex align-items-center">
+          <Col span="6" className="d-lg-flex align-items-center ms-auto">
             <div className="ant-tabs-box w-100 me-2">
               <ul>
                 <li>
@@ -489,7 +489,7 @@ export default function AddEstimates() {
                           </span>
                         </>,
                       ]}
-                     >
+                    >
                       <Row gutter={[24, 0]}>
                         {formula.elements.map((element, idx) => {
                           return (
@@ -533,7 +533,7 @@ export default function AddEstimates() {
 
                       <Card className="radius-12 ant-estimate-table-card">
                         <Table
-                          className="ant-table-estmating add-estimates-table"
+                          className="add-estimates-table"
                           columns={columns}
                           dataSource={processMaterials(formula)}
                           size="middle"

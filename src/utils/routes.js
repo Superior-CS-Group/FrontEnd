@@ -14,6 +14,7 @@ import Dashboard from "../components/dashboard.component";
 
 import Formula from "../components/formula/v1/formula.component";
 import FormulaV2 from "../components/formula/v2/formula.v2.component";
+import Catlog from "../components/estimates/catlog/Catlog";
 
 const routes = [
   {
@@ -100,6 +101,12 @@ const routes = [
     exact: true,
     name: "Formula Tree v2",
     component: <FormulaV2 />,
+  },
+  {
+    path: "/new-catlog",
+    exact: true,
+    name: "catlog",
+    component: <Catlog />,
   },
 ];
 export default routes;
