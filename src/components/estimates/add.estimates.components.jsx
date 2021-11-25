@@ -278,13 +278,10 @@ export default function AddEstimates() {
   }
 
   async function handleFormulaSearch(value) {
-    console.log("vlaue: ", value);
     const newFormula = await searchFormulaByName(value);
-    console.log("newFOrmulia: ", newFormula);
     setFormulas(newFormula.data.data);
   }
   function handleSelectFormula(formula) {
-    console.log("formula: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
   }
   function handleEditField(e, index, subField, subIndex) {
@@ -293,6 +290,30 @@ export default function AddEstimates() {
       e.target.value;
     setSelectedFormulas(newSelectedFormulas);
   }
+
+  function findElementWithName(elements, name) {
+    return elements.find((element) => element.name === name);
+  }
+
+  function processCost(str) {
+    let newStr = str.match(/###__[0-9a-zA-Z:,]+/g) || [];
+    newStr = newStr.map((element) => element.replace("###__", ""));
+    console.log(newStr);
+  }
+
+  function processMaterials(formula) {
+    console.log("formula: ", formula);
+    const materials = [...formula.materials].map((material) => {
+      let cost = material.cost;
+      let quantity = findElementWithName(formula.elements, material.quantity);
+      cost = cost.replace("{Quantity}", quantity.value);
+      console.log("cost: ", cost);
+      processCost(cost);
+      return { ...material, cost };
+    });
+    return materials;
+  }
+
   return (
     <>
       <div className="">
@@ -514,7 +535,7 @@ export default function AddEstimates() {
                         <Table
                           className="ant-table-estmating add-estimates-table"
                           columns={columns}
-                          dataSource={formula.materials}
+                          dataSource={processMaterials(formula)}
                           size="middle"
                           pagination={false}
                         />

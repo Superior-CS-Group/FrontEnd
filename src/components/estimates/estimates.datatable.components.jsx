@@ -1,10 +1,10 @@
-import React, { useEffect, useState, Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Table, Checkbox } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
-import { getData, postData } from "../../utils/fetchApi.js";
+import { getData } from "../../utils/fetchApi.js";
 
 export default function Datatable() {
   const params = useParams();
@@ -168,8 +168,7 @@ export default function Datatable() {
     ],
   });
 
-  const [newEstimateData, setnewEstimateData]= useState([])
-  const [isSetData, setData]= useState(false)
+  const [newEstimateData, setNewEstimateData] = useState([]);
 
   // const that = state;
   const dragProps = {
@@ -184,33 +183,27 @@ export default function Datatable() {
     },
     nodeSelector: "th",
   };
- 
+
   function handleAllChecked(e, id, name, email) {
-    
     let newEstimateData1;
+    console.log(e.target.checked, e.target);
     if (e.target.checked) {
-      let leaddata = newEstimateData;
       newEstimateData1 = {
         leadId: id,
         leadName: name,
         leadEmail: email,
       };
 
-    //  setnewEstimateData([...newEstimateData, newEstimateData1])
-      leaddata.push(newEstimateData1)
-      setnewEstimateData(leaddata)
-      setData(!isSetData)
+      setNewEstimateData([...newEstimateData, newEstimateData1]);
       console.log("newEstimateData", newEstimateData);
-     
     } else {
-      var newEstimateData2 = newEstimateData.filter(item=> item.leadId!==id)
-      console.log("uncheck", newEstimateData2)
-      setnewEstimateData(newEstimateData2)
-      setData(!isSetData)
-      // console.log("newEstimateData2",newEstimateData);
+      var newEstimateData2 = newEstimateData.filter(
+        (item) => item.leadId !== id
+      );
+      setNewEstimateData([...newEstimateData2]);
     }
-    
   }
+  console.log("newEstimateData new", newEstimateData);
 
   useEffect(() => {
     const data = [];
@@ -223,9 +216,15 @@ export default function Datatable() {
 
       for (let i = 0; i < result.data.Data.length; i++) {
         let estimateData = result.data.Data[i];
-        console.log(estimateData, "estimateData");
+        // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
         let customerData = estimateData.customerLeadId;
-
+        let followRemind;
+        if(customerData[0].autoReminderEmail ===true){
+          followRemind = "Yes"
+        }
+        else{
+          followRemind = "No"
+        }
         data.push({
           key: (
             <Checkbox
@@ -239,7 +238,6 @@ export default function Datatable() {
               }
             />
           ),
-          // estimate: estimateData.leadInvoinceNo,
           name: (
             <Link to={`/customer-lead/${customerData[0]._id}`}>
               {customerData[0].name}
@@ -249,9 +247,9 @@ export default function Datatable() {
           contactNo: customerData[0].contactNo,
           date: customerData[0].createdAt.split("T")[0],
           address: customerData[0].address,
-          autoFollowUp: estimateData.autoFollowUp,
+          autoFollowUp:  followRemind,
           estimaitonSent: estimateData.estimaitonSent,
-          estimaitonStatus: estimateData.estimaitonStatus,
+          estimaitonStatus: customerData[0].estimaitonStatus,
           estimaitonSentDate: estimateData.estimaitonSentDate,
           daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
           design: estimateData.design,
@@ -269,7 +267,7 @@ export default function Datatable() {
     fetchData();
   }, [params]);
 
-  console.log("newEstimateData1", newEstimateData)
+  console.log("newEstimateData1", newEstimateData);
 
   return (
     <>
