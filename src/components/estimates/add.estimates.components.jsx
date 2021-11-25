@@ -37,7 +37,9 @@ const { Option } = Select;
 function handleChange(value) {
   console.log(`selected ${value}`);
 }
-export default function AddEstimates() {
+export default function AddEstimates(props) {
+  console.log(props.custInfo);
+
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
 
@@ -273,6 +275,49 @@ export default function AddEstimates() {
       ),
     },
   ];
+
+  const payment = [
+    {
+      title: "Deposit payment at signing of contract",
+      cost: (
+        <Input
+          type="number"
+          maxLength="2"
+          placeholder="Basic usage"
+          className="ant-width-small font-bold radius-4 gray-text"
+          defaultValue="12"
+          suffix="%"
+        />
+      ),
+    },
+    {
+      title: "Progress payment when project is started",
+      cost: (
+        <Input
+          type="number"
+          min={1}
+          max={2}
+          placeholder="Basic usage"
+          className="ant-width-small font-bold radius-4 gray-text"
+          defaultValue="99"
+          suffix="%"
+        />
+      ),
+    },
+    {
+      title: "Completion payment",
+      cost: (
+        <Input
+          type="number"
+          maxLength="2"
+          placeholder="Basic usage"
+          className="ant-width-small font-bold radius-4 gray-text"
+          defaultValue="89"
+          suffix="%"
+        />
+      ),
+    },
+  ];
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
@@ -318,6 +363,7 @@ export default function AddEstimates() {
     <>
       <div className="">
         <Card
+          style={{ display: "none" }}
           className="radius-12"
           bordered={false}
           title="Customer Information"
@@ -341,6 +387,7 @@ export default function AddEstimates() {
                     placeholder=""
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.name}
                   />
                 </Form.Item>
               </Col>
@@ -353,6 +400,7 @@ export default function AddEstimates() {
                     placeholder=""
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.address1}
                   />
                 </Form.Item>
               </Col>
@@ -363,6 +411,7 @@ export default function AddEstimates() {
                     type="email"
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.email}
                   />
                 </Form.Item>
               </Col>
@@ -372,6 +421,7 @@ export default function AddEstimates() {
                     placeholder=""
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.address}
                   />
                 </Form.Item>
               </Col>
@@ -436,7 +486,14 @@ export default function AddEstimates() {
             )}
           </Col>
           <Col span={8} className="text-end pe-5">
-            <Link to="/contract-preview">
+            <Link
+              to={{
+                pathname: `/contract-preview/${props.custInfo.id}`,
+                state: {
+                  custInfo: props.custInfo.id,
+                },
+              }}
+            >
               <Button
                 type="primary"
                 className="radius-30 ant-primary-btn font-15 ps-4"
@@ -643,7 +700,7 @@ export default function AddEstimates() {
               />
             </Card>
             <Collapse
-              defaultActiveKey={["1", "2"]}
+              defaultActiveKey={["1", "2", "3"]}
               onChange={callback}
               expandIconPosition="right"
               bordered={false}
@@ -696,6 +753,51 @@ export default function AddEstimates() {
                     </List.Item>
                   )}
                 />
+              </Panel>
+
+              <Panel
+                header="Payment Terms for Project"
+                key="3"
+                className="border-0 ant-bootom-line-effect"
+              >
+                <List
+                  className="mb-3"
+                  bordered={false}
+                  dataSource={payment}
+                  size="small"
+                  renderItem={(item) => (
+                    <List.Item className="border-0 font-d" extra={[item.cost]}>
+                      {item.title}
+                    </List.Item>
+                  )}
+                />
+                {/* <div className="p-3">
+                  <Row>
+                    <Col md={20}>
+                      <Input placeholder="" />
+                    </Col>
+                    <Col md={4}>
+                      <Input
+                        type="number"
+                        maxLength="2"
+                        placeholder="Basic usage"
+                        className="ant-width-small font-bold radius-4 gray-text"
+                        defaultValue="89"
+                        suffix="%"
+                      />
+                    </Col>
+                  </Row>
+                </div> */}
+                <div className="addbtn-ant ps-3 py-3">
+                  <a href="#" className="d-inline-flex align-items-center">
+                    <PlusCircleOutlined className="me-2" />
+                    Add new field
+                  </a>
+                </div>
+                <span>
+                  <b>Note:</b>{" "}
+                  <i>Payment terms will change if change orders are made</i>
+                </span>
               </Panel>
             </Collapse>
           </Col>

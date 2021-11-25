@@ -2113,3 +2113,24 @@ ul.work-scope-list li {
 .components-table-demo-nested thead {
   display: none;
 }
+/*-------------------------Email setting page-------------*/
+.logo-btn {
+  height: 120px;
+  width: 100%;
+}
+span.check-input-logo div {
+  width: 100%;
+}
+.ant-width-small {
+  width: 47px;
+  padding: 5px;
+  margin-left: 5px;
+}
+.ant-width-small input {
+  min-width: auto !important;
+}
+.ant-width-small input::-webkit-outer-spin-button,
+.ant-width-small input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
