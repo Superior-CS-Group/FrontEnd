@@ -90,6 +90,12 @@ const routes = [
     component: <ContractPreview />,
   },
   {
+    path: "/contract-preview/:id",
+    exact: false,
+    name: "contract-preview",
+    component: <ContractPreview />,
+  },
+  {
     path: "/v1/formula-tree",
     exact: true,
     name: "Formula Tree",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PreviewBanner from "../../../src/images/estimate-banner.png";
 import MountSky from "../../../src/images/mount-sky.png";
 import { Divider, Button, Input, Row, Col, Form } from "antd";
@@ -6,17 +6,32 @@ import { edit } from "../../utils/svg.file";
 import logo from "../../images/small-logo.png";
 import planting from "../../images/planting.jpg";
 import TeamPic from "../../images/team.jpg";
-import { Link } from "react-router-dom";
 import ReactQuill from "react-quill";
 import SimpleEMailSent from "../email/simple.emailsent.component";
 import ModalMain from "../modal/modal.component";
+import { useParams } from "react-router-dom";
+import { postData } from "../../utils/fetchApi";
+import { sendEstimateContract } from "../../api/estimate-contract";
 
 export default function ContractPreview(props) {
+  const params = useParams();
+
+  const [state, setState] = useState({
+    activeStatus: "Active",
+    customerid: "",
+    customerName: "",
+    customerAddress: "",
+    customerAddress1: "",
+    autoReminderEmail: "",
+    estimaitonStatus: "",
+    resultData: [],
+  });
+
   const [editPreviewDiv, setEditPreviewDiv] = useState(false);
   const [editPreviewText, setEditPreviewText] = useState(false);
   const [editorHtml, setEditorHtml] = useState("");
   const [ModalVisible, setModalVisible] = useState(false);
-  const [state, setState] = useState({ activeStatus: "Active" });
+
   let handleEdit = () => {
     setEditPreviewDiv(true);
     setEditPreviewText(false);
@@ -31,35 +46,94 @@ export default function ContractPreview(props) {
   let handleCancel = () => {
     setModalVisible(false);
   };
-  let modalShow = () => {
-    var axios = require("axios");
-    var data = JSON.stringify({
-      customerLeadId: ["6195fce7f8a35249b02d246d"],
-    });
 
-    var config = {
-      method: "post",
-      url: "digimonk.net:1629/api/estimation/sent-estimate-contract",
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MThjZGM5ZjQ0MGE1YzY0MWUwYTI3M2IiLCJlbWFpbCI6ImFkbWluQG9uZXBlcmNlbnRjcm0uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjM2NjIzMjg2LCJleHAiOjE2NjgxODAyMTJ9.YWUaTHpsKkjMFJe44BX5D7fLDXz4Omard3pz6J5l0fo",
-        "Content-Type": "application/json",
-        Cookie:
-          "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNTRhMGE1YTNjY2VmMjMwOGVlZjVjNCIsImlhdCI6MTYzNTU4ODAxMSwiZXhwIjoxNjQzMzY0MDExfQ.MLQGmFDL8r9CVUi_EuP-9DiiWr195YwV0Y_z5aVYgkY",
-      },
-      data: data,
-    };
+  useEffect(() => {
+    const id = params.id;
 
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (id) {
+      const body = { id };
+      const fetchData = async () => {
+        const result = await postData(`customer/get-info`, body);
+        // console.log("result.data.Data",result.data.Data)
+        let userstatus;
+        let autoReminder;
+
+        if (result.data.Data.activeStatus === true) {
+          userstatus = "Active";
+        } else {
+          userstatus = "Deactive";
+        }
+
+        setState({
+          ...state,
+          id: id,
+          customerid: id,
+          customerName: result.data.Data.name,
+          customerEmail: result.data.Data.email,
+          customerAddress: result.data.Data.address,
+          customerAddress1:
+            result.data.Data.city +
+            " " +
+            result.data.Data.state +
+            +result.data.Data.postalCode,
+          activeStatus: userstatus,
+          estimaitonStatus: result.data.Data.estimaitonStatus,
+          autoReminderEmail: result.data.Data.autoReminderEmail,
+          resultData: result.data.Data,
+        });
+      };
+
+      fetchData();
+    }
+  }, [params]);
+  // console.log(state.resultData, "resultDataresultData");
+
+  let modalShow = async () => {
+    const custId = params.id;
+    let custLeadId = [];
+    custLeadId.push(custId);
+    const body = { customerLeadId: custLeadId };
+    console.log(body);
+    const result = await sendEstimateContract(body);
+    if (result.remote === "success") {
+      console.log(result.data.data);
+      
+    }
+
+    // const custId = params.id;
+    // let custLeadId = [];
+    // custLeadId.push(custId);
+    // // console.log(custLeadId,"custLeadId")
+
+    // var axios = require("axios");
+    // var data = JSON.stringify({
+    //   customerLeadId: custLeadId,
+    // });
+
+    // var config = {
+    //   method: "post",
+    //   url: "digimonk.net:1629/api/estimation/sent-estimate-contract",
+    //   headers: {
+    //     Authorization:
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MThjZGM5ZjQ0MGE1YzY0MWUwYTI3M2IiLCJlbWFpbCI6ImFkbWluQG9uZXBlcmNlbnRjcm0uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjM2NjIzMjg2LCJleHAiOjE2NjgxODAyMTJ9.YWUaTHpsKkjMFJe44BX5D7fLDXz4Omard3pz6J5l0fo",
+    //     "Content-Type": "application/json",
+    //     Cookie:
+    //       "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNTRhMGE1YTNjY2VmMjMwOGVlZjVjNCIsImlhdCI6MTYzNTU4ODAxMSwiZXhwIjoxNjQzMzY0MDExfQ.MLQGmFDL8r9CVUi_EuP-9DiiWr195YwV0Y_z5aVYgkY",
+    //   },
+    //   data: data,
+    // };
+
+    // axios(config)
+    //   .then(function (response) {
+    //     console.log(JSON.stringify(response.data));
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
 
     setModalVisible(true);
   };
+
   return (
     <>
       <div className="card-shadow p-3" style={{ borderRadius: "25px" }}>
@@ -69,19 +143,29 @@ export default function ContractPreview(props) {
             <img src={MountSky} />
             <div className="text-right-estimate-header">
               <h5>Mountain Sky Proposal</h5>
-              <span>Sales: Siloh Churchill </span>
+              <span>Sales: {state.resultData.name} </span>
               <br></br>
-              <span>Dates:11-02-2011</span>
+              <span>Dates: {new Date().toLocaleString()}</span>
             </div>
           </div>
 
           <div className="estiamte-preview-head">
             <div className="text-right-estimate-header mt-3">
               <p>Prepared For:</p>
-              <h4>Leslie Alexander</h4>
+              <h4>{state.resultData.name}</h4>
               <span style={{ fontSize: "12px" }}>Located At</span>
               <br></br>
-              <h6>Singpore</h6>
+              <h6>
+                {state.resultData.address +
+                  ", " +
+                  state.resultData.city +
+                  " " +
+                  state.resultData.state +
+                  " " +
+                  state.resultData.country +
+                  ", " +
+                  state.resultData.postalCode}
+              </h6>
             </div>
             <div className="text-right-estimate-header">
               <img src={logo} alt="" />
@@ -683,27 +767,37 @@ export default function ContractPreview(props) {
                       name="Contractor Signature"
                       label="Contractor Signature"
                     >
-                      <Input placeholder="input placeholder" />
+                      <Input
+                        placeholder="Contractor Signature"
+                        type="text"
+                        defaultValue={state.resultData.name}
+                      />
                     </Form.Item>
                   </Col>
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
                     <Form.Item name="date" label="Date">
-                      <Input placeholder="input placeholder" />
+                      <Input placeholder="input placeholder" 
+                        type="text"
+                        defaultValue={state.resultData.name}/>
                     </Form.Item>
                   </Col>
                   <Col md={11}>
                     {" "}
                     <Form.Item name="owner" label="Owner">
-                      <Input placeholder="input placeholder" />
+                      <Input placeholder="input placeholder" 
+                        type="text"
+                        defaultValue={state.resultData.name}/>
                     </Form.Item>
                   </Col>{" "}
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
                     <Form.Item name="Company" label="Company">
-                      <Input placeholder="input placeholder" />
+                      <Input placeholder="input placeholder" 
+                        type="text"
+                        defaultValue={state.resultData.name}/>
                     </Form.Item>
                   </Col>
                   <Col md={11}>
@@ -712,20 +806,26 @@ export default function ContractPreview(props) {
                       name="customer signature"
                       label="Customer Signature"
                     >
-                      <Input placeholder="input placeholder" />
+                      <Input placeholder="input placeholder" 
+                        type="text"
+                        defaultValue={state.resultData.name}/>
                     </Form.Item>
                   </Col>{" "}
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
                     <Form.Item name="customer date" label="Date">
-                      <Input placeholder="input placeholder" />
+                      <Input placeholder="input placeholder" 
+                        type="text"
+                        defaultValue={state.resultData.name} />
                     </Form.Item>
                   </Col>
                   <Col md={11}>
                     {" "}
                     <Form.Item name="ctr name" label="Customer Name">
-                      <Input placeholder="input placeholder" />
+                      <Input placeholder="input placeholder" 
+                        type="text"
+                        defaultValue={state.resultData.name}/>
                     </Form.Item>
                   </Col>
                 </Row>

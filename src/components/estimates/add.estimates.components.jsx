@@ -37,7 +37,9 @@ const { Option } = Select;
 function handleChange(value) {
   console.log(`selected ${value}`);
 }
-export default function AddEstimates() {
+export default function AddEstimates(props) {
+  console.log(props.custInfo);
+
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
 
@@ -318,6 +320,7 @@ export default function AddEstimates() {
     <>
       <div className="">
         <Card
+          style={{ display: "none" }}
           className="radius-12"
           bordered={false}
           title="Customer Information"
@@ -341,6 +344,7 @@ export default function AddEstimates() {
                     placeholder=""
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.name}
                   />
                 </Form.Item>
               </Col>
@@ -353,6 +357,7 @@ export default function AddEstimates() {
                     placeholder=""
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.address1}
                   />
                 </Form.Item>
               </Col>
@@ -363,6 +368,7 @@ export default function AddEstimates() {
                     type="email"
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.email}
                   />
                 </Form.Item>
               </Col>
@@ -372,6 +378,7 @@ export default function AddEstimates() {
                     placeholder=""
                     size="large"
                     className="ant-furmulla-input radius-30"
+                    value={props.custInfo.address}
                   />
                 </Form.Item>
               </Col>
@@ -436,7 +443,14 @@ export default function AddEstimates() {
             )}
           </Col>
           <Col span={8} className="text-end pe-5">
-            <Link to="/contract-preview">
+            <Link
+              to={{
+                pathname: `/contract-preview/${props.custInfo.id}`,
+                state: {
+                  custInfo: props.custInfo.id,
+                },
+              }}
+            >
               <Button
                 type="primary"
                 className="radius-30 ant-primary-btn font-15 ps-4"
@@ -489,7 +503,7 @@ export default function AddEstimates() {
                           </span>
                         </>,
                       ]}
-                     >
+                    >
                       <Row gutter={[24, 0]}>
                         {formula.elements.map((element, idx) => {
                           return (
