@@ -5,6 +5,7 @@ import { Layout } from "antd";
 // import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Menubar from "../components/navbar/menubar";
 import DashboardNavbar from "../components/navbar/DashboardNavbar";
+import Error from "../components/Error";
 const { Header, Sider, Content } = Layout;
 export default class Estimates extends Component {
   state = {
@@ -63,6 +64,7 @@ export default class Estimates extends Component {
                 {routes.map((route) => {
                   return <Route path={route.path} element={route.component} />;
                 })}
+                <Route path="*" element={<Error />} />
               </Routes>
             </Content>
           </Layout>

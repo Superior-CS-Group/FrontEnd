@@ -51,7 +51,7 @@ export default class DashboardNavbar extends Component {
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="4" icon={jobOr} className="sidebar-btn-disable">
-            <NavLink to="">Job Organization & SchedulingS</NavLink>
+            <NavLink to="#">Job Organization & SchedulingS</NavLink>
           </Menu.Item>
           <Menu.Item key="5" icon={time} className="sidebar-btn-disable">
             <NavLink to="#">Time Tracking</NavLink>

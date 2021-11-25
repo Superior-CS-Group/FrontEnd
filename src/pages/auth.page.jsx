@@ -34,7 +34,7 @@ export default class Auth extends Component {
                   </Link>
                 </div>
                 <Routes>
-                  <Route path="/login" expect element={<Login />} />
+                  <Route path="/" expect element={<Login />} />
                   <Route path="/sign-up" element={<SignUp />} />
                   <Route path="/set-dashboard" element={<SetDashboard />} />
                 </Routes>

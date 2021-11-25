@@ -468,7 +468,7 @@ export default function AddEstimates() {
                           </span>
                         </>,
                       ]}
-                    >
+                     >
                       <Row gutter={[24, 0]}>
                         {formula.elements.map((element, idx) => {
                           return (
