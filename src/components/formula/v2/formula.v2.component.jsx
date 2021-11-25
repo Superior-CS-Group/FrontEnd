@@ -39,6 +39,8 @@ function FormulaV2() {
       view: "client",
     },
   ]);
+
+  const [markupId, setMarkupId] = React.useState(null);
   const [materials, setMaterials] = React.useState([]);
   const [isUpdated, setIsUpdated] = React.useState(false);
   const [clientContract, setClientContract] = React.useState("");
@@ -66,8 +68,11 @@ function FormulaV2() {
       setFormulaDetails(formulaDetails.data.data);
       setTitle(formulaDetails.data.data.title);
       setClientContract(formulaDetails.data.data.clientContract);
-      // setElementList([...formulaDetails.data.data.elements]);
-      // setMaterials([...formulaDetails.data.data.materials]);
+      setMarkupId(
+        formulaDetails.data.data.elements.find(
+          (element) => element.name === "Markup"
+        )._id
+      );
     }
   }
   /**
@@ -81,7 +86,7 @@ function FormulaV2() {
         clientContract: clientContract,
         title: title,
       };
-      updateFormulaDetails(body);
+      setTimeout(() => updateFormulaDetails(body), 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdated]);
@@ -118,25 +123,32 @@ function FormulaV2() {
     setIsUpdated("Update");
   };
 
+  const processMaterial = (text) => {
+    const tags = text.match(/@\{\{[^\}]+\}\}/gi) || [];
+    const allMaterialsIds = tags.map((myTag) => {
+      const tagData = myTag.slice(3, -2);
+      const tagDataArray = tagData.split("||");
+      if (tagDataArray[0] === "catalog") {
+        return tagDataArray[1];
+      }
+      return null;
+    });
+    return allMaterialsIds.filter((elem) => elem);
+  };
+
   const handleMaterialChange = (e, index, material) => {
     const newMaterials = [...materials];
-    // if (e.target.name === "cost") {
-    //   console.log(e.target.value);
-    //   if (e.target.value.startsWith("{Quantity} *")) {
-    //     newMaterials[index][e.target.name] = `{Quantity} * ${e.target.value
-    //       .split("{Quantity} *")[1]
-    //       .trimLeft()}`;
-    //   } else {
-    //     newMaterials[index][e.target.name] = `{Quantity} * ${e.target.value}`;
-    //   }
-    //   if (e.target.suggestion) {
-    //     newMaterials[index].formula = [
-    //       material,
-    //       ...(newMaterials[index].formula || []),
-    //     ];
-    //   }
-    // } else {
+
     newMaterials[index][e.target.name] = e.target.value;
+    newMaterials[
+      index
+    ].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
+    if (material) {
+      let processed = processMaterial(material);
+      newMaterials[index].formula = [
+        ...new Set([...(newMaterials[index].formula || []), ...processed]),
+      ];
+    }
     // }
     setMaterials([...newMaterials]);
   };

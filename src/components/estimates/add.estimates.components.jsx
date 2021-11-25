@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 // import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
@@ -26,6 +27,7 @@ import {
 import { arrowdown, arrowup, drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 import { searchFormulaByName } from "../../api/formula";
+import EstimationOverview from "./estimation/estimationOverview.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -295,22 +297,61 @@ export default function AddEstimates() {
     return elements.find((element) => element.name === name);
   }
 
-  function processCost(str) {
-    let newStr = str.match(/###__[0-9a-zA-Z:,]+/g) || [];
-    newStr = newStr.map((element) => element.replace("###__", ""));
-    console.log(newStr);
-  }
-
   function processMaterials(formula) {
-    console.log("formula: ", formula);
+    const elements = [...formula.elements];
+    let totalMaterialsCost = 0;
+    let totalMaterialsCharge = 0;
     const materials = [...formula.materials].map((material) => {
+      console.log("material", material);
       let cost = material.cost;
+      let charge = material.charge;
       let quantity = findElementWithName(formula.elements, material.quantity);
-      cost = cost.replace("{Quantity}", quantity.value);
-      console.log("cost: ", cost);
-      processCost(cost);
-      return { ...material, cost };
+      try {
+        cost = "{Quantity} * " + cost;
+        cost = cost.replace("{Quantity}", quantity.value);
+
+        const usedMaterials = material.formula.map((item) => {
+          return {
+            title: `@{{catalog||${item._id}||${item.title}}}`,
+            price: item.price,
+          };
+        });
+        const usedElements = elements.map((element) => {
+          return {
+            title: `@{{element||${element._id}||${element.name}}}`,
+            price: element.value,
+          };
+        });
+        usedMaterials.map((material) => {
+          cost = cost.replace(material.title, material.price);
+          return cost;
+        });
+        usedElements.map((element) => {
+          cost = cost.replace(element.title, element.price);
+          charge = charge.replace(element.title, Number(element.price) / 100);
+          return cost;
+        });
+        cost = Number(eval(cost).toFixed(2));
+        charge = charge.replace("{Cost}", cost);
+        charge = Number((eval(charge) + cost).toFixed(2));
+        console.log("charege: ", typeof charge, typeof cost);
+      } catch (error) {
+        cost = 0;
+        charge = 0;
+      }
+      totalMaterialsCost += cost;
+      totalMaterialsCharge += charge;
+      return { ...material, cost, charge, quantity: quantity.value || 0 };
     });
+    formula.totalMaterialsCost = totalMaterialsCost;
+    formula.totalProjectCharge = totalMaterialsCharge;
+    const profitPercent = Number(
+      (
+        (totalMaterialsCharge - totalMaterialsCost) /
+        totalMaterialsCost
+      ).toFixed(2)
+    );
+    formula.grossProfit = `${profitPercent * 100}%`;
     return materials;
   }
 
@@ -483,13 +524,13 @@ export default function AddEstimates() {
                       key={index}
                       extra={[
                         <>
-                          $4,785.00{" "}
+                          ${formula.totalProjectCharge || 0}{" "}
                           <span className="closeicon-panel">
                             <CloseCircleFilled />
                           </span>
                         </>,
                       ]}
-                     >
+                    >
                       <Row gutter={[24, 0]}>
                         {formula.elements.map((element, idx) => {
                           return (
@@ -519,6 +560,33 @@ export default function AddEstimates() {
                                       }}
                                       name="value"
                                       value={element.value}
+                                      type="number"
+                                    />
+                                  ) : element.name === "Markup" ? (
+                                    <Input
+                                      onChange={(e) => {
+                                        handleEditField(
+                                          e,
+                                          index,
+                                          "elements",
+                                          idx
+                                        );
+                                      }}
+                                      name="value"
+                                      value={element.value}
+                                      type="number"
+                                    />
+                                  ) : element.name === "Total Cost" ? (
+                                    <Input
+                                      name="value"
+                                      value={formula.totalMaterialsCost}
+                                      disabled
+                                    />
+                                  ) : element.name === "Gross Profit" ? (
+                                    <Input
+                                      name="value"
+                                      value={formula.grossProfit}
+                                      disabled
                                     />
                                   ) : (
                                     <h4>{element.value}</h4>
@@ -543,105 +611,12 @@ export default function AddEstimates() {
                     </Panel>
                   );
                 })}
-                {/* <Panel
-                  header="Paver Patio"
-                  key="2"
-                  extra={[
-                    <>
-                      $4,785.00{" "}
-                      <span className="closeicon-panel">
-                        <CloseCircleFilled />
-                      </span>{" "}
-                    </>,
-                  ]}
-                >
-                  <Row gutter={[24, 0]}>
-                    {box.map((c, index) => (
-                      <Col lg={6} span={24} key={index}>
-                        <Card
-                          bordered={false}
-                          className={`radius-12 mb-3  ${c.columbtn}`}
-                          bodyStyle={{ padding: "16px" }}
-                        >
-                          <div className="text-end drgicon">
-                            <span className="me-1">{drag}</span>{" "}
-                            <span>{ellps}</span>
-                          </div>
-                          <span>{c.title}</span>
-
-                          <div className="d-flex align-items-center justify-content-between">
-                            {c.rate}
-                            {c.editIcon}
-                          </div>
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-
-                  <Card className="radius-12 ant-estimate-table-card">
-                    <Table
-                      className="ant-table-estmating add-estimates-table"
-                      columns={columns}
-                      dataSource={data}
-                      size="middle"
-                      pagination={false}
-                    />
-                  </Card>
-                </Panel> */}
               </Collapse>
             </Card>
           </Col>
           <Col span={24} lg={8}>
-            <Card
-              bordered={false}
-              className="radius-12 ant-bootom-line-effect mb-3"
-            >
-              <Meta
-                className="border-bottom ant-meta-title text-center py-3"
-                title="Estimate Overview"
-              />
-              <div className="ant-desc-box ">
-                <ul>
-                  <li className="py-3">
-                    <div className="d-flex align-items-center justify-content-between mb-2">
-                      <div className="d-inline-flex align-items-center ant-overview-card">
-                        <span className="me-2">{arrowup}</span>
-                        Total Project Price
-                      </div>
+            <EstimationOverview selectedFormulas={selectedFormulas} />
 
-                      <span className="ant-blue-rate-font ant-blue-rate">
-                        $24,551.14
-                      </span>
-                    </div>
-                    <div className="d-flex align-items-center justify-content-between mb-2">
-                      <div className="d-inline-flex align-items-center ant-overview-card">
-                        <span className="me-2">{arrowdown}</span>
-                        Total Project Cost
-                      </div>
-
-                      <span className="ant-dager-rate ant-blue-rate-font">
-                        $24,551.14
-                      </span>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <List
-                bordered={false}
-                size="large"
-                dataSource={listdata}
-                renderItem={(item) => (
-                  <List.Item
-                    className="px-0 ant-list-bx"
-                    extra={[
-                      <div className={` ${item.pricebtn}`}>{item.rate}</div>,
-                    ]}
-                  >
-                    <List.Item.Meta description={item.title} />
-                  </List.Item>
-                )}
-              />
-            </Card>
             <Collapse
               defaultActiveKey={["1", "2"]}
               onChange={callback}

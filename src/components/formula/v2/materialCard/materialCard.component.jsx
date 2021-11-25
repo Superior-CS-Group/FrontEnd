@@ -28,7 +28,7 @@ function MaterialCard({
       fetchData();
     }
   }, [value]);
-
+  console.log("material: ", material);
   return (
     <tr>
       <td>
@@ -106,19 +106,23 @@ function MaterialCard({
           <Col md={8}>
             <label>Cost:</label>
           </Col>
-          <Col md={16}>
+          <Col
+            md={16}
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            {"{Quantity} * "}
             <ReactMentionInput
-              className="ant-furmulla-input px-2 outline height-150"
+              className="ant-furmulla-input px-2 outline"
               elementList={elementList.map((element) => ({
                 display: element.name,
                 id: element._id,
               }))}
-              onChange={(e) => {
+              onChange={(e, newValue) => {
                 e = { target: { ...e.target, name: "cost" } };
-                handleChange(e, index);
+                handleChange(e, index, newValue);
                 setValue(e.target.value);
               }}
-              placeholder="Enter Client Contract use '{E' for the dynamic values"
+              placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
               value={material.cost}
               onBlur={onFocusOut}
             />
@@ -171,22 +175,34 @@ function MaterialCard({
         <Row className="align-items-center">
           <Col md={8}>
             <label>Charge:</label>
-            <Checkbox
-              value={isEditable}
-              onChange={(e) => setIsEditable(e.target.checked)}
-            >
-              Edit
-            </Checkbox>
           </Col>
           <Col md={16}>
-            <Input
+            <ReactMentionInput
+              className="ant-furmulla-input"
+              elementList={elementList.map((element) => ({
+                display: element.name,
+                id: element._id,
+              }))}
+              onChange={(e, newValue) => {
+                e = { target: { ...e.target, name: "cost" } };
+                handleChange(e, index, newValue);
+                setValue(e.target.value);
+              }}
+              placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
+              value={material.charge}
+              onBlur={onFocusOut}
+              disabled
+            />
+            {/* <Input
               className="ant-furmulla-input"
               name="charge"
-              onChange={(e) => handleChange(e, index)}
+              onChange={(e) => {
+                handleChange(e, index);
+              }}
               onBlur={onFocusOut}
               value={material.charge}
               disabled
-            />
+            /> */}
           </Col>
         </Row>
       </td>

@@ -101,6 +101,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
               value={element.name}
               name="name"
               onBlur={onFocusOut}
+              disabled={element.disabled}
             />
           </Col>
         </Row>
