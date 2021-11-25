@@ -995,7 +995,7 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   color: #2ed47a;
   margin: 0px;
   width: 100%;
-  border: 0px;
+
   outline: none;
 }
 .count-card,
@@ -1094,10 +1094,11 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   border-radius: 6px 0px 0px 6px;
   position: absolute;
   width: 7px;
-  height: 60px;
+  width: 7px;
+  height: 50%;
   right: 0px;
   top: 50%;
-  margin-top: -17px;
+  transform: translatey(-50%);
 }
 
 .ant-meta-title .ant-card-meta-title {
@@ -1914,4 +1915,222 @@ ul.work-scope-list li {
 .height-150 {
   max-height: 150px;
   min-height: 150px;
+}
+
+.add-estimates-table table thead tr th {
+  background: #d0d0d0;
+  border: 0px;
+  color: #092d5d;
+}
+
+.add-estimates-table table tbody tr:nth-child(odd) {
+  background: #fafcff;
+}
+
+.add-estimates-table table tbody tr:nth-child(even) {
+  background: #e8f1fd;
+}
+
+.add-estimates-table table thead tr th:first-child {
+  border-top-left-radius: 6px !important;
+  border-bottom-left-radius: 6px;
+}
+
+.add-estimates-table table {
+  border-spacing: 0px 5px;
+}
+
+.add-estimates-table table thead tr th:last-child {
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px;
+}
+
+.add-estimates-table table tbody tr td:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.add-estimates-table table tbody tr td:last-child {
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px;
+}
+
+.add-estimates-table table tr td {
+  border: 0px;
+  color: #092d5d;
+}
+
+.catlog-tabs {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  background: #1a73e8;
+  border-radius: 9px 9px 0px 0px;
+}
+
+.catlog-tabs li {
+  display: inline-block;
+
+  font-weight: 500;
+  font-size: 17.4728px;
+  line-height: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+.catlog-tabs li a.active {
+  color: #1a73e8;
+  background: #fff;
+}
+
+.catlog-tabs li a b.left-curve {
+  position: absolute;
+  bottom: 0px;
+  left: -20px;
+  height: 100%;
+  width: 20px;
+  background: #fff;
+  display: none;
+}
+
+.catlog-tabs li a b.left-curve::before {
+  content: "";
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-bottom-right-radius: 9px;
+  background: #1a73e8;
+}
+
+.catlog-tabs li a b.right-curve {
+  position: absolute;
+  right: -20px;
+  top: 0px;
+  height: 100%;
+  width: 20px;
+  background: #fff;
+  display: none;
+}
+
+.catlog-tabs li a b.right-curve::before {
+  content: "";
+  right: 0;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  border-bottom-left-radius: 9px;
+  background: #1a73e8;
+}
+
+.catlog-tabs li a.active b.left-curve,
+.catlog-tabs li a.active b.right-curve {
+  display: block;
+}
+
+.catlog-tabs li .nav-link {
+  position: relative;
+  border-radius: 9px 9px 0px 0px;
+  padding: 1rem;
+  color: #fff;
+}
+
+.catlog-tabs li:first-child a b.left-curve {
+  display: none;
+}
+
+.ant-text-danger {
+  font-size: 15.8627px;
+  color: #ff0303;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.components-table-demo-nested table thead th {
+  background: transparent;
+  border: 0px;
+}
+
+.components-table-demo-nested table tr {
+  box-shadow: 0px 0px 19.8381px 1.98381px rgb(0 0 0 / 8%);
+  border-radius: 9px;
+}
+
+.components-table-demo-nested table {
+  border-spacing: 0px 10px;
+}
+
+.components-table-demo-nested table td {
+  border: 0px;
+}
+
+.components-table-demo-nested table thead th {
+  background: transparent;
+  border: 0px;
+}
+
+.components-table-demo-nested table tr {
+  box-shadow: 0px 0px 19.8381px 1.98381px rgb(0 0 0 / 8%);
+  border-radius: 9px;
+}
+
+.components-table-demo-nested table td {
+  border: 0px;
+}
+
+.ant-table-expand:before {
+  display: none;
+}
+
+.ant-table-expand ::before {
+  display: none;
+}
+
+.components-table-demo-nested .ant-table-expand table {
+  border-spacing: 0px;
+}
+
+.components-table-demo-nested .ant-table-expand table tr {
+  box-shadow: none;
+  background: transparent;
+  border-radius: 0px;
+}
+
+.components-table-demo-nested .ant-table-expand .ant-table {
+  background: transparent;
+}
+
+.components-table-demo-nested table .ant-table-expand thead {
+  display: none;
+}
+
+.green-color {
+  color: #2ed47a;
+}
+
+.components-table-demo-nested thead {
+  display: none;
+}
+/*-------------------------Email setting page-------------*/
+.logo-btn {
+  height: 120px;
+  width: 100%;
+}
+span.check-input-logo div {
+  width: 100%;
+}
+.ant-width-small {
+  width: 47px;
+  padding: 5px;
+  margin-left: 5px;
+}
+.ant-width-small input {
+  min-width: auto !important;
+}
+.ant-width-small input::-webkit-outer-spin-button,
+.ant-width-small input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

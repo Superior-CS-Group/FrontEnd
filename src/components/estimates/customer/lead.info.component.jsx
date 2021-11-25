@@ -34,7 +34,7 @@ export default function LeadInfo() {
   useEffect(() => {
     // console.log("params: ", params.id);
     const id = params.id;
-
+    
     if (id) {
       const body = { id };
       const fetchData = async () => {

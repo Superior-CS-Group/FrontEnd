@@ -68,8 +68,8 @@ export default class DashboardNavbar extends Component {
           <Menu.Item key="9" icon={invoice} className="sidebar-btn-disable">
             <NavLink to="#">Change orders</NavLink>
           </Menu.Item>
-          <Menu.Item key="10" icon={setting} className="sidebar-btn-disable">
-            <NavLink to="#">Budgeting & settings</NavLink>
+          <Menu.Item key="10" icon={setting}>
+            <NavLink to="/email-setting">Settings</NavLink>
           </Menu.Item>
           <Menu.Item key="11" icon={template} className="sidebar-btn-disable">
             <NavLink to="#">Template</NavLink>

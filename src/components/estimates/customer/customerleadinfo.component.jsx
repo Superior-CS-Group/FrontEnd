@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Select, Tabs, Button, Card, Switch } from "antd";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
@@ -19,13 +19,53 @@ export default function CustomerLeadInfo() {
     activeStatus: "Active",
     customerid: "",
     customerName: "",
-    customerAddress:"",
-    customerAddress1:"",
+    customerAddress: "",
+    customerAddress1: "",
     autoReminderEmail: "",
     statusList: [],
     estimaitonStatus: "",
     resultData: [],
   });
+
+  useEffect(() => {
+    const id = params.id;
+    if (id) {
+      const body = { id };
+      const fetchData = async () => {
+        const result = await postData(`customer/get-info`, body);
+        // console.log("result.data.Data",result.data.Data)
+        let userstatus;
+
+        if (result.data.Data.activeStatus === true) {
+          userstatus = "Active";
+        } else {
+          userstatus = "Deactive";
+        }
+        const status = await getData(`status/list`, body);
+
+        setState({
+          ...state,
+          id: id,
+          customerid: id,
+          customerName: result.data.Data.name,
+          customerEmail: result.data.Data.email,
+          customerAddress: result.data.Data.address,
+          customerAddress1:
+            result.data.Data.city +
+            " " +
+            result.data.Data.state +
+            +result.data.Data.postalCode,
+          activeStatus: userstatus,
+          estimaitonStatus: result.data.Data.estimaitonStatus,
+          autoReminderEmail: result.data.Data.autoReminderEmail,
+          resultData: result.data.Data,
+          statusList: status.data.Data,
+        });
+      };
+
+      fetchData();
+    }
+  }, []);
 
   const onChangeTab = (val) => {
     if (val === "Lead") {
@@ -124,7 +164,11 @@ export default function CustomerLeadInfo() {
           customerName: result.data.Data.name,
           customerEmail: result.data.Data.email,
           customerAddress: result.data.Data.address,
-          customerAddress1: result.data.Data.city+' '+result.data.Data.state+ +result.data.Data.postalCode,
+          customerAddress1:
+            result.data.Data.city +
+            " " +
+            result.data.Data.state +
+            +result.data.Data.postalCode,
           activeStatus: userstatus,
           estimaitonStatus: result.data.Data.estimaitonStatus,
           autoReminderEmail: result.data.Data.autoReminderEmail,
@@ -231,10 +275,13 @@ export default function CustomerLeadInfo() {
                     // value={state.estimaitonStatus}
                     name="estimaitonStatus"
                     onChange={updateStatusHandleSubmit}
+                    defaultValue={state.estimaitonStatus}
                   >
-                    {state.statusList.map((Datalist) => {
+                    {state.statusList.map((Datalist, idx) => {
                       return (
-                        <option value={Datalist.name}>{Datalist.name}</option>
+                        <option value={Datalist.name} key={idx}>
+                          {Datalist.name}
+                        </option>
                       );
                     })}
                   </Select>
@@ -276,10 +323,11 @@ export default function CustomerLeadInfo() {
                 {console.log("state.resultData", state.resultData)}
                 <AddEstimates
                   custInfo={{
+                    id: state.customerid,
                     name: state.customerName,
                     email: state.customerEmail,
                     address1: state.customerAddress1,
-                    address: state.customerAddress, 
+                    address: state.customerAddress,
                   }}
                 />
               </div>

@@ -62,7 +62,7 @@ export default function MaterialTable() {
               <span className="me-2">{Datel}</span>{" "}
               <span className="align-text">Delete</span>
             </Button>
-            <Button className="ant-edit-button " onClick={showModal}>
+            <Button className="ant-edit-button " onClick={handleEditForm}>
               <span className="me-2">{edit}</span> Edit
             </Button>
           </>
@@ -71,11 +71,11 @@ export default function MaterialTable() {
     ],
   });
 
-  const showModal = () => {
-    setState({
-      visible: true,
-    });
-  };
+  // const showModal = () => {
+  //   setState({
+  //     visible: true,
+  //   });
+  // };
 
   const hideModal = () => {
     setState({
@@ -159,6 +159,12 @@ export default function MaterialTable() {
     onChange: onSelectChange,
   };
 
+  const handleEditForm = () => {
+    setState({
+      visible: true,
+    });
+  };
+
   return (
     <>
       <ReactDragListView.DragColumn {...dragProps}>
@@ -172,7 +178,7 @@ export default function MaterialTable() {
       </ReactDragListView.DragColumn>
 
       <Modal
-        title="Edit Material/Services"
+        title="Edit Material"
         visible={state.visible}
         onOk={hideModal}
         onCancel={hideModal}

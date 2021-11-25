@@ -14,6 +14,8 @@ import Dashboard from "../components/dashboard.component";
 
 import Formula from "../components/formula/v1/formula.component";
 import FormulaV2 from "../components/formula/v2/formula.v2.component";
+import Catlog from "../components/estimates/catlog/Catlog";
+import EmailSetting from "../components/setting/emailsetting.component";
 
 const routes = [
   {
@@ -90,6 +92,12 @@ const routes = [
     component: <ContractPreview />,
   },
   {
+    path: "/contract-preview/:id",
+    exact: false,
+    name: "contract-preview",
+    component: <ContractPreview />,
+  },
+  {
     path: "/v1/formula-tree",
     exact: true,
     name: "Formula Tree",
@@ -100,6 +108,18 @@ const routes = [
     exact: true,
     name: "Formula Tree v2",
     component: <FormulaV2 />,
+  },
+  {
+    path: "/new-catlog",
+    exact: true,
+    name: "catlog",
+    component: <Catlog />,
+  },
+  {
+    path: "/email-setting",
+    exact: true,
+    name: "email-setting",
+    component: <EmailSetting />,
   },
 ];
 export default routes;
