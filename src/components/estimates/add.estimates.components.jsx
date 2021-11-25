@@ -273,6 +273,49 @@ export default function AddEstimates() {
       ),
     },
   ];
+
+  const payment = [
+    {
+      title: "Deposit payment at signing of contract",
+      cost: (
+        <Input
+          type="number"
+          maxLength="2"
+          placeholder="Basic usage"
+          className="ant-width-small font-bold radius-4 gray-text"
+          defaultValue="12"
+          suffix="%"
+        />
+      ),
+    },
+    {
+      title: "Progress payment when project is started",
+      cost: (
+        <Input
+          type="number"
+          min={1}
+          max={2}
+          placeholder="Basic usage"
+          className="ant-width-small font-bold radius-4 gray-text"
+          defaultValue="99"
+          suffix="%"
+        />
+      ),
+    },
+    {
+      title: "Completion payment",
+      cost: (
+        <Input
+          type="number"
+          maxLength="2"
+          placeholder="Basic usage"
+          className="ant-width-small font-bold radius-4 gray-text"
+          defaultValue="89"
+          suffix="%"
+        />
+      ),
+    },
+  ];
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
@@ -489,7 +532,7 @@ export default function AddEstimates() {
                           </span>
                         </>,
                       ]}
-                     >
+                    >
                       <Row gutter={[24, 0]}>
                         {formula.elements.map((element, idx) => {
                           return (
@@ -643,7 +686,7 @@ export default function AddEstimates() {
               />
             </Card>
             <Collapse
-              defaultActiveKey={["1", "2"]}
+              defaultActiveKey={["1", "2", "3"]}
               onChange={callback}
               expandIconPosition="right"
               bordered={false}
@@ -696,6 +739,51 @@ export default function AddEstimates() {
                     </List.Item>
                   )}
                 />
+              </Panel>
+
+              <Panel
+                header="Payment Terms for Project"
+                key="3"
+                className="border-0 ant-bootom-line-effect"
+              >
+                <List
+                  className="mb-3"
+                  bordered={false}
+                  dataSource={payment}
+                  size="small"
+                  renderItem={(item) => (
+                    <List.Item className="border-0 font-d" extra={[item.cost]}>
+                      {item.title}
+                    </List.Item>
+                  )}
+                />
+                {/* <div className="p-3">
+                  <Row>
+                    <Col md={20}>
+                      <Input placeholder="" />
+                    </Col>
+                    <Col md={4}>
+                      <Input
+                        type="number"
+                        maxLength="2"
+                        placeholder="Basic usage"
+                        className="ant-width-small font-bold radius-4 gray-text"
+                        defaultValue="89"
+                        suffix="%"
+                      />
+                    </Col>
+                  </Row>
+                </div> */}
+                <div className="addbtn-ant ps-3 py-3">
+                  <a href="#" className="d-inline-flex align-items-center">
+                    <PlusCircleOutlined className="me-2" />
+                    Add new field
+                  </a>
+                </div>
+                <span>
+                  <b>Note:</b>{" "}
+                  <i>Payment terms will change if change orders are made</i>
+                </span>
               </Panel>
             </Collapse>
           </Col>
