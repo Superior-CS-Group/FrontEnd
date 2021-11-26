@@ -1037,7 +1037,7 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 }
 .blue-card:before {
   content: "";
-  background: #6e6b7b;
+  background: #717171;
   box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
   border-radius: 6px 6px 0px 0px;
   position: absolute;
@@ -1624,6 +1624,9 @@ ul.work-scope-list li {
 
 .ant-cover-success:before {
   background: #00ac07;
+}
+.ant-cover-gray:before {
+  background: #717171;
 }
 .ant-cricle-add {
   font-size: 32px;
