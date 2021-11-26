@@ -2280,3 +2280,44 @@ input::-webkit-inner-spin-button {
 .text-spaceb {
   white-space: nowrap;
 }
+
+.modal-radius .ant-modal-header {
+  border: 0px;
+  padding-bottom: 0px;
+}
+
+.modal-radius .ant-modal-header .ant-modal-title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 45px;
+  /* identical to box height */
+  text-transform: capitalize;
+
+  /* ONE % BLACK II */
+}
+
+.modal-radius .ant-modal-content {
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.ant-modal.modal-radius {
+  border-radius: 30px;
+}
+
+.modal-radius .ant-modal-content .ant-modal-close {
+  top: 22px;
+  right: 20px;
+}
+
+.modal-radius .ant-modal-content .ant-modal-close .ant-modal-close-x {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #717171;
+  border-radius: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
