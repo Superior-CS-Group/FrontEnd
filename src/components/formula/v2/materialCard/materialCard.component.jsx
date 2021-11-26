@@ -33,10 +33,10 @@ function MaterialCard({
     <tr>
       <td>
         <Row className="align-items-center">
-          <Col md={8}>
+          <Col md={12}>
             <label>Name Material:</label>
           </Col>
-          <Col md={16}>
+          <Col md={12}>
             <Input
               className="ant-furmulla-input"
               name="name"
@@ -49,7 +49,7 @@ function MaterialCard({
       </td>
       <td>
         <Row>
-          <Col md={8}>
+          <Col md={12}>
             <label>Enter Quantity:</label>
             <Checkbox
               value={isNumaric}
@@ -58,7 +58,7 @@ function MaterialCard({
               use numaric
             </Checkbox>
           </Col>
-          <Col md={16}>
+          <Col md={12}>
             {isNumaric ? (
               <Input
                 placeholder="Number"
@@ -102,7 +102,7 @@ function MaterialCard({
         </Row>
       </td>
       <td>
-        <Row className="align-items-center">
+        <Row className="align-items-start">
           <Col md={8}>
             <label>Cost:</label>
           </Col>
@@ -110,22 +110,26 @@ function MaterialCard({
             md={16}
             style={{ display: "flex", justifyContent: "space-between" }}
           >
-            {"{Quantity} * "}
-            <ReactMentionInput
-              className="ant-furmulla-input px-2 outline"
-              elementList={elementList.map((element) => ({
-                display: element.name,
-                id: element._id,
-              }))}
-              onChange={(e, newValue) => {
-                e = { target: { ...e.target, name: "cost" } };
-                handleChange(e, index, newValue);
-                setValue(e.target.value);
-              }}
-              placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
-              value={material.cost}
-              onBlur={onFocusOut}
-            />
+            <div className="d-flex align-items-start">
+              <span style={{ whiteSpace: "nowrap" }} className="me-2">
+                {"{Quantity} * "}
+              </span>
+              <ReactMentionInput
+                className="ant-furmulla-input px-2 outline"
+                elementList={elementList.map((element) => ({
+                  display: element.name,
+                  id: element._id,
+                }))}
+                onChange={(e, newValue) => {
+                  e = { target: { ...e.target, name: "cost" } };
+                  handleChange(e, index, newValue);
+                  setValue(e.target.value);
+                }}
+                placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
+                value={material.cost}
+                onBlur={onFocusOut}
+              />
+            </div>
             <>
               {/* <div className="d-flex align-items-center">
               <Input
@@ -172,7 +176,7 @@ function MaterialCard({
         </Row>
       </td>
       <td>
-        <Row className="align-items-center">
+        <Row className="align-items-start">
           <Col md={8}>
             <label>Charge:</label>
           </Col>

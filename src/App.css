@@ -2134,3 +2134,9 @@ span.check-input-logo div {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.ant-furmulla-input--multiLine textarea.ant-furmulla-input__input {
+  border: 0px;
+  padding: 0px 5px;
+  outline: none;
+}
