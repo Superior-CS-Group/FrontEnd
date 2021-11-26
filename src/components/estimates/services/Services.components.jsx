@@ -136,7 +136,7 @@ export default function Services() {
             pagination={{ pageSize: 6 }}
             bordered={false}
           />
-          <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
+          {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
             <div className="ms-auto pe-3 ant-select-box ">
               <span className="me-3">Action:</span>
               <Select
@@ -161,7 +161,7 @@ export default function Services() {
                 </Button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </Card>
       <Modal

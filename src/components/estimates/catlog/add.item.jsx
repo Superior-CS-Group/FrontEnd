@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Progress, Form, Input, Select } from "antd";
+import { Row, Col, Progress, Form, Input, Select, Button } from "antd";
 import { star, upload } from "../../../utils/svg.file";
 import {
   CheckOutlined,
@@ -110,7 +110,7 @@ export default function AddItem() {
             </Col>
             <Col md={8}>
               <Form.Item label="Unit" className="ant-smily-select">
-                <SmileOutlined />
+                {/* <SmileOutlined />
                 <Select
                   defaultValue="e.g. inches"
                   style={{ width: "100%" }}
@@ -121,7 +121,13 @@ export default function AddItem() {
                   <Option value="lucy">Lucy</Option>
 
                   <Option value="Yiminghe">yiminghe</Option>
-                </Select>
+                </Select> */}
+                <Input
+                  className="ant-furmulla-input radius-30"
+                  prefix={<SmileOutlined />}
+                  placeholder="e.g. inches"
+                  size="large"
+                />
               </Form.Item>
             </Col>
             <Col md={8}>
@@ -144,6 +150,11 @@ export default function AddItem() {
                   placeholder="dfcsxR410A has a 60% higher operating pressure than R22 thus requiring a thicker wall copper tube and significantly stronger (R410A) copper fittings."
                 />
               </Form.Item>
+            </Col>
+            <Col md={24} className="text-end">
+              <Button type="primary" className="radius-9">
+                Save
+              </Button>
             </Col>
           </Row>
         </Form>
