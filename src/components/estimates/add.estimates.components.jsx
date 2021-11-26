@@ -20,11 +20,10 @@ import {
   PlusCircleOutlined,
   SaveOutlined,
   EditOutlined,
-  InfoCircleOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
 } from "@ant-design/icons";
-import { arrowdown, arrowup, drag, ellps, eye } from "../../utils/svg.file";
+import { drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 import { searchFormulaByName } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
@@ -33,108 +32,18 @@ const { Panel } = Collapse;
 function callback(key) {
   console.log(key);
 }
-const { Meta } = Card;
 const { Option } = Select;
 
 function handleChange(value) {
   console.log(`selected ${value}`);
 }
 export default function AddEstimates(props) {
-  console.log(props.custInfo);
-
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
 
   const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
+  const [view, setView] = React.useState("client");
 
-  const box = [
-    {
-      title: "Hours",
-      rate: <h4>16</h4>,
-      editIcon: <EditOutlined />,
-      columbtn: "count-card",
-    },
-    {
-      title: "Tons Of Fill Dirt",
-      rate: <h4>10</h4>,
-      editIcon: <EditOutlined />,
-      columbtn: "count-card",
-    },
-    {
-      title: "Yards Of Topsoil",
-      rate: <h4>5</h4>,
-      editIcon: <EditOutlined />,
-      columbtn: "count-card",
-    },
-
-    {
-      title: "Haul Off Cost",
-      rate: <h4>$1,500.00</h4>,
-      editIcon: <EditOutlined />,
-      columbtn: "count-card",
-    },
-    {
-      title: (
-        <>
-          Days with<span className="tree-box">3</span> guys
-        </>
-      ),
-      rate: <h4>0.67</h4>,
-      editIcon: <InfoCircleOutlined />,
-      columbtn: "blue-card",
-    },
-    {
-      title: "Rental Equipment",
-      rate: (
-        <div className="d-flex align-items-center justify-content-between ">
-          <h4 className="trencher">Trencher</h4>
-          <Select
-            defaultValue="$150.00"
-            style={{ width: "100%" }}
-            onChange={handleChange}
-            className="ms-2"
-            size="small"
-          >
-            <Option value="rate">$150.00</Option>
-            <Option value="ss">$151.00</Option>
-          </Select>
-        </div>
-      ),
-      columbtn: "count-card",
-    },
-    {
-      title: "Days Of Rental",
-      rate: <h4>2</h4>,
-      columbtn: "count-card",
-      editIcon: <EditOutlined />,
-    },
-    {
-      title: "Misc Cost",
-      rate: <h4>$100.00</h4>,
-
-      editIcon: <EditOutlined />,
-      columbtn: "yellow-card",
-    },
-    {
-      title: "Total Cost",
-      rate: <h4>$2,871.00</h4>,
-      columbtn: "danger-card",
-      editIcon: <InfoCircleOutlined />,
-    },
-    {
-      title: "Gross Profit",
-      rate: <h4>44.93%</h4>,
-      columbtn: "blue-card",
-      editIcon: <InfoCircleOutlined />,
-    },
-    {
-      title: "Markup",
-      rate: <h4>1.69</h4>,
-      columbtn: "count-card",
-      editIcon: <EditOutlined />,
-      columbtn: "blue-card",
-    },
-  ];
   const columns = [
     {
       title: "Materials needed:",
@@ -156,51 +65,6 @@ export default function AddEstimates(props) {
       title: "Charge",
       dataIndex: "charge",
     },
-  ];
-  const data = [
-    {
-      key: "1",
-      name: "Disposal Fee",
-      age: 1,
-      address: "Each",
-      cost: "$1,500.00",
-      charge: "$2535.00",
-    },
-    {
-      key: "1",
-      name: "Disposal Fee",
-      age: 1,
-      address: "Each",
-      cost: "$1,500.00",
-      charge: "$2535.00",
-    },
-    {
-      key: "1",
-      name: "Disposal Fee",
-      age: 1,
-      address: "Each",
-      cost: "$1,500.00",
-      charge: "$2535.00",
-    },
-    {
-      key: "1",
-      name: "Disposal Fee",
-      age: 1,
-      address: "Each",
-      cost: "$1,500.00",
-      charge: "$2535.00",
-    },
-  ];
-
-  const listdata = [
-    { title: "Materials Cost", rate: "$5332.00", pricebtn: "danger-text" },
-    { title: "Expected Overhead", rate: "$0.00", pricebtn: "danger-text" },
-    { title: "Subcontractor Cost", rate: "$0.00", pricebtn: "danger-text" },
-    { title: "Gross Profit", rate: "$12,124.98", pricebtn: "warring-text" },
-    { title: "Gross Profit %", rate: "49.39%", pricebtn: "warring-text" },
-    { title: "Net Profit", rate: "$12,124.98", pricebtn: "warring-text" },
-    { title: "Man Hours", rate: "172", pricebtn: "blue-text" },
-    { title: "Days w/5 guys", rate: "4.3", pricebtn: "blue-text" },
   ];
 
   const mdata = [
@@ -386,6 +250,7 @@ export default function AddEstimates(props) {
       }
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
+      console.log(material, "material");
       return { ...material, cost, charge, quantity: quantity.value || 0 };
     });
     formula.totalMaterialsCost = totalMaterialsCost;
@@ -548,13 +413,28 @@ export default function AddEstimates(props) {
             <div className="ant-tabs-box w-100 me-2">
               <ul>
                 <li>
-                  <a href="#">Client</a>
+                  <a
+                    className={view === "client" ? "active" : ""}
+                    onClick={() => setView("client")}
+                  >
+                    Client
+                  </a>
                 </li>
                 <li>
-                  <a className="active">Admin</a>
+                  <a
+                    className={view === "internal" ? "active" : ""}
+                    onClick={() => setView("internal")}
+                  >
+                    Admin
+                  </a>
                 </li>
                 <li>
-                  <a>Full</a>
+                  <a
+                    className={view === "full" ? "active" : ""}
+                    onClick={() => setView("full")}
+                  >
+                    Full
+                  </a>
                 </li>
               </ul>
             </div>
@@ -589,71 +469,73 @@ export default function AddEstimates(props) {
                       ]}
                     >
                       <Row gutter={[24, 0]}>
-                        {formula.elements.map((element, idx) => {
-                          return (
-                            <Col lg={6} span={24} key={idx}>
-                              <Card
-                                bordered={false}
-                                className={`radius-12 mb-3  count-card`}
-                                bodyStyle={{ padding: "16px" }}
-                              >
-                                <div className="text-end drgicon">
-                                  <span className="me-1">{drag}</span>{" "}
-                                  <span>{ellps}</span>
-                                </div>
-                                <span>{element.name}</span>
+                        {formula.elements
+                          .filter((elem) => elem.view.includes(view))
+                          .map((element, idx) => {
+                            return (
+                              <Col lg={6} span={24} key={idx}>
+                                <Card
+                                  bordered={false}
+                                  className={`radius-12 mb-3  count-card`}
+                                  bodyStyle={{ padding: "16px" }}
+                                >
+                                  <div className="text-end drgicon">
+                                    <span className="me-1">{drag}</span>{" "}
+                                    <span>{ellps}</span>
+                                  </div>
+                                  <span>{element.name}</span>
 
-                                <div className="d-flex align-items-center justify-content-between">
-                                  {element.type === "manual" ||
-                                  element.type === "prefilled" ? (
-                                    <Input
-                                      onChange={(e) => {
-                                        handleEditField(
-                                          e,
-                                          index,
-                                          "elements",
-                                          idx
-                                        );
-                                      }}
-                                      name="value"
-                                      value={element.value}
-                                      type="number"
-                                    />
-                                  ) : element.name === "Markup" ? (
-                                    <Input
-                                      onChange={(e) => {
-                                        handleEditField(
-                                          e,
-                                          index,
-                                          "elements",
-                                          idx
-                                        );
-                                      }}
-                                      name="value"
-                                      value={element.value}
-                                      type="number"
-                                    />
-                                  ) : element.name === "Total Cost" ? (
-                                    <Input
-                                      name="value"
-                                      value={formula.totalMaterialsCost}
-                                      disabled
-                                    />
-                                  ) : element.name === "Gross Profit" ? (
-                                    <Input
-                                      name="value"
-                                      value={formula.grossProfit}
-                                      disabled
-                                    />
-                                  ) : (
-                                    <h4>{element.value}</h4>
-                                  )}
-                                  <EditOutlined />
-                                </div>
-                              </Card>
-                            </Col>
-                          );
-                        })}
+                                  <div className="d-flex align-items-center justify-content-between">
+                                    {element.type === "manual" ||
+                                    element.type === "prefilled" ? (
+                                      <Input
+                                        onChange={(e) => {
+                                          handleEditField(
+                                            e,
+                                            index,
+                                            "elements",
+                                            idx
+                                          );
+                                        }}
+                                        name="value"
+                                        value={element.value}
+                                        type="number"
+                                      />
+                                    ) : element.name === "Markup" ? (
+                                      <Input
+                                        onChange={(e) => {
+                                          handleEditField(
+                                            e,
+                                            index,
+                                            "elements",
+                                            idx
+                                          );
+                                        }}
+                                        name="value"
+                                        value={element.value}
+                                        type="number"
+                                      />
+                                    ) : element.name === "Total Cost" ? (
+                                      <Input
+                                        name="value"
+                                        value={formula.totalMaterialsCost}
+                                        disabled
+                                      />
+                                    ) : element.name === "Gross Profit" ? (
+                                      <Input
+                                        name="value"
+                                        value={formula.grossProfit}
+                                        disabled
+                                      />
+                                    ) : (
+                                      <h4>{element.value}</h4>
+                                    )}
+                                    <EditOutlined />
+                                  </div>
+                                </Card>
+                              </Col>
+                            );
+                          })}
                       </Row>
 
                       <Card className="radius-12 ant-estimate-table-card">

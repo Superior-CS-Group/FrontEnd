@@ -7,34 +7,33 @@ import {
   PlusCircleOutlined,
   SearchOutlined,
   CloseCircleOutlined,
-  EditOutlined,
-  DeleteOutlined,
   UpCircleFilled,
   DownCircleFilled,
   EditTwoTone,
   DeleteTwoTone,
   PlusCircleTwoTone,
 } from "@ant-design/icons";
-import fillter from "../../../images/fillter.png";
-import FilterSorting from "../filter/filter.sorting.component";
+
 import CataLogModal from "./catalog.modal";
+import Addelement from "./add.element";
+import AddItem from "./add.item";
 
 export default function Catlog() {
   const { Option } = Select;
   function handleChange(value) {
     console.log(`selected ${value}`);
   }
-
-  const [isModal, setIsModal] = useState(false);
+  const [title, setTitle] = useState("Sub Category");
+  const [isModal, setIsModal] = useState("");
   const addModal = () => {
-    setIsModal(true);
+    setIsModal("subcategory");
   };
   const handleOk = () => {
     setIsModal(false);
   };
 
   const handleCancel = () => {
-    setIsModal(false);
+    setIsModal("");
   };
 
   const expandedRowRender = () => {
@@ -44,6 +43,12 @@ export default function Catlog() {
       { title: "", dataIndex: "quantity", key: "quantity" },
 
       { title: "", dataIndex: "upgradeNum", key: "upgradeNum" },
+      {
+        title: "",
+        dataIndex: "action",
+        key: "action",
+        className: "text-end",
+      },
     ];
 
     const data = [];
@@ -54,6 +59,24 @@ export default function Catlog() {
         name: "$0.40",
         quantity: "1",
         upgradeNum: "Item",
+        action: (
+          <>
+            <Button
+              type="text"
+              shape="circle"
+              className="me-2 d-inline-flex align-items-center justify-content-center"
+            >
+              <DeleteTwoTone />
+            </Button>
+            <Button
+              type="text"
+              shape="circle"
+              className="d-inline-flex align-items-center justify-content-center"
+            >
+              <EditTwoTone />
+            </Button>
+          </>
+        ),
       });
     }
     return (
@@ -125,6 +148,19 @@ export default function Catlog() {
     });
   }
 
+  const renderItem = () => {
+    console.log("isModal: ", isModal);
+    switch (isModal.isModal) {
+      case "subcategory":
+        return <Addelement />;
+      case "additem":
+        return <AddItem />;
+
+      default:
+        return "";
+    }
+  };
+
   return (
     <>
       <BreadcrumbBar
@@ -161,8 +197,8 @@ export default function Catlog() {
                 </Nav.Link>
               </Nav.Item>
             </Nav>
-            <div className="radius-9 p-3">
-              <div className="card-shadow p-2">
+            <div className="p-3 card-shadow ">
+              <div className="p-2">
                 <div className="fillter d-lg-flex align-items-center">
                   {/* <span
                     className="inline-block me-4 fillter-btn cursor-btn"
@@ -172,14 +208,26 @@ export default function Catlog() {
                     Sort
                   </span> */}
 
-                  <span className="ant-blue-plus me-4" onClick={addModal}>
+                  <span
+                    className="ant-blue-plus me-4"
+                    onClick={() => {
+                      setIsModal({ isModal: "subcategory" });
+                      setTitle("Sub Category");
+                    }}
+                  >
                     <PlusCircleOutlined
                       style={{ fontSize: "18px" }}
                       className="me-2"
                     />{" "}
-                    Add Element
+                    Sub Category
                   </span>
-                  <span className="ant-blue-plus me-4">
+                  <span
+                    className="ant-blue-plus me-4"
+                    onClick={() => {
+                      setIsModal({ isModal: "additem" });
+                      setTitle("Add Item");
+                    }}
+                  >
                     <PlusCircleOutlined
                       style={{ fontSize: "18px" }}
                       className="me-2"
@@ -196,7 +244,7 @@ export default function Catlog() {
 
                   <div className="ms-auto col-lg-3">
                     <Input
-                      placeholder="Search by name"
+                      placeholder="Search catalog by name"
                       text="search"
                       className="ant-search-button"
                       suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
@@ -238,11 +286,13 @@ export default function Catlog() {
         </Card>
       </div>
       <CataLogModal
-        title="Add Element"
+        title={title}
         addModal={addModal}
         isModal={isModal}
         handleOk={handleOk}
         handleCancel={handleCancel}
+        content={renderItem()}
+        width={575}
       />
     </>
   );

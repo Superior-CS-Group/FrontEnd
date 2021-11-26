@@ -8,6 +8,8 @@ export default function CataLogModal(props) {
         visible={props.isModal}
         onOk={props.handleOk}
         onCancel={props.handleCancel}
+        footer={false}
+        width={props.width}
       >
         {props.content}
       </Modal>

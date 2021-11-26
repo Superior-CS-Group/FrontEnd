@@ -122,7 +122,7 @@ export default function Services() {
         style={{ borderRadius: "10px" }}
         bodyStyle={{ padding: "0px" }}
       >
-        <FillterTabs />
+        <FillterTabs name="Search services by Name" />
         <div className="p-2 ant-table-seprate">
           <Table
             columns={columns}
