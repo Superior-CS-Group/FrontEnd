@@ -13,10 +13,10 @@ function MaterialCard({
     <tr>
       <td>
         <Row className="align-items-center">
-          <Col md={12}>
+          <Col md={8}>
             <label>Name Material:</label>
           </Col>
-          <Col md={12}>
+          <Col md={16}>
             <Input
               className="ant-furmulla-input"
               name="name"
@@ -29,12 +29,12 @@ function MaterialCard({
       </td>
       <td>
         <Row>
-          <Col md={12}>
+          <Col md={8}>
             <label>Enter Quantity:</label>
           </Col>
           <Col md={16}>
             <ReactMentionInput
-              className="ant-furmulla-input px-2 outline"
+              className="ant-furmulla-input px-2 outline w-200"
               elementList={elementList.map((element) => ({
                 display: element.name,
                 id: element._id,
@@ -52,28 +52,27 @@ function MaterialCard({
       </td>
       <td>
         <Row className="align-items-start">
-          <Col md={8}>
+          <Col md={3}>
             <label>Cost:</label>
           </Col>
-          <Col
-            md={16}
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            {"{Quantity} * "}
-            <ReactMentionInput
-              className="ant-furmulla-input px-2 outline"
-              elementList={elementList.map((element) => ({
-                display: element.name,
-                id: element._id,
-              }))}
-              onChange={(e, newValue) => {
-                e = { target: { ...e.target, name: "cost" } };
-                handleChange(e, index, newValue);
-              }}
-              placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
-              value={material.cost}
-              onBlur={onFocusOut}
-            />
+          <Col md={21}>
+            <div className="d-flex">
+              <span className="me-2 text-spaceb"> {"{Quantity} * "}</span>
+              <ReactMentionInput
+                className="ant-furmulla-input px-2 outline w-200"
+                elementList={elementList.map((element) => ({
+                  display: element.name,
+                  id: element._id,
+                }))}
+                onChange={(e, newValue) => {
+                  e = { target: { ...e.target, name: "cost" } };
+                  handleChange(e, index, newValue);
+                }}
+                placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
+                value={material.cost}
+                onBlur={onFocusOut}
+              />
+            </div>
           </Col>
         </Row>
       </td>
@@ -84,7 +83,7 @@ function MaterialCard({
           </Col>
           <Col md={16}>
             <ReactMentionInput
-              className="ant-furmulla-input"
+              className="ant-furmulla-input w-200"
               elementList={elementList.map((element) => ({
                 display: element.name,
                 id: element._id,

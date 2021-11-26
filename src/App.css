@@ -1879,17 +1879,21 @@ ul.work-scope-list li {
   list-style: none;
 }
 
-.sagision {
+.sagision,
+.ant-furmulla-input__suggestions__list {
   box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
     0 9px 28px 8px rgb(0 0 0 / 5%);
   border-radius: 2px;
   background: #fff;
-  position: absolute;
+
   z-index: 1;
-  width: 100%;
+  max-height: 200px;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
-.sagision ul li {
+.sagision ul li,
+.ant-furmulla-input__suggestions__list li {
   position: relative;
   display: block;
   min-height: 32px;
@@ -1902,7 +1906,8 @@ ul.work-scope-list li {
   transition: background 0.3s ease;
 }
 
-.sagision ul li:hover {
+.sagision ul li:hover,
+.ant-furmulla-input__suggestions__list li:hover {
   background: #f5f5f5;
 }
 
@@ -1914,7 +1919,7 @@ ul.work-scope-list li {
 }
 .height-150 {
   max-height: 150px;
-  min-height: 150px;
+  min-height: 150px !important;
 }
 
 .add-estimates-table table thead tr th {
@@ -2261,4 +2266,17 @@ input::-webkit-inner-spin-button {
   .ant-select-selector {
   padding-left: 40px;
   border-radius: 30px;
+}
+
+.ant-furmulla-input.ant-furmulla-input--multiLine {
+  min-height: 40px;
+  background: #fff;
+}
+
+.w-200 {
+  width: 100%;
+}
+
+.text-spaceb {
+  white-space: nowrap;
 }
