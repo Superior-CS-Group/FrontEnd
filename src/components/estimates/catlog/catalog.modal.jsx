@@ -10,6 +10,7 @@ export default function CataLogModal(props) {
         onCancel={props.handleCancel}
         footer={false}
         width={props.width}
+        className="modal-radius"
       >
         {props.content}
       </Modal>

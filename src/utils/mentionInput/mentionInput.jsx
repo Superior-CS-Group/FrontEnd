@@ -34,6 +34,7 @@ function ReactMentionInput({
         onChange={onChange}
         placeholder={placeholder}
         onBlur={onBlur}
+       
       >
         <Mention
           trigger="@"

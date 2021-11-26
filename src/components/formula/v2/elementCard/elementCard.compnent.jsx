@@ -7,8 +7,8 @@ const typeOfOptions = [
   { type: "manual", title: "Manual Entry" },
   { type: "prefilled", title: "Prefilled but Editable" },
   { type: "dropdown", title: "Dropdown" },
-  { type: "result_editable", title: "Resykt (Editable)" },
-  { type: "result_locked", title: "Resykt (Locked)" },
+  { type: "result_editable", title: "Result (Editable)" },
+  { type: "result_locked", title: "Result (Locked)" },
 ];
 
 function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
@@ -150,6 +150,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
           <Col md={16}>
             <Select
               className="select-w"
+              size="large"
               defaultValue={element.type}
               style={{ width: "100%" }}
               onChange={(value) => {
@@ -169,7 +170,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
           </Col>
         </Row>
 
-        <Row gutter={[8, 0]} className="align-items-center mb-3">
+        <Row gutter={[8, 0]} className="mb-3">
           {renderSection()}
         </Row>
         <Row gutter={[8, 0]} className="align-items-center mb-3">
@@ -186,6 +187,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
               style={{ width: "100%" }}
               onBlur={onFocusOut}
               listHeight={150}
+              size="large"
             >
               <Option>Unit</Option>
               {unit.map((item, index) => {
@@ -205,6 +207,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
           <Col md={16}>
             <Select
               mode="multiple"
+              size="large"
               allowClear
               defaultValue={[...(element.view || [])]}
               onChange={(e) => handleChange(e, "view", idx)}
