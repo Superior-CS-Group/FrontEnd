@@ -1037,7 +1037,7 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 }
 .blue-card:before {
   content: "";
-  background: #6e6b7b;
+  background: #717171;
   box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
   border-radius: 6px 6px 0px 0px;
   position: absolute;
@@ -1624,6 +1624,9 @@ ul.work-scope-list li {
 
 .ant-cover-success:before {
   background: #00ac07;
+}
+.ant-cover-gray:before {
+  background: #717171;
 }
 .ant-cricle-add {
   font-size: 32px;
@@ -2279,4 +2282,45 @@ input::-webkit-inner-spin-button {
 
 .text-spaceb {
   white-space: nowrap;
+}
+
+.modal-radius .ant-modal-header {
+  border: 0px;
+  padding-bottom: 0px;
+}
+
+.modal-radius .ant-modal-header .ant-modal-title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 45px;
+  /* identical to box height */
+  text-transform: capitalize;
+
+  /* ONE % BLACK II */
+}
+
+.modal-radius .ant-modal-content {
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.ant-modal.modal-radius {
+  border-radius: 30px;
+}
+
+.modal-radius .ant-modal-content .ant-modal-close {
+  top: 22px;
+  right: 20px;
+}
+
+.modal-radius .ant-modal-content .ant-modal-close .ant-modal-close-x {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #717171;
+  border-radius: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }

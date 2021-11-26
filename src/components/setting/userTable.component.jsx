@@ -7,24 +7,25 @@ import { Datel, drag, edit } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../utils/fetchApi.js";
 import { deleteCatalog } from "../../api/catalogue";
+import { getUserList } from "../../api/admin.js";
 
 export default function UserTable() {
   const params = useParams();
 
   const [state, setState] = useState({
     columns: [
-      {
-        title: <Checkbox />,
-        dataIndex: "key",
-      },
+      // {
+      //   title: <Checkbox />,
+      //   dataIndex: "key",
+      // },
 
       {
         title: (
           <>
-            User Name <span className="float-end me-2">{drag}</span>
+            Company Name <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "name",
+        dataIndex: "companyName",
       },
       {
         title: (
@@ -37,23 +38,31 @@ export default function UserTable() {
       {
         title: (
           <>
-            Phone <span className="float-end me-2">{drag}</span>
+            Currency <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "phone",
+        dataIndex: "currency",
       },
       {
         title: (
           <>
-            Address <span className="float-end me-2">{drag}</span>
+            Time Zone <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "address",
+        dataIndex: "timeZone",
       },
       {
-        title: "Action",
-        dataIndex: "action",
+        title: (
+          <>
+            Date <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "cdate",
       },
+      // {
+      //   title: "Action",
+      //   dataIndex: "action",
+      // },
     ],
   });
 
@@ -72,25 +81,12 @@ export default function UserTable() {
   };
 
   const deleteServiceHandleSubmit = async (id) => {
-    console.log(id);
+    // console.log(id);
 
     const body = {
       _id: id,
     };
-    console.log("body: ", body);
-    // const updateCustomer = await deleteCatalog(body);
-    // if (updateCustomer.remote === "success") {
-    //   setState({
-    //     ...state,
-    //     message: "Data Deleted!",
-    //   });
-    // } else {
-    //   setState({
-    //     ...state,
-    //     errors: updateCustomer.remote.data.errors,
-    //     isLoading: false,
-    //   });
-    // }
+    // console.log("body: ", body);
   };
 
   useEffect(() => {
@@ -100,34 +96,36 @@ export default function UserTable() {
       const body = { type: "service" };
       const result = await postData(`services/list-by-type`, body);
 
-      // console.log(result.data.Data);
+      const result2 = await getUserList();
+      console.log(result2.data, "result2   result2");
 
-      for (let i = 0; i < result.data.Data.length; i++) {
-        let catalogueData = result.data.Data[i];
+      for (let i = 0; i < result2.data.length; i++) {
+        let catalogueData = result2.data[i];
         data.push({
-          key: <Checkbox />,
+          // key: <Checkbox />,
 
-          name: catalogueData.title,
-          email: catalogueData.hours,
-          phone: catalogueData.price,
-          address: catalogueData.price,
-          action: (
-            <>
-              {" "}
-              <Button className="ant-edit-button me-3" onClick={showModal}>
-                <span className="me-2">{edit}</span> Edit
-              </Button>
-              <Button danger className="ant-danger-button">
-                <span className="me-2">{Datel}</span>{" "}
-                <span
-                  className="align-text"
-                  onClick={deleteServiceHandleSubmit(catalogueData._id)}
-                >
-                  Delete
-                </span>
-              </Button>
-            </>
-          ),
+          companyName: catalogueData.companyName,
+          email: catalogueData.email,
+          currency: catalogueData.currency,
+          timeZone: catalogueData.timeZone,
+          cdate: catalogueData.createdAt.split("T")[0],
+          // action: (
+          //   <>
+          //     {" "}
+          //     <Button className="ant-edit-button me-3" onClick={showModal}>
+          //       <span className="me-2">{edit}</span> Edit
+          //     </Button>
+          //     <Button danger className="ant-danger-button">
+          //       <span className="me-2">{Datel}</span>{" "}
+          //       <span
+          //         className="align-text"
+          //         onClick={deleteServiceHandleSubmit(catalogueData._id)}
+          //       >
+          //         Delete
+          //       </span>
+          //     </Button>
+          //   </>
+          // ),
         });
       }
       // console.log("data: ", data);
