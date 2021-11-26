@@ -1,8 +1,17 @@
 import { Col, Input, Row, Select } from "antd";
 
 import React from "react";
-import { EditOutlined } from "@ant-design/icons";
-function ElementCard({ element, handleChange, idx, onFocusOut }) {
+import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
+
+const typeOfOptions = [
+  { type: "manual", title: "Manual Entry" },
+  { type: "prefilled", title: "Prefilled but Editable" },
+  { type: "dropdown", title: "Dropdown" },
+  { type: "result_editable", title: "Resykt (Editable)" },
+  { type: "result_locked", title: "Resykt (Locked)" },
+];
+
+function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
   const { Option } = Select;
   const [unit, setUnit] = React.useState([]);
   const [view, setView] = React.useState([]);
@@ -10,7 +19,6 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
 
   React.useEffect(() => {
     setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
-    console.log("element: ", element);
     setTypeOfElement(element.type || "manual");
     setView([
       { type: "client", title: "Client view" },
@@ -21,6 +29,22 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
 
   const renderSection = () => {
     switch (typeOfElement) {
+      case "dropdown":
+        return (
+          <>
+            <Col md={8} className="mb-3">
+              <label>Choose Dropdown Items:</label>
+            </Col>
+            <Col md={16}>
+              <Select style={{ width: "100%" }}>
+                <Option>Option1</Option>
+                <Option>Option2</Option>
+                <Option>Option3</Option>
+                <Option>Option4</Option>
+              </Select>
+            </Col>
+          </>
+        );
       case "prefilled":
         return (
           <>
@@ -37,6 +61,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
                 value={element.value}
                 name="value"
                 onBlur={onFocusOut}
+                type="number"
               />
             </Col>
           </>
@@ -48,14 +73,20 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
               <label>Formula(editable)</label>
             </Col>
             <Col md={16}>
-              <Input
+              <ReactMentionInput
                 className="ant-furmulla-input"
+                elementList={elementList.map((element) => ({
+                  display: element.name,
+                  id: element._id,
+                }))}
+                onChange={(e) => {
+                  e = { target: { ...e.target, name: "value" } };
+                  handleChange(e.target.value, e.target.name, idx);
+                }}
+                placeholder="Enter Formula use '@' for the dynamic values"
                 value={element.value}
-                name="value"
-                onChange={(e) =>
-                  handleChange(e.target.value, e.target.name, idx)
-                }
                 onBlur={onFocusOut}
+                noMaterial
               />
             </Col>
           </>
@@ -67,14 +98,20 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
               <label>Formula(locked)</label>
             </Col>
             <Col md={16}>
-              <Input
+              <ReactMentionInput
                 className="ant-furmulla-input"
+                elementList={elementList.map((element) => ({
+                  display: element.name,
+                  id: element._id,
+                }))}
+                onChange={(e) => {
+                  e = { target: { ...e.target, name: "value" } };
+                  handleChange(e.target.value, e.target.name, idx);
+                }}
+                placeholder="Enter Formula use '@' for the dynamic values"
                 value={element.value}
-                name="value"
-                onChange={(e) =>
-                  handleChange(e.target.value, e.target.name, idx)
-                }
                 onBlur={onFocusOut}
+                noMaterial
               />
             </Col>
           </>
@@ -87,16 +124,16 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
     <Col span={24} md={6} className="mb-4">
       <div className="furmulla-tree-box  ant-cover-b ant-cover-success px-2 py-4">
         <div className="ant-automic">{element.auto}</div>
-        <span className="ant-edit-furmulla">
+        {/* <span className="ant-edit-furmulla">
           <EditOutlined />
-        </span>
+        </span> */}
         <Row gutter={[8, 0]} className="align-items-center mb-3">
           <Col md={8}>
             <label>Name Element:</label>
           </Col>
           <Col md={16}>
             <Input
-              placeholder="Hours"
+              placeholder="Name of Element"
               className="ant-furmulla-input"
               onChange={(e) => handleChange(e.target.value, e.target.name, idx)}
               value={element.name}
@@ -121,15 +158,18 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
               }}
               onBlur={onFocusOut}
             >
-              <Option value="manual">Manual Entry</Option>
-              <Option value="prefilled">Prefilled but Editable</Option>
-
-              <Option value="result_editable">Result (Editable)</Option>
-              <Option value="result_locked">Result (Locked)</Option>
+              {typeOfOptions.map((item, idx) => {
+                return (
+                  <Option value={item.type} key={idx}>
+                    {item.title}
+                  </Option>
+                );
+              })}
             </Select>
           </Col>
         </Row>
 
+        <Row gutter={[8, 0]}>{renderSection()}</Row>
         <Row gutter={[8, 0]} className="align-items-center mb-3">
           <Col md={8}>
             <label>Unit Type:</label>
@@ -156,7 +196,6 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
             </Select>
           </Col>
         </Row>
-        <Row gutter={[8, 0]}>{renderSection()}</Row>
         <Row gutter={[8, 0]} className="align-items-center">
           <Col md={8}>
             <label>View</label>
