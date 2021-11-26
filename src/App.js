@@ -13,7 +13,7 @@ function App() {
         <Route path="/auth/*" element={<Auth />} />
         <Route path="/*" element={<Estimates />} />
         <Route path="/" element={<Navigate replace={true} to="/auth" />} />
-        <Route path="/contract-pdf/id" element={<ContractPdf />} />
+        <Route path="/contract-pdf/:id" element={<ContractPdf />} />
       </Routes>
     </div>
   );

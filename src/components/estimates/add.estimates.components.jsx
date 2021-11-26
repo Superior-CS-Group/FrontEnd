@@ -1,6 +1,6 @@
 /* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useState } from "react";
 // import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import {
   Row,
@@ -22,6 +22,7 @@ import {
   EditOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
@@ -38,6 +39,7 @@ function handleChange(value) {
   console.log(`selected ${value}`);
 }
 export default function AddEstimates(props) {
+  const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
 
@@ -146,41 +148,36 @@ export default function AddEstimates(props) {
     {
       title: "Deposit payment at signing of contract",
       cost: (
-        <Input
-          type="number"
-          maxLength="2"
-          placeholder="Basic usage"
-          className="ant-width-small font-bold radius-4 gray-text"
-          defaultValue="12"
-          suffix="%"
-        />
+        <>
+          <span className="per-input">
+            <Input
+              type="number"
+              maxLength="2"
+              placeholder=""
+              className="ant-width-small font-bold radius-4 gray-text"
+              defaultValue="12"
+            />
+            %
+          </span>
+        </>
       ),
     },
     {
       title: "Progress payment when project is started",
       cost: (
-        <Input
-          type="number"
-          min={1}
-          max={2}
-          placeholder="Basic usage"
-          className="ant-width-small font-bold radius-4 gray-text"
-          defaultValue="99"
-          suffix="%"
-        />
-      ),
-    },
-    {
-      title: "Completion payment",
-      cost: (
-        <Input
-          type="number"
-          maxLength="2"
-          placeholder="Basic usage"
-          className="ant-width-small font-bold radius-4 gray-text"
-          defaultValue="89"
-          suffix="%"
-        />
+        <>
+          <span className="per-input">
+            <Input
+              type="number"
+              min={1}
+              max={2}
+              placeholder=""
+              className="ant-width-small font-bold radius-4 gray-text"
+              defaultValue="99"
+            />
+            %{" "}
+          </span>
+        </>
       ),
     },
   ];
@@ -361,10 +358,13 @@ export default function AddEstimates(props) {
             {isSearchingFormula ? (
               <div>
                 <Input
-                  className="radius-4 me-2"
+                  className="radius-30 me-2"
                   onChange={(e) => handleFormulaSearch(e.target.value)}
                   suffix={[
-                    <span onClick={() => setIsSearchingFormula(false)}>
+                    <span
+                      onClick={() => setIsSearchingFormula(false)}
+                      style={{ marginTop: "-5px" }}
+                    >
                       <CloseCircleOutlined />
                     </span>,
                   ]}
@@ -628,25 +628,44 @@ export default function AddEstimates(props) {
                     </List.Item>
                   )}
                 />
-                {/* <div className="p-3">
-                  <Row>
-                    <Col md={20}>
-                      <Input placeholder="" />
-                    </Col>
-                    <Col md={4}>
-                      <Input
-                        type="number"
-                        maxLength="2"
-                        placeholder="Basic usage"
-                        className="ant-width-small font-bold radius-4 gray-text"
-                        defaultValue="89"
-                        suffix="%"
-                      />
-                    </Col>
-                  </Row>
-                </div> */}
+                {variation.map((variation, index) => {
+                  return (
+                    <>
+                      <div className="p-3">
+                        <Row>
+                          <Col md={20}>
+                            <Input placeholder="" />
+                          </Col>
+                          <Col md={4}>
+                            <span>
+                              <Input
+                                type="number"
+                                maxLength="2"
+                                placeholder="Basic usage"
+                                className="ant-width-small font-bold radius-4 gray-text"
+                                defaultValue="89"
+                              />{" "}
+                              %
+                            </span>
+                            <DeleteOutlined className="delete-icon" />
+                          </Col>
+                        </Row>
+                      </div>
+                    </>
+                  );
+                })}
                 <div className="addbtn-ant ps-3 py-3">
-                  <a href="#" className="d-inline-flex align-items-center">
+                  <a
+                    href="#"
+                    className="d-inline-flex align-items-center"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setVariation([
+                        ...variation,
+                        { title: "title", value: "" },
+                      ]);
+                    }}
+                  >
                     <PlusCircleOutlined className="me-2" />
                     Add new field
                   </a>

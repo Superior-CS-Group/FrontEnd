@@ -2122,15 +2122,35 @@ span.check-input-logo div {
   width: 100%;
 }
 .ant-width-small {
-  width: 47px;
+  width: 30px;
   padding: 5px;
   margin-left: 5px;
 }
 .ant-width-small input {
   min-width: auto !important;
 }
-.ant-width-small input::-webkit-outer-spin-button,
-.ant-width-small input::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+  display: none;
+}
+.ant-width-smallinput[type="number"] {
+  -moz-appearance: textfield;
+}
+.per-input {
+  display: flex;
+  align-items: center;
+}
+.delete-icon {
+  position: absolute;
+  color: red;
+  right: -20px;
+  font-size: 14px;
+  top: 7px;
+  cursor: pointer;
+}
+.del-btn-svg svg {
+  width: 14px;
+  margin-left: 2px;
 }

@@ -49,6 +49,9 @@ export default class DashboardNavbar extends Component {
             <Menu.Item key="es3">
               <NavLink to="/estimating">Estimation</NavLink>
             </Menu.Item>
+            <Menu.Item key="es4">
+              <NavLink to="/userlist">User List</NavLink>
+            </Menu.Item>
           </SubMenu>
           <Menu.Item key="4" icon={jobOr} className="sidebar-btn-disable">
             <NavLink to="#">Job Organization & SchedulingS</NavLink>
