@@ -7,8 +7,7 @@ import SimpleEMailSent from "../email/simple.emailsent.component";
 import ModalMain from "../modal/modal.component";
 import { useParams } from "react-router-dom";
 import { postData } from "../../utils/fetchApi";
-import { sendEstimateContract } from "../../api/estimate-contract";
-import { Document, Page, pdfjs } from "react-pdf";
+import { sendEstimateContract } from "../../api/estimate-contract"; 
 // import dataPDF from "../../contract2.pdf";
 export default function ContractPdf(props) {
   const dataMainPDF = "http://www.africau.edu/images/default/sample.pdf";
