@@ -181,7 +181,7 @@ export default function LeadInfo() {
 
       setState({
         ...state,
-        errors: err.response.data.errors,
+        message: err.response.data.errors,
         isLoading: false,
       });
     }
@@ -330,6 +330,9 @@ export default function LeadInfo() {
                   />
                   <div role="alert" class="text-danger">
                     {state.errors.email}
+                  </div>
+                  <div role="alert" class="text-danger">
+                    {state.message}
                   </div>
                 </Form.Item>
                 <Form.Item label="Phone">

@@ -13,12 +13,14 @@ export default function EmailSetting() {
     username: "",
     password: "",
     profileImage: "",
-    message: "",
+    oldLogo:"",
+    message: "", 
     resultData: [],
   });
   const [host, setHost] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [fromEmail, setfromEmail] = useState("");
   const [port, setPort] = useState("");
 
   useEffect(() => {
@@ -30,6 +32,7 @@ export default function EmailSetting() {
         setUsername(response.data.username);
         setPassword(response.data.password);
         setPort(response.data.port);
+        setfromEmail(response.data.fromEmail)
         setState({profileImage:response.data.logo})
       }
     };
@@ -50,7 +53,9 @@ export default function EmailSetting() {
       username: username,
       password: password,
       port: port,
+      fromEmail: fromEmail,
       profileImage: base64,
+      oldLogo: state.profileImage,
     };
     console.log(body);
     const response = await updateEmailSetting(body);
@@ -59,7 +64,10 @@ export default function EmailSetting() {
       setHost(response.data.host);
       setUsername(response.data.username);
       setPassword(response.data.password);
+      setfromEmail(response.data.fromEmail);
       setPort(response.data.port);
+      setState({profileImage:response.data.logo});
+      setState({oldLogo:response.data.logo});
       setState({ message: "Data Updated" });
     }
   };
@@ -129,6 +137,14 @@ export default function EmailSetting() {
             </Col>
             <Col md={12}>
               {" "}
+              <Form.Item label="From Email">
+                <Input
+                  placeholder="From Email"
+                  name="fromEmail"
+                  value={fromEmail}
+                  onChange={(e) => setfromEmail(e.target.value)}
+                />
+              </Form.Item>
               <Form.Item
                 label="CRM Logo"
                 valuePropName="fileList"
