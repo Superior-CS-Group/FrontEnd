@@ -16,29 +16,7 @@ import { getFormulaById, updateFormula } from "../../../api/formula";
 function FormulaV2() {
   const [formulaDetails, setFormulaDetails] = React.useState({});
   const [title, setTitle] = React.useState("");
-  const [elementList, setElementList] = React.useState([
-    {
-      name: "Total Cost",
-      type: "result_locked",
-      unit: "",
-      value: "",
-      view: "client",
-    },
-    {
-      name: "Gross Profit",
-      type: "result_locked",
-      unit: "",
-      value: "",
-      view: "client",
-    },
-    {
-      name: "Markup",
-      type: "result_editable",
-      unit: "",
-      value: "",
-      view: "client",
-    },
-  ]);
+  const [elementList, setElementList] = React.useState([]);
 
   const [markupId, setMarkupId] = React.useState(null);
   const [materials, setMaterials] = React.useState([]);
@@ -140,9 +118,7 @@ function FormulaV2() {
     const newMaterials = [...materials];
 
     newMaterials[index][e.target.name] = e.target.value;
-    newMaterials[
-      index
-    ].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
+    newMaterials[index].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
     if (material) {
       let processed = processMaterial(material);
       newMaterials[index].formula = [
@@ -212,17 +188,18 @@ function FormulaV2() {
           </span>
         </div>
         <Row gutter={[24, 0]} className="pt-4 tree-line-furmulla">
-          {elementList.map((element, index) => {
-            return (
-              <ElementCard
-                element={element}
-                handleChange={handleChange}
-                key={index}
-                idx={index}
-                onFocusOut={onFocusOut}
-              />
-            );
-          })}
+          {elementList.length &&
+            elementList.map((element, index) => {
+              return (
+                <ElementCard
+                  element={element}
+                  handleChange={handleChange}
+                  key={index}
+                  idx={index}
+                  onFocusOut={onFocusOut}
+                />
+              );
+            })}
         </Row>
 
         <div className="">

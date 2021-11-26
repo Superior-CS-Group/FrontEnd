@@ -126,48 +126,6 @@ function MaterialCard({
               value={material.cost}
               onBlur={onFocusOut}
             />
-            <>
-              {/* <div className="d-flex align-items-center">
-              <Input
-                className="ant-furmulla-input"
-                name="cost"
-                onChange={(e) => {
-                  handleChange(e, index, "cost", material);
-                  setValue(e.target.value);
-                }}
-                value={material.cost}
-                onBlur={onFocusOut}
-              />
-            </div>
-            <div className="sagision">
-              <ul>
-                {catalog.map((cat, idx) => {
-                  return (
-                    <li
-                      key={idx}
-                      onClick={() => {
-                        handleChange(
-                          {
-                            target: {
-                              value: cat.title,
-                              name: "cost",
-                              suggestion: true,
-                            },
-                          },
-                          index,
-                          cat
-                        );
-                        setCatalog([]);
-                        setValue("");
-                      }}
-                    >
-                      {cat.title}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div> */}
-            </>
           </Col>
         </Row>
       </td>
