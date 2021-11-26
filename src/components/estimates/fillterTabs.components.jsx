@@ -4,7 +4,7 @@ import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Card, Select, Input } from "antd";
 import fillter from "../../images/fillter.png";
 import FilterSorting from "./filter/filter.sorting.component";
-
+import { Nav } from "react-bootstrap";
 export default function FillterTabs(props) {
   const { Option } = Select;
 
@@ -26,15 +26,25 @@ export default function FillterTabs(props) {
   };
   return (
     <>
-      <div className="view-tabs">
-        <ul>
-          <li className="active">Default View</li>
-          <li>
-            <span>
-              <PlusCircleOutlined style={{ fontSize: "18px" }} />
-            </span>
-          </li>
-        </ul>
+      <div>
+        <Nav className="catlog-tabs" as="ul">
+          <Nav.Item as="li">
+            <Nav.Link className="active">
+              <b class="left-curve"></b>
+              <b class="right-curve"></b>
+              Materials
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item as="li">
+            <Nav.Link>
+              <b class="left-curve"></b>
+              <b class="right-curve"></b>
+              <span>
+                <PlusCircleOutlined style={{ fontSize: "18px" }} />
+              </span>
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
       </div>
       <div className="p-3 card-shadow pe-4 ps-5">
         <div className="fillter d-lg-flex align-items-center">
@@ -60,10 +70,10 @@ export default function FillterTabs(props) {
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
             Add Column
           </span>
-         
+
           <div className="ms-auto col-lg-3">
             <Input
-              placeholder="Search customers by name"
+              placeholder={props.name}
               text="search"
               className="ant-search-button"
               suffix={<SearchOutlined style={{ fontSize: "18px" }} />}

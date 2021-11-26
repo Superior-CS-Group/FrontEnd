@@ -196,6 +196,7 @@ function FormulaV2() {
                   handleChange={handleChange}
                   key={index}
                   idx={index}
+                  elementList={elementList}
                   onFocusOut={onFocusOut}
                 />
               );

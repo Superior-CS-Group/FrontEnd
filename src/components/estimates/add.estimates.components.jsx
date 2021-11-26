@@ -199,8 +199,50 @@ export default function AddEstimates(props) {
     setSelectedFormulas(newSelectedFormulas);
   }
 
-  function findElementWithName(elements, name) {
-    return elements.find((element) => element.name === name);
+  function escapeRegExp(string) {
+    return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+  }
+
+  function processFormula(formula, materials, elements) {
+    console.log("formula: ", formula, "---------------------------");
+    if (materials) {
+      const usedMaterials = materials.map((item) => {
+        return {
+          title: `@{{catalog||${item._id}||${item.title}}}`,
+          price: item.price,
+        };
+      });
+      usedMaterials.forEach((material) => {
+        const regex = new RegExp(escapeRegExp(material.title), "g");
+        formula = formula.replace(regex, material.price);
+      });
+    }
+
+    if (elements) {
+      const usedElements = elements.map((element) => {
+        return {
+          title: `@{{element||${element._id}||${element.name}}}`,
+          price: element.value,
+        };
+      });
+
+      usedElements.forEach((element) => {
+        const regex = new RegExp(escapeRegExp(element.title), "g");
+        try {
+          formula = formula.replace(regex, element.price);
+        } catch (error) {
+          console.log("regex; ", regex);
+          console.log("formula; ", formula);
+          console.log("error: ", error);
+        }
+      });
+    }
+    try {
+      return Number(eval(formula).toFixed(2));
+    } catch (error) {
+      console.log("error: ", error);
+      return 0;
+    }
   }
 
   function processMaterials(formula) {
@@ -208,47 +250,25 @@ export default function AddEstimates(props) {
     let totalMaterialsCost = 0;
     let totalMaterialsCharge = 0;
     const materials = [...formula.materials].map((material) => {
-      console.log("material", material);
-      let cost = material.cost;
-      let charge = material.charge;
-      let quantity = findElementWithName(formula.elements, material.quantity);
-      try {
-        cost = "{Quantity} * " + cost;
-        cost = cost.replace("{Quantity}", quantity.value);
+      let quantity = processFormula(
+        material.quantity || "",
+        material.formula,
+        elements
+      );
+      let cost =
+        quantity *
+        processFormula(material.cost || "", material.formula, elements);
+      let charge = processFormula(
+        material.charge.replace("{Cost}", cost) || "",
+        material.formula,
+        elements
+      );
+      console.log("material: ", { cost, charge, quantity });
 
-        const usedMaterials = material.formula.map((item) => {
-          return {
-            title: `@{{catalog||${item._id}||${item.title}}}`,
-            price: item.price,
-          };
-        });
-        const usedElements = elements.map((element) => {
-          return {
-            title: `@{{element||${element._id}||${element.name}}}`,
-            price: element.value,
-          };
-        });
-        usedMaterials.map((material) => {
-          cost = cost.replace(material.title, material.price);
-          return cost;
-        });
-        usedElements.map((element) => {
-          cost = cost.replace(element.title, element.price);
-          charge = charge.replace(element.title, Number(element.price) / 100);
-          return cost;
-        });
-        cost = Number(eval(cost).toFixed(2));
-        charge = charge.replace("{Cost}", cost);
-        charge = Number((eval(charge) + cost).toFixed(2));
-        console.log("charege: ", typeof charge, typeof cost);
-      } catch (error) {
-        cost = 0;
-        charge = 0;
-      }
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
       console.log(material, "material");
-      return { ...material, cost, charge, quantity: quantity.value || 0 };
+      return { ...material, cost, charge, quantity };
     });
     formula.totalMaterialsCost = totalMaterialsCost;
     formula.totalProjectCharge = totalMaterialsCharge;
@@ -528,7 +548,13 @@ export default function AddEstimates(props) {
                                         disabled
                                       />
                                     ) : (
-                                      <h4>{element.value}</h4>
+                                      <h4>
+                                        {processFormula(
+                                          element.value,
+                                          null,
+                                          formula.elements
+                                        )}
+                                      </h4>
                                     )}
                                     <EditOutlined />
                                   </div>

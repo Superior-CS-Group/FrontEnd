@@ -111,9 +111,9 @@ const routes = [
     component: <FormulaV2 />,
   },
   {
-    path: "/new-catlog",
+    path: "/new-catalog",
     exact: true,
-    name: "catlog",
+    name: "catalog",
     component: <Catlog />,
   },
   {
