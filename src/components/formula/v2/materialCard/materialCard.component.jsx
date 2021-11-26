@@ -89,7 +89,7 @@ function MaterialCard({
                 id: element._id,
               }))}
               onChange={(e, newValue) => {
-                e = { target: { ...e.target, name: "cost" } };
+                e = { target: { ...e.target, name: "charge" } };
                 handleChange(e, index, newValue);
               }}
               placeholder="Enter Charge use '@' and '#' for the dynamic values"

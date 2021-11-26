@@ -496,7 +496,9 @@ export default function AddEstimates(props) {
                               <Col lg={6} span={24} key={idx}>
                                 <Card
                                   bordered={false}
-                                  className={`radius-12 mb-3  count-card`}
+                                  className={`radius-12 mb-3  count-card ${
+                                    element.automatic ? "blue-card" : ""
+                                  }`}
                                   bodyStyle={{ padding: "16px" }}
                                 >
                                   <div className="text-end drgicon">

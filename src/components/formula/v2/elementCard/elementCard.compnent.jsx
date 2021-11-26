@@ -122,12 +122,16 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
   };
   return (
     <Col span={24} md={6} className="mb-4">
-      <div className="furmulla-tree-box  ant-cover-b ant-cover-success px-2 py-4">
+      <div
+        className={`furmulla-tree-box  ant-cover-b ${
+          !element.automatic ? "ant-cover-success" : "ant-cover-gray"
+        } px-2 py-4`}
+      >
         <div className="ant-automic">{element.auto}</div>
         {/* <span className="ant-edit-furmulla">
           <EditOutlined />
         </span> */}
-        <Row gutter={[8, 0]} className="align-items-center mb-3">
+        <Row gutter={[8, 0]} className="align-items-center mb-3 ">
           <Col md={8}>
             <label>Name Element:</label>
           </Col>
