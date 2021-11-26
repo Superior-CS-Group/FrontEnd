@@ -1,6 +1,5 @@
-import { Checkbox, Col, Input, Row, Select } from "antd";
+import { Col, Input, Row } from "antd";
 import React from "react";
-import { getSuggestions } from "../../../../api/formula";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 
 function MaterialCard({
@@ -14,10 +13,10 @@ function MaterialCard({
     <tr>
       <td>
         <Row className="align-items-center">
-          <Col md={8}>
+          <Col md={12}>
             <label>Name Material:</label>
           </Col>
-          <Col md={16}>
+          <Col md={12}>
             <Input
               className="ant-furmulla-input"
               name="name"
@@ -30,7 +29,7 @@ function MaterialCard({
       </td>
       <td>
         <Row>
-          <Col md={8}>
+          <Col md={12}>
             <label>Enter Quantity:</label>
           </Col>
           <Col md={16}>
@@ -52,7 +51,7 @@ function MaterialCard({
         </Row>
       </td>
       <td>
-        <Row className="align-items-center">
+        <Row className="align-items-start">
           <Col md={8}>
             <label>Cost:</label>
           </Col>
@@ -79,7 +78,7 @@ function MaterialCard({
         </Row>
       </td>
       <td>
-        <Row className="align-items-center">
+        <Row className="align-items-start">
           <Col md={8}>
             <label>Charge:</label>
           </Col>

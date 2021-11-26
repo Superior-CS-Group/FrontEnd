@@ -8,6 +8,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Select, Input, DatePicker } from "antd";
+import { Nav } from "react-bootstrap";
 
 import fillter from "../../images/fillter.png";
 import Datatable from "./estimates.datatable.components";
@@ -121,15 +122,25 @@ export default class MainEstimates extends Component {
           style={{ borderRadius: "25px" }}
           bodyStyle={{ padding: "0px" }}
         >
-          <div className="view-tabs">
-            <ul>
-              <li className="active">Default View</li>
-              <li>
-                <span>
-                  <PlusCircleOutlined style={{ fontSize: "18px" }} />
-                </span>
-              </li>
-            </ul>
+          <div>
+            <Nav className="catlog-tabs" as="ul">
+              <Nav.Item as="li">
+                <Nav.Link className="active">
+                  <b class="left-curve"></b>
+                  <b class="right-curve"></b>
+                  Materials
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item as="li">
+                <Nav.Link>
+                  <b class="left-curve"></b>
+                  <b class="right-curve"></b>
+                  <span>
+                    <PlusCircleOutlined style={{ fontSize: "18px" }} />
+                  </span>
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
           </div>
           <div className="p-3 card-shadow pe-4 ps-5">
             <div className="fillter d-lg-flex align-items-center">
@@ -213,15 +224,25 @@ export default class MainEstimates extends Component {
           style={{ borderRadius: "25px" }}
           bodyStyle={{ padding: "0px" }}
         >
-          <div className="view-tabs">
-            <ul>
-              <li className="active">Default View</li>
-              <li>
-                <span>
-                  <PlusCircleOutlined style={{ fontSize: "18px" }} />
-                </span>
-              </li>
-            </ul>
+          <div>
+            <Nav className="catlog-tabs" as="ul">
+              <Nav.Item as="li">
+                <Nav.Link className="active">
+                  <b class="left-curve"></b>
+                  <b class="right-curve"></b>
+                  Materials
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item as="li">
+                <Nav.Link>
+                  <b class="left-curve"></b>
+                  <b class="right-curve"></b>
+                  <span>
+                    <PlusCircleOutlined style={{ fontSize: "18px" }} />
+                  </span>
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
           </div>
           <div className="p-3 card-shadow pe-4 ps-5">
             <div className="fillter d-lg-flex align-items-center">
@@ -295,7 +316,7 @@ export default class MainEstimates extends Component {
             </div>
           </div>
         </Card>
-       
+
         <FilterSorting
           showModal={this.showModal}
           ModalVisible={this.state.ModalVisible}

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Route, Routes } from "react-router-dom";
 import routes from "../utils/routes";
 import { Layout } from "antd";
-// import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Menubar from "../components/navbar/menubar";
 import DashboardNavbar from "../components/navbar/DashboardNavbar";
 import Error from "../components/Error";
@@ -17,6 +17,7 @@ export default class Estimates extends Component {
       collapsed: !this.state.collapsed,
     });
   };
+
   render() {
     return (
       <>

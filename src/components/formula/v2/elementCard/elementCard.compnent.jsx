@@ -196,6 +196,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
             </Select>
           </Col>
         </Row>
+        <Row gutter={[8, 0]} className="align-items-center mb-3">{renderSection()}</Row>
         <Row gutter={[8, 0]} className="align-items-center">
           <Col md={8}>
             <label>View</label>

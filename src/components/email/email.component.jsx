@@ -169,12 +169,11 @@ export default class EmailSend extends Component {
                           type="text"
                           onChange={this.handleChange}
                           value={datavalue.subject}
-                          
                           placeholder="Still Interested"
                         />
                       </Form.Item>
                       <Form.Item label="Description">
-                        <ReactQuill 
+                        <ReactQuill
                           onChange={this.handleChange}
                           value={datavalue.bodyPart}
                           bounds={".app"}
