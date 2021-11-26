@@ -10,7 +10,7 @@ import ServicesTable from "./services.table.components";
 import FilterSorting from "./filter/filter.sorting.component";
 import { Link } from "react-router-dom";
 import MaterialTable from "./material.table.component";
-
+import { Nav } from "react-bootstrap";
 const { Option } = Select;
 
 function handleChange(value) {
@@ -71,15 +71,25 @@ export default class Catalog extends Component {
           className="card-depultview"
           bodyStyle={{ padding: "0px" }}
         >
-          <div className="view-tabs">
-            <ul>
-              <li className="active">Default View</li>
-              <li>
-                <span>
-                  <PlusCircleOutlined style={{ fontSize: "18px" }} />
-                </span>
-              </li>
-            </ul>
+          <div>
+            <Nav className="catlog-tabs" as="ul">
+              <Nav.Item as="li">
+                <Nav.Link className="active">
+                  <b class="left-curve"></b>
+                  <b class="right-curve"></b>
+                  Materials
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item as="li">
+                <Nav.Link>
+                  <b class="left-curve"></b>
+                  <b class="right-curve"></b>
+                  <span>
+                    <PlusCircleOutlined style={{ fontSize: "18px" }} />
+                  </span>
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
           </div>
           <div className="p-3 card-shadow pe-4 ps-5">
             <div className="fillter d-lg-flex align-items-center">
@@ -110,7 +120,7 @@ export default class Catalog extends Component {
               </span>
               <div className="ms-auto col-lg-3">
                 <Input
-                  placeholder="Search customers by name"
+                  placeholder="Search catalog by name"
                   text="search"
                   className="ant-search-button"
                   suffix={<SearchOutlined style={{ fontSize: "18px" }} />}

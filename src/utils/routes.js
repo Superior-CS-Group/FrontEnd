@@ -16,6 +16,7 @@ import Formula from "../components/formula/v1/formula.component";
 import FormulaV2 from "../components/formula/v2/formula.v2.component";
 import Catlog from "../components/estimates/catlog/Catlog";
 import EmailSetting from "../components/setting/emailsetting.component";
+import UserList from "../components/setting/userList.component";
 
 const routes = [
   {
@@ -110,9 +111,9 @@ const routes = [
     component: <FormulaV2 />,
   },
   {
-    path: "/new-catlog",
+    path: "/new-catalog",
     exact: true,
-    name: "catlog",
+    name: "catalog",
     component: <Catlog />,
   },
   {
@@ -120,6 +121,12 @@ const routes = [
     exact: true,
     name: "email-setting",
     component: <EmailSetting />,
+  },
+  {
+    path: "/userlist",
+    exact: true,
+    name: "userlist",
+    component: <UserList />,
   },
 ];
 export default routes;

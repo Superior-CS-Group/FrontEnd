@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox } from "antd";
+import { Table, Checkbox, Button } from "antd";
 import ReactDragListView from "react-drag-listview";
-import { drag } from "../../utils/svg.file";
+import { drag, Datel, edit } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData } from "../../utils/fetchApi.js";
 
@@ -19,6 +19,15 @@ export default function Datatable() {
         dataIndex: "key",
       },
       {
+        title: "Action",
+        dataIndex: "action",
+        render: () => (
+          <>
+            <span className="me-2 cursor-btn">{Datel}</span>
+          </>
+        ),
+      },
+      {
         title: (
           <>
             Estimate Date <span className="float-end me-2">{drag}</span>
@@ -26,14 +35,7 @@ export default function Datatable() {
         ),
         dataIndex: "date",
       },
-      // {
-      //   title: (
-      //     <>
-      //       Estimate <span className="float-end me-2">{drag}</span>
-      //     </>
-      //   ),
-      //   dataIndex: "estimate",
-      // },
+
       {
         title: (
           <>

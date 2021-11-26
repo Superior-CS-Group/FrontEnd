@@ -5,7 +5,7 @@ import FillterTabs from "../fillterTabs.components";
 import { Card, Table, Modal, Form, Input, Button, Select } from "antd";
 import { Link, Navigate } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
-import { ellps } from "../../../utils/svg.file";
+import { ellps, Datel } from "../../../utils/svg.file";
 import { createFormula, getAllFormula } from "../../../api/formula";
 
 export default function Services() {
@@ -89,12 +89,16 @@ export default function Services() {
       className: "text-end",
       render: (view, tags) => {
         return (
-          <Link
-            to={`/v2/formula-tree?formulaId=${tags._id}`}
-            style={{ color: "inherit" }}
-          >
-            {view}
-          </Link>
+          <>
+            <Link
+              to={`/v2/formula-tree?formulaId=${tags._id}`}
+              style={{ color: "inherit" }}
+            >
+              {view}
+            </Link>
+            &nbsp;
+            <span className="me-2 cursor-btn del-btn-svg">{Datel}</span>
+          </>
         );
       },
     },
@@ -122,7 +126,7 @@ export default function Services() {
         style={{ borderRadius: "10px" }}
         bodyStyle={{ padding: "0px" }}
       >
-        <FillterTabs />
+        <FillterTabs name="Search services by Name" />
         <div className="p-2 ant-table-seprate">
           <Table
             columns={columns}

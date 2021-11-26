@@ -1,6 +1,6 @@
 /* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useState } from "react";
 // import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import {
   Row,
@@ -22,6 +22,7 @@ import {
   EditOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
@@ -38,6 +39,7 @@ function handleChange(value) {
   console.log(`selected ${value}`);
 }
 export default function AddEstimates(props) {
+  const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
 
@@ -146,41 +148,36 @@ export default function AddEstimates(props) {
     {
       title: "Deposit payment at signing of contract",
       cost: (
-        <Input
-          type="number"
-          maxLength="2"
-          placeholder="Basic usage"
-          className="ant-width-small font-bold radius-4 gray-text"
-          defaultValue="12"
-          suffix="%"
-        />
+        <>
+          <span className="per-input">
+            <Input
+              type="number"
+              maxLength="2"
+              placeholder=""
+              className="ant-width-small font-bold radius-4 gray-text"
+              defaultValue="12"
+            />
+            %
+          </span>
+        </>
       ),
     },
     {
       title: "Progress payment when project is started",
       cost: (
-        <Input
-          type="number"
-          min={1}
-          max={2}
-          placeholder="Basic usage"
-          className="ant-width-small font-bold radius-4 gray-text"
-          defaultValue="99"
-          suffix="%"
-        />
-      ),
-    },
-    {
-      title: "Completion payment",
-      cost: (
-        <Input
-          type="number"
-          maxLength="2"
-          placeholder="Basic usage"
-          className="ant-width-small font-bold radius-4 gray-text"
-          defaultValue="89"
-          suffix="%"
-        />
+        <>
+          <span className="per-input">
+            <Input
+              type="number"
+              min={1}
+              max={2}
+              placeholder=""
+              className="ant-width-small font-bold radius-4 gray-text"
+              defaultValue="99"
+            />
+            %{" "}
+          </span>
+        </>
       ),
     },
   ];
@@ -202,8 +199,50 @@ export default function AddEstimates(props) {
     setSelectedFormulas(newSelectedFormulas);
   }
 
-  function findElementWithName(elements, name) {
-    return elements.find((element) => element.name === name);
+  function escapeRegExp(string) {
+    return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+  }
+
+  function processFormula(formula, materials, elements) {
+    console.log("formula: ", formula, "---------------------------");
+    if (materials) {
+      const usedMaterials = materials.map((item) => {
+        return {
+          title: `@{{catalog||${item._id}||${item.title}}}`,
+          price: item.price,
+        };
+      });
+      usedMaterials.forEach((material) => {
+        const regex = new RegExp(escapeRegExp(material.title), "g");
+        formula = formula.replace(regex, material.price);
+      });
+    }
+
+    if (elements) {
+      const usedElements = elements.map((element) => {
+        return {
+          title: `@{{element||${element._id}||${element.name}}}`,
+          price: element.value,
+        };
+      });
+
+      usedElements.forEach((element) => {
+        const regex = new RegExp(escapeRegExp(element.title), "g");
+        try {
+          formula = formula.replace(regex, element.price);
+        } catch (error) {
+          console.log("regex; ", regex);
+          console.log("formula; ", formula);
+          console.log("error: ", error);
+        }
+      });
+    }
+    try {
+      return Number(eval(formula).toFixed(2));
+    } catch (error) {
+      console.log("error: ", error);
+      return 0;
+    }
   }
 
   function processMaterials(formula) {
@@ -211,47 +250,25 @@ export default function AddEstimates(props) {
     let totalMaterialsCost = 0;
     let totalMaterialsCharge = 0;
     const materials = [...formula.materials].map((material) => {
-      console.log("material", material);
-      let cost = material.cost;
-      let charge = material.charge;
-      let quantity = findElementWithName(formula.elements, material.quantity);
-      try {
-        cost = "{Quantity} * " + cost;
-        cost = cost.replace("{Quantity}", quantity.value);
+      let quantity = processFormula(
+        material.quantity || "",
+        material.formula,
+        elements
+      );
+      let cost =
+        quantity *
+        processFormula(material.cost || "", material.formula, elements);
+      let charge = processFormula(
+        material.charge.replace("{Cost}", cost) || "",
+        material.formula,
+        elements
+      );
+      console.log("material: ", { cost, charge, quantity });
 
-        const usedMaterials = material.formula.map((item) => {
-          return {
-            title: `@{{catalog||${item._id}||${item.title}}}`,
-            price: item.price,
-          };
-        });
-        const usedElements = elements.map((element) => {
-          return {
-            title: `@{{element||${element._id}||${element.name}}}`,
-            price: element.value,
-          };
-        });
-        usedMaterials.map((material) => {
-          cost = cost.replace(material.title, material.price);
-          return cost;
-        });
-        usedElements.map((element) => {
-          cost = cost.replace(element.title, element.price);
-          charge = charge.replace(element.title, Number(element.price) / 100);
-          return cost;
-        });
-        cost = Number(eval(cost).toFixed(2));
-        charge = charge.replace("{Cost}", cost);
-        charge = Number((eval(charge) + cost).toFixed(2));
-        console.log("charege: ", typeof charge, typeof cost);
-      } catch (error) {
-        cost = 0;
-        charge = 0;
-      }
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
       console.log(material, "material");
-      return { ...material, cost, charge, quantity: quantity.value || 0 };
+      return { ...material, cost, charge, quantity };
     });
     formula.totalMaterialsCost = totalMaterialsCost;
     formula.totalProjectCharge = totalMaterialsCharge;
@@ -361,10 +378,13 @@ export default function AddEstimates(props) {
             {isSearchingFormula ? (
               <div>
                 <Input
-                  className="radius-4 me-2"
+                  className="radius-30 me-2"
                   onChange={(e) => handleFormulaSearch(e.target.value)}
                   suffix={[
-                    <span onClick={() => setIsSearchingFormula(false)}>
+                    <span
+                      onClick={() => setIsSearchingFormula(false)}
+                      style={{ marginTop: "-5px" }}
+                    >
                       <CloseCircleOutlined />
                     </span>,
                   ]}
@@ -528,7 +548,13 @@ export default function AddEstimates(props) {
                                         disabled
                                       />
                                     ) : (
-                                      <h4>{element.value}</h4>
+                                      <h4>
+                                        {processFormula(
+                                          element.value,
+                                          null,
+                                          formula.elements
+                                        )}
+                                      </h4>
                                     )}
                                     <EditOutlined />
                                   </div>
@@ -628,25 +654,44 @@ export default function AddEstimates(props) {
                     </List.Item>
                   )}
                 />
-                {/* <div className="p-3">
-                  <Row>
-                    <Col md={20}>
-                      <Input placeholder="" />
-                    </Col>
-                    <Col md={4}>
-                      <Input
-                        type="number"
-                        maxLength="2"
-                        placeholder="Basic usage"
-                        className="ant-width-small font-bold radius-4 gray-text"
-                        defaultValue="89"
-                        suffix="%"
-                      />
-                    </Col>
-                  </Row>
-                </div> */}
+                {variation.map((variation, index) => {
+                  return (
+                    <>
+                      <div className="p-3">
+                        <Row>
+                          <Col md={20}>
+                            <Input placeholder="" />
+                          </Col>
+                          <Col md={4}>
+                            <span>
+                              <Input
+                                type="number"
+                                maxLength="2"
+                                placeholder="Basic usage"
+                                className="ant-width-small font-bold radius-4 gray-text"
+                                defaultValue="89"
+                              />{" "}
+                              %
+                            </span>
+                            <DeleteOutlined className="delete-icon" />
+                          </Col>
+                        </Row>
+                      </div>
+                    </>
+                  );
+                })}
                 <div className="addbtn-ant ps-3 py-3">
-                  <a href="#" className="d-inline-flex align-items-center">
+                  <a
+                    href="#"
+                    className="d-inline-flex align-items-center"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setVariation([
+                        ...variation,
+                        { title: "title", value: "" },
+                      ]);
+                    }}
+                  >
                     <PlusCircleOutlined className="me-2" />
                     Add new field
                   </a>

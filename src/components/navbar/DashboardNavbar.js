@@ -37,6 +37,10 @@ export default class DashboardNavbar extends Component {
             <NavLink to="/estimating"> Estimating</NavLink>
           </Menu.Item> */}
           <SubMenu key="sub1" icon={estimating} title=" Estimating">
+            <Menu.Item key="esn">
+              {" "}
+              <NavLink to="/new-catalog">New Catalog</NavLink>
+            </Menu.Item>
             <Menu.Item key="es1">
               {" "}
               <NavLink to="/catalog">Catalog</NavLink>
@@ -48,6 +52,9 @@ export default class DashboardNavbar extends Component {
             </Menu.Item>
             <Menu.Item key="es3">
               <NavLink to="/estimating">Estimation</NavLink>
+            </Menu.Item>
+            <Menu.Item key="es4">
+              <NavLink to="/userlist">User List</NavLink>
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="4" icon={jobOr} className="sidebar-btn-disable">

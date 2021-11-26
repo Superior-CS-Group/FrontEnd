@@ -23,8 +23,23 @@ export async function updateEmailSetting(body) {
   if (response.remote === "success") {
     return {
       remote: response.remote,
-      data: response.data.Data[0],
+      data: response.data.Data,
     };
   }
   return response;
 }
+
+
+export async function getUserList() {
+    const response = await api.request({
+      url: "/auth/user-list",
+      method: "GET",
+    });
+    if (response.remote === "success") {
+      return {
+        remote: response.remote,
+        data: response.data.Data,
+      };
+    }
+    return response;
+  }

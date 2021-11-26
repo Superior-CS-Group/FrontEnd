@@ -97,8 +97,7 @@ export default function ContractPreview(props) {
     const result = await sendEstimateContract(body);
     if (result.remote === "success") {
       console.log(result.data.data);
-      
-    } 
+    }
     setModalVisible(true);
   };
 
