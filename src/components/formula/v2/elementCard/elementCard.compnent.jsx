@@ -10,6 +10,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
 
   React.useEffect(() => {
     setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
+    console.log("element: ", element);
     setTypeOfElement(element.type || "manual");
     setView([
       { type: "client", title: "Client view" },
@@ -112,7 +113,7 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
           <Col md={16}>
             <Select
               className="select-w"
-              defaultValue={typeOfElement}
+              defaultValue={element.type}
               style={{ width: "100%" }}
               onChange={(value) => {
                 handleChange(value, "type", idx);
@@ -135,13 +136,12 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
           </Col>
           <Col md={16}>
             <Select
-              defaultValue="Number"
+              defaultValue={element.unit}
               onChange={(value) => {
                 handleChange(value, "unit", idx);
               }}
               className="select-w"
               style={{ width: "100%" }}
-              selected={element.value}
               onBlur={onFocusOut}
               listHeight={150}
             >
@@ -163,11 +163,12 @@ function ElementCard({ element, handleChange, idx, onFocusOut }) {
           </Col>
           <Col md={16}>
             <Select
-              defaultValue="Client View"
+              mode="multiple"
+              allowClear
+              defaultValue={[...element.view]}
               onChange={(e) => handleChange(e, "view", idx)}
               className="select-w"
               style={{ width: "100%" }}
-              selected={element.value}
               onBlur={onFocusOut}
             >
               {view.map((item, index) => {
