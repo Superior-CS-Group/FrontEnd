@@ -7,8 +7,8 @@ const typeOfOptions = [
   { type: "manual", title: "Manual Entry" },
   { type: "prefilled", title: "Prefilled but Editable" },
   { type: "dropdown", title: "Dropdown" },
-  { type: "result_editable", title: "Resykt (Editable)" },
-  { type: "result_locked", title: "Resykt (Locked)" },
+  { type: "result_editable", title: "Result (Editable)" },
+  { type: "result_locked", title: "Result (Locked)" },
 ];
 
 function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
