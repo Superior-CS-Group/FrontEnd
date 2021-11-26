@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Select, Input, Table, Badge, Button, Space } from "antd";
+import { Card, Select, Input, Table, Button, Modal } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 
 import {
@@ -9,27 +9,32 @@ import {
   CloseCircleOutlined,
   EditOutlined,
   DeleteOutlined,
+  UpCircleFilled,
+  DownCircleFilled,
+  EditTwoTone,
+  DeleteTwoTone,
+  PlusCircleTwoTone,
 } from "@ant-design/icons";
 import fillter from "../../../images/fillter.png";
 import FilterSorting from "../filter/filter.sorting.component";
+import CataLogModal from "./catalog.modal";
 
 export default function Catlog() {
   const { Option } = Select;
   function handleChange(value) {
     console.log(`selected ${value}`);
   }
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const [isModal, setIsModal] = useState(false);
+  const addModal = () => {
+    setIsModal(true);
   };
-
   const handleOk = () => {
-    setIsModalVisible(false);
+    setIsModal(false);
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    setIsModal(false);
   };
 
   const expandedRowRender = () => {
@@ -80,21 +85,29 @@ export default function Catlog() {
       render: () => (
         <>
           <Button
+            type="text"
             shape="circle"
-            type="danger"
             className="me-2 d-inline-flex align-items-center justify-content-center"
           >
-            <DeleteOutlined />
+            <DeleteTwoTone />
           </Button>
           <Button
-            type="primary"
+            type="text"
             shape="circle"
             className="d-inline-flex align-items-center justify-content-center"
           >
-            <EditOutlined />
+            <EditTwoTone />
+          </Button>
+          <Button
+            type="text"
+            shape="circle"
+            className="d-inline-flex align-items-center justify-content-center"
+          >
+            <PlusCircleTwoTone />
           </Button>
         </>
       ),
+      className: "text-end",
     },
   ];
 
@@ -151,15 +164,15 @@ export default function Catlog() {
             <div className="radius-9 p-3">
               <div className="card-shadow p-2">
                 <div className="fillter d-lg-flex align-items-center">
-                  <span
+                  {/* <span
                     className="inline-block me-4 fillter-btn cursor-btn"
                     onClick={showModal}
                   >
                     <img src={fillter} className="me-3" alt="" /> Filter and
                     Sort
-                  </span>
+                  </span> */}
 
-                  <span className="ant-blue-plus me-4">
+                  <span className="ant-blue-plus me-4" onClick={addModal}>
                     <PlusCircleOutlined
                       style={{ fontSize: "18px" }}
                       className="me-2"
@@ -183,7 +196,7 @@ export default function Catlog() {
 
                   <div className="ms-auto col-lg-3">
                     <Input
-                      placeholder="Search customers by name"
+                      placeholder="Search by name"
                       text="search"
                       className="ant-search-button"
                       suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
@@ -198,6 +211,21 @@ export default function Catlog() {
                     className="components-table-demo-nested"
                     columns={columns}
                     expandable={{ expandedRowRender }}
+                    expandable={{
+                      expandedRowRender,
+                      expandIcon: ({ expanded, onExpand, record }) =>
+                        expanded ? (
+                          <UpCircleFilled
+                            style={{ color: "#3483FA" }}
+                            onClick={(e) => onExpand(record, e)}
+                          />
+                        ) : (
+                          <DownCircleFilled
+                            style={{ color: "#3483FA" }}
+                            onClick={(e) => onExpand(record, e)}
+                          />
+                        ),
+                    }}
                     dataSource={data}
                     pagination={false}
                   />
@@ -209,12 +237,12 @@ export default function Catlog() {
           </Tab.Container>
         </Card>
       </div>
-
-      <FilterSorting
-        showModal={showModal}
-        ModalVisible={isModalVisible}
-        handleCancel={handleCancel}
+      <CataLogModal
+        title="Add Element"
+        addModal={addModal}
+        isModal={isModal}
         handleOk={handleOk}
+        handleCancel={handleCancel}
       />
     </>
   );
