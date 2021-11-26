@@ -196,7 +196,9 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
             </Select>
           </Col>
         </Row>
-        <Row gutter={[8, 0]} className="align-items-center mb-3">{renderSection()}</Row>
+        <Row gutter={[8, 0]} className="align-items-center mb-3">
+          {renderSection()}
+        </Row>
         <Row gutter={[8, 0]} className="align-items-center">
           <Col md={8}>
             <label>View</label>
@@ -205,7 +207,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
             <Select
               mode="multiple"
               allowClear
-              defaultValue={[...element.view]}
+              defaultValue={[...(element.view || [])]}
               onChange={(e) => handleChange(e, "view", idx)}
               className="select-w"
               style={{ width: "100%" }}
