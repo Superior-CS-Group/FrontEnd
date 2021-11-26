@@ -9,15 +9,10 @@ import { useParams } from "react-router-dom";
 import { postData } from "../../utils/fetchApi";
 import { sendEstimateContract } from "../../api/estimate-contract";
 import { Document, Page, pdfjs } from "react-pdf";
-// import dataPDF from "../../contract1.pdf";
+// import dataPDF from "../../contract2.pdf";
 export default function ContractPdf(props) {
-  const url =
-    "https://cors-anywhere.herokuapp.com/http://www.pdf995.com/samples/pdf.pdf";
-
-  pdfjs.GlobalWorkerOptions.workerSrc = `https//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+  const dataMainPDF = "http://www.africau.edu/images/default/sample.pdf";
   const params = useParams();
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
   const [state, setState] = useState({
     activeStatus: "Active",
     customerid: "",
@@ -102,59 +97,13 @@ export default function ContractPdf(props) {
     setModalVisible(true);
   };
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
-
-  document.addEventListener("contextmenu", (event) => {
-    event.preventDefault();
-  });
-
-  /*When document gets loaded successfully*/
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-    setPageNumber(1);
-  }
-
-  function changePage(offset) {
-    setPageNumber((prevPageNumber) => prevPageNumber + offset);
-  }
-
-  function previousPage() {
-    changePage(-1);
-  }
-
-  function nextPage() {
-    changePage(1);
-  }
   return (
     <>
       <div className="main text-center mt-4">
-        <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
-          <Page pageNumber={pageNumber} />
-        </Document>
-        <div>
-          <div className="pagec">
-            Page {pageNumber || (numPages ? 1 : "--")} of {numPages || "--"}
-          </div>
-          <div className="buttonc">
-            <button
-              type="button"
-              disabled={pageNumber <= 1}
-              onClick={previousPage}
-              className="Pre"
-            >
-              Previous
-            </button>
-            <button
-              type="button"
-              disabled={pageNumber >= numPages}
-              onClick={nextPage}
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        <iframe
+          src={dataMainPDF}
+          style={{ height: "100vh", width: "100%" }}
+        ></iframe>
       </div>
     </>
   );
