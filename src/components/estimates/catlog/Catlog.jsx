@@ -17,7 +17,7 @@ import {
 import CataLogModal from "./catalog.modal";
 import Addelement from "./add.element";
 import AddItem from "./add.item";
-
+import pipe from "../../../images/boulder.jpg";
 export default function Catlog() {
   const { Option } = Select;
   function handleChange(value) {
@@ -138,7 +138,16 @@ export default function Catlog() {
   for (let i = 0; i < 6; ++i) {
     data.push({
       key: i,
-      name: "Perforated Drain Pipe",
+      name: (
+        <>
+          <div className="d-flex align-items-center">
+            <div className="ant-image-box me-3">
+              <img src={pipe} alt="" />
+            </div>
+            <div className="list-text">Perforated Drain Pipe</div>
+          </div>
+        </>
+      ),
       platform: "$2.00-$2.80",
 
       version: "1",

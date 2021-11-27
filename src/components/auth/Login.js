@@ -169,7 +169,7 @@ export default class Login extends Component {
               Sign In
             </Button>
           </Form.Item>
-          <div className="ant-social-icon text-center">
+          {/* <div className="ant-social-icon text-center">
             <GoogleLogin
               clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
               render={(renderProps) => (
@@ -184,7 +184,7 @@ export default class Login extends Component {
             />
 
             <button className="facebook-icon mb-4">Facebook</button>
-          </div>
+          </div> */}
           <Link to="/auth/sign-up">
             <Button type="primary" type="submit" className="ant-btn-save">
               Sign Up
