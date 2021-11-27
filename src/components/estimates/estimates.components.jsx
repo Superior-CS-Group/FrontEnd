@@ -98,18 +98,19 @@ export default class MainEstimates extends Component {
                         </Button>
                       </div>
                       <div className="ant-estimate-text mb-3">
-                        <span>Costumer Name</span>
+                        <span>Customer Name</span>
                         <h2>{value.customerLeadId[0].name}</h2>
                       </div>
                       <div className="d-flex align-items-start justify-content-between">
-                        <div className="ant-estimate-text">
-                          <span>Adress</span>
+                        <div className="ant-estimate-text text-ellpis">
+                          <span>Address</span>
                           <h2>{value.customerLeadId[0].address}</h2>
                         </div>
                         <div className="ant-estimate-text">
                           <span>Job Farness</span>
                           <h2>
                           {value.customerLeadId[0].distance}<sub className="ms-2">min</sub>
+                            6.3<sub className="ms-1">km</sub>
                           </h2>
                         </div>
                       </div>

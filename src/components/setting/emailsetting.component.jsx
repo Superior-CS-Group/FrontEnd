@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import { Form, Input, Col, Row, Button, Upload } from "antd";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
 import { fileToBase64 } from "../../utils/fileBase64.js";
 import { getEmailSetting, updateEmailSetting } from "../../api/admin";
-import Loader from "../loader";
+
+import Swal from "sweetalert2";
 
 export default function EmailSetting() {
   const [state, setState] = useState({
@@ -92,6 +92,13 @@ export default function EmailSetting() {
 
     return e && e.fileList;
   };
+
+  Swal.fire({
+    icon: "success",
+    title: "success",
+    text: "Data successfully Added",
+    showConfirmButton: true,
+  });
   // console.log("host: ", host);
   if(state.isLoader===true){
     <Loader />
@@ -102,7 +109,6 @@ export default function EmailSetting() {
         <BreadcrumbBar name="Setting" subname="Email-setting" />
       </div>{" "}
       <div className="card-shadow p-4" style={{ borderRadius: "25px" }}>
-        
         <div role="alert" class="text-success">
           {state.message}
         </div>
@@ -118,7 +124,7 @@ export default function EmailSetting() {
                   onChange={(e) => setHost(e.target.value)}
                 />
               </Form.Item>
-              <Form.Item label="User">
+              <Form.Item label="User ">
                 <Input
                   placeholder="Username"
                   name="username"

@@ -8,6 +8,7 @@ export default function DeleteModal(removeId, table, updateData) {
   confirm({
     title: "Do you Want to delete these items?",
     icon: <ExclamationCircleOutlined />,
+
     content: "Some descriptions",
     onOk() {
       if (table === "customerLead") {

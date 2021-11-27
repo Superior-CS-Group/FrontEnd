@@ -14,4 +14,38 @@ export async function deleteCatalog(data) {
   }
   return response;
 }
- 
+
+export async function getCatalogItem() {
+  const response = await api.request({
+    url: "/v2/catalog/get-all-catalog",
+    method: "GET",
+  });
+  return response;
+}
+
+export async function getVariationsByCatalogId(id) {
+  const response = await api.request({
+    url: `/v2/catalog/get-allVariation-by-catalog/${id}`,
+    method: "GET",
+  });
+  return response;
+}
+
+export async function createCatalogItem(data) {
+  const response = await api.request({
+    url: "/v2/catalog/create-catalog",
+    method: "POST",
+    data,
+  });
+  return response;
+}
+
+export async function createVariation(data) {
+  const response = await api.request({
+    url: "/v2/catalog/create-variation",
+    method: "POST",
+    data,
+  });
+  console.log("response", response);
+  return response;
+}
