@@ -81,35 +81,41 @@ export default class MainEstimates extends Component {
             {this.state.estimateData.map((value) => {
               // console.log(value.customerLeadId[0].email,"valuecustomerLeadId")
               return (
-                <Card
-                  bordered={false}
-                  className="shadow estimate-card m-3"
-                  style={{ borderRadius: "10px" }}
-                >
-                  <div className="d-flex align-items-start justify-content-between mb-3">
-                    <div className="ant-estimate-text">
-                      <span>Estimate</span>
-                      <h2>#{value.leadInvoinceNo}</h2>
-                    </div>
-                    <Button className="ant-moving-button">Moving FWD</Button>
-                  </div>
-                  <div className="ant-estimate-text mb-3">
-                    <span>Costumer Name</span>
-                    <h2>{value.customerLeadId[0].name}</h2>
-                  </div>
-                  <div className="d-flex align-items-start justify-content-between">
-                    <div className="ant-estimate-text">
-                      <span>Adress</span>
-                      <h2>{value.customerLeadId[0].address}</h2>
-                    </div>
-                    <div className="ant-estimate-text">
-                      <span>Distance</span>
-                      <h2>
-                        6.3<sub className="ms-2">km</sub>
-                      </h2>
-                    </div>
-                  </div>
-                </Card>
+                <>
+                  <Link to={`/customer-lead/${value.customerLeadId[0]._id}`}>
+                    <Card
+                      bordered={false}
+                      className="shadow estimate-card m-3"
+                      style={{ borderRadius: "10px" }}
+                    >
+                      <div className="d-flex align-items-start justify-content-between mb-3">
+                        <div className="ant-estimate-text">
+                          <span>Estimate</span>
+                          <h2>#{value.leadInvoinceNo}</h2>
+                        </div>
+                        <Button className="ant-moving-button">
+                          Moving FWD
+                        </Button>
+                      </div>
+                      <div className="ant-estimate-text mb-3">
+                        <span>Costumer Name</span>
+                        <h2>{value.customerLeadId[0].name}</h2>
+                      </div>
+                      <div className="d-flex align-items-start justify-content-between">
+                        <div className="ant-estimate-text">
+                          <span>Adress</span>
+                          <h2>{value.customerLeadId[0].address}</h2>
+                        </div>
+                        <div className="ant-estimate-text">
+                          <span>Distance</span>
+                          <h2>
+                            6.3<sub className="ms-2">km</sub>
+                          </h2>
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                </>
               );
             })}
           </Carousel>
