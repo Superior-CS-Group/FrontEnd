@@ -2352,3 +2352,20 @@ input::-webkit-inner-spin-button {
   font-size: 14px;
   text-align: center;
 }
+
+.components-table-demo-nested .ant-table-row-expand-icon-cell {
+  padding: 0px;
+  width: 63px;
+}
+
+.ant-catalog-img img {
+  width: 100%;
+  height: 64px;
+  border-radius: 9.91903px;
+}
+.w-64 {
+  width: 64px;
+}
+.ant-table-expand td {
+  padding: 4px 0px !important;
+}

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import { Card, Select, Input, Table, Button, Modal } from "antd";
 import { Nav, Tab } from "react-bootstrap";
-
 import {
   PlusCircleOutlined,
   SearchOutlined,
@@ -13,11 +12,16 @@ import {
   DeleteTwoTone,
   PlusCircleTwoTone,
 } from "@ant-design/icons";
-
+import SmallLoader from "../../loader/smallLoader";
 import CataLogModal from "./catalog.modal";
 import Addelement from "./add.element";
 import AddItem from "./add.item";
-import pipe from "../../../images/boulder.jpg";
+import log from "../../../images/boulder.jpg";
+import {
+  getCatalogItem,
+  getVariationsByCatalogId,
+} from "../../../api/catalogue";
+
 export default function Catlog() {
   const { Option } = Select;
   function handleChange(value) {
@@ -25,8 +29,79 @@ export default function Catlog() {
   }
   const [title, setTitle] = useState("Sub Category");
   const [isModal, setIsModal] = useState("");
+  const [catalogItem, setCatalogItem] = useState([]);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [expandedRowRender, setExpandedRowRender] = useState([]);
+  const [isLoadingVariation, setIsLoadingVariation] = useState(false);
+  const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
+  const [variations, setVariations] = useState([]);
+
+  const handelUpdate = () => {
+    setIsUpdate(!isUpdate);
+  };
+
+  const loadVariations = async (id) => {
+    setIsLoadingVariation(true);
+    console.log("id: ", id);
+    const response = await getVariationsByCatalogId(id);
+    if (response.remote === "success") {
+      const variations = response.data.data;
+      console.log("variations: ", variations);
+      const prcessedVariations = variations.map((variation) => {
+        return {
+          key: variation._id,
+          name: (
+            <>
+              <div className="d-flex align-items-center">
+                {" "}
+                <div className="ant-catalog-img me-3 w-64">
+                  <img src={log} alt="" />
+                </div>
+                <span> {variation.name}</span>
+              </div>
+            </>
+          ),
+          price: variation.price,
+          quantity: variation.quantity,
+          unit: variation.unit,
+          description: variation.description,
+          _id: variation._id,
+          action: (
+            <>
+              <Button
+                type="text"
+                shape="circle"
+                className="me-2 d-inline-flex align-items-center justify-content-center"
+              >
+                <DeleteTwoTone />
+              </Button>
+              <Button
+                type="text"
+                shape="circle"
+                className="d-inline-flex align-items-center justify-content-center"
+              >
+                <EditTwoTone />
+              </Button>
+            </>
+          ),
+        };
+      });
+      setVariations(prcessedVariations);
+    }
+    setTimeout(() => {
+      setIsLoadingVariation(false);
+    }, 1000);
+  };
+
+  React.useEffect(() => {
+    if (selectedSubCatalog) {
+      setIsModal("additem");
+      setTitle("Add Item");
+    }
+  }, [selectedSubCatalog]);
+
   const addModal = () => {
-    setIsModal("subcategory");
+    setIsModal("additem");
   };
   const handleOk = () => {
     setIsModal(false);
@@ -36,31 +111,41 @@ export default function Catlog() {
     setIsModal("");
   };
 
-  const expandedRowRender = () => {
-    const columns = [
-      { title: "", dataIndex: "title", key: "title", className: "font-bold" },
-      { title: "", dataIndex: "name", key: "name" },
-      { title: "", dataIndex: "quantity", key: "quantity" },
+  const getCatalog = async () => {
+    const response = await getCatalogItem();
+    if (response.remote === "success") {
+      setCatalogItem(response.data.data);
+    }
+  };
 
-      { title: "", dataIndex: "upgradeNum", key: "upgradeNum" },
-      {
-        title: "",
-        dataIndex: "action",
-        key: "action",
-        className: "text-end",
-      },
-    ];
+  React.useEffect(() => {
+    getCatalog();
+  }, [isUpdate]);
 
-    const data = [];
-    for (let i = 0; i < 3; ++i) {
-      data.push({
-        key: i,
-        title: "wire",
-        name: "$0.40",
-        quantity: "1",
-        upgradeNum: "Item",
+  React.useEffect(() => {
+    const newElements = [];
+    console.log("catalogItem: ", catalogItem);
+    catalogItem.forEach((element) => {
+      newElements.push({
+        key: element._id,
+        _id: element._id,
+        name: element.name,
+        price: element.price,
+        quantity: element.quantity,
+        description: element.description,
+        type: element.type,
         action: (
           <>
+            {element.type === "subCatalog" && (
+              <Button
+                type="text"
+                shape="circle"
+                className="me-2 d-inline-flex align-items-center justify-content-center"
+                onClick={() => setSelectedSubCatalog(element._id)}
+              >
+                <PlusCircleTwoTone />
+              </Button>
+            )}
             <Button
               type="text"
               shape="circle"
@@ -78,24 +163,17 @@ export default function Catlog() {
           </>
         ),
       });
-    }
-    return (
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={false}
-        bordered={false}
-        className="ant-table-expand"
-      />
-    );
-  };
+    });
+    setExpandedRowRender(newElements);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalogItem.length]);
 
   const columns = [
     { title: "Pipe", dataIndex: "name", key: "name", className: "font-bold" },
     {
       title: "Prize",
-      dataIndex: "platform",
-      key: "platform",
+      dataIndex: "price",
+      key: "price",
       className: "green-color",
     },
     { title: "Quantity", dataIndex: "version", key: "version" },
@@ -104,66 +182,25 @@ export default function Catlog() {
 
     {
       title: "Action",
-      key: "operation",
-      render: () => (
-        <>
-          <Button
-            type="text"
-            shape="circle"
-            className="me-2 d-inline-flex align-items-center justify-content-center"
-          >
-            <DeleteTwoTone />
-          </Button>
-          <Button
-            type="text"
-            shape="circle"
-            className="d-inline-flex align-items-center justify-content-center"
-          >
-            <EditTwoTone />
-          </Button>
-          <Button
-            type="text"
-            shape="circle"
-            className="d-inline-flex align-items-center justify-content-center"
-          >
-            <PlusCircleTwoTone />
-          </Button>
-        </>
-      ),
+      key: "action",
+      dataIndex: "action",
       className: "text-end",
     },
   ];
 
-  const data = [];
-  for (let i = 0; i < 6; ++i) {
-    data.push({
-      key: i,
-      name: (
-        <>
-          <div className="d-flex align-items-center">
-            <div className="ant-image-box me-3">
-              <img src={pipe} alt="" />
-            </div>
-            <div className="list-text">Perforated Drain Pipe</div>
-          </div>
-        </>
-      ),
-      platform: "$2.00-$2.80",
-
-      version: "1",
-
-      creator: "Element",
-      createdAt: "2014-12-24 23:12:00",
-    });
-  }
-
   const renderItem = () => {
-    console.log("isModal: ", isModal);
-    switch (isModal.isModal) {
+    switch (isModal) {
       case "subcategory":
         return <Addelement />;
       case "additem":
-        return <AddItem />;
+        return (
+          <AddItem
+            handleCancel={handleCancel}
+            selectedSubCatalog={selectedSubCatalog}
+            handelUpdate={handelUpdate}
+            setSelectedSubCatalog={setSelectedSubCatalog}
+          />
+        );
 
       default:
         return "";
@@ -229,7 +266,7 @@ export default function Catlog() {
                   <span
                     className="ant-blue-plus me-4"
                     onClick={() => {
-                      setIsModal({ isModal: "subcategory" });
+                      setIsModal("subcategory");
                       setTitle("Sub Category");
                     }}
                   >
@@ -242,7 +279,7 @@ export default function Catlog() {
                   <span
                     className="ant-blue-plus me-4"
                     onClick={() => {
-                      setIsModal({ isModal: "additem" });
+                      setIsModal("additem");
                       setTitle("Add Item");
                     }}
                   >
@@ -276,23 +313,73 @@ export default function Catlog() {
                     bordered={false}
                     className="components-table-demo-nested"
                     columns={columns}
-                    expandable={{ expandedRowRender }}
                     expandable={{
-                      expandedRowRender,
-                      expandIcon: ({ expanded, onExpand, record }) =>
-                        expanded ? (
-                          <UpCircleFilled
-                            style={{ color: "#3483FA" }}
-                            onClick={(e) => onExpand(record, e)}
+                      expandedRowRender: (render) => {
+                        if (isLoadingVariation) {
+                          return (
+                            <div className="text-center overflow-hidden">
+                              <SmallLoader />
+                            </div>
+                          );
+                        }
+                        if (!variations.length) {
+                          return (
+                            <div
+                              className="text-center"
+                              onClick={() => setSelectedSubCatalog(render._id)}
+                            >
+                              <h1>Add Item..</h1>
+                            </div>
+                          );
+                        }
+                        return (
+                          <Table
+                            columns={columns}
+                            dataSource={variations}
+                            pagination={false}
+                            bordered={false}
+                            className="ant-table-expand mt-3"
+                            // expandable={{
+                            //   expandIcon: ({ expanded, onExpand, record }) => {
+                            //     return (
+
+                            //     );
+                            //   },
+                            // }}
                           />
-                        ) : (
-                          <DownCircleFilled
-                            style={{ color: "#3483FA" }}
-                            onClick={(e) => onExpand(record, e)}
-                          />
-                        ),
+                        );
+                      },
+                      rowExpandable: (element) => element.type === "subCatalog",
+                      expandIcon: ({ expanded, onExpand, record }) => {
+                        if (record.type === "subCatalog") {
+                          return expanded ? (
+                            <UpCircleFilled
+                              style={{ color: "#3483FA" }}
+                              onClick={(e) => {
+                                onExpand(record, e);
+                              }}
+                            />
+                          ) : (
+                            <DownCircleFilled
+                              style={{ color: "#3483FA" }}
+                              onClick={(e) => {
+                                onExpand(record, e);
+                                loadVariations(record._id);
+                              }}
+                            />
+                          );
+                        } else {
+                          return (
+                            <>
+                              <div className="ant-catalog-img">
+                                <img src={log} alt="" />
+                              </div>
+                            </>
+                          );
+                        }
+                      },
                     }}
-                    dataSource={data}
+                    dataSource={expandedRowRender}
                     pagination={false}
                   />
                 </Tab.Pane>
