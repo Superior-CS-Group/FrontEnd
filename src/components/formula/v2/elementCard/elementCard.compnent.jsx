@@ -33,17 +33,19 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
       case "dropdown":
         return (
           <>
-            <Col md={8} className="mb-3">
-              <label>Choose Dropdown Items:</label>
-            </Col>
-            <Col md={16}>
-              <Select style={{ width: "100%" }}>
-                <Option>Option1</Option>
-                <Option>Option2</Option>
-                <Option>Option3</Option>
-                <Option>Option4</Option>
-              </Select>
-            </Col>
+            <Row className={[24, 0]} className="mb-3">
+              <Col md={8} className="mb-3">
+                <label>Choose Dropdown Items:</label>
+              </Col>
+              <Col md={16}>
+                <Select style={{ width: "100%" }}>
+                  <Option>Option1</Option>
+                  <Option>Option2</Option>
+                  <Option>Option3</Option>
+                  <Option>Option4</Option>
+                </Select>
+              </Col>
+            </Row>
           </>
         );
       case "prefilled":
@@ -178,9 +180,8 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
           </Col>
         </Row>
 
-        <Row gutter={[8, 0]} className="mb-3">
-          {renderSection()}
-        </Row>
+        {renderSection()}
+
         <Row gutter={[8, 0]} className="align-items-center mb-3">
           <Col md={8}>
             <label>Unit Type:</label>

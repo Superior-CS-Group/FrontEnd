@@ -7,6 +7,8 @@ import { fileToBase64 } from "../../utils/fileBase64.js";
 import { getEmailSetting, updateEmailSetting } from "../../api/admin";
 import Loader from "../loader";
 
+import Swal from "sweetalert2";
+
 export default function EmailSetting() {
   const [state, setState] = useState({
     host: "",
@@ -89,6 +91,13 @@ export default function EmailSetting() {
 
     return e && e.fileList;
   };
+
+  Swal.fire({
+    icon: "success",
+    title: "success",
+    text: "Data successfully Added",
+    showConfirmButton: true,
+  });
   // console.log("host: ", host);
   return (
     <>

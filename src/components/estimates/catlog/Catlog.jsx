@@ -21,6 +21,7 @@ import {
   getCatalogItem,
   getVariationsByCatalogId,
 } from "../../../api/catalogue";
+import CatalogServices from "./catalog.services";
 
 export default function Catlog() {
   const { Option } = Select;
@@ -383,7 +384,9 @@ export default function Catlog() {
                     pagination={false}
                   />
                 </Tab.Pane>
-                <Tab.Pane eventKey="second">Comming Soon Services</Tab.Pane>
+                <Tab.Pane eventKey="second">
+                  <CatalogServices/>
+                </Tab.Pane>
                 <Tab.Pane eventKey="three">Comming Soon Packages</Tab.Pane>
               </Tab.Content>
             </div>
