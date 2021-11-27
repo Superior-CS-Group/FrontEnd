@@ -17,6 +17,7 @@ export default function EmailSetting() {
     oldLogo: "",
     message: "",
     resultData: [],
+    isLoader:true
   });
   const [host, setHost] = useState("");
   const [username, setUsername] = useState("");
@@ -34,7 +35,7 @@ export default function EmailSetting() {
         setPassword(response.data.password);
         setPort(response.data.port);
         setfromEmail(response.data.fromEmail);
-        setState({ profileImage: response.data.logo });
+        setState({ profileImage: response.data.logo,isLoader:true });
       }
     };
 
@@ -61,16 +62,18 @@ export default function EmailSetting() {
     console.log(body);
     const response = await updateEmailSetting(body);
     if (response.remote === "success") {
-      console.log(response.data);
-      setHost(response.data.host);
-      setUsername(response.data.username);
-      setPassword(response.data.password);
-      setfromEmail(response.data.fromEmail);
-      setPort(response.data.port);
-      setState({ profileImage: response.data.logo });
-      setState({ oldLogo: response.data.logo });
-      setState({ message: "Data Updated" });
+      // console.log(response.data);
+      // setHost(response.data.host);
+      // setUsername(response.data.username);
+      // setPassword(response.data.password);
+      // setfromEmail(response.data.fromEmail);
+      // setPort(response.data.port);
+      // setState({ profileImage: response.data.logo });
+      // setState({ oldLogo: response.data.logo });
+      // setState({ message: "Data Updated" });
+      setState({isLoader:false})
     }
+     
   };
 
   const handleAllChange = (e) => {
@@ -90,13 +93,16 @@ export default function EmailSetting() {
     return e && e.fileList;
   };
   // console.log("host: ", host);
+  if(state.isLoader===true){
+    <Loader />
+  }
   return (
     <>
       <div className="d-flex align-items-center justify-content-between mb-4">
         <BreadcrumbBar name="Setting" subname="Email-setting" />
       </div>{" "}
       <div className="card-shadow p-4" style={{ borderRadius: "25px" }}>
-        <Loader />
+        
         <div role="alert" class="text-success">
           {state.message}
         </div>

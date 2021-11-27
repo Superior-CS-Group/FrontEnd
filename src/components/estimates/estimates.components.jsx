@@ -94,7 +94,7 @@ export default class MainEstimates extends Component {
                           <h2>#{value.leadInvoinceNo}</h2>
                         </div>
                         <Button className="ant-moving-button">
-                          Moving FWD
+                        {value.customerLeadId[0].estimaitonStatus}
                         </Button>
                       </div>
                       <div className="ant-estimate-text mb-3">
@@ -107,9 +107,9 @@ export default class MainEstimates extends Component {
                           <h2>{value.customerLeadId[0].address}</h2>
                         </div>
                         <div className="ant-estimate-text">
-                          <span>Distance</span>
+                          <span>Job Farness</span>
                           <h2>
-                            6.3<sub className="ms-2">km</sub>
+                          {value.customerLeadId[0].distance}<sub className="ms-2">min</sub>
                           </h2>
                         </div>
                       </div>
