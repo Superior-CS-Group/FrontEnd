@@ -43,7 +43,7 @@ function MaterialCard({
                 e = { target: { ...e.target, name: "quantity" } };
                 handleChange(e, index, newValue);
               }}
-              placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
+              placeholder="Enter Charge use '@' and '#' for the dynamic values"
               value={material.quantity}
               onBlur={onFocusOut}
             />
@@ -68,7 +68,7 @@ function MaterialCard({
                   e = { target: { ...e.target, name: "cost" } };
                   handleChange(e, index, newValue);
                 }}
-                placeholder="Enter Client Contract use '@' and '#' for the dynamic values"
+                placeholder="Enter Charge use '@' and '#' for the dynamic values"
                 value={material.cost}
                 onBlur={onFocusOut}
               />

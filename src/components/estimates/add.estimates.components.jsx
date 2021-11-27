@@ -28,6 +28,7 @@ import { drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 import { searchFormulaByName } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
+import { getVariationsByCatalogId } from "../../api/catalogue";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -189,7 +190,21 @@ export default function AddEstimates(props) {
     const newFormula = await searchFormulaByName(value);
     setFormulas(newFormula.data.data);
   }
-  function handleSelectFormula(formula) {
+  async function handleSelectFormula(formula) {
+    const elements = formula.elements;
+    const newElements = [];
+    for (let i = 0; i < elements.length; i++) {
+      if (elements[i].type === "dropdown") {
+        newElements.push({
+          ...elements[i],
+          options: await processDropdown(elements[i].dropdown),
+        });
+      } else {
+        newElements.push(elements[i]);
+      }
+    }
+    formula.elements = newElements;
+    console.log("formula: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
   }
   function handleEditField(e, index, subField, subIndex) {
@@ -199,12 +214,16 @@ export default function AddEstimates(props) {
     setSelectedFormulas(newSelectedFormulas);
   }
 
+  function handleEditDropdownField(e, index) {
+    console.log({ e, index });
+  }
+
   function escapeRegExp(string) {
     return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
   function processFormula(formula, materials, elements) {
-    console.log("formula: ", formula, "---------------------------");
+    console.log("formula: ", { formula, materials, elements });
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
@@ -238,7 +257,8 @@ export default function AddEstimates(props) {
       });
     }
     try {
-      return Number(eval(formula).toFixed(2));
+      const result = Number(eval(formula).toFixed(2));
+      return result;
     } catch (error) {
       console.log("error: ", error);
       return 0;
@@ -263,7 +283,6 @@ export default function AddEstimates(props) {
         material.formula,
         elements
       );
-      console.log("material: ", { cost, charge, quantity });
 
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
@@ -280,6 +299,16 @@ export default function AddEstimates(props) {
     );
     formula.grossProfit = `${profitPercent * 100}%`;
     return materials;
+  }
+
+  async function processDropdown(id) {
+    const elements = await getVariationsByCatalogId(id);
+    console.log(elements);
+    if (elements.remote === "success") {
+      return elements.data.data;
+    } else {
+      return [];
+    }
   }
 
   return (
@@ -492,6 +521,10 @@ export default function AddEstimates(props) {
                         {formula.elements
                           .filter((elem) => elem.view.includes(view))
                           .map((element, idx) => {
+                            if (element.type === "dropdown") {
+                              processDropdown(element.dropdown, element);
+                            }
+                            console.log("elelfdsakjlkds: ", element);
                             return (
                               <Col lg={6} span={24} key={idx}>
                                 <Card
@@ -523,6 +556,24 @@ export default function AddEstimates(props) {
                                         value={element.value}
                                         type="number"
                                       />
+                                    ) : element.type === "dropdown" ? (
+                                      <Select
+                                        style={{ width: "100%" }}
+                                        onChange={(value) =>
+                                          handleEditDropdownField(value, idx)
+                                        }
+                                      >
+                                        {element.options?.map((option) => {
+                                          return (
+                                            <Option
+                                              value={option._id}
+                                              key={option._id}
+                                            >
+                                              {option.name}
+                                            </Option>
+                                          );
+                                        })}
+                                      </Select>
                                     ) : element.name === "Markup" ? (
                                       <Input
                                         onChange={(e) => {

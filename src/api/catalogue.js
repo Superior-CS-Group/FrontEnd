@@ -49,3 +49,11 @@ export async function createVariation(data) {
   console.log("response", response);
   return response;
 }
+
+export async function searchCatalogByName(name, type) {
+  const response = await api.request({
+    url: `/v2/catalog/search-catalog-by-name/${name}?searchFor=${type}`,
+    method: "GET",
+  });
+  return response;
+}

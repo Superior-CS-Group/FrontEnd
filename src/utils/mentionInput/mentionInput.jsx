@@ -1,5 +1,5 @@
 import { MentionsInput, Mention } from "react-mentions";
-import { getSuggestions } from "../../api/formula";
+import { searchCatalogByName } from "../../api/catalogue";
 
 function ReactMentionInput({
   elementList,
@@ -11,12 +11,12 @@ function ReactMentionInput({
   noMaterial,
 }) {
   const handleCatalog = (query, callback) => {
-    return getSuggestions("material", query)
+    return searchCatalogByName(query, "catalog")
       .then((res) => {
         if (res.remote === "success") {
-          return res.data.map((item) => {
+          return res.data.data.map((item) => {
             return {
-              display: item.title,
+              display: item.name,
               id: item._id,
             };
           });

@@ -3,7 +3,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 import DeleteModal from "../../../modal/deleteModal.component";
-
+import { searchCatalogByName } from "../../../../api/catalogue";
 const typeOfOptions = [
   { type: "manual", title: "Manual Entry" },
   { type: "prefilled", title: "Prefilled but Editable" },
@@ -17,6 +17,8 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
   const [unit, setUnit] = React.useState([]);
   const [view, setView] = React.useState([]);
   const [typeOfElement, setTypeOfElement] = React.useState("");
+  const [suggestedCatalogs, setSuggestedCatalogs] = React.useState([]);
+  const [searchValue, setSearchValue] = React.useState("");
 
   React.useEffect(() => {
     setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
@@ -28,6 +30,21 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
     ]);
   }, [element]);
 
+  async function searchCatalog() {
+    const catalogs = await searchCatalogByName(searchValue, "subCatalog");
+    console.log("catalgos: ", catalogs);
+    if (catalogs.remote === "success") {
+      setSuggestedCatalogs(catalogs.data.data);
+    } else {
+      setSuggestedCatalogs([]);
+    }
+  }
+
+  React.useEffect(() => {
+    searchCatalog();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValue]);
+
   const renderSection = () => {
     switch (typeOfElement) {
       case "dropdown":
@@ -37,11 +54,29 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
               <label>Choose Dropdown Items:</label>
             </Col>
             <Col md={16}>
-              <Select style={{ width: "100%" }}>
-                <Option>Option1</Option>
-                <Option>Option2</Option>
-                <Option>Option3</Option>
-                <Option>Option4</Option>
+              <Select
+                showSearch
+                style={{ width: "100%" }}
+                onSearch={setSearchValue}
+                onChange={(value) => {
+                  handleChange(value, "dropdown", idx);
+                }}
+                filterOption={(input, option) => {
+                  return option.name
+                    .toLowerCase()
+                    .includes(input.toLowerCase());
+                }}
+                onBlur={onFocusOut}
+              >
+                {suggestedCatalogs.map((catalog) => (
+                  <Option
+                    key={catalog._id}
+                    value={catalog._id}
+                    name={catalog.name}
+                  >
+                    {catalog.name}
+                  </Option>
+                ))}
               </Select>
             </Col>
           </>
@@ -163,6 +198,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
               style={{ width: "100%" }}
               onChange={(value) => {
                 handleChange(value, "type", idx);
+                handleChange("", "value", idx);
                 setTypeOfElement(value);
               }}
               onBlur={onFocusOut}

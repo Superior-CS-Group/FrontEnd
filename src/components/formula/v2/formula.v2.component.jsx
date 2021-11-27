@@ -27,7 +27,6 @@ function FormulaV2() {
   const params = useLocation();
   React.useEffect(() => {
     const searchQuery = params.search.trim();
-    console.log("searchQury: ", searchQuery);
     const query = new URLSearchParams(searchQuery);
     const formulaId = query.get("formulaId");
     if (!formulaId) {
