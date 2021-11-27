@@ -133,7 +133,7 @@ export default function Services() {
             dataSource={data}
             className="ant-table-color ant-th-style"
             rowSelection={rowSelection}
-            pagination={{ pageSize: 6 }}
+            pagination={false}
             bordered={false}
           />
           {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
