@@ -73,7 +73,7 @@ export default function Datatable() {
       {
         title: (
           <>
-            Soft Follow Up <span className="float-end me-2">{drag}</span>
+            Softwere Follow Up <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "autoFollowUp",
@@ -281,7 +281,7 @@ export default function Datatable() {
           pagination={false}
           dataSource={state.data}
           bordered={false}
-          scroll={{ x: 3500 }}
+          scroll={{ x: 3500, y: 500 }}
         />
       </ReactDragListView.DragColumn>
     </>
