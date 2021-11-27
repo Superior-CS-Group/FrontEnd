@@ -5,6 +5,7 @@ import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
 import { fileToBase64 } from "../../utils/fileBase64.js";
 import { getEmailSetting, updateEmailSetting } from "../../api/admin";
+import Loader from "../loader";
 
 export default function EmailSetting() {
   const [state, setState] = useState({
@@ -13,8 +14,8 @@ export default function EmailSetting() {
     username: "",
     password: "",
     profileImage: "",
-    oldLogo:"",
-    message: "", 
+    oldLogo: "",
+    message: "",
     resultData: [],
   });
   const [host, setHost] = useState("");
@@ -32,8 +33,8 @@ export default function EmailSetting() {
         setUsername(response.data.username);
         setPassword(response.data.password);
         setPort(response.data.port);
-        setfromEmail(response.data.fromEmail)
-        setState({profileImage:response.data.logo})
+        setfromEmail(response.data.fromEmail);
+        setState({ profileImage: response.data.logo });
       }
     };
 
@@ -66,8 +67,8 @@ export default function EmailSetting() {
       setPassword(response.data.password);
       setfromEmail(response.data.fromEmail);
       setPort(response.data.port);
-      setState({profileImage:response.data.logo});
-      setState({oldLogo:response.data.logo});
+      setState({ profileImage: response.data.logo });
+      setState({ oldLogo: response.data.logo });
       setState({ message: "Data Updated" });
     }
   };
@@ -95,6 +96,7 @@ export default function EmailSetting() {
         <BreadcrumbBar name="Setting" subname="Email-setting" />
       </div>{" "}
       <div className="card-shadow p-4" style={{ borderRadius: "25px" }}>
+        <Loader />
         <div role="alert" class="text-success">
           {state.message}
         </div>
@@ -153,7 +155,7 @@ export default function EmailSetting() {
                 // extra="long"
               >
                 <input type="file" onChange={handleProfileImage} />
-                <img src={state.profileImage}/> 
+                <img src={state.profileImage} />
                 {/* <Upload
                   listType="picture"
                   className="check-input-logo" 

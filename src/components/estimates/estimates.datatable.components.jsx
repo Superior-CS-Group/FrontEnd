@@ -5,7 +5,7 @@ import ReactDragListView from "react-drag-listview";
 import { drag, Datel, edit } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData } from "../../utils/fetchApi.js";
-
+import DeleteModal from "../modal/deleteModal.component"
 export default function Datatable() {
   const params = useParams();
 
@@ -23,7 +23,7 @@ export default function Datatable() {
         dataIndex: "action",
         render: () => (
           <>
-            <span className="me-2 cursor-btn">{Datel}</span>
+            <span className="me-2 cursor-btn" onClick={DeleteModal}>{Datel}</span>
           </>
         ),
       },
@@ -39,7 +39,7 @@ export default function Datatable() {
       {
         title: (
           <>
-            Costumer Name <span className="float-end me-2">{drag}</span>
+            Custumer Name <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "name",
@@ -276,7 +276,7 @@ export default function Datatable() {
         <Table
           className="ant-table-estmating"
           columns={state.columns}
-          pagination={true}
+          pagination={false}
           dataSource={state.data}
           bordered={false}
           scroll={{ x: 3500 }}

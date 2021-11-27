@@ -77,7 +77,7 @@ export default class Catalog extends Component {
                 <Nav.Link className="active">
                   <b class="left-curve"></b>
                   <b class="right-curve"></b>
-                  Materials
+                  Default View
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li">
@@ -99,25 +99,14 @@ export default class Catalog extends Component {
               >
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
-              <span className="inline-block me-4">
-                <Select
-                  defaultValue="Filter"
-                  style={{ width: 150 }}
-                  onChange={handleChange}
-                >
-                  <Option value="jack">Boulder</Option>
-                  <Option value="lucy">Lucy</Option>
 
-                  <Option value="Yiminghe">yiminghe</Option>
-                </Select>
-              </span>
-              <span className="ant-blue-plus">
+              {/* <span className="ant-blue-plus">
                 <PlusCircleOutlined
                   style={{ fontSize: "18px" }}
                   className="me-2"
                 />{" "}
                 Add Column
-              </span>
+              </span> */}
               <div className="ms-auto col-lg-3">
                 <Input
                   placeholder="Search catalog by name"
@@ -141,33 +130,6 @@ export default class Catalog extends Component {
               <Radio value={2}>Services</Radio>
             </Radio.Group>
             {this.state.isProduct ? <MaterialTable /> : <ServicesTable />}
-            <div className="ant-action-box d-flex align-items-center mt-5 pb-3">
-              <div className="ms-auto pe-3 ant-select-box ">
-                <span className="me-3">Action:</span>
-                <Select
-                  defaultValue="What do yo want to do?"
-                  onChange={handleChange}
-                  style={{ width: "300px" }}
-                >
-                  <Option>
-                    <Link to="/view-email"> Export to Email </Link>
-                  </Option>
-                  <Option value="lucy">Export to Text</Option>
-                  <Option value="Yiminghe">Export to Video</Option>
-                  <Option value="Yiminghe">Export to Excel</Option>
-                  <Option value="Yiminghe">Delete</Option>
-                </Select>
-                <div className="text-end mt-3">
-                  <Button
-                    type="primary"
-                    disabled
-                    className="ant-confirm-button"
-                  >
-                    Confirm
-                  </Button>
-                </div>
-              </div>
-            </div>
           </div>
         </Card>
         <Modal

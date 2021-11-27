@@ -81,35 +81,41 @@ export default class MainEstimates extends Component {
             {this.state.estimateData.map((value) => {
               // console.log(value.customerLeadId[0].email,"valuecustomerLeadId")
               return (
-                <Card
-                  bordered={false}
-                  className="shadow estimate-card m-3"
-                  style={{ borderRadius: "10px" }}
-                >
-                  <div className="d-flex align-items-start justify-content-between mb-3">
-                    <div className="ant-estimate-text">
-                      <span>Estimate</span>
-                      <h2>#{value.leadInvoinceNo}</h2>
-                    </div>
-                    <Button className="ant-moving-button">Moving FWD</Button>
-                  </div>
-                  <div className="ant-estimate-text mb-3">
-                    <span>Costumer Name</span>
-                    <h2>{value.customerLeadId[0].name}</h2>
-                  </div>
-                  <div className="d-flex align-items-start justify-content-between">
-                    <div className="ant-estimate-text">
-                      <span>Adress</span>
-                      <h2>{value.customerLeadId[0].address}</h2>
-                    </div>
-                    <div className="ant-estimate-text">
-                      <span>Distance</span>
-                      <h2>
-                        6.3<sub className="ms-2">km</sub>
-                      </h2>
-                    </div>
-                  </div>
-                </Card>
+                <>
+                  <Link to={`/customer-lead/${value.customerLeadId[0]._id}`}>
+                    <Card
+                      bordered={false}
+                      className="shadow estimate-card m-3"
+                      style={{ borderRadius: "10px" }}
+                    >
+                      <div className="d-flex align-items-start justify-content-between mb-3">
+                        <div className="ant-estimate-text">
+                          <span>Estimate</span>
+                          <h2>#{value.leadInvoinceNo}</h2>
+                        </div>
+                        <Button className="ant-moving-button">
+                          Moving FWD
+                        </Button>
+                      </div>
+                      <div className="ant-estimate-text mb-3">
+                        <span>Costumer Name</span>
+                        <h2>{value.customerLeadId[0].name}</h2>
+                      </div>
+                      <div className="d-flex align-items-start justify-content-between">
+                        <div className="ant-estimate-text">
+                          <span>Adress</span>
+                          <h2>{value.customerLeadId[0].address}</h2>
+                        </div>
+                        <div className="ant-estimate-text">
+                          <span>Distance</span>
+                          <h2>
+                            6.3<sub className="ms-2">km</sub>
+                          </h2>
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                </>
               );
             })}
           </Carousel>
@@ -128,7 +134,7 @@ export default class MainEstimates extends Component {
                 <Nav.Link className="active">
                   <b class="left-curve"></b>
                   <b class="right-curve"></b>
-                  Materials
+                  Default View
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li">
@@ -150,25 +156,14 @@ export default class MainEstimates extends Component {
               >
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
-              {/* <span className="inline-block me-4">
-                <Select
-                  defaultValue="Filter"
-                  style={{ width: 150 }}
-                  onChange={handleChange}
-                >
-                  <Option value="jack">Boulder</Option>
-                  <Option value="lucy">Lucy</Option>
 
-                  <Option value="Yiminghe">yiminghe</Option>
-                </Select>
-              </span> */}
-              <span className="ant-blue-plus">
+              {/* <span className="ant-blue-plus">
                 <PlusCircleOutlined
                   style={{ fontSize: "18px" }}
                   className="me-2"
                 />{" "}
                 Add Column
-              </span>
+              </span> */}
               <div className="ms-auto col-lg-3">
                 <Input
                   placeholder="Search customers by name"
@@ -193,114 +188,12 @@ export default class MainEstimates extends Component {
                   <Option value="jack">
                     <Link to="/view-email">Export to Email</Link>
                   </Option>
-                  <Option value="lucy">
-                    <Link to="/view-email">Export to Text</Link>
+                  <Option value="lucy" disabled>
+                    Export to Text
                   </Option>
 
-                  <Option value="Yiminghe">
-                    <Link to="/view-email">Export to Excell</Link>
-                  </Option>
-                </Select>
-                <div className="text-end mt-3">
-                  <Button
-                    type="primary"
-                    disabled
-                    className="ant-confirm-button"
-                  >
-                    Confirm
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <div className="heading mt-4">
-          <p>Estimate Sent</p>
-        </div>
-        <Card
-          bordered={false}
-          className="shadow estimate-card mt-2 mb-4"
-          style={{ borderRadius: "25px" }}
-          bodyStyle={{ padding: "0px" }}
-        >
-          <div>
-            <Nav className="catlog-tabs" as="ul">
-              <Nav.Item as="li">
-                <Nav.Link className="active">
-                  <b class="left-curve"></b>
-                  <b class="right-curve"></b>
-                  Materials
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item as="li">
-                <Nav.Link>
-                  <b class="left-curve"></b>
-                  <b class="right-curve"></b>
-                  <span>
-                    <PlusCircleOutlined style={{ fontSize: "18px" }} />
-                  </span>
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </div>
-          <div className="p-3 card-shadow pe-4 ps-5">
-            <div className="fillter d-lg-flex align-items-center">
-              <span
-                className="inline-block me-5 fillter-btn cursor-btn"
-                onClick={this.showModal}
-              >
-                <img src={fillter} className="me-3" alt="" /> Filter and Sort
-              </span>
-              {/* <span className="inline-block me-4">
-                <Select
-                  defaultValue="Filter"
-                  style={{ width: 150 }}
-                  onChange={handleChange}
-                >
-                  <Option value="jack">Boulder</Option>
-                  <Option value="lucy">Lucy</Option>
-
-                  <Option value="Yiminghe">yiminghe</Option>
-                </Select>
-              </span> */}
-              <span className="ant-blue-plus">
-                <PlusCircleOutlined
-                  style={{ fontSize: "18px" }}
-                  className="me-2"
-                />{" "}
-                Add Column
-              </span>
-              <div className="ms-auto col-lg-3">
-                <Input
-                  placeholder="Search customers by name"
-                  text="search"
-                  className="ant-search-button"
-                  suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="p-2 ant-table-seprate">
-            <Datatable />
-
-            <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
-              <div className="ms-auto pe-3 ant-select-box ">
-                <span className="me-3">Action:</span>
-                <Select
-                  defaultValue="What do yo want to do?"
-                  onChange={handleChange}
-                  style={{ width: "300px" }}
-                >
-                  <Option value="jack">
-                    <Link to="/view-email">Export to Email</Link>
-                  </Option>
-                  <Option value="lucy">
-                    <Link to="/view-email">Export to Text</Link>
-                  </Option>
-
-                  <Option value="Yiminghe">
-                    <Link to="/view-email">Export to Excell</Link>
+                  <Option value="Yiminghe" disabled>
+                    Export to Excell
                   </Option>
                 </Select>
                 <div className="text-end mt-3">
