@@ -276,7 +276,7 @@ export default function Datatable() {
         <Table
           className="ant-table-estmating"
           columns={state.columns}
-          pagination={true}
+          pagination={false}
           dataSource={state.data}
           bordered={false}
           scroll={{ x: 3500 }}

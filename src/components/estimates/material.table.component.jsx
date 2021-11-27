@@ -173,7 +173,7 @@ export default function MaterialTable() {
           rowSelection={rowSelection}
           columns={state.columns}
           dataSource={state.data}
-          pagination={true}
+          pagination={false}
         />
       </ReactDragListView.DragColumn>
 

@@ -99,25 +99,14 @@ export default class Catalog extends Component {
               >
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
-              <span className="inline-block me-4">
-                <Select
-                  defaultValue="Filter"
-                  style={{ width: 150 }}
-                  onChange={handleChange}
-                >
-                  <Option value="jack">Boulder</Option>
-                  <Option value="lucy">Lucy</Option>
 
-                  <Option value="Yiminghe">yiminghe</Option>
-                </Select>
-              </span>
-              <span className="ant-blue-plus">
+              {/* <span className="ant-blue-plus">
                 <PlusCircleOutlined
                   style={{ fontSize: "18px" }}
                   className="me-2"
                 />{" "}
                 Add Column
-              </span>
+              </span> */}
               <div className="ms-auto col-lg-3">
                 <Input
                   placeholder="Search catalog by name"
