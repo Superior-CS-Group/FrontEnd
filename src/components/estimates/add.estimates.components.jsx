@@ -655,33 +655,33 @@ export default function AddEstimates(props) {
                       {item.title}
                     </List.Item>
                   )}
-                />
-                {variation.map((variation, index) => {
-                  return (
-                    <>
-                      <div className="p-3">
-                        <Row>
-                          <Col md={20}>
-                            <Input placeholder="" />
-                          </Col>
-                          <Col md={4}>
-                            <span>
+                >
+                  {variation.map((variation, index) => {
+                    return (
+                      <>
+                        <List.Item
+                          className="border-0 font-d position-relative"
+                          extra={[
+                            <>
                               <Input
+                                style={{ width: "30px" }}
                                 type="number"
                                 maxLength="2"
                                 placeholder="Basic usage"
                                 className="ant-width-small font-bold radius-4 gray-text"
                                 defaultValue="89"
-                              />{" "}
-                              %
-                            </span>
-                            <DeleteOutlined className="delete-icon" />
-                          </Col>
-                        </Row>
-                      </div>
-                    </>
-                  );
-                })}
+                              />
+                              <span>%</span>{" "}
+                              <DeleteOutlined className="delete-icon" />
+                            </>,
+                          ]}
+                        >
+                          <Input placeholder="" style={{ width: "88%" }} />
+                        </List.Item>
+                      </>
+                    );
+                  })}
+                </List>
                 <div className="addbtn-ant ps-3 py-3">
                   <a
                     href="#"

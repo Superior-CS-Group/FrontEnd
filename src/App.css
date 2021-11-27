@@ -2153,9 +2153,9 @@ input::-webkit-inner-spin-button {
 .delete-icon {
   position: absolute;
   color: red;
-  right: -20px;
+  right: -2px;
   font-size: 14px;
-  top: 7px;
+
   cursor: pointer;
 }
 .del-btn-svg svg {
