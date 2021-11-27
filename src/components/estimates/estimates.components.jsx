@@ -108,7 +108,11 @@ export default class MainEstimates extends Component {
                         </div>
                         <div className="ant-estimate-text">
                           <span>Job Farness</span>
-                          <h2>{value.customerLeadId[0].distance}</h2>
+                          <h2>
+                            {value.customerLeadId[0].distance}
+                            <sub className="ms-2">min</sub>
+                            6.3
+                          </h2>
                         </div>
                       </div>
                     </Card>
