@@ -14,7 +14,8 @@ import SimpleEMailSent from "./simple.emailsent.component";
 import ScheduleTimeDate from "./schedule.timedate.component";
 import ScheduleEmailSent from "./schedule.emailsent.component";
 import { getData } from "../../utils/fetchApi";
-
+import { Card, Table } from "antd";
+import { Nav, Tab } from "react-bootstrap";
 export default class EmailSend extends Component {
   constructor(props) {
     super();
@@ -143,127 +144,168 @@ export default class EmailSend extends Component {
           style={{ margin: "-1.5rem", padding: "1.5rem" }}
         >
           <h5>Mail</h5>
-          <div className="tab-div-new-email">
-            <ul className="">
-              {this.state.templateData.map((datavalue) => {
-                return (
-                  <li
-                    onClick={() => this.onChangeTab("still-interested")}
-                    className={this.state.tabShow ? "active" : ""}
-                  >
-                    {datavalue.name} <MoreOutlined />
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-          {this.state.tabShow === true ? (
-            <div className="card-show pt-2 pb-3">
-              <Form layout="vertical">
+
+          <Card
+            bordered={false}
+            className="radius-9"
+            bodyStyle={{ padding: "0px" }}
+          >
+            <Tab.Container
+              id="left-tabs-example"
+              defaultActiveKey={this.state.templateData[0]?._id}
+            >
+              <Nav className="catlog-tabs" as="ul">
                 {this.state.templateData.map((datavalue) => {
-                  // console.log(datavalue, "values");
                   return (
-                    <>
-                      <Form.Item name="Column" label="Email Subject">
-                        <Input
-                          type="text"
-                          onChange={this.handleChange}
-                          value={datavalue.subject}
-                          placeholder="Still Interested"
-                        />
-                      </Form.Item>
-                      <Form.Item label="Description">
-                        <ReactQuill
-                          onChange={this.handleChange}
-                          value={datavalue.bodyPart}
-                          bounds={".app"}
-                          placeholder={this.props.placeholder}
-                        />
-                      </Form.Item>
-                    </>
+                    <Nav.Item as="li">
+                      <Nav.Link eventKey={datavalue._id}>
+                        <b class="left-curve"></b>
+                        <b class="right-curve"></b>
+                        {datavalue.name} <MoreOutlined />
+                      </Nav.Link>
+                    </Nav.Item>
                   );
                 })}
-                <Row>
-                  <Col md={2}>
+                {/* <Nav.Item as="li">
+                  <Nav.Link eventKey="second">
+                    <b class="left-curve"></b>
+                    <b class="right-curve"></b>Services
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item as="li">
+                  <Nav.Link eventKey="three">
+                    <b class="left-curve"></b>
+                    <b class="right-curve"></b>Packages
+                  </Nav.Link>
+                </Nav.Item> */}
+              </Nav>
+              <div className="p-3 card-shadow ">
+                <Tab.Content className="mt-2">
+                  {/* <Tab.Pane eventKey="first">
                     {" "}
-                    <span className="d-lg-flex align-items-center mail-send-button">
-                      <Button
-                        type="primary"
-                        size="middle"
-                        onClick={() => this.setState({ toShow: "sendEmail" })}
-                      >
-                        Send
-                      </Button>
-                      <Dropdown overlay={menu} trigger={["click"]}>
-                        <a
-                          className="ant-dropdown-link"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          &nbsp;
-                          <DownOutlined />
-                        </a>
-                      </Dropdown>
-                    </span>
-                  </Col>
-                  <Col md={20}></Col>
-                  <Col md={2} className="text-right">
-                    <span className="text-right delete-div-mail">
-                      <MoreOutlined />
-                      <DeleteOutlined />
-                    </span>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
-          ) : (
-            <div className="card-show pt-2 pb-3">
-              {" "}
-              <Form layout="vertical">
-                <Form.Item name="Column" label="Email Subject">
-                  <Input type="text" placeholder="Template 2" />
-                </Form.Item>
-                <Form.Item label="Description">
-                  <ReactQuill
-                    theme={this.state.theme}
-                    onChange={this.handleChange}
-                    value={this.state.editorHtml}
-                    bounds={".app"}
-                    placeholder={this.props.placeholder}
-                  />
-                </Form.Item>
-                <Row>
-                  <Col md={2}>
-                    {" "}
-                    <span className="d-lg-flex align-items-center mail-send-button">
-                      <Button
-                        type="primary"
-                        size="middle"
-                        onClick={() => this.setState({ toShow: "sendEmail" })}
-                      >
-                        Send
-                      </Button>
-                      <Dropdown overlay={menu} trigger={["click"]}>
-                        <a
-                          className="ant-dropdown-link"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          &nbsp;
-                          <DownOutlined />
-                        </a>
-                      </Dropdown>
-                    </span>
-                  </Col>
-                  <Col md={20}></Col>
-                  <Col md={2} className="text-right">
-                    <span className=" text-right delete-div-mail">
-                      <MoreOutlined />
-                      <DeleteOutlined />
-                    </span>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
-          )}
+                    <Form layout="vertical">
+                      {this.state.templateData.map((datavalue) => {
+                        // console.log(datavalue, "values");
+                        return (
+                          <>
+                            <Form.Item name="Column" label="Email Subject">
+                              <Input
+                                type="text"
+                                onChange={this.handleChange}
+                                value={datavalue.subject}
+                                placeholder="Still Interested"
+                              />
+                            </Form.Item>
+                            <Form.Item label="Description">
+                              <ReactQuill
+                                onChange={this.handleChange}
+                                value={datavalue.bodyPart}
+                                bounds={".app"}
+                                placeholder={this.props.placeholder}
+                              />
+                            </Form.Item>
+                          </>
+                        );
+                      })}
+                      <Row>
+                        <Col md={2}>
+                          {" "}
+                          <span className="d-lg-flex align-items-center mail-send-button">
+                            <Button
+                              type="primary"
+                              size="middle"
+                              onClick={() =>
+                                this.setState({ toShow: "sendEmail" })
+                              }
+                            >
+                              Send
+                            </Button>
+                            <Dropdown overlay={menu} trigger={["click"]}>
+                              <a
+                                className="ant-dropdown-link"
+                                onClick={(e) => e.preventDefault()}
+                              >
+                                &nbsp;
+                                <DownOutlined />
+                              </a>
+                            </Dropdown>
+                          </span>
+                        </Col>
+                        <Col md={20}></Col>
+                        <Col md={2} className="text-right">
+                          <span className="text-right delete-div-mail">
+                            <MoreOutlined />
+                            <DeleteOutlined />
+                          </span>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Tab.Pane> */}
+                  {this.state.templateData.map((datavalue) => {
+                    // console.log(datavalue, "values");
+                    return (
+                      <>
+                        <Tab.Pane eventKey={datavalue._id}>
+                          <Form layout="vertical">
+                            <Form.Item label="Email Subject">
+                              <Input
+                                type="text"
+                                onChange={this.handleChange}
+                                value={datavalue.subject}
+                                placeholder="Still Interested"
+                              />
+                            </Form.Item>
+                            <Form.Item label="Description">
+                              <ReactQuill
+                                onChange={this.handleChange}
+                                value={datavalue.bodyPart}
+                                bounds={".app"}
+                                placeholder={this.props.placeholder}
+                              />
+                            </Form.Item>
+
+                            <Row>
+                              <Col md={2}>
+                                {" "}
+                                <span className="d-lg-flex align-items-center mail-send-button">
+                                  <Button
+                                    type="primary"
+                                    size="middle"
+                                    onClick={() =>
+                                      this.setState({ toShow: "sendEmail" })
+                                    }
+                                  >
+                                    Send
+                                  </Button>
+                                  <Dropdown overlay={menu} trigger={["click"]}>
+                                    <a
+                                      className="ant-dropdown-link"
+                                      onClick={(e) => e.preventDefault()}
+                                    >
+                                      &nbsp;
+                                      <DownOutlined />
+                                    </a>
+                                  </Dropdown>
+                                </span>
+                              </Col>
+                              <Col md={20}></Col>
+                              <Col md={2} className="text-right">
+                                <span className="text-right delete-div-mail">
+                                  <MoreOutlined />
+                                  <DeleteOutlined />
+                                </span>
+                              </Col>
+                            </Row>
+                          </Form>
+                        </Tab.Pane>{" "}
+                      </>
+                    );
+                  })}
+                  <Tab.Pane eventKey="three">Comming Soon Packages</Tab.Pane>
+                </Tab.Content>
+              </div>
+            </Tab.Container>
+          </Card>
         </div>
 
         <ModalMain

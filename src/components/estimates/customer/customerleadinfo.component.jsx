@@ -22,6 +22,7 @@ export default function CustomerLeadInfo() {
     customerAddress: "",
     customerAddress1: "",
     autoReminderEmail: "",
+    distance: "",
     statusList: [],
     estimaitonStatus: "",
     resultData: [],
@@ -50,6 +51,7 @@ export default function CustomerLeadInfo() {
           customerName: result.data.Data.name,
           customerEmail: result.data.Data.email,
           customerAddress: result.data.Data.address,
+          distance: result.data.Data.distance,
           customerAddress1:
             result.data.Data.city +
             " " +
@@ -140,55 +142,7 @@ export default function CustomerLeadInfo() {
       });
     }
   };
-
-  // useEffect(() => {
-  //   const id = params.id;
-
-  //   if (id) {
-  //     const body = { id };
-  //     const fetchData = async () => {
-  //       const result = await postData(`customer/get-info`, body);
-  //       // console.log("result.data.Data",result.data.Data)
-  //       let userstatus;
-  //       let autoReminder;
-
-  //       if (result.data.Data.activeStatus === true) {
-  //         userstatus = "Active";
-  //       } else {
-  //         userstatus = "Deactive";
-  //       }
-
-  //       setState({
-  //         ...state,
-  //         id: id,
-  //         customerName: result.data.Data.name,
-  //         customerEmail: result.data.Data.email,
-  //         customerAddress: result.data.Data.address,
-  //         customerAddress1:
-  //           result.data.Data.city +
-  //           " " +
-  //           result.data.Data.state +
-  //           +result.data.Data.postalCode,
-  //         activeStatus: userstatus,
-  //         estimaitonStatus: result.data.Data.estimaitonStatus,
-  //         autoReminderEmail: result.data.Data.autoReminderEmail,
-  //         resultData: result.data.Data,
-  //       });
-  //     };
-
-  //     const fetchStatusData = async () => {
-  //       const result = await getData(`status/list`, body);
-  //       // console.log("statusresult", result);
-  //       setState({
-  //         ...state,
-  //         statusList: result.data.Data,
-  //       });
-  //     };
-
-  //     fetchData();
-  //     fetchStatusData();
-  //   }
-  // }, [params]);
+ 
 
   const updateActiveStatushandleSubmit = async (e) => {
     // console.log(localStorage.getItem("token"));
@@ -232,6 +186,7 @@ export default function CustomerLeadInfo() {
         <div className="heading">
           <h1>Customer Leads</h1>
         </div>
+        {console.log(params.id,"params.id")}
         <Row>
           <Col md={24}>
             <Card
@@ -239,7 +194,8 @@ export default function CustomerLeadInfo() {
               bodyStyle={{ padding: "0px" }}
               className="radius-12"
             >
-              <div className="fillter d-lg-flex align-items-center p-3">
+{params.id ?( <>
+  <div className="fillter d-lg-flex align-items-center p-3">
                 <span className="inline-block me-5 fillter-btn d-lg-flex align-items-center">
                   <UserOutlined className="me-2" /> {state.customerName}
                 </span>
@@ -296,6 +252,7 @@ export default function CustomerLeadInfo() {
                   </Button>
                 </div>
               </div>
+
               <div className="tab-div border-top">
                 <ul className="">
                   <li
@@ -312,6 +269,11 @@ export default function CustomerLeadInfo() {
                   </li>
                 </ul>
               </div>
+</>
+
+): "" }
+             
+              
             </Card>
 
             {state.tabShow === true ? (

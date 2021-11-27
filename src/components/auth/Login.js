@@ -53,7 +53,7 @@ export default class Login extends Component {
     if (!this.state.password) {
       errors.password = "Password is not blank";
     }
-    if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.state.email)) {
+    if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.state.email)) {
       errors.email = "Email is not valid";
       // this.setState({ isValidEmail:false})
     }

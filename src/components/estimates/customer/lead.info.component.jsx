@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Collapse, Input, Form, Row, Col, Button } from "antd";
 import "react-phone-number-input/style.css";
 import { UserOutlined, CheckOutlined } from "@ant-design/icons";
-import { postData } from "../../../utils/fetchApi.js";
+import { postData } from "../../../utils/fetchApi.js"; 
 
-import { useParams } from "react-router-dom";
+import { useParams,Navigate } from "react-router-dom";
 
 export default function LeadInfo() {
   const params = useParams();
@@ -15,12 +15,12 @@ export default function LeadInfo() {
     name: "",
     email: "",
     contactNo: "",
-    country: "",
+    country: "US",
     states: "",
     city: "",
     postalCode: "",
     address: "",
-    otherNote: "",
+    otherNote: "", distance: "",
     otherInformation: "",
     size: "large",
     tabShow: true,
@@ -30,11 +30,12 @@ export default function LeadInfo() {
     expandIconPosition: "right",
     value: "",
     setValue: "",
+    isRedirect:false
   });
   useEffect(() => {
     // console.log("params: ", params.id);
     const id = params.id;
-    
+
     if (id) {
       const body = { id };
       const fetchData = async () => {
@@ -53,6 +54,7 @@ export default function LeadInfo() {
           city: result.data.Data.city,
           postalCode: result.data.Data.postalCode,
           address: result.data.Data.address,
+          distance: result.data.Data.distance,
           otherNote: result.data.Data.otherNote,
           otherInformation: result.data.Data.otherInformation,
         });
@@ -120,6 +122,7 @@ export default function LeadInfo() {
     setState({
       ...state,
       [e.target.name]: e.target.value,
+      errors: []
     });
   };
 
@@ -143,6 +146,7 @@ export default function LeadInfo() {
       city,
       address,
       postalCode,
+      distance,
       otherInformation,
     } = state;
     const body = {
@@ -153,7 +157,7 @@ export default function LeadInfo() {
       state: states,
       city,
       address,
-      postalCode,
+      postalCode, distance,
       otherInformation,
     };
     // console.log("body: ", body);
@@ -175,13 +179,14 @@ export default function LeadInfo() {
         otherNote: "",
         otherInformation: "",
         isLoading: false,
+        isRedirect:true
       });
     } catch (err) {
       console.log("error", err, err.response);
-
+      
       setState({
         ...state,
-        message: err.response.data.errors,
+        message: err.response?.data?.errors,
         isLoading: false,
       });
     }
@@ -207,7 +212,7 @@ export default function LeadInfo() {
       states,
       city,
       address,
-      postalCode,
+      postalCode, distance,
       otherInformation,
     } = state;
     const body = {
@@ -219,7 +224,7 @@ export default function LeadInfo() {
       state: states,
       city,
       address,
-      postalCode,
+      postalCode, distance,
       otherInformation,
     };
     console.log("body: ", body);
@@ -229,8 +234,9 @@ export default function LeadInfo() {
       console.log("result: ", result);
       setState({
         ...state,
-        errors:[],
+        errors: [],
         message: "New Data Updated!",
+        isRedirect:true
       });
     } catch (err) {
       console.log("error", err, err.response);
@@ -243,7 +249,7 @@ export default function LeadInfo() {
     }
   };
 
-  
+
   const updateActiveStatushandleSubmit = async (event) => {
     // console.log(localStorage.getItem("token"));
     let id = state.id;
@@ -257,7 +263,7 @@ export default function LeadInfo() {
     }
     setState({ ...state, isLoading: true });
 
-    const {activeStatus } = state;
+    const { activeStatus } = state;
     const body = {
       id,
       activeStatus,
@@ -269,7 +275,7 @@ export default function LeadInfo() {
       // console.log("result: ", result);
       setState({
         ...state,
-        errors:[],
+        errors: [],
         message: "Data Updated!",
       });
     } catch (err) {
@@ -290,6 +296,10 @@ export default function LeadInfo() {
   const { TextArea } = Input;
   function callback(key) {
     console.log(key);
+  }
+
+  if (state.isRedirect) {
+    return <Navigate to="/estimating" />;
   }
 
   return (
@@ -323,7 +333,7 @@ export default function LeadInfo() {
                 <Form.Item label="Email">
                   <Input
                     size="large"
-                    suffix={<CheckOutlined />}
+                     
                     name="email"
                     value={state.email}
                     onChange={handleAllChange}
@@ -335,28 +345,44 @@ export default function LeadInfo() {
                     {state.message}
                   </div>
                 </Form.Item>
-                <Form.Item label="Phone">
-                  {/* <Input suffix={<CheckOutlined />} /> */}
-                  <Input
-                    // international
-                    // defaultCountry="RU"
-                    suffix={<CheckOutlined />}
-                    size="large"
-                    name="contactNo"
-                    value={state.contactNo}
-                    onChange={handleAllChange}
-                  />
-                  <div role="alert" class="text-danger">
-                    {state.errors.contactNo}
-                  </div>
-                </Form.Item>
+                <Row gutter={[24, 0]}>
+                  <Col md={12}>
+                    <Form.Item label="Phone">
+                      {/* <Input suffix={<CheckOutlined />} /> */}
+                      <Input
+                        // international
+                        // defaultCountry="RU"
+                         
+                        size="large"
+                        name="contactNo"
+                        value={state.contactNo}
+                        onChange={handleAllChange}
+                      />
+                      <div role="alert" class="text-danger">
+                        {state.errors.contactNo}
+                      </div>
+                    </Form.Item>
+                  </Col>
+                  <Col md={12}>
+                    <Form.Item label="Job Farness">
+                      <Input
+                        size="large"
+                        
+                        name="distance"
+                        placeholder="Minite"
+                        value={state.distance}
+                        onChange={handleAllChange}
+                      />
+
+                    </Form.Item>
+                  </Col> </Row>
               </Col>
 
               <Col md={12}>
                 <Form.Item label="Country">
                   <Input
                     size="large"
-                    suffix={<CheckOutlined />}
+                     
                     name="country"
                     value={state.country}
                     onChange={handleAllChange}
@@ -370,7 +396,7 @@ export default function LeadInfo() {
                     <Form.Item label="City ">
                       <Input
                         size="large"
-                        suffix={<CheckOutlined />}
+                         
                         name="city"
                         value={state.city}
                         onChange={handleAllChange}
@@ -384,7 +410,7 @@ export default function LeadInfo() {
                     <Form.Item label="State">
                       <Input
                         size="large"
-                        suffix={<CheckOutlined />}
+                         
                         name="states"
                         value={state.states}
                         onChange={handleAllChange}
@@ -400,7 +426,7 @@ export default function LeadInfo() {
                     <Form.Item label="Address">
                       <Input
                         size="large"
-                        suffix={<CheckOutlined />}
+                         
                         name="address"
                         value={state.address}
                         onChange={handleAllChange}
@@ -414,7 +440,7 @@ export default function LeadInfo() {
                     <Form.Item label="Zip code">
                       <Input
                         size="large"
-                        suffix={<CheckOutlined />}
+                         
                         name="postalCode"
                         value={state.postalCode}
                         onChange={handleAllChange}
@@ -424,6 +450,7 @@ export default function LeadInfo() {
                       </div>
                     </Form.Item>
                   </Col>
+
                 </Row>
               </Col>
               <Col md={24}>
@@ -492,7 +519,7 @@ export default function LeadInfo() {
 
               <Col md={24}>
                 <div className="text-right">
-                  {}
+                  { }
                   <Button className="add-btn ant-btn-primary">
                     Save Changes
                   </Button>

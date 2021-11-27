@@ -5,7 +5,7 @@ import ReactDragListView from "react-drag-listview";
 import { drag, Datel, edit } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData } from "../../utils/fetchApi.js";
-import DeleteModal from "../modal/deleteModal.component"
+import DeleteModal from "../modal/deleteModal.component";
 export default function Datatable() {
   const params = useParams();
 
@@ -20,12 +20,7 @@ export default function Datatable() {
       },
       {
         title: "Action",
-        dataIndex: "action",
-        render: () => (
-          <>
-            <span className="me-2 cursor-btn" onClick={DeleteModal}>{Datel}</span>
-          </>
-        ),
+        dataIndex: "action", 
       },
       {
         title: (
@@ -39,7 +34,7 @@ export default function Datatable() {
       {
         title: (
           <>
-            Custumer Name <span className="float-end me-2">{drag}</span>
+            Customer Name <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "name",
@@ -71,7 +66,7 @@ export default function Datatable() {
       {
         title: (
           <>
-            Auto Follow Up <span className="float-end me-2">{drag}</span>
+            Softwere Follow Up <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "autoFollowUp",
@@ -95,7 +90,7 @@ export default function Datatable() {
       {
         title: (
           <>
-            E stimaiton Sent Date <span className="float-end me-2">{drag}</span>
+            Estimaiton Sent Date <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "estimaitonSentDate",
@@ -103,7 +98,7 @@ export default function Datatable() {
       {
         title: (
           <>
-            days t Took To Send Estimate{" "}
+            Days Took To Send Estimate{" "}
             <span className="float-end me-2">{drag}</span>
           </>
         ),
@@ -205,7 +200,6 @@ export default function Datatable() {
       setNewEstimateData([...newEstimateData2]);
     }
   }
-  console.log("newEstimateData new", newEstimateData);
 
   useEffect(() => {
     const data = [];
@@ -239,6 +233,32 @@ export default function Datatable() {
               }
             />
           ),
+          action: (
+            <>
+              <span
+                className="me-2 cursor-btn"
+                onClick={(e) => {
+                  DeleteModal(customerData[0]._id, "customerLead");
+                  // console.log("state: ", state);
+                  // const newData = [...state.data].filter((elem) => {
+                  //   console.log(
+                  //     elem._id !== customerData[0]._id,
+                  //     elem._id,
+                  //     customerData[0]._id
+                  //   );
+                  //   return elem._id !== customerData[0]._id;
+                  // });
+                  // console.log(newData, "data");
+                  // setState({
+                  //   ...state,
+                  //   data: newData,
+                  // });
+                }}
+              >
+                {Datel}
+              </span>
+            </>
+          ),
           name: (
             <Link to={`/customer-lead/${customerData[0]._id}`}>
               {customerData[0].name}
@@ -260,6 +280,7 @@ export default function Datatable() {
           noOfEmailFollowUp: estimateData.noOfEmailFollowUp,
           lastDateEmailFollowUp: estimateData.lastDateEmailFollowUp,
           estimaitonCloseDate: estimateData.estimaitonCloseDate,
+          _id: customerData[0]._id,
         });
       }
       // console.log("data: ", data);
@@ -267,9 +288,7 @@ export default function Datatable() {
     };
     fetchData();
   }, [params]);
-
-  console.log("newEstimateData1", newEstimateData);
-
+  console.log("state: ", state);
   return (
     <>
       <ReactDragListView.DragColumn {...dragProps}>
@@ -279,7 +298,7 @@ export default function Datatable() {
           pagination={false}
           dataSource={state.data}
           bordered={false}
-          scroll={{ x: 3500 }}
+          scroll={{ x: 3500, y: 500 }}
         />
       </ReactDragListView.DragColumn>
     </>

@@ -49,7 +49,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
     switch (typeOfElement) {
       case "dropdown":
         return (
-          <>
+          <Row gutter={[24, 0]} className="mb-3">
             <Col md={8} className="mb-3">
               <label>Choose Dropdown Items:</label>
             </Col>
@@ -79,7 +79,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
                 ))}
               </Select>
             </Col>
-          </>
+          </Row>
         );
       case "prefilled":
         return (
@@ -214,9 +214,8 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
           </Col>
         </Row>
 
-        <Row gutter={[8, 0]} className="mb-3">
-          {renderSection()}
-        </Row>
+        {renderSection()}
+
         <Row gutter={[8, 0]} className="align-items-center mb-3">
           <Col md={8}>
             <label>Unit Type:</label>

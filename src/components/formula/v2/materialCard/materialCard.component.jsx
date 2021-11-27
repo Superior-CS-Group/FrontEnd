@@ -1,7 +1,8 @@
 import { Col, Input, Row } from "antd";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
-
+import DeleteModal from "../../../modal/deleteModal.component";
+import { DeleteOutlined } from "@ant-design/icons";
 function MaterialCard({
   material,
   handleChange,
@@ -13,10 +14,10 @@ function MaterialCard({
     <tr>
       <td>
         <Row className="align-items-center">
-          <Col md={8}>
+          <Col md={24}>
             <label>Name Material:</label>
           </Col>
-          <Col md={16}>
+          <Col md={24}>
             <Input
               className="ant-furmulla-input"
               name="name"
@@ -29,10 +30,10 @@ function MaterialCard({
       </td>
       <td>
         <Row>
-          <Col md={8}>
+          <Col md={24}>
             <label>Enter Quantity:</label>
           </Col>
-          <Col md={16}>
+          <Col md={24}>
             <ReactMentionInput
               className="ant-furmulla-input px-2 outline w-200"
               elementList={elementList.map((element) => ({
@@ -52,12 +53,12 @@ function MaterialCard({
       </td>
       <td>
         <Row className="align-items-start">
-          <Col md={3}>
-            <label>Cost:</label>
+          <Col md={24}>
+            <label>Cost:</label>{" "}
+            <span className="me-2 text-spaceb"> {"{Quantity} * "}</span>
           </Col>
-          <Col md={21}>
+          <Col md={24}>
             <div className="d-flex">
-              <span className="me-2 text-spaceb"> {"{Quantity} * "}</span>
               <ReactMentionInput
                 className="ant-furmulla-input px-2 outline w-200"
                 elementList={elementList.map((element) => ({
@@ -78,10 +79,10 @@ function MaterialCard({
       </td>
       <td>
         <Row className="align-items-start">
-          <Col md={8}>
+          <Col md={24}>
             <label>Charge:</label>
           </Col>
-          <Col md={16}>
+          <Col md={24}>
             <ReactMentionInput
               className="ant-furmulla-input w-200"
               elementList={elementList.map((element) => ({
@@ -99,6 +100,9 @@ function MaterialCard({
             />
           </Col>
         </Row>
+        <span className="delect">
+          <DeleteOutlined className="text-danger" onClick={DeleteModal} />
+        </span>
       </td>
     </tr>
   );
