@@ -1,7 +1,8 @@
 import { Col, Input, Row, Select } from "antd";
-
+import { DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
+import DeleteModal from "../../../modal/deleteModal.component";
 
 const typeOfOptions = [
   { type: "manual", title: "Manual Entry" },
@@ -127,6 +128,9 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
           !element.automatic ? "ant-cover-success" : "ant-cover-gray"
         } px-2 py-4`}
       >
+        <span className="delect">
+          <DeleteOutlined className="text-danger" onClick={DeleteModal} />
+        </span>
         <div className="ant-automic">{element.auto}</div>
         {/* <span className="ant-edit-furmulla">
           <EditOutlined />

@@ -2040,7 +2040,7 @@ ul.work-scope-list li {
 .catlog-tabs li .nav-link {
   position: relative;
   border-radius: 9px 9px 0px 0px;
-  padding: 1rem;
+  padding: 1rem 1.5rem 1rem 1rem;
   color: #fff;
 }
 
@@ -2323,4 +2323,49 @@ input::-webkit-inner-spin-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+}
+
+.ant-image-box {
+  width: 72px;
+  height: 62px;
+}
+
+.ant-image-box img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 9px;
+}
+
+.text-ellpis {
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.delect {
+  position: absolute;
+  right: 6px;
+  top: 1px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.components-table-demo-nested .ant-table-row-expand-icon-cell {
+  padding: 0px;
+  width: 63px;
+}
+
+.ant-catalog-img img {
+  width: 100%;
+  height: 64px;
+  border-radius: 9.91903px;
+}
+.w-64 {
+  width: 64px;
+}
+.ant-table-expand td {
+  padding: 4px 0px !important;
 }

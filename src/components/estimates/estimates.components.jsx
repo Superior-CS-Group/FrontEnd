@@ -102,7 +102,7 @@ export default class MainEstimates extends Component {
                         <h2>{value.customerLeadId[0].name}</h2>
                       </div>
                       <div className="d-flex align-items-start justify-content-between">
-                        <div className="ant-estimate-text text-truncate">
+                        <div className="ant-estimate-text text-ellpis">
                           <span>Adress</span>
                           <h2>{value.customerLeadId[0].address}</h2>
                         </div>

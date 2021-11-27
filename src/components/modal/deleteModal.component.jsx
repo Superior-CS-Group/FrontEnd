@@ -7,6 +7,7 @@ export default function DeleteModal() {
   confirm({
     title: "Do you Want to delete these items?",
     icon: <ExclamationCircleOutlined />,
+
     content: "Some descriptions",
     onOk() {
       console.log("OK");

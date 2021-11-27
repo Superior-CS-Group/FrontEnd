@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Select, Input } from "antd";
+import { Select, Input } from "antd";
 import fillter from "../../images/fillter.png";
 import FilterSorting from "./filter/filter.sorting.component";
 import { Nav } from "react-bootstrap";
@@ -32,7 +32,7 @@ export default function FillterTabs(props) {
             <Nav.Link className="active">
               <b class="left-curve"></b>
               <b class="right-curve"></b>
-              Materials
+              {props.name}
             </Nav.Link>
           </Nav.Item>
           <Nav.Item as="li">
@@ -73,7 +73,7 @@ export default function FillterTabs(props) {
 
           <div className="ms-auto col-lg-3">
             <Input
-              placeholder={props.name}
+              placeholder={props.placeholder}
               text="search"
               className="ant-search-button"
               suffix={<SearchOutlined style={{ fontSize: "18px" }} />}

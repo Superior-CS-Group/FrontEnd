@@ -10,10 +10,12 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        
         <Route path="/auth/*" element={<Auth />} />
         <Route path="/*" element={<Estimates />} />
         <Route path="/" element={<Navigate replace={true} to="/auth" />} />
         <Route path="/contract-pdf/:id" element={<ContractPdf />} />
+
       </Routes>
     </div>
   );
