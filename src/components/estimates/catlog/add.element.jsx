@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Row, Col, Progress, Form, Input, Select } from "antd";
+import React from "react";
+import { Row, Col, Progress, Form, Input, Button } from "antd";
 import { star, upload } from "../../../utils/svg.file";
 import {
   CheckOutlined,
@@ -10,11 +10,6 @@ import {
 
 import element from "../../../images/boulder.jpg";
 export default function Addelement() {
-  const { Option } = Select;
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
   const { TextArea } = Input;
   const onChange = (e) => {
     console.log("Change:", e.target.value);
@@ -32,7 +27,7 @@ export default function Addelement() {
               <span className="ant-star-delete ant-position">
                 <CloseOutlined />
               </span>
-              <img src={element} />
+              <img src={element} alt="" />
             </div>
             <Progress
               percent={50}
@@ -50,7 +45,7 @@ export default function Addelement() {
               <span className="ant-star-delete ant-position">
                 <CloseOutlined />
               </span>
-              <img src={element} />
+              <img src={element} alt="" />
             </div>
             <Progress
               percent={100}
@@ -68,7 +63,7 @@ export default function Addelement() {
               <span className="ant-star-delete ant-position">
                 <CloseOutlined />
               </span>
-              <img src={element} />
+              <img src={element} alt="" />
             </div>
             <Progress
               percent={100}
@@ -110,7 +105,7 @@ export default function Addelement() {
             </Col>
             <Col md={8}>
               <Form.Item label="Unit" className="ant-smily-select">
-                <SmileOutlined />
+                {/* <SmileOutlined />
                 <Select
                   defaultValue="e.g. inches"
                   style={{ width: "100%" }}
@@ -121,7 +116,13 @@ export default function Addelement() {
                   <Option value="lucy">Lucy</Option>
 
                   <Option value="Yiminghe">yiminghe</Option>
-                </Select>
+                </Select> */}
+                <Input
+                  className="ant-furmulla-input radius-30"
+                  prefix={<SmileOutlined />}
+                  placeholder="e.g. inches"
+                  size="large"
+                />{" "}
               </Form.Item>
             </Col>
             <Col md={8}>
@@ -144,6 +145,11 @@ export default function Addelement() {
                   placeholder="R410A has a 60% higher operating pressure than R22 thus requiring a thicker wall copper tube and significantly stronger (R410A) copper fittings."
                 />
               </Form.Item>
+            </Col>
+            <Col md={24} className="text-end">
+              <Button type="primary" className="radius-9">
+                Save
+              </Button>
             </Col>
           </Row>
         </Form>

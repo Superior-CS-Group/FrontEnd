@@ -52,14 +52,6 @@ export default class UserList extends Component {
       <>
         <div className="d-flex align-items-center justify-content-between mb-4">
           <BreadcrumbBar name="User" subname="UserList" />
-          <Button
-            onClick={this.showModalNew}
-            type="primary"
-            className="radius-30 ant-primary-btn font-15"
-            size="large"
-          >
-            <PlusCircleOutlined style={{ fontSize: "24px" }} /> Add New Material
-          </Button>
         </div>
 
         <Card
@@ -91,7 +83,7 @@ export default class UserList extends Component {
             <div className="fillter d-lg-flex align-items-center">
               <div className="ms-auto col-lg-3">
                 <Input
-                  placeholder="Search catalog by name"
+                  placeholder="Search by User "
                   text="search"
                   className="ant-search-button"
                   suffix={<SearchOutlined style={{ fontSize: "18px" }} />}

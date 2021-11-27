@@ -53,7 +53,6 @@ export default function ServicesTable() {
       {
         title: "Action",
         dataIndex: "action",
-        
       },
     ],
   });
@@ -74,7 +73,7 @@ export default function ServicesTable() {
 
   const deleteServiceHandleSubmit = async (id) => {
     console.log(id);
-    
+
     const body = {
       _id: id,
     };
@@ -100,7 +99,7 @@ export default function ServicesTable() {
     const fetchData = async () => {
       const body = { type: "service" };
       const result = await postData(`services/list-by-type`, body);
-     
+
       // console.log(result.data.Data);
 
       for (let i = 0; i < result.data.Data.length; i++) {
@@ -116,7 +115,12 @@ export default function ServicesTable() {
             <>
               <Button danger className="ant-danger-button me-3">
                 <span className="me-2">{Datel}</span>{" "}
-                <span className="align-text" onClick={deleteServiceHandleSubmit(catalogueData._id)}>Delete</span>
+                <span
+                  className="align-text"
+                  onClick={deleteServiceHandleSubmit(catalogueData._id)}
+                >
+                  Delete
+                </span>
               </Button>
               <Button className="ant-edit-button " onClick={showModal}>
                 <span className="me-2">{edit}</span> Edit
@@ -149,7 +153,7 @@ export default function ServicesTable() {
         <Table
           className="ant-table-color"
           columns={state.columns}
-          pagination={true}
+          pagination={false}
           dataSource={state.data}
           bordered={false}
         />

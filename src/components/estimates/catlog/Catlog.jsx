@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Select, Input, Table, Button, Modal } from "antd";
+import { Card, Input, Table, Button } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 
 import {
@@ -11,7 +11,6 @@ import {
   DownCircleFilled,
   EditTwoTone,
   DeleteTwoTone,
-  PlusCircleTwoTone,
 } from "@ant-design/icons";
 
 import CataLogModal from "./catalog.modal";
@@ -19,10 +18,6 @@ import Addelement from "./add.element";
 import AddItem from "./add.item";
 import pipe from "../../../images/boulder.jpg";
 export default function Catlog() {
-  const { Option } = Select;
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
   const [title, setTitle] = useState("Sub Category");
   const [isModal, setIsModal] = useState("");
   const addModal = () => {
@@ -98,10 +93,6 @@ export default function Catlog() {
       key: "platform",
       className: "green-color",
     },
-    { title: "Quantity", dataIndex: "version", key: "version" },
-
-    { title: "Item", dataIndex: "creator", key: "creator" },
-
     {
       title: "Action",
       key: "operation",
@@ -120,13 +111,6 @@ export default function Catlog() {
             className="d-inline-flex align-items-center justify-content-center"
           >
             <EditTwoTone />
-          </Button>
-          <Button
-            type="text"
-            shape="circle"
-            className="d-inline-flex align-items-center justify-content-center"
-          >
-            <PlusCircleTwoTone />
           </Button>
         </>
       ),
@@ -158,12 +142,11 @@ export default function Catlog() {
   }
 
   const renderItem = () => {
-    console.log("isModal: ", isModal);
     switch (isModal.isModal) {
       case "subcategory":
-        return <Addelement />;
+        return <Addelement handleCancel={handleCancel} />;
       case "additem":
-        return <AddItem />;
+        return <AddItem handleCancel={handleCancel} />;
 
       default:
         return "";
@@ -209,14 +192,6 @@ export default function Catlog() {
             <div className="p-3 card-shadow ">
               <div className="p-2">
                 <div className="fillter d-lg-flex align-items-center">
-                  {/* <span
-                    className="inline-block me-4 fillter-btn cursor-btn"
-                    onClick={showModal}
-                  >
-                    <img src={fillter} className="me-3" alt="" /> Filter and
-                    Sort
-                  </span> */}
-
                   <span
                     className="ant-blue-plus me-4"
                     onClick={() => {
@@ -267,7 +242,6 @@ export default function Catlog() {
                     bordered={false}
                     className="components-table-demo-nested"
                     columns={columns}
-                    expandable={{ expandedRowRender }}
                     expandable={{
                       expandedRowRender,
                       expandIcon: ({ expanded, onExpand, record }) =>
