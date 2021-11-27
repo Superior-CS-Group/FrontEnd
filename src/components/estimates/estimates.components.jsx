@@ -111,7 +111,6 @@ export default class MainEstimates extends Component {
                           <h2>
                             {value.customerLeadId[0].distance}
                             <sub className="ms-2">min</sub>
-                            6.3
                           </h2>
                         </div>
                       </div>
