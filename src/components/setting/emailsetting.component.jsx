@@ -5,8 +5,6 @@ import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
 import { fileToBase64 } from "../../utils/fileBase64.js";
 import { getEmailSetting, updateEmailSetting } from "../../api/admin";
-import Loader from "../loader";
-
 export default function EmailSetting() {
   const [state, setState] = useState({
     host: "",
@@ -96,7 +94,6 @@ export default function EmailSetting() {
         <BreadcrumbBar name="Setting" subname="Email-setting" />
       </div>{" "}
       <div className="card-shadow p-4" style={{ borderRadius: "25px" }}>
-        <Loader />
         <div role="alert" class="text-success">
           {state.message}
         </div>
@@ -112,7 +109,7 @@ export default function EmailSetting() {
                   onChange={(e) => setHost(e.target.value)}
                 />
               </Form.Item>
-              <Form.Item label="User">
+              <Form.Item label="User ">
                 <Input
                   placeholder="Username"
                   name="username"
