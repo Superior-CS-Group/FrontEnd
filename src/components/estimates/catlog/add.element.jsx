@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Row, Col, Progress, Form, Input, Select, Button } from "antd";
+import React from "react";
+import { Row, Col, Progress, Form, Input, Button } from "antd";
 import { star, upload } from "../../../utils/svg.file";
 import {
   CheckOutlined,
@@ -10,11 +10,6 @@ import {
 
 import element from "../../../images/boulder.jpg";
 export default function Addelement() {
-  const { Option } = Select;
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
   const { TextArea } = Input;
   const onChange = (e) => {
     console.log("Change:", e.target.value);
@@ -32,7 +27,7 @@ export default function Addelement() {
               <span className="ant-star-delete ant-position">
                 <CloseOutlined />
               </span>
-              <img src={element} />
+              <img src={element} alt="" />
             </div>
             <Progress
               percent={50}
@@ -50,7 +45,7 @@ export default function Addelement() {
               <span className="ant-star-delete ant-position">
                 <CloseOutlined />
               </span>
-              <img src={element} />
+              <img src={element} alt="" />
             </div>
             <Progress
               percent={100}
@@ -68,7 +63,7 @@ export default function Addelement() {
               <span className="ant-star-delete ant-position">
                 <CloseOutlined />
               </span>
-              <img src={element} />
+              <img src={element} alt="" />
             </div>
             <Progress
               percent={100}
