@@ -2040,7 +2040,7 @@ ul.work-scope-list li {
 .catlog-tabs li .nav-link {
   position: relative;
   border-radius: 9px 9px 0px 0px;
-  padding: 1rem;
+  padding: 1rem 1.5rem 1rem 1rem;
   color: #fff;
 }
 
@@ -2335,4 +2335,20 @@ input::-webkit-inner-spin-button {
   width: 100%;
   object-fit: cover;
   border-radius: 9px;
+}
+
+.text-ellpis {
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.delect {
+  position: absolute;
+  right: 6px;
+  top: 1px;
+  font-size: 14px;
+  text-align: center;
 }
