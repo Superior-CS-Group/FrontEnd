@@ -17,7 +17,7 @@ export default function EmailSetting() {
     oldLogo: "",
     message: "",
     resultData: [],
-    isLoader:true
+    isLoader: true,
   });
   const [host, setHost] = useState("");
   const [username, setUsername] = useState("");
@@ -35,7 +35,7 @@ export default function EmailSetting() {
         setPassword(response.data.password);
         setPort(response.data.port);
         setfromEmail(response.data.fromEmail);
-        setState({ profileImage: response.data.logo,isLoader:true });
+        setState({ profileImage: response.data.logo, isLoader: true });
       }
     };
 
@@ -71,9 +71,8 @@ export default function EmailSetting() {
       // setState({ profileImage: response.data.logo });
       // setState({ oldLogo: response.data.logo });
       // setState({ message: "Data Updated" });
-      setState({isLoader:false})
+      setState({ isLoader: false });
     }
-     
   };
 
   const handleAllChange = (e) => {
@@ -99,10 +98,7 @@ export default function EmailSetting() {
     text: "Data successfully Added",
     showConfirmButton: true,
   });
-  // console.log("host: ", host);
-  if(state.isLoader===true){
-    <Loader />
-  }
+
   return (
     <>
       <div className="d-flex align-items-center justify-content-between mb-4">
