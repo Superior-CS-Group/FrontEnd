@@ -2413,3 +2413,8 @@ input::-webkit-inner-spin-button {
   .ant-collapse-arrow {
   font-size: 26px;
 }
+img.preview-logo {
+  max-width: 100px;
+  max-height: 100px;
+  margin-top: 20px;
+}

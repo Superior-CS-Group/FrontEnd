@@ -164,7 +164,7 @@ export default function EmailSetting() {
                 // extra="long"
               >
                 <input type="file" onChange={handleProfileImage} />
-                <img src={state.profileImage} />
+                <img src={state.profileImage} className="preview-logo" />
                 {/* <Upload
                   listType="picture"
                   className="check-input-logo" 
