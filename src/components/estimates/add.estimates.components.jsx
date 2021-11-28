@@ -715,7 +715,7 @@ export default function AddEstimates(props) {
                           extra={[
                             <>
                               <Input
-                                style={{ width: "30px" }}
+                                style={{ width: "40px" }}
                                 type="number"
                                 maxLength="2"
                                 placeholder=""
