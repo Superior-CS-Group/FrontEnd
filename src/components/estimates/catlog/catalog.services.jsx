@@ -67,7 +67,7 @@ export default function CatalogServices() {
       ),
       dataIndex: "title",
       render: (text) => <a>{text} </a>,
-      width: 300,
+      width: 570,
     },
     {
       title: (
@@ -76,10 +76,11 @@ export default function CatalogServices() {
         </>
       ),
       dataIndex: "formula",
-      width: 300,
+      width: 450,
     },
     {
       key: "_id",
+      width: 300,
       title: (
         <Button onClick={showModal} type="primary">
           Add
@@ -123,10 +124,11 @@ export default function CatalogServices() {
         <Table
           columns={columns}
           dataSource={data}
-          className="ant-table-color ant-th-style"
+          className="ant-table-color ant-th-style scroll-style munscher"
           rowSelection={rowSelection}
           pagination={false}
           bordered={false}
+          scroll={{ y: 300 }}
         />
       </div>
 

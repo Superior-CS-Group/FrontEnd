@@ -16,6 +16,7 @@ export default function ServicesTable() {
       {
         title: <Checkbox />,
         dataIndex: "key",
+        width: 50,
       },
 
       {
@@ -25,6 +26,7 @@ export default function ServicesTable() {
           </>
         ),
         dataIndex: "name",
+        width: 500,
       },
       {
         title: (
@@ -33,6 +35,7 @@ export default function ServicesTable() {
           </>
         ),
         dataIndex: "hours",
+        width: 150,
       },
       {
         title: (
@@ -41,6 +44,7 @@ export default function ServicesTable() {
           </>
         ),
         dataIndex: "days",
+        width: 200,
       },
       {
         title: (
@@ -49,10 +53,13 @@ export default function ServicesTable() {
           </>
         ),
         dataIndex: "price",
+        width:250,
       },
       {
         title: "Action",
         dataIndex: "action",
+        className: "text-nowrap",
+        width: 200,
       },
     ],
   });
@@ -151,11 +158,12 @@ export default function ServicesTable() {
     <>
       <ReactDragListView.DragColumn {...state.dragProps}>
         <Table
-          className="ant-table-color"
           columns={state.columns}
           pagination={false}
           dataSource={state.data}
           bordered={false}
+          className="ant-table-color scroll-style munscher"
+          scroll={{ y: 300 }}
         />
       </ReactDragListView.DragColumn>
       <Modal

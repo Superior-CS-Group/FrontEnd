@@ -29,6 +29,7 @@ import { Link } from "react-router-dom";
 import { searchFormulaByName } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
+import DeleteModal from "../modal/deleteModal.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -310,7 +311,14 @@ export default function AddEstimates(props) {
       return [];
     }
   }
-
+  const genExtra = () => (
+    <CloseCircleFilled
+      // onClick={(event) => {
+      //   event.stopPropagation();
+      // }}
+      onClick={DeleteModal}
+    />
+  );
   return (
     <>
       <div className="">
@@ -499,9 +507,9 @@ export default function AddEstimates(props) {
               bodyStyle={{ padding: "0px" }}
             >
               <Collapse
-                defaultActiveKey={["1", "2"]}
+                defaultActiveKey={["1"]}
                 onChange={callback}
-                expandIconPosition="right"
+                expandIconPosition="left"
               >
                 {selectedFormulas.map((formula, index) => {
                   return (
@@ -511,9 +519,7 @@ export default function AddEstimates(props) {
                       extra={[
                         <>
                           ${formula.totalProjectCharge || 0}{" "}
-                          <span className="closeicon-panel">
-                            <CloseCircleFilled />
-                          </span>
+                          <span className="closeicon-panel">{genExtra()}</span>
                         </>,
                       ]}
                     >

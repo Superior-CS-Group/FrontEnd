@@ -16,7 +16,7 @@ import SmallLoader from "../../loader/smallLoader";
 import CataLogModal from "./catalog.modal";
 import Addelement from "./add.element";
 import AddItem from "./add.item";
-import log from "../../../images/boulder.jpg";
+import log from "../../../images/placeholder.jpg";
 import {
   getCatalogItem,
   getVariationsByCatalogId,
@@ -51,6 +51,7 @@ export default function Catlog() {
       const prcessedVariations = variations.map((variation) => {
         return {
           key: variation._id,
+
           name: (
             <>
               <div className="d-flex align-items-center">
@@ -62,6 +63,7 @@ export default function Catlog() {
               </div>
             </>
           ),
+
           price: variation.price,
           quantity: variation.quantity,
           unit: variation.unit,
@@ -170,7 +172,12 @@ export default function Catlog() {
   }, [catalogItem.length]);
 
   const columns = [
-    { title: "Pipe", dataIndex: "name", key: "name", className: "font-bold" },
+    {
+      title: "Pipe",
+      dataIndex: "name",
+      key: "name",
+      className: "font-bold",
+    },
     {
       title: "Prize",
       dataIndex: "price",
@@ -312,7 +319,8 @@ export default function Catlog() {
                 <Tab.Pane eventKey="first">
                   <Table
                     bordered={false}
-                    className="components-table-demo-nested"
+                    scroll={{ y: 400 }}
+                    className="components-table-demo-nested  scroll-style"
                     columns={columns}
                     expandable={{
                       expandedRowRender: (render) => {
@@ -339,7 +347,7 @@ export default function Catlog() {
                             dataSource={variations}
                             pagination={false}
                             bordered={false}
-                            className="ant-table-expand mt-3"
+                            className="ant-table-expand  mt-3"
                             // expandable={{
                             //   expandIcon: ({ expanded, onExpand, record }) => {
                             //     return (
@@ -385,7 +393,7 @@ export default function Catlog() {
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
-                  <CatalogServices/>
+                  <CatalogServices />
                 </Tab.Pane>
                 <Tab.Pane eventKey="three">Comming Soon Packages</Tab.Pane>
               </Tab.Content>

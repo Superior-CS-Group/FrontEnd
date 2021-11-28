@@ -25,6 +25,7 @@ export default function MaterialTable() {
         ),
         dataIndex: "descriptive",
         sorter: true,
+        width: 500,
       },
       {
         title: (
@@ -34,6 +35,7 @@ export default function MaterialTable() {
         ),
         dataIndex: "quantity",
         sorter: true,
+        width: 300,
       },
       {
         title: (
@@ -43,6 +45,7 @@ export default function MaterialTable() {
         ),
         dataIndex: "cost",
         sorter: true,
+        width: 200,
       },
       // {
       //   title: "Variations",
@@ -56,6 +59,7 @@ export default function MaterialTable() {
       {
         title: "Action",
         dataIndex: "action",
+        width: 300,
         render: () => (
           <>
             <Button danger className="ant-danger-button me-3">
@@ -169,11 +173,12 @@ export default function MaterialTable() {
     <>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
-          className="ant-table-color"
           rowSelection={rowSelection}
           columns={state.columns}
           dataSource={state.data}
           pagination={false}
+          className="ant-table-color scroll-style munscher"
+          scroll={{ y: 300 }}
         />
       </ReactDragListView.DragColumn>
 
