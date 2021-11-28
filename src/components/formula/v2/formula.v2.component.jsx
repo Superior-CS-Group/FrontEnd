@@ -120,6 +120,7 @@ function FormulaV2() {
     newMaterials[index].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
     if (material) {
       let processed = processMaterial(material);
+      console.log("processed: ", processed);
       newMaterials[index].formula = [
         ...new Set([...(newMaterials[index].formula || []), ...processed]),
       ];
