@@ -194,7 +194,7 @@ export default class MainEstimates extends Component {
                   </Option>
 
                   <Option value="Yiminghe" disabled>
-                    Export to Excell
+                    Export to Excel
                   </Option>
                 </Select>
                 <div className="text-end mt-3">

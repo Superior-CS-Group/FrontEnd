@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
-import { Form, Input, Col, Row, Button, Upload } from "antd";
+import { Form, Input, Col, Row, Button, message, Upload } from "antd";
 
 import { fileToBase64 } from "../../utils/fileBase64.js";
 import { getEmailSetting, updateEmailSetting } from "../../api/admin";
 
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 
 export default function EmailSetting() {
   const [state, setState] = useState({
@@ -72,6 +72,7 @@ export default function EmailSetting() {
       // setState({ oldLogo: response.data.logo });
       // setState({ message: "Data Updated" });
       setState({ isLoader: false });
+      message.success("Successfully Saved ", 10);
     }
   };
 
@@ -92,12 +93,12 @@ export default function EmailSetting() {
     return e && e.fileList;
   };
 
-  Swal.fire({
-    icon: "success",
-    title: "success",
-    text: "Data successfully Added",
-    showConfirmButton: true,
-  });
+  // Swal.fire({
+  //   icon: "success",
+  //   title: "success",
+  //   text: "Data successfully Added",
+  //   showConfirmButton: true,
+  // });
 
   return (
     <>
