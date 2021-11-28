@@ -220,7 +220,7 @@ export default function AddItem({
                 onClick={handleClose}
                 disabled={loading}
               >
-                Cancle
+                Cancel
               </Button>
               <Button
                 type="primary"
