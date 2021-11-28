@@ -67,7 +67,7 @@ export default function Services() {
       ),
       dataIndex: "title",
       render: (text) => <a>{text} </a>,
-      width: 600,
+      width: 450,
     },
     {
       title: (

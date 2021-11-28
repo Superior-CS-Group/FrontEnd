@@ -67,7 +67,7 @@ export default function CatalogServices() {
       ),
       dataIndex: "title",
       render: (text) => <a>{text} </a>,
-      width: 570,
+      width: 530,
     },
     {
       title: (
