@@ -99,19 +99,23 @@ export default class MainEstimates extends Component {
                       </div>
                       <div className="ant-estimate-text mb-3">
                         <span>Customer Name</span>
-                        <h2>{value.customerLeadId[0].name}</h2>
+                        <h3>{value.customerLeadId[0].name}</h3>
                       </div>
                       <div className="d-flex align-items-start justify-content-between">
                         <div className="ant-estimate-text text-ellpis">
                           <span>Address</span>
-                          <h2>{value.customerLeadId[0].address}</h2>
+                          <h3>{value.customerLeadId[0].address}</h3>
                         </div>
                         <div className="ant-estimate-text">
                           <span>Job Farness</span>
-                          <h2>
+                          <h3>
                             {value.customerLeadId[0].distance}
-                            <sub className="ms-2">min</sub>
-                          </h2>
+                            <small
+                              style={{ marginLeft: "2px", fontSize: "12px" }}
+                            >
+                              Km
+                            </small>
+                          </h3>
                         </div>
                       </div>
                     </Card>
@@ -194,7 +198,7 @@ export default class MainEstimates extends Component {
                   </Option>
 
                   <Option value="Yiminghe" disabled>
-                    Export to Excell
+                    Export to Excel
                   </Option>
                 </Select>
                 <div className="text-end mt-3">

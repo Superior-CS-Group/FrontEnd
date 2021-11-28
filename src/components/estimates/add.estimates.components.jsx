@@ -29,6 +29,7 @@ import { Link } from "react-router-dom";
 import { searchFormulaByName } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
+import DeleteModal from "../modal/deleteModal.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -154,9 +155,9 @@ export default function AddEstimates(props) {
             <Input
               type="number"
               maxLength="2"
-              placeholder=""
+              placeholder="12"
               className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue="12"
+              defaultValue=""
             />
             %
           </span>
@@ -172,9 +173,9 @@ export default function AddEstimates(props) {
               type="number"
               min={1}
               max={2}
-              placeholder=""
+              placeholder="88"
               className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue="99"
+              defaultValue=""
             />
             %{" "}
           </span>
@@ -324,6 +325,13 @@ export default function AddEstimates(props) {
     console.log({ selectedFormulas });
   }
 
+  const genExtra = () => <CloseCircleFilled />;
+
+  const handleRemoveService = (index) => {
+    const newSelectedFormulas = [...selectedFormulas];
+    newSelectedFormulas.splice(index, 1);
+    setSelectedFormulas(newSelectedFormulas);
+  };
   return (
     <>
       <div className="">
@@ -512,9 +520,9 @@ export default function AddEstimates(props) {
               bodyStyle={{ padding: "0px" }}
             >
               <Collapse
-                defaultActiveKey={["1", "2"]}
+                defaultActiveKey={["1"]}
                 onChange={callback}
-                expandIconPosition="right"
+                expandIconPosition="left"
               >
                 {selectedFormulas.map((formula, index) => {
                   return (
@@ -524,8 +532,11 @@ export default function AddEstimates(props) {
                       extra={[
                         <>
                           ${formula.totalProjectCharge || 0}{" "}
-                          <span className="closeicon-panel">
-                            <CloseCircleFilled />
+                          <span
+                            className="closeicon-panel"
+                            onClick={() => handleRemoveService(index)}
+                          >
+                            {genExtra()}
                           </span>
                         </>,
                       ]}
@@ -547,10 +558,7 @@ export default function AddEstimates(props) {
                                   bodyStyle={{ padding: "16px" }}
                                   key={idx}
                                 >
-                                  <div className="text-end drgicon">
-                                    {/* <span className="me-1">{drag}</span>{" "}
-                                    <span>{ellps}</span> */}
-                                  </div>
+                                  <div className="text-end drgicon"></div>
                                   <span>{element.name}</span>
 
                                   <div className="d-flex align-items-center justify-content-between">
@@ -732,12 +740,12 @@ export default function AddEstimates(props) {
                           extra={[
                             <>
                               <Input
-                                style={{ width: "30px" }}
+                                style={{ width: "40px" }}
                                 type="number"
                                 maxLength="2"
-                                placeholder="Basic usage"
+                                placeholder=""
                                 className="ant-width-small font-bold radius-4 gray-text"
-                                defaultValue="89"
+                                defaultValue=""
                               />
                               <span>%</span>{" "}
                               <DeleteOutlined className="delete-icon" />

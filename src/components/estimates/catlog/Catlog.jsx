@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Select, Input, Table, Button, Modal } from "antd";
+import { Card, Input, Table, Button } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import {
   PlusCircleOutlined,
@@ -16,7 +16,7 @@ import SmallLoader from "../../loader/smallLoader";
 import CataLogModal from "./catalog.modal";
 import Addelement from "./add.element";
 import AddItem from "./add.item";
-import log from "../../../images/boulder.jpg";
+import log from "../../../images/placeholder.jpg";
 import {
   getCatalogItem,
   getVariationsByCatalogId,
@@ -24,33 +24,30 @@ import {
 import CatalogServices from "./catalog.services";
 
 export default function Catlog() {
-  const { Option } = Select;
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
   const [title, setTitle] = useState("Sub Category");
   const [isModal, setIsModal] = useState("");
   const [catalogItem, setCatalogItem] = useState([]);
+  const [filtredCatalogItem, setFilteredCatalogItem] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [expandedRowRender, setExpandedRowRender] = useState([]);
-  const [isLoadingVariation, setIsLoadingVariation] = useState(false);
+  const [isLoadingVariation, setIsLoadingVariation] = useState(null);
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
-  const [variations, setVariations] = useState([]);
-
+  const [variations, setVariations] = useState({});
   const handelUpdate = () => {
     setIsUpdate(!isUpdate);
   };
 
   const loadVariations = async (id) => {
-    setIsLoadingVariation(true);
+    setIsLoadingVariation(id);
     console.log("id: ", id);
     const response = await getVariationsByCatalogId(id);
     if (response.remote === "success") {
-      const variations = response.data.data;
-      console.log("variations: ", variations);
-      const prcessedVariations = variations.map((variation) => {
+      const variationsResponse = response.data.data;
+      console.log("variationRes: ", variationsResponse);
+      const prcessedVariations = variationsResponse.map((variation) => {
         return {
           key: variation._id,
+
           name: (
             <>
               <div className="d-flex align-items-center">
@@ -62,6 +59,7 @@ export default function Catlog() {
               </div>
             </>
           ),
+
           price: variation.price,
           quantity: variation.quantity,
           unit: variation.unit,
@@ -87,10 +85,11 @@ export default function Catlog() {
           ),
         };
       });
-      setVariations(prcessedVariations);
+      console.log("valria: ", { ...variations, [id]: prcessedVariations });
+      setVariations({ ...variations, [id]: prcessedVariations });
     }
     setTimeout(() => {
-      setIsLoadingVariation(false);
+      setIsLoadingVariation(null);
     }, 1000);
   };
 
@@ -116,6 +115,7 @@ export default function Catlog() {
     const response = await getCatalogItem();
     if (response.remote === "success") {
       setCatalogItem(response.data.data);
+      setFilteredCatalogItem(response.data.data);
     }
   };
 
@@ -125,8 +125,7 @@ export default function Catlog() {
 
   React.useEffect(() => {
     const newElements = [];
-    console.log("catalogItem: ", catalogItem);
-    catalogItem.forEach((element) => {
+    filtredCatalogItem.forEach((element) => {
       newElements.push({
         key: element._id,
         _id: element._id,
@@ -167,10 +166,15 @@ export default function Catlog() {
     });
     setExpandedRowRender(newElements);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalogItem.length]);
+  }, [filtredCatalogItem.length]);
 
   const columns = [
-    { title: "Pipe", dataIndex: "name", key: "name", className: "font-bold" },
+    {
+      title: "Pipe",
+      dataIndex: "name",
+      key: "name",
+      className: "font-bold",
+    },
     {
       title: "Prize",
       dataIndex: "price",
@@ -206,6 +210,13 @@ export default function Catlog() {
       default:
         return "";
     }
+  };
+  const filterCatalogItems = (e) => {
+    const value = e.target.value;
+    const newCatalog = catalogItem.filter((item) => {
+      return item.name.toLowerCase().includes(value.toLowerCase());
+    });
+    setFilteredCatalogItem(newCatalog);
   };
 
   return (
@@ -256,14 +267,6 @@ export default function Catlog() {
             <div className="p-3 card-shadow ">
               <div className="p-2">
                 <div className="fillter d-lg-flex align-items-center">
-                  {/* <span
-                    className="inline-block me-4 fillter-btn cursor-btn"
-                    onClick={showModal}
-                  >
-                    <img src={fillter} className="me-3" alt="" /> Filter and
-                    Sort
-                  </span> */}
-
                   <span
                     className="ant-blue-plus me-4"
                     onClick={() => {
@@ -304,6 +307,7 @@ export default function Catlog() {
                       text="search"
                       className="ant-search-button"
                       suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
+                      onChange={filterCatalogItems}
                     />
                   </div>
                 </div>
@@ -312,18 +316,19 @@ export default function Catlog() {
                 <Tab.Pane eventKey="first">
                   <Table
                     bordered={false}
-                    className="components-table-demo-nested"
+                    scroll={{ y: 400 }}
+                    className="components-table-demo-nested  scroll-style"
                     columns={columns}
                     expandable={{
                       expandedRowRender: (render) => {
-                        if (isLoadingVariation) {
+                        if (isLoadingVariation === render._id) {
                           return (
                             <div className="text-center overflow-hidden">
                               <SmallLoader />
                             </div>
                           );
                         }
-                        if (!variations.length) {
+                        if (!variations[render._id]?.length) {
                           return (
                             <div
                               className="text-center"
@@ -333,20 +338,14 @@ export default function Catlog() {
                             </div>
                           );
                         }
+
                         return (
                           <Table
                             columns={columns}
-                            dataSource={variations}
+                            dataSource={variations[render._id]}
                             pagination={false}
                             bordered={false}
-                            className="ant-table-expand mt-3"
-                            // expandable={{
-                            //   expandIcon: ({ expanded, onExpand, record }) => {
-                            //     return (
-
-                            //     );
-                            //   },
-                            // }}
+                            className="ant-table-expand  mt-3"
                           />
                         );
                       },
@@ -385,7 +384,7 @@ export default function Catlog() {
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
-                  <CatalogServices/>
+                  <CatalogServices />
                 </Tab.Pane>
                 <Tab.Pane eventKey="three">Comming Soon Packages</Tab.Pane>
               </Tab.Content>
