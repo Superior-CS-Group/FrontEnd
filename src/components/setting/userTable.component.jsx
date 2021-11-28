@@ -66,13 +66,13 @@ export default function UserTable() {
     ],
   });
 
-  const that = state;
+  // const that = state;
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
-      const columns = [...that.state.columns];
+      const columns = [...state.columns];
       const item = columns.splice(fromIndex, 1)[0];
       columns.splice(toIndex, 0, item);
-      that.setState({
+      setState({
         ...state,
         columns,
       });
@@ -148,11 +148,11 @@ export default function UserTable() {
 
   return (
     <>
-      <ReactDragListView.DragColumn {...state.dragProps}>
+      <ReactDragListView.DragColumn {...dragProps}>
         <Table
           className="ant-table-color"
           columns={state.columns}
-          pagination={true}
+          pagination={false}
           dataSource={state.data}
           bordered={false}
         />

@@ -67,7 +67,7 @@ export default function Services() {
       ),
       dataIndex: "title",
       render: (text) => <a>{text} </a>,
-      width: 300,
+      width: 600,
     },
     {
       title: (
@@ -76,10 +76,11 @@ export default function Services() {
         </>
       ),
       dataIndex: "formula",
-      width: 300,
+      width: 450,
     },
     {
       key: "_id",
+      width: 300,
       title: (
         <Button onClick={showModal} type="primary">
           Add
@@ -134,10 +135,11 @@ export default function Services() {
           <Table
             columns={columns}
             dataSource={data}
-            className="ant-table-color ant-th-style"
+            className="ant-table-color ant-th-style scroll-style munscher"
             rowSelection={rowSelection}
             pagination={false}
             bordered={false}
+            scroll={{ y: 300 }}
           />
           {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
             <div className="ms-auto pe-3 ant-select-box ">

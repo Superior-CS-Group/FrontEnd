@@ -54,7 +54,7 @@ export default function FillterTabs(props) {
           >
             <img src={fillter} className="me-3" alt="" /> Filter and Sort
           </span>
-          <span className="inline-block me-4">
+          {/* <span className="inline-block me-4">
             <Select
               defaultValue="Filter"
               style={{ width: 150 }}
@@ -65,7 +65,7 @@ export default function FillterTabs(props) {
 
               <Option value="Yiminghe">yiminghe</Option>
             </Select>
-          </span>
+          </span> */}
           <span className="ant-blue-plus">
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
             Add Column

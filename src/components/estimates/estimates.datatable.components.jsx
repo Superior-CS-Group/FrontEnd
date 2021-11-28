@@ -17,11 +17,9 @@ export default function Datatable() {
       {
         title: <Checkbox />,
         dataIndex: "key",
+        width: 50,
       },
-      {
-        title: "Action",
-        dataIndex: "action", 
-      },
+
       {
         title: (
           <>
@@ -29,6 +27,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "date",
+        width: 200,
       },
 
       {
@@ -38,6 +37,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "name",
+        width: 200,
       },
       {
         title: (
@@ -46,6 +46,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "email",
+        width: 300,
       },
       {
         title: (
@@ -54,6 +55,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "contactNo",
+        width: 200,
       },
       {
         title: (
@@ -62,6 +64,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "address",
+        width: 200,
       },
       {
         title: (
@@ -70,6 +73,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "autoFollowUp",
+        width: 200,
       },
       {
         title: (
@@ -78,6 +82,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "estimaitonSent",
+        width: 200,
       },
       {
         title: (
@@ -86,6 +91,8 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "estimaitonStatus",
+        className: "text-green",
+        width: 200,
       },
       {
         title: (
@@ -94,6 +101,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "estimaitonSentDate",
+        width: 300,
       },
       {
         title: (
@@ -103,6 +111,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "daysItTookToSendEstimate",
+        width: 300,
       },
       {
         title: (
@@ -111,6 +120,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "design",
+        width: 200,
       },
       {
         title: (
@@ -119,6 +129,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "designPaid",
+        width: 200,
       },
       {
         title: (
@@ -127,6 +138,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "noOfPhoneFollowUp",
+        width: 200,
       },
       {
         title: (
@@ -136,6 +148,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "lastDatePhoneFollowUp",
+        width: 300,
       },
       {
         title: (
@@ -144,6 +157,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "noOfEmailFollowUp",
+        width: 200,
       },
       {
         title: (
@@ -153,6 +167,7 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "lastDateEmailFollowUp",
+        width: 300,
       },
       {
         title: (
@@ -161,6 +176,14 @@ export default function Datatable() {
           </>
         ),
         dataIndex: "estimaitonCloseDate",
+        width: 200,
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        width: 100,
+        fixed: "right",
+        className:"text-center"
       },
     ],
   });
@@ -293,12 +316,13 @@ export default function Datatable() {
     <>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
-          className="ant-table-estmating"
+          
           columns={state.columns}
           pagination={false}
           dataSource={state.data}
           bordered={false}
-          scroll={{ x: 3500, y: 500 }}
+          className="ant-table-estmating scroll-style"
+          scroll={{ x: 400, y: 500 }}
         />
       </ReactDragListView.DragColumn>
     </>
