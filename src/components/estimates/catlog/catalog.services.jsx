@@ -54,7 +54,8 @@ export default function CatalogServices() {
     console.log(result);
     if (result.remote === "success") {
       console.log("result", result);
-      setRedirect(`/v2/formula-tree?formulaId=${result.data.data._id}`);
+      setRedirect(`/catalog`);
+      // setRedirect(`/v2/formula-tree?formulaId=${result.data.data._id}`);
     }
   }
 
