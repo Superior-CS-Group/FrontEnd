@@ -155,9 +155,9 @@ export default function AddEstimates(props) {
             <Input
               type="number"
               maxLength="2"
-              placeholder=""
+              placeholder="12"
               className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue="12"
+              defaultValue=""
             />
             %
           </span>
@@ -173,9 +173,9 @@ export default function AddEstimates(props) {
               type="number"
               min={1}
               max={2}
-              placeholder=""
+              placeholder="88"
               className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue="99"
+              defaultValue=""
             />
             %{" "}
           </span>
@@ -724,9 +724,9 @@ export default function AddEstimates(props) {
                                 style={{ width: "30px" }}
                                 type="number"
                                 maxLength="2"
-                                placeholder="Basic usage"
+                                placeholder=""
                                 className="ant-width-small font-bold radius-4 gray-text"
-                                defaultValue="89"
+                                defaultValue=""
                               />
                               <span>%</span>{" "}
                               <DeleteOutlined className="delete-icon" />

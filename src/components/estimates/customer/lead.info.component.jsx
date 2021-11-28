@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Collapse, Input, Form, Row, Col, Button } from "antd";
 import "react-phone-number-input/style.css";
 import { UserOutlined, CheckOutlined } from "@ant-design/icons";
-import { postData } from "../../../utils/fetchApi.js"; 
+import { postData } from "../../../utils/fetchApi.js";
 
-import { useParams,Navigate } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 
 export default function LeadInfo() {
   const params = useParams();
@@ -20,7 +20,8 @@ export default function LeadInfo() {
     city: "",
     postalCode: "",
     address: "",
-    otherNote: "", distance: "",
+    otherNote: "",
+    distance: "",
     otherInformation: "",
     size: "large",
     tabShow: true,
@@ -30,7 +31,7 @@ export default function LeadInfo() {
     expandIconPosition: "right",
     value: "",
     setValue: "",
-    isRedirect:false
+    isRedirect: false,
   });
   useEffect(() => {
     // console.log("params: ", params.id);
@@ -122,7 +123,7 @@ export default function LeadInfo() {
     setState({
       ...state,
       [e.target.name]: e.target.value,
-      errors: []
+      errors: [],
     });
   };
 
@@ -157,7 +158,8 @@ export default function LeadInfo() {
       state: states,
       city,
       address,
-      postalCode, distance,
+      postalCode,
+      distance,
       otherInformation,
     };
     // console.log("body: ", body);
@@ -179,11 +181,11 @@ export default function LeadInfo() {
         otherNote: "",
         otherInformation: "",
         isLoading: false,
-        isRedirect:true
+        isRedirect: true,
       });
     } catch (err) {
       console.log("error", err, err.response);
-      
+
       setState({
         ...state,
         message: err.response?.data?.errors,
@@ -212,7 +214,8 @@ export default function LeadInfo() {
       states,
       city,
       address,
-      postalCode, distance,
+      postalCode,
+      distance,
       otherInformation,
     } = state;
     const body = {
@@ -224,7 +227,8 @@ export default function LeadInfo() {
       state: states,
       city,
       address,
-      postalCode, distance,
+      postalCode,
+      distance,
       otherInformation,
     };
     console.log("body: ", body);
@@ -236,7 +240,7 @@ export default function LeadInfo() {
         ...state,
         errors: [],
         message: "New Data Updated!",
-        isRedirect:true
+        isRedirect: true,
       });
     } catch (err) {
       console.log("error", err, err.response);
@@ -248,7 +252,6 @@ export default function LeadInfo() {
       });
     }
   };
-
 
   const updateActiveStatushandleSubmit = async (event) => {
     // console.log(localStorage.getItem("token"));
@@ -288,7 +291,6 @@ export default function LeadInfo() {
       });
     }
   };
-
 
   const { value, setValue } = state;
   const { Panel } = Collapse;
@@ -333,7 +335,6 @@ export default function LeadInfo() {
                 <Form.Item label="Email">
                   <Input
                     size="large"
-                     
                     name="email"
                     value={state.email}
                     onChange={handleAllChange}
@@ -352,7 +353,7 @@ export default function LeadInfo() {
                       <Input
                         // international
                         // defaultCountry="RU"
-                         
+
                         size="large"
                         name="contactNo"
                         value={state.contactNo}
@@ -367,22 +368,20 @@ export default function LeadInfo() {
                     <Form.Item label="Job Farness">
                       <Input
                         size="large"
-                        
                         name="distance"
-                        placeholder="Minite"
+                        placeholder="Minute"
                         value={state.distance}
                         onChange={handleAllChange}
                       />
-
                     </Form.Item>
-                  </Col> </Row>
+                  </Col>{" "}
+                </Row>
               </Col>
 
               <Col md={12}>
                 <Form.Item label="Country">
                   <Input
                     size="large"
-                     
                     name="country"
                     value={state.country}
                     onChange={handleAllChange}
@@ -396,7 +395,6 @@ export default function LeadInfo() {
                     <Form.Item label="City ">
                       <Input
                         size="large"
-                         
                         name="city"
                         value={state.city}
                         onChange={handleAllChange}
@@ -410,7 +408,6 @@ export default function LeadInfo() {
                     <Form.Item label="State">
                       <Input
                         size="large"
-                         
                         name="states"
                         value={state.states}
                         onChange={handleAllChange}
@@ -426,7 +423,6 @@ export default function LeadInfo() {
                     <Form.Item label="Address">
                       <Input
                         size="large"
-                         
                         name="address"
                         value={state.address}
                         onChange={handleAllChange}
@@ -440,7 +436,6 @@ export default function LeadInfo() {
                     <Form.Item label="Zip code">
                       <Input
                         size="large"
-                         
                         name="postalCode"
                         value={state.postalCode}
                         onChange={handleAllChange}
@@ -450,7 +445,6 @@ export default function LeadInfo() {
                       </div>
                     </Form.Item>
                   </Col>
-
                 </Row>
               </Col>
               <Col md={24}>
@@ -519,7 +513,7 @@ export default function LeadInfo() {
 
               <Col md={24}>
                 <div className="text-right">
-                  { }
+                  {}
                   <Button className="add-btn ant-btn-primary">
                     Save Changes
                   </Button>
