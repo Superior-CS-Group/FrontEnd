@@ -162,7 +162,7 @@ export default function CatalogServices() {
           dataSource={state.data}
           bordered={false}
           className="ant-table-color scroll-style munscher"
-          scroll={{ y: 300 }}
+          scroll={{ y: 600 }}
         />
       </ReactDragListView.DragColumn>
      

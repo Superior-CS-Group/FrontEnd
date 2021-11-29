@@ -125,14 +125,14 @@ function ElementCard({
                     display: element.name,
                     id: element._id,
                   }))}
-                  onChange={(e) => {
+                  onChange={(e, newValue) => {
                     e = { target: { ...e.target, name: "value" } };
-                    handleChange(e.target.value, e.target.name, idx);
+                    handleChange(e.target.value, e.target.name, idx, newValue);
                   }}
-                  placeholder="Enter Formula use '@' for the dynamic values"
+                  placeholder="Enter Formula use '@' or '#' for the dynamic values"
                   value={element.value}
                   onBlur={onFocusOut}
-                  noMaterial
+                  // noMaterial
                 />
               </Col>
             </Row>
@@ -152,14 +152,14 @@ function ElementCard({
                     display: element.name,
                     id: element._id,
                   }))}
-                  onChange={(e) => {
+                  onChange={(e, newValue) => {
                     e = { target: { ...e.target, name: "value" } };
-                    handleChange(e.target.value, e.target.name, idx);
+                    handleChange(e.target.value, e.target.name, idx, newValue);
                   }}
-                  placeholder="Enter Formula use '@' for the dynamic values"
+                  placeholder="Enter Formula use '@' or '#' for the dynamic values"
                   value={element.value}
                   onBlur={onFocusOut}
-                  noMaterial
+                  // noMaterial
                 />
               </Col>
             </Row>

@@ -144,7 +144,6 @@ export default function CustomerLeadInfo() {
       });
     }
   };
- 
 
   const updateActiveStatushandleSubmit = async (e) => {
     // console.log(localStorage.getItem("token"));
@@ -188,7 +187,7 @@ export default function CustomerLeadInfo() {
         <div className="heading">
           <h1>Customer Leads</h1>
         </div>
-        {console.log(params.id,"params.id")}
+        {console.log(params.id, "params.id")}
         <Row>
           <Col md={24}>
             <Card
@@ -196,86 +195,86 @@ export default function CustomerLeadInfo() {
               bodyStyle={{ padding: "0px" }}
               className="radius-12"
             >
-{params.id ?( <>
-  <div className="fillter d-lg-flex align-items-center p-3">
-                <span className="inline-block me-5 fillter-btn d-lg-flex align-items-center">
-                  <UserOutlined className="me-2" /> {state.customerName}
-                </span>
-                <span className="inline-block me-4">
-                  <b className="green-text">{state.estimaitonStatus}</b>
-                </span>
-
-                <div className="ms-auto col-lg-6 text-end d-inline-flex align-items-center justify-content-end">
-                  <div role="alert" class="text-success">
-                    {state.message}
-                  </div>
-                  <div className="float-start d-inline-flex align-items-center">
-                    <span className="me-2">
-                      {console.log(
-                        state.autoReminderEmail,
-                        "111state.autoReminderEmail"
-                      )}
-                      Auto Reminder Email{" "}
+              {params.id ? (
+                <>
+                  <div className="fillter d-lg-flex align-items-center p-3">
+                    <span className="inline-block me-5 fillter-btn d-lg-flex align-items-center">
+                      <UserOutlined className="me-2" /> {state.customerName}
                     </span>
-                    <Switch
-                      value={state.autoReminderEmail}
-                      onChange={autoReminderEmailHandleSubmit}
-                      className="me-2"
-                      checked={state.autoReminderEmail}
-                    />
+                    {/* <span className="inline-block me-4">
+                      <b className="green-text">{state.estimaitonStatus}</b>
+                    </span> */}
+
+                    <div className="ms-auto col-lg-9 text-end d-inline-flex align-items-center justify-content-end">
+                      {/* <div role="alert" class="text-success">
+                        {state.message}
+                      </div> */}
+                      <div className="float-start d-inline-flex align-items-center">
+                        <span className="me-2">
+                          {console.log(
+                            state.autoReminderEmail,
+                            "111state.autoReminderEmail"
+                          )}
+                          Auto Reminder Email{" "}
+                        </span>
+                        <Switch
+                          value={state.autoReminderEmail}
+                          onChange={autoReminderEmailHandleSubmit}
+                          className="me-2"
+                          checked={state.autoReminderEmail}
+                        />
+                      </div>
+
+                      <Select
+                        size="large"
+                        className="me-4 ant-bg-primary "
+                        bordered={false}
+                        style={{ fontSize: "14px" }}
+                        value={state.estimaitonStatus}
+                        name="estimaitonStatus"
+                        onChange={updateStatusHandleSubmit}
+                        // defaultValue={state.estimaitonStatus}
+                      >
+                        {state.statusList.map((Datalist, idx) => {
+                          return (
+                            <option value={Datalist.name} key={idx}>
+                              {Datalist.name}
+                            </option>
+                          );
+                        })}
+                      </Select>
+                      <Button
+                        style={{ width: "150px" }}
+                        className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
+                        type="primary"
+                        shape="round"
+                        size={size}
+                      >
+                        <PhoneOutlined /> Contact
+                      </Button>
+                    </div>
                   </div>
 
-                  <Select
-                    size="large"
-                    className="me-4 ant-bg-primary "
-                    bordered={false}
-                    style={{ width: "150px" }}
-                    value={state.estimaitonStatus}
-                    name="estimaitonStatus"
-                    onChange={updateStatusHandleSubmit}
-                    // defaultValue={state.estimaitonStatus}
-                  >
-                    {state.statusList.map((Datalist, idx) => {
-                      return (
-                        <option value={Datalist.name} key={idx}>
-                          {Datalist.name}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                  <Button
-                    style={{ width: "150px" }}
-                    className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
-                    type="primary"
-                    shape="round"
-                    size={size}
-                  >
-                    <PhoneOutlined /> Contact
-                  </Button>
-                </div>
-              </div>
-
-              <div className="tab-div border-top">
-                <ul className="">
-                  <li
-                    onClick={() => onChangeTab("Lead")}
-                    className={state.tabShow ? "active" : ""}
-                  >
-                    Lead Info
-                  </li>
-                  <li
-                    onClick={() => onChangeTab("Estimate")}
-                    className={!state.tabShow ? "active" : ""}
-                  >
-                    Estimate
-                  </li>
-                </ul>
-              </div>
-</>
-
-): "" }
-             
-              
+                  <div className="tab-div border-top">
+                    <ul className="">
+                      <li
+                        onClick={() => onChangeTab("Lead")}
+                        className={state.tabShow ? "active" : ""}
+                      >
+                        Lead Info
+                      </li>
+                      <li
+                        onClick={() => onChangeTab("Estimate")}
+                        className={!state.tabShow ? "active" : ""}
+                      >
+                        Estimate
+                      </li>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
             </Card>
 
             {state.tabShow === true ? (

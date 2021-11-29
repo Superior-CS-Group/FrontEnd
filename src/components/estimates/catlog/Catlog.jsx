@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Input, Table, Button } from "antd";
+import { Card, Input, Table, Button, Image } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import {
   PlusCircleOutlined,
@@ -8,9 +8,8 @@ import {
   CloseCircleOutlined,
   UpCircleFilled,
   DownCircleFilled,
-  EditTwoTone,
-  DeleteTwoTone,
-  PlusCircleTwoTone,
+  DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import SmallLoader from "../../loader/smallLoader";
 import CataLogModal from "./catalog.modal";
@@ -22,6 +21,8 @@ import {
   getVariationsByCatalogId,
 } from "../../../api/catalogue";
 import CatalogServices from "./catalog.services";
+import AddService from "./addService.component";
+import EditItem from "./edit.item";
 
 export default function Catlog() {
   const [title, setTitle] = useState("Sub Category");
@@ -33,6 +34,16 @@ export default function Catlog() {
   const [isLoadingVariation, setIsLoadingVariation] = useState(null);
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
+  const [isAddService, setIsAddService] = useState(false);
+  const [IsEditData, setIsEditData] = useState(false);
+
+  const handleAddModal = () => {
+    setIsAddService(true);
+  };
+  const handleEditModal = () => {
+    setIsEditData(true);
+  };
+  const [visible, setVisible] = useState(false);
   const handelUpdate = () => {
     setIsUpdate(!isUpdate);
   };
@@ -50,15 +61,32 @@ export default function Catlog() {
             <>
               <div className="d-flex align-items-center">
                 {" "}
-                <div className="ant-catalog-img me-3 w-64">
-                  <img src={log} alt="" />
+                <div className="ant-catalog-img me-3">
+                  <Image
+                    preview={{ visible: false }}
+                    src={log}
+                    onClick={() => setVisible(true)}
+                    alt=""
+                  />
+                  <div style={{ display: "none" }}>
+                    <Image.PreviewGroup
+                      preview={{
+                        visible,
+                        onVisibleChange: (vis) => setVisible(vis),
+                      }}
+                    >
+                      <Image src={log} />
+                      <Image src={log} />
+                      <Image src={log} />
+                    </Image.PreviewGroup>
+                  </div>
                 </div>
                 <span> {variation.name}</span>
               </div>
             </>
           ),
 
-          price: variation.price,
+          price: `$${variation.price}`,
           quantity: variation.quantity,
           unit: variation.unit,
           description: variation.description,
@@ -68,16 +96,10 @@ export default function Catlog() {
               <Button
                 type="text"
                 shape="circle"
-                className="me-2 d-inline-flex align-items-center justify-content-center"
-              >
-                <DeleteTwoTone />
-              </Button>
-              <Button
-                type="text"
-                shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
+                onClick={handleEditModal}
               >
-                <EditTwoTone />
+                <EditOutlined className="text-primary" />
               </Button>
             </>
           ),
@@ -103,10 +125,14 @@ export default function Catlog() {
   };
   const handleOk = () => {
     setIsModal(false);
+    setIsAddService(false);
+    setIsEditData(false);
   };
 
   const handleCancel = () => {
+    setIsAddService(false);
     setIsModal("");
+    setIsEditData(false);
   };
 
   const getCatalog = async () => {
@@ -125,10 +151,11 @@ export default function Catlog() {
     const newElements = [];
     filtredCatalogItem.forEach((element) => {
       newElements.push({
+        images: element.images,
         key: element._id,
         _id: element._id,
         name: element.name,
-        price: element.price,
+        price: element.price ? `$${element.price}` : "",
         quantity: element.quantity,
         description: element.description,
         type: element.type,
@@ -141,7 +168,7 @@ export default function Catlog() {
                 className="me-2 d-inline-flex align-items-center justify-content-center"
                 onClick={() => setSelectedSubCatalog(element._id)}
               >
-                <PlusCircleTwoTone />
+                <PlusCircleOutlined className="text-primary" />
               </Button>
             )}
             <Button
@@ -149,14 +176,14 @@ export default function Catlog() {
               shape="circle"
               className="me-2 d-inline-flex align-items-center justify-content-center"
             >
-              <DeleteTwoTone />
+              <DeleteOutlined className="text-danger" />
             </Button>
             <Button
               type="text"
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
             >
-              <EditTwoTone />
+              <EditOutlined className="text-primary" />
             </Button>
           </>
         ),
@@ -171,7 +198,7 @@ export default function Catlog() {
       title: "Pipe",
       dataIndex: "name",
       key: "name",
-      className: "font-bold",
+      className: "font-bold w-275",
     },
     {
       title: "Prize",
@@ -336,7 +363,9 @@ export default function Catlog() {
                               className="text-center"
                               onClick={() => setSelectedSubCatalog(render._id)}
                             >
-                              <h1>Add Item..</h1>
+                              <h1 className="font-16 mb-0 cursor-btn py-3">
+                                Add Item..
+                              </h1>
                             </div>
                           );
                         }
@@ -356,6 +385,7 @@ export default function Catlog() {
                         if (record.type === "subCatalog") {
                           return expanded ? (
                             <UpCircleFilled
+                              className="font-24"
                               style={{ color: "#3483FA" }}
                               onClick={(e) => {
                                 onExpand(record, e);
@@ -363,6 +393,7 @@ export default function Catlog() {
                             />
                           ) : (
                             <DownCircleFilled
+                              className="font-24"
                               style={{ color: "#3483FA" }}
                               onClick={(e) => {
                                 onExpand(record, e);
@@ -374,7 +405,24 @@ export default function Catlog() {
                           return (
                             <>
                               <div className="ant-catalog-img">
-                                <img src={log} alt="" />
+                                <Image
+                                  preview={{ visible: false }}
+                                  src={record.images[0] || log}
+                                  onClick={() => setVisible(true)}
+                                  alt=""
+                                />
+                                <div style={{ display: "none" }}>
+                                  <Image.PreviewGroup
+                                    preview={{
+                                      visible,
+                                      onVisibleChange: (vis) => setVisible(vis),
+                                    }}
+                                  >
+                                    {record.images.map((image, idx) => (
+                                      <Image src={image} key={idx} alt="" />
+                                    ))}
+                                  </Image.PreviewGroup>
+                                </div>
                               </div>
                             </>
                           );
@@ -388,7 +436,10 @@ export default function Catlog() {
                 <Tab.Pane eventKey="second">
                   <div className="p-2">
                     <div className="fillter d-lg-flex align-items-center">
-                      <span className="ant-blue-plus me-4">
+                      <span
+                        className="ant-blue-plus me-4"
+                        onClick={handleAddModal}
+                      >
                         <PlusCircleOutlined
                           style={{ fontSize: "18px" }}
                           className="me-2"
@@ -431,6 +482,24 @@ export default function Catlog() {
         handleOk={handleOk}
         handleCancel={handleCancel}
         content={renderItem()}
+        width={575}
+      />
+      <AddService
+        title={title}
+        handleAddModal={handleAddModal}
+        isAddService={isAddService}
+        // isModal={isModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        width={575}
+      />
+      <EditItem
+        title={title}
+        handleEditModal={handleEditModal}
+        IsEditData={IsEditData}
+        // isModal={isModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
         width={575}
       />
     </>

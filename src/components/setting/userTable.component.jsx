@@ -105,7 +105,11 @@ export default function UserTable(props) {
                 count="Activate"
                 style={{ backgroundColor: "#52c41a" }}
               />
-              <Tooltip title="Change Password">
+              <Badge
+                className="cursor-btn site-badge-count-109 me-2"
+                count="Deactivate"
+              />
+              <Tooltip title="Reset Password">
                 <LockOutlined
                   className="cursor-btn pass-key-btn"
                   onClick={showModalPassword}

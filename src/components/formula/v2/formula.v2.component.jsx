@@ -83,9 +83,15 @@ function FormulaV2() {
     }
   }, [formulaDetails]);
 
-  const handleChange = (value, name, index) => {
+  const handleChange = (value, name, index, newMaterial) => {
     const newElementList = [...elementList];
     newElementList[index][name] = value;
+    if (newMaterial) {
+      const processed = processMaterial(newMaterial);
+      newElementList[index].formula = [
+        ...new Set([...(newElementList[index].formula || []), ...processed]),
+      ];
+    }
     setElementList([...newElementList]);
   };
   const handleNewElement = () => {
@@ -103,6 +109,7 @@ function FormulaV2() {
   };
 
   const processMaterial = (text) => {
+    // eslint-disable-next-line no-useless-escape
     const tags = text.match(/@\{\{[^\}]+\}\}/gi) || [];
     const allMaterialsIds = tags.map((myTag) => {
       const tagData = myTag.slice(3, -2);
@@ -119,10 +126,14 @@ function FormulaV2() {
     const newMaterials = [...materials];
 
     newMaterials[index][e.target.name] = e.target.value;
-    newMaterials[index].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
+    if (!e.target.manual) {
+      newMaterials[index].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
+    } else {
+      newMaterials[index].manual = true;
+    }
     if (material) {
       let processed = processMaterial(material);
-      console.log("processed: ", processed);
+      console.log("rpoc: ", processed);
       newMaterials[index].formula = [
         ...new Set([...(newMaterials[index].formula || []), ...processed]),
       ];

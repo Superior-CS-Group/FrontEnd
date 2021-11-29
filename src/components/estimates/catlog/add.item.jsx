@@ -1,15 +1,11 @@
 import React from "react";
-import { Row, Col, Progress, Form, Input, Button } from "antd";
-import { star, upload } from "../../../utils/svg.file";
-import {
-  CheckOutlined,
-  CloseOutlined,
-  DollarCircleOutlined,
-} from "@ant-design/icons";
+import { Row, Col, Form, Input, Button } from "antd";
+import { upload } from "../../../utils/svg.file";
+import { CloseOutlined, DollarCircleOutlined } from "@ant-design/icons";
 
-import element from "../../../images/placeholder.jpg";
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
 import { createCatalogItem, createVariation } from "../../../api/catalogue";
+import { fileToBase64 } from "../../../utils/fileBase64";
 
 export default function AddItem({
   handleCancel,
@@ -17,7 +13,6 @@ export default function AddItem({
   setSelectedSubCatalog,
   handelUpdate,
 }) {
-  const { TextArea } = Input;
   const [loading, setLoading] = React.useState(false);
   const [itemDetails, setItemDetails] = React.useState({
     name: "",
@@ -25,7 +20,7 @@ export default function AddItem({
     description: "",
     unit: "",
     quantity: "",
-    image: [],
+    images: [],
     type: "catalog",
   });
   const [errors, setErrors] = React.useState({
@@ -43,7 +38,7 @@ export default function AddItem({
       description: "",
       unit: "",
       quantity: "",
-      image: [],
+      images: [],
       type: "catalog",
     });
     setErrors({
@@ -54,6 +49,15 @@ export default function AddItem({
       quantity: "",
     });
     handleCancel();
+  };
+
+  const handleImageChange = async (e) => {
+    console.log("image: ", e.target.files[0]);
+    const imageBase64 = await fileToBase64(e.target.files[0]);
+    setItemDetails({
+      ...itemDetails,
+      images: [...itemDetails.images, imageBase64],
+    });
   };
 
   const handleInputChange = (e) => {
@@ -88,6 +92,7 @@ export default function AddItem({
         });
       } else {
         response = await createCatalogItem(itemDetails);
+        console.log("resposne: ", response);
       }
       if (response.remote === "success") {
         setTimeout(() => {
@@ -107,38 +112,17 @@ export default function AddItem({
     }
   };
 
+  const handleRemoveImage = (index) => {
+    const images = [...itemDetails.images];
+    images.splice(index, 1);
+    setItemDetails({
+      ...itemDetails,
+      images,
+    });
+  };
   return (
     <>
       <div className="ant-upload-box">
-        <Row gutter={[24, 0]}>
-          <Col md={6}>
-            <div className="ant-image-upload">
-              <span className="ant-star-icon">{star}</span>
-              <span className="ant-star-tick ant-position d-none">
-                <CheckOutlined />
-              </span>
-              <span className="ant-star-delete ant-position">
-                <CloseOutlined />
-              </span>
-              <img src={element} alt="" />
-            </div>
-            <Progress
-              percent={50}
-              showInfo={false}
-              strokeColor="#34C759"
-              strokeWidth={3}
-              strokeLinecap="round"
-            />
-          </Col>
-          <Col md={6}>
-            <div className="ant-image-upload border-dash">
-              <div className="d-flex align-items-center  justify-content-center h-100 upload-input">
-                <input type="file" />
-                {upload}
-              </div>
-            </div>
-          </Col>
-        </Row>
         <Form layout="vertical">
           <Row gutter={[24, 0]}>
             <Col span={24}>
@@ -154,7 +138,7 @@ export default function AddItem({
                 <span className="text-danger small">{errors.name}</span>
               </Form.Item>
             </Col>
-            <Col md={8}>
+            <Col md={12}>
               <Form.Item label="Price">
                 <Input
                   prefix={<DollarCircleOutlined />}
@@ -170,7 +154,7 @@ export default function AddItem({
                 <span className="text-danger small">{errors.price}</span>
               </Form.Item>
             </Col>
-            <Col md={8}>
+            <Col md={12}>
               <Form.Item label="Unit" className="ant-smily-select">
                 <Input
                   className="ant-furmulla-input radius-30"
@@ -183,7 +167,7 @@ export default function AddItem({
                 <span className="text-danger small">{errors.unit}</span>
               </Form.Item>
             </Col>
-            <Col md={8}>
+            {/* <Col md={8}>
               <Form.Item label="Quantity">
                 <Input
                   className="ant-furmulla-input radius-30"
@@ -211,19 +195,60 @@ export default function AddItem({
                 />
                 <span className="text-danger small">{errors.description}</span>
               </Form.Item>
+            </Col> */}
+          </Row>
+          <Row gutter={[24, 0]}>
+            {itemDetails.images.map((image, index) => {
+              return (
+                <Col md={6} key={index}>
+                  <div className="ant-image-upload">
+                    {/* <span className="ant-star-icon">{star}</span> */}
+                    {/* <span className="ant-star-tick ant-position d-none">
+                    <CheckOutlined />
+                  </span> */}
+                    <span
+                      className="ant-star-delete ant-position"
+                      onClick={() => handleRemoveImage(index)}
+                    >
+                      <CloseOutlined />
+                    </span>
+                    <img src={image} alt="" />
+                  </div>
+                </Col>
+              );
+            })}
+            <Col md={6}>
+              <div className="ant-image-upload border-dash">
+                <div className="d-flex align-items-center  justify-content-center h-100 upload-input">
+                  <input type="file" onChange={handleImageChange} />
+                  {upload}
+                </div>
+              </div>
             </Col>
-            <Col md={24} className="text-end">
-              <Button
+            <Col md={24} className="text-end mt-3">
+              {/* <Button
                 type="link"
-                className="radius-30 px-4 me-2"
+                danger
+                className="radius-30 px-4 me-2 btn-width"
                 onClick={handleClose}
                 disabled={loading}
+                size="large"
+              >
+                Delete Items
+              </Button> */}
+              <Button
+                type="link"
+                className="radius-30 px-4 me-2 btn-width"
+                onClick={handleClose}
+                disabled={loading}
+                size="large"
               >
                 Cancel
               </Button>
               <Button
                 type="primary"
-                className="radius-30 px-4"
+                size="large"
+                className="radius-30 px-4 btn-width"
                 onClick={handleSave}
                 disabled={loading}
               >

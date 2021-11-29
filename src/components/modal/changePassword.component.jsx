@@ -5,16 +5,13 @@ export default function ChangePasswordUser(props) {
     <>
       <Modal
         className="modal-radius"
-        title="Change Password"
+        title="Reset Password"
         visible={props.isModalShow}
         onOk={props.handleOk}
         onCancel={props.handleCancel}
         footer={null}
       >
         <Form layout="vertical">
-          <Form.Item label="Old Password" name="Old Password">
-            <Input />
-          </Form.Item>
           <Form.Item label="New Password" name="New Password ">
             <Input />
           </Form.Item>
