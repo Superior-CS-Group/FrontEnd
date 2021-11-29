@@ -9,7 +9,6 @@ import {
 
 import element from "../../../images/placeholder.jpg";
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
-import Loader from "../../loader";
 import { createCatalogItem, createVariation } from "../../../api/catalogue";
 
 export default function AddItem({

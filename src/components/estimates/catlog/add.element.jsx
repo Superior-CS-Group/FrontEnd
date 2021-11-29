@@ -2,12 +2,14 @@ import React from "react";
 import { Row, Col, Form, Input, Button } from "antd";
 import { createCatalogItem } from "../../../api/catalogue";
 
-export default function Addelement() {
+export default function Addelement({ handelUpdate, handleCancel }) {
   const [name, setName] = React.useState("");
   const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
   const handleSave = async (e) => {
     try {
       e.preventDefault();
+      setLoading(true);
       if (!name) {
         setErrors({ name: "Name is required" });
         return;
@@ -15,11 +17,18 @@ export default function Addelement() {
       const response = await createCatalogItem({ name, type: "subCatalog" });
       if (response.remote) {
         console.log("remteo: ", response);
+        setTimeout(() => {
+          handelUpdate();
+          handleCancel();
+          setLoading(false);
+        }, 1000);
       } else {
         console.log("response: ", response);
+        setLoading(false);
       }
     } catch (error) {
       console.log("error", error);
+      setLoading(false);
     }
   };
   return (
@@ -36,12 +45,13 @@ export default function Addelement() {
                   onChange={(e) => setName(e.target.value)}
                   value={name}
                 />
+                <span className="text-danger small">{errors.name}</span>
               </Form.Item>
             </Col>
 
             <Col md={24} className="text-end">
               <Button type="primary" className="radius-9" onClick={handleSave}>
-                Save
+                {loading ? "Adding..." : "Add"}
               </Button>
             </Col>
           </Row>
