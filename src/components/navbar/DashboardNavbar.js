@@ -39,7 +39,7 @@ export default class DashboardNavbar extends Component {
           <SubMenu key="sub1" icon={estimating} title=" Estimating">
             <Menu.Item key="esn">
               {" "}
-              <NavLink to="/new-catalog">New Catalog</NavLink>
+              <NavLink to="/catalog">Catalog</NavLink>
             </Menu.Item>
             {/* <Menu.Item key="es1">
               {" "}

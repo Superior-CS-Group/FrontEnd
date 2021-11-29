@@ -56,7 +56,7 @@ export default function Catlog() {
             <>
               <div className="d-flex align-items-center">
                 {" "}
-                <div className="ant-catalog-img me-2">
+                <div className="ant-catalog-img me-3">
                   <Image
                     preview={{ visible: false }}
                     src={log}
@@ -189,7 +189,8 @@ export default function Catlog() {
       title: "Pipe",
       dataIndex: "name",
       key: "name",
-      className: "font-bold",
+      className: "font-bold w-275",
+     
     },
     {
       title: "Prize",
