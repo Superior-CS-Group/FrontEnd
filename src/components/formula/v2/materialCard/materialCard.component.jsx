@@ -1,4 +1,4 @@
-import { Col, Input, Row } from "antd";
+import { Checkbox, Col, Input, Row } from "antd";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 import DeleteModal from "../../../modal/deleteModal.component";
@@ -10,6 +10,10 @@ function MaterialCard({
   elementList,
   onFocusOut,
 }) {
+  const [manualCharge, setManualCharge] = React.useState(false);
+  React.useEffect(() => {
+    setManualCharge(material.manual);
+  }, []);
   return (
     <tr>
       <td>
@@ -81,6 +85,9 @@ function MaterialCard({
         <Row className="align-items-start">
           <Col md={24}>
             <label>Charge:</label>
+            <Checkbox onChange={(e) => setManualCharge(e.target.checked)}>
+              Manual
+            </Checkbox>
           </Col>
           <Col md={24}>
             <ReactMentionInput
@@ -90,13 +97,15 @@ function MaterialCard({
                 id: element._id,
               }))}
               onChange={(e, newValue) => {
-                e = { target: { ...e.target, name: "charge" } };
+                e = {
+                  target: { ...e.target, name: "charge", manual: manualCharge },
+                };
                 handleChange(e, index, newValue);
               }}
               placeholder="Enter Charge use '@' and '#' for the dynamic values"
               value={material.charge}
               onBlur={onFocusOut}
-              disabled
+              disabled={!manualCharge}
             />
           </Col>
         </Row>
