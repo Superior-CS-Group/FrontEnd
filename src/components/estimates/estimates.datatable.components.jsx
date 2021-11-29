@@ -338,12 +338,14 @@ export default function Datatable() {
       </div>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
+        
           columns={state.columns}
           pagination={false}
           dataSource={state.filteredData}
           bordered={false}
           className="ant-table-estmating scroll-style"
           scroll={{ x: 400, y: 500 }}
+          
         />
       </ReactDragListView.DragColumn>
     </>

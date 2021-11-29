@@ -175,7 +175,7 @@ export default class MainEstimates extends Component {
                     Export to Excel
                   </Option>
                 </Select>
-                <div className="text-end mt-3">
+                {/* <div className="text-end mt-3">
                   <Button
                     type="primary"
                     disabled
@@ -183,7 +183,7 @@ export default class MainEstimates extends Component {
                   >
                     Confirm
                   </Button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
