@@ -53,6 +53,8 @@ export default function ContractPreview(props) {
     if (id) {
       const body = { id };
       const fetchData = async () => {
+        const emailSettingResult = await postData(`customer/get-info`, body);
+
         const result = await postData(`customer/get-info`, body);
         // console.log("result.data.Data",result.data.Data)
         let userstatus;
@@ -730,80 +732,79 @@ export default function ContractPreview(props) {
                 <Row>
                   <Col md={11}>
                     {" "}
-                    <Form.Item
-                      name="Contractor Signature"
+                    <Form.Item 
                       label="Contractor Signature"
                     >
                       <Input
                         placeholder="Contractor Signature"
                         type="text"
-                        defaultValue={state.resultData.name}
+                        value={state.resultData.name}
                       />
                     </Form.Item>
                   </Col>
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item name="date" label="Date">
+                    <Form.Item  label="Date">
                       <Input
-                        placeholder="input placeholder"
+                        placeholder="Date"
                         type="text"
-                        defaultValue={state.resultData.name}
+                        value={new Date().toLocaleString()}
                       />
                     </Form.Item>
                   </Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item name="owner" label="Owner">
+                    <Form.Item   label="Owner">
                       <Input
-                        placeholder="input placeholder"
+                        placeholder="Owner"
                         type="text"
-                        defaultValue={state.resultData.name}
+                        value={state.resultData.name}
                       />
                     </Form.Item>
                   </Col>{" "}
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item name="Company" label="Company">
+                    <Form.Item   label="Company">
                       <Input
-                        placeholder="input placeholder"
+                        placeholder="Company"
                         type="text"
-                        defaultValue={state.resultData.name}
+                        value={state.resultData.name}
                       />
                     </Form.Item>
                   </Col>
                   <Col md={11}>
                     {" "}
                     <Form.Item
-                      name="customer signature"
+                      
                       label="Customer Signature"
                     >
                       <Input
-                        placeholder="input placeholder"
+                        placeholder="Customer Signature"
                         type="text"
-                        defaultValue={state.resultData.name}
+                        value={state.resultData.name}
                       />
                     </Form.Item>
                   </Col>{" "}
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item name="customer date" label="Date">
+                    <Form.Item   label="Date">
                       <Input
-                        placeholder="input placeholder"
+                        placeholder="Date"
                         type="text"
-                        defaultValue={state.resultData.name}
+                        value={new Date().toLocaleString()}
                       />
                     </Form.Item>
                   </Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item name="ctr name" label="Customer Name">
+                    <Form.Item   label="Customer Name">
                       <Input
-                        placeholder="input placeholder"
+                        placeholder="Customer Name"
                         type="text"
-                        defaultValue={state.resultData.name}
+                        value={state.resultData.name}
                       />
                     </Form.Item>
                   </Col>
