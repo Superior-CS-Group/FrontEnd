@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Collapse, Input, Form, Row, Col, Button } from "antd";
+import { Collapse, Input, Form, Row, Col, Button, message } from "antd";
 import "react-phone-number-input/style.css";
 import { UserOutlined, CheckOutlined } from "@ant-design/icons";
 import { postData } from "../../../utils/fetchApi.js";
@@ -23,6 +23,10 @@ export default function LeadInfo() {
     otherNote: "",
     distance: "",
     otherInformation: "",
+    spouseName: "",
+    spouseEmail: "",
+    spousePhone: "",
+    spouseOtherInfo: "",
     size: "large",
     tabShow: true,
     isValidEmail: false,
@@ -32,6 +36,7 @@ export default function LeadInfo() {
     value: "",
     setValue: "",
     isRedirect: false,
+    message: "",
   });
   useEffect(() => {
     // console.log("params: ", params.id);
@@ -58,6 +63,10 @@ export default function LeadInfo() {
           distance: result.data.Data.distance,
           otherNote: result.data.Data.otherNote,
           otherInformation: result.data.Data.otherInformation,
+          spouseName: result.data.Data.spouse[0].name,
+          spouseEmail: result.data.Data.spouse[0].email,
+          spousePhone: result.data.Data.spouse[0].phone,
+          spouseOtherInfo: result.data.Data.spouse[0].otherInfo,
         });
       };
 
@@ -84,34 +93,46 @@ export default function LeadInfo() {
     const errors = {};
     if (!state.name) {
       errors.name = "Customer Name is not blank";
+      message.error(errors.name, 5);
     }
     if (!state.email) {
       errors.email = "Email Id is not blank";
+      message.error(errors.email, 5);
     }
     if (!state.contactNo) {
       errors.contactNo = "Contact No is not blank";
+      message.error(errors.contactNo, 5);
     }
     if (!state.country) {
       errors.country = "Country is not blank";
+      message.error(errors.country, 5);
     }
     if (!state.states) {
       errors.states = "State is not blank";
+      message.error(errors.states, 5);
     }
     if (!state.city) {
       errors.city = "City is not blank";
+      message.error(errors.city, 5);
     }
     if (!state.postalCode) {
       errors.postalCode = "Postal Code is not blank";
+      message.error(errors.postalCode, 5);
     }
     if (!state.address) {
       errors.address = "Address is not blank";
+      message.error(errors.address, 5);
     }
     // if (!this.state.otherInformation) {
     //   errors.otherInformation = "Address is not blank";
     // }
-    if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
+    if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
       errors.email = "Email is not valid";
-      // this.setState({ isValidEmail:false})
+      message.error(errors.email, 5);
+    }
+    if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.spouseEmail)) {
+      errors.spouseEmail = "Email is not valid";
+      message.error(errors.spouseEmail, 5);
     }
     return {
       errors,
@@ -135,9 +156,17 @@ export default function LeadInfo() {
     const { errors, isValid } = validateFields();
     if (!isValid) {
       setState({ ...state, errors });
+      // message.success(errors, 5);
       return;
     }
+    const spouse = {
+      name: state.spouseName,
+      email: state.spouseEmail,
+      phone: state.spousePhone,
+      otherInfo: state.spouseOtherInfo,
+    };
     setState({ ...state, isLoading: true });
+
     const {
       name,
       email,
@@ -161,6 +190,7 @@ export default function LeadInfo() {
       postalCode,
       distance,
       otherInformation,
+      spouse,
     };
     // console.log("body: ", body);
 
@@ -183,6 +213,7 @@ export default function LeadInfo() {
         isLoading: false,
         isRedirect: true,
       });
+      message.success("New Customer Added!", 2);
     } catch (err) {
       console.log("error", err, err.response);
 
@@ -205,6 +236,13 @@ export default function LeadInfo() {
       setState({ ...state, errors });
       return;
     }
+
+    const spouse = {
+      name: state.spouseName,
+      email: state.spouseEmail,
+      phone: state.spousePhone,
+      otherInfo: state.spouseOtherInfo,
+    };
     setState({ ...state, isLoading: true });
     const {
       name,
@@ -230,6 +268,7 @@ export default function LeadInfo() {
       postalCode,
       distance,
       otherInformation,
+      spouse,
     };
     console.log("body: ", body);
 
@@ -495,28 +534,70 @@ export default function LeadInfo() {
             <Row gutter={[24, 0]}>
               <Col md={12}>
                 <Form.Item label="Full Name">
-                  <Input size="large" suffix={<CheckOutlined />} />
+                  <Input
+                    size="large"
+                    name="spouseName"
+                    value={state.spouseName}
+                    onChange={handleAllChange}
+                    suffix={<CheckOutlined />}
+                  />
                 </Form.Item>{" "}
                 <Form.Item label="Email">
-                  <Input size="large" suffix={<CheckOutlined />} />
+                  <Input
+                    size="large"
+                    name="spouseEmail"
+                    value={state.spouseEmail}
+                    onChange={handleAllChange}
+                    suffix={<CheckOutlined />}
+                  />
+                  <div role="alert" class="text-danger">
+                    {state.errors.spouseEmail}
+                  </div>
                 </Form.Item>
                 <Form.Item label="Phone">
-                  <Input size="large" suffix={<CheckOutlined />} />
+                  <Input
+                    size="large"
+                    name="spousePhone"
+                    value={state.spousePhone}
+                    onChange={handleAllChange}
+                    suffix={<CheckOutlined />}
+                  />
                 </Form.Item>
               </Col>
 
               <Col md={12}>
                 <Form.Item label="Other Information">
-                  <TextArea size="large" rows={4} />
+                  <TextArea
+                    size="large"
+                    name="spouseOtherInfo"
+                    value={state.spouseOtherInfo}
+                    onChange={handleAllChange}
+                    rows={4}
+                  />
                 </Form.Item>
               </Col>
 
               <Col md={24}>
                 <div className="text-right">
-                  {}
-                  <Button className="add-btn ant-btn-primary">
-                    Save Changes
-                  </Button>
+                  {state.id ? (
+                    <>
+                      <Button
+                        className="add-btn ant-btn-primary"
+                        onClick={updatehandleSubmit}
+                      >
+                        Update Changes
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        className="add-btn ant-btn-primary"
+                        onClick={handleSubmit}
+                      >
+                        Save Changes
+                      </Button>
+                    </>
+                  )}
                 </div>
               </Col>
             </Row>
