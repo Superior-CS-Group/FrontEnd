@@ -19,15 +19,17 @@ import {
 import {
   PlusCircleOutlined,
   SaveOutlined,
+  EditOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { eye } from "../../utils/svg.file";
+import { drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
-import { createUserEstimation, searchFormulaByName } from "../../api/formula";
+import { searchFormulaByName } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
+import DeleteModal from "../modal/deleteModal.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -42,7 +44,7 @@ export default function AddEstimates(props) {
   const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
-  
+
   const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
 
@@ -190,12 +192,6 @@ export default function AddEstimates(props) {
     setFormulas(newFormula.data.data);
   }
   async function handleSelectFormula(formula) {
-    formula = {
-      ...formula,
-      elements: formula.elements?.map((element) => ({ ...element })) || [],
-      materials: formula.materials?.map((material) => ({ ...material })) || [],
-    };
-
     const elements = formula.elements;
     const newElements = [];
     for (let i = 0; i < elements.length; i++) {
@@ -209,8 +205,8 @@ export default function AddEstimates(props) {
       }
     }
     formula.elements = newElements;
+    console.log("formula: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
-    setFormulas([]);
   }
   function handleEditField(e, index, subField, subIndex) {
     const newSelectedFormulas = [...selectedFormulas];
@@ -219,14 +215,8 @@ export default function AddEstimates(props) {
     setSelectedFormulas(newSelectedFormulas);
   }
 
-  function handleEditDropdownField(e, index, subIndex) {
-    const newSelectedFormula = [...selectedFormulas];
-    const selectedOption = newSelectedFormula[index].elements[
-      subIndex
-    ].options.find((el) => el._id === e);
-    newSelectedFormula[index].elements[subIndex].selected = selectedOption;
-    newSelectedFormula[index].elements[subIndex].value = selectedOption.price;
-    setSelectedFormulas(newSelectedFormula);
+  function handleEditDropdownField(e, index) {
+    console.log({ e, index });
   }
 
   function escapeRegExp(string) {
@@ -234,10 +224,11 @@ export default function AddEstimates(props) {
   }
 
   function processFormula(formula, materials, elements) {
+    console.log("formula: ", { formula, materials, elements });
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
-          title: `@{{catalog||${item._id}||${item.name}}}`,
+          title: `@{{catalog||${item._id}||${item.title}}}`,
           price: item.price,
         };
       });
@@ -296,6 +287,7 @@ export default function AddEstimates(props) {
 
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
+      console.log(material, "material");
       return { ...material, cost, charge, quantity };
     });
     formula.totalMaterialsCost = totalMaterialsCost;
@@ -306,33 +298,27 @@ export default function AddEstimates(props) {
         totalMaterialsCost
       ).toFixed(2)
     );
-    formula.grossProfit = `${profitPercent}%`;
+    formula.grossProfit = `${profitPercent * 100}%`;
     return materials;
   }
 
   async function processDropdown(id) {
     const elements = await getVariationsByCatalogId(id);
+    console.log(elements);
     if (elements.remote === "success") {
       return elements.data.data;
     } else {
       return [];
     }
   }
-
-  async function handleSaveEstimations() {
-    const body = { services: selectedFormulas, userId: props.custInfo.id };
-    console.log({ body, props });
-    const response = await createUserEstimation(body);
-    console.log("respones: ", response);
-  }
-
-  const genExtra = () => <CloseCircleFilled />;
-
-  const handleRemoveService = (index) => {
-    const newSelectedFormulas = [...selectedFormulas];
-    newSelectedFormulas.splice(index, 1);
-    setSelectedFormulas(newSelectedFormulas);
-  };
+  const genExtra = () => (
+    <CloseCircleFilled
+      // onClick={(event) => {
+      //   event.stopPropagation();
+      // }}
+      onClick={DeleteModal}
+    />
+  );
   return (
     <>
       <div className="">
@@ -442,8 +428,8 @@ export default function AddEstimates(props) {
                 />
                 <div className="sagision">
                   <ul>
-                    {formulas.map((formula, idx) => (
-                      <li onClick={() => handleSelectFormula(formula, idx)}>
+                    {formulas.map((formula) => (
+                      <li onClick={() => handleSelectFormula(formula)}>
                         {formula.title}
                       </li>
                     ))}
@@ -533,12 +519,7 @@ export default function AddEstimates(props) {
                       extra={[
                         <>
                           ${formula.totalProjectCharge || 0}{" "}
-                          <span
-                            className="closeicon-panel"
-                            onClick={() => handleRemoveService(index)}
-                          >
-                            {genExtra()}
-                          </span>
+                          <span className="closeicon-panel">{genExtra()}</span>
                         </>,
                       ]}
                     >
@@ -549,6 +530,7 @@ export default function AddEstimates(props) {
                             if (element.type === "dropdown") {
                               processDropdown(element.dropdown, element);
                             }
+                            console.log("elelfdsakjlkds: ", element);
                             return (
                               <Col lg={6} span={24} key={idx}>
                                 <Card
@@ -557,9 +539,11 @@ export default function AddEstimates(props) {
                                     element.automatic ? "blue-card" : ""
                                   }`}
                                   bodyStyle={{ padding: "16px" }}
-                                  key={idx}
                                 >
-                                  <div className="text-end drgicon"></div>
+                                  <div className="text-end drgicon">
+                                    <span className="me-1">{drag}</span>{" "}
+                                    <span>{ellps}</span>
+                                  </div>
                                   <span>{element.name}</span>
 
                                   <div className="d-flex align-items-center justify-content-between">
@@ -582,11 +566,7 @@ export default function AddEstimates(props) {
                                       <Select
                                         style={{ width: "100%" }}
                                         onChange={(value) =>
-                                          handleEditDropdownField(
-                                            value,
-                                            index,
-                                            idx
-                                          )
+                                          handleEditDropdownField(value, idx)
                                         }
                                       >
                                         {element.options?.map((option) => {
@@ -635,7 +615,7 @@ export default function AddEstimates(props) {
                                         )}
                                       </h4>
                                     )}
-                                    {/* <EditOutlined /> */}
+                                    <EditOutlined />
                                   </div>
                                 </Card>
                               </Col>
@@ -735,7 +715,7 @@ export default function AddEstimates(props) {
                 >
                   {variation.map((variation, index) => {
                     return (
-                      <React.Fragment key={index}>
+                      <>
                         <List.Item
                           className="border-0 font-d position-relative"
                           extra={[
@@ -755,7 +735,7 @@ export default function AddEstimates(props) {
                         >
                           <Input placeholder="" style={{ width: "88%" }} />
                         </List.Item>
-                      </React.Fragment>
+                      </>
                     );
                   })}
                 </List>
@@ -786,7 +766,7 @@ export default function AddEstimates(props) {
       </div>
       <div className="ant-floating">
         <Button type="primary">
-          <SaveOutlined onClick={handleSaveEstimations} />
+          <SaveOutlined />
         </Button>
       </div>
     </>

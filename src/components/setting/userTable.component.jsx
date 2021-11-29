@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Component } from "react";
-import { Table, Checkbox, Button, Modal, Radio } from "antd";
+import { Table, Checkbox, Button, Modal, Radio, Badge, Tooltip } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { Datel, drag, edit } from "../../utils/svg.file";
 // import Material from "./material.components";
@@ -8,10 +8,12 @@ import { useParams } from "react-router-dom";
 import { getData, postData } from "../../utils/fetchApi.js";
 import { deleteCatalog } from "../../api/catalogue";
 import { getUserList } from "../../api/admin.js";
-
+import { LockOutlined } from "@ant-design/icons";
+import ChangePasswordUser from "../modal/changePassword.component";
 export default function UserTable() {
   const params = useParams();
 
+  const [isModalShow, setIsModalShow] = useState(false);
   const [state, setState] = useState({
     columns: [
       // {
@@ -59,10 +61,10 @@ export default function UserTable() {
         ),
         dataIndex: "cdate",
       },
-      // {
-      //   title: "Action",
-      //   dataIndex: "action",
-      // },
+      {
+        title: "Status",
+        dataIndex: "Status",
+      },
     ],
   });
 
@@ -109,23 +111,18 @@ export default function UserTable() {
           currency: catalogueData.currency,
           timeZone: catalogueData.timeZone,
           cdate: catalogueData.createdAt.split("T")[0],
-          // action: (
-          //   <>
-          //     {" "}
-          //     <Button className="ant-edit-button me-3" onClick={showModal}>
-          //       <span className="me-2">{edit}</span> Edit
-          //     </Button>
-          //     <Button danger className="ant-danger-button">
-          //       <span className="me-2">{Datel}</span>{" "}
-          //       <span
-          //         className="align-text"
-          //         onClick={deleteServiceHandleSubmit(catalogueData._id)}
-          //       >
-          //         Delete
-          //       </span>
-          //     </Button>
-          //   </>
-          // ),
+          Status: (
+            <>
+              <Badge
+                className="cursor-btn site-badge-count-109 me-2"
+                count="Activate"
+                style={{ backgroundColor: "#52c41a" }}
+              />
+              <Tooltip title="Change Password">
+                <LockOutlined className="cursor-btn pass-key-btn" />
+              </Tooltip>
+            </>
+          ),
         });
       }
       // console.log("data: ", data);
@@ -146,6 +143,17 @@ export default function UserTable() {
     });
   };
 
+  const showModalPassword = () => {
+    setIsModalShow(true);
+  };
+
+  const handleOk = () => {
+    setIsModalShow(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalShow(false);
+  };
   return (
     <>
       <ReactDragListView.DragColumn {...dragProps}>
@@ -157,6 +165,12 @@ export default function UserTable() {
           bordered={false}
         />
       </ReactDragListView.DragColumn>
+      <ChangePasswordUser
+        showModal={showModalPassword}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        isModalShow={isModalShow}
+      />
     </>
   );
 }
