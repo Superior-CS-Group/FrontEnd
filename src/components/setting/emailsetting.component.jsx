@@ -15,9 +15,12 @@ export default function EmailSetting() {
     password: "",
     profileImage: "",
     oldLogo: "",
-    message: "",
+    successMessage: "",
+    errorMessage: "",
     resultData: [],
     isLoader: true,
+    errors: {},
+    errorUsername:""
   });
   const [host, setHost] = useState("");
   const [username, setUsername] = useState("");
@@ -28,14 +31,17 @@ export default function EmailSetting() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getEmailSetting();
-      if (response.remote === "success") {
-        console.log(response.data);
-        setHost(response.data.host);
-        setUsername(response.data.username);
-        setPassword(response.data.password);
-        setPort(response.data.port);
-        setfromEmail(response.data.fromEmail);
-        setState({ profileImage: response.data.logo, isLoader: true });
+      if (response) {
+        if (response.remote === "success") {
+          console.log(response.data);
+          setHost(response.data.host);
+          setUsername(response.data.username);
+          setPassword(response.data.password);
+          setPort(response.data.port);
+          setfromEmail(response.data.fromEmail);
+          setState({ profileImage: response.data.logo, isLoader: true });
+        }
+      } else {
       }
     };
 
@@ -47,8 +53,49 @@ export default function EmailSetting() {
 
     setState({ profileImage: base64 });
   };
-  // console.log(state.profileImage,"state.profileImage");
-  const handleSave = async () => {
+
+  const validateFields = () => {
+    const errors = {};
+    if (!host) {
+      errors.host = "Host is not blank";
+      message.error(errors.host, 5);
+    }
+    if (!username) {
+      errors.username = "Username is not blank";
+      message.error(errors.username, 5);
+    }
+    if (!password) {
+      errors.password = "Password is not blank";
+      message.error(errors.password, 5);
+    }
+    if (!port) {
+      errors.port = "Port is not blank";
+      message.error(errors.port, 5);
+    }
+    if (!fromEmail) {
+      errors.fromEmail = "From Email is not blank";
+      message.error(errors.fromEmail, 5);
+    }
+    if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(username)) {
+      errors.email = "Email is not valid";
+      message.error(errors.email, 5);
+      // setState({ errorUsername:errors.email})
+    }
+    return {
+      errors,
+      isValid: !Object.keys(errors).length,
+    };
+  };
+
+  const handleSave = async (event) => {
+    event.preventDefault();
+    setState({ ...state, errors: {} });
+    const { errors, isValid } = validateFields();
+    if (!isValid) {
+      setState({ ...state, errors });
+      // message.success(errors, 2);
+      return;
+    }
     const base64 = state.profileImage.split(",")[1];
     const body = {
       host: host,
@@ -59,20 +106,14 @@ export default function EmailSetting() {
       profileImage: base64,
       oldLogo: state.profileImage,
     };
-    console.log(body);
+    // console.log(body);
     const response = await updateEmailSetting(body);
     if (response.remote === "success") {
-      // console.log(response.data);
-      // setHost(response.data.host);
-      // setUsername(response.data.username);
-      // setPassword(response.data.password);
-      // setfromEmail(response.data.fromEmail);
-      // setPort(response.data.port);
-      // setState({ profileImage: response.data.logo });
-      // setState({ oldLogo: response.data.logo });
+      // const message1 = "Data Updated";
+      setState({ oldLogo: response.data.logo });
       // setState({ message: "Data Updated" });
       setState({ isLoader: false });
-      message.success("Successfully Saved ", 10);
+      message.success("Data Updated", 2);
     }
   };
 
@@ -120,6 +161,7 @@ export default function EmailSetting() {
                   value={host}
                   onChange={(e) => setHost(e.target.value)}
                 />
+                
               </Form.Item>
               <Form.Item label="User ">
                 <Input

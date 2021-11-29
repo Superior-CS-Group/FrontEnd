@@ -2367,6 +2367,7 @@ input::-webkit-inner-spin-button {
   width: 100%;
   height: 50px;
   border-radius: 9.91903px;
+  display: inline;
 }
 .w-64 {
   width: 50px;
@@ -2434,4 +2435,19 @@ img.preview-logo {
 }
 .warning-modal .warning-modal{
   font-size: 20px;
+}
+
+.btn-width {
+  width: 150px;
+}
+
+.font-16 {
+  font-size: 16px;
+}
+.font-24 {
+  font-size: 24px;
+}
+
+.ant-catalog-img .ant-image-mask {
+  border-radius: 9px;
 }

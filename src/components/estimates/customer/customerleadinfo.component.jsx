@@ -228,10 +228,10 @@ export default function CustomerLeadInfo() {
                     className="me-4 ant-bg-primary "
                     bordered={false}
                     style={{ width: "150px" }}
-                    // value={state.estimaitonStatus}
+                    value={state.estimaitonStatus}
                     name="estimaitonStatus"
                     onChange={updateStatusHandleSubmit}
-                    defaultValue={state.estimaitonStatus}
+                    // defaultValue={state.estimaitonStatus}
                   >
                     {state.statusList.map((Datalist, idx) => {
                       return (

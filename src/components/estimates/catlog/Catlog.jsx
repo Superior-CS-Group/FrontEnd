@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Input, Table, Button } from "antd";
+import { Card, Input, Table, Button, Image } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import {
   PlusCircleOutlined,
@@ -9,8 +9,8 @@ import {
   UpCircleFilled,
   DownCircleFilled,
   EditTwoTone,
-  DeleteTwoTone,
-  PlusCircleTwoTone,
+  DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import SmallLoader from "../../loader/smallLoader";
 import CataLogModal from "./catalog.modal";
@@ -34,10 +34,14 @@ export default function Catlog() {
   const [isLoadingVariation, setIsLoadingVariation] = useState(null);
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
+<<<<<<< HEAD
   const [isAddService, setIsAddService] = useState(false);
   const handleAddModal = () => {
     setIsAddService(true);
   };
+=======
+  const [visible, setVisible] = useState(false);
+>>>>>>> 18ef64982de0ced8f1eec4cc8dd2e37c8eed944d
   const handelUpdate = () => {
     setIsUpdate(!isUpdate);
   };
@@ -55,15 +59,32 @@ export default function Catlog() {
             <>
               <div className="d-flex align-items-center">
                 {" "}
-                <div className="ant-catalog-img me-3 w-64">
-                  <img src={log} alt="" />
+                <div className="ant-catalog-img me-2">
+                  <Image
+                    preview={{ visible: false }}
+                    src={log}
+                    onClick={() => setVisible(true)}
+                    alt=""
+                  />
+                  <div style={{ display: "none" }}>
+                    <Image.PreviewGroup
+                      preview={{
+                        visible,
+                        onVisibleChange: (vis) => setVisible(vis),
+                      }}
+                    >
+                      <Image src={log} />
+                      <Image src={log} />
+                      <Image src={log} />
+                    </Image.PreviewGroup>
+                  </div>
                 </div>
                 <span> {variation.name}</span>
               </div>
             </>
           ),
 
-          price: variation.price,
+          price: `$${variation.price}`,
           quantity: variation.quantity,
           unit: variation.unit,
           description: variation.description,
@@ -73,16 +94,9 @@ export default function Catlog() {
               <Button
                 type="text"
                 shape="circle"
-                className="me-2 d-inline-flex align-items-center justify-content-center"
-              >
-                <DeleteTwoTone />
-              </Button>
-              <Button
-                type="text"
-                shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
               >
-                <EditTwoTone />
+                <EditOutlined className="text-primary" />
               </Button>
             </>
           ),
@@ -135,7 +149,7 @@ export default function Catlog() {
         key: element._id,
         _id: element._id,
         name: element.name,
-        price: element.price,
+        price: element.price ? `$${element.price}` : "",
         quantity: element.quantity,
         description: element.description,
         type: element.type,
@@ -148,7 +162,7 @@ export default function Catlog() {
                 className="me-2 d-inline-flex align-items-center justify-content-center"
                 onClick={() => setSelectedSubCatalog(element._id)}
               >
-                <PlusCircleTwoTone />
+                <PlusCircleOutlined className="text-primary" />
               </Button>
             )}
             <Button
@@ -156,14 +170,14 @@ export default function Catlog() {
               shape="circle"
               className="me-2 d-inline-flex align-items-center justify-content-center"
             >
-              <DeleteTwoTone />
+              <DeleteOutlined className="text-danger" />
             </Button>
             <Button
               type="text"
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
             >
-              <EditTwoTone />
+              <EditOutlined className="text-primary" />
             </Button>
           </>
         ),
@@ -343,7 +357,9 @@ export default function Catlog() {
                               className="text-center"
                               onClick={() => setSelectedSubCatalog(render._id)}
                             >
-                              <h1>Add Item..</h1>
+                              <h1 className="font-16 mb-0 cursor-btn py-3">
+                                Add Item..
+                              </h1>
                             </div>
                           );
                         }
@@ -363,6 +379,7 @@ export default function Catlog() {
                         if (record.type === "subCatalog") {
                           return expanded ? (
                             <UpCircleFilled
+                              className="font-24"
                               style={{ color: "#3483FA" }}
                               onClick={(e) => {
                                 onExpand(record, e);
@@ -370,6 +387,7 @@ export default function Catlog() {
                             />
                           ) : (
                             <DownCircleFilled
+                              className="font-24"
                               style={{ color: "#3483FA" }}
                               onClick={(e) => {
                                 onExpand(record, e);
@@ -381,7 +399,24 @@ export default function Catlog() {
                           return (
                             <>
                               <div className="ant-catalog-img">
-                                <img src={log} alt="" />
+                                <Image
+                                  preview={{ visible: false }}
+                                  src={log}
+                                  onClick={() => setVisible(true)}
+                                  alt=""
+                                />
+                                <div style={{ display: "none" }}>
+                                  <Image.PreviewGroup
+                                    preview={{
+                                      visible,
+                                      onVisibleChange: (vis) => setVisible(vis),
+                                    }}
+                                  >
+                                    <Image src={log} />
+                                    <Image src={log} />
+                                    <Image src={log} />
+                                  </Image.PreviewGroup>
+                                </div>
                               </div>
                             </>
                           );
