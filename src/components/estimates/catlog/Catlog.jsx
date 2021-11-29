@@ -265,58 +265,60 @@ export default function Catlog() {
               </Nav.Item>
             </Nav>
             <div className="p-3 card-shadow ">
-              <div className="p-2">
-                <div className="fillter d-lg-flex align-items-center">
-                  <span
-                    className="ant-blue-plus me-4"
-                    onClick={() => {
-                      setIsModal("subcategory");
-                      setTitle("Sub Category");
-                    }}
-                  >
-                    <PlusCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
-                    Sub Category
-                  </span>
-                  <span
-                    className="ant-blue-plus me-4"
-                    onClick={() => {
-                      setIsModal("additem");
-                      setTitle("Add Item");
-                    }}
-                  >
-                    <PlusCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
-                    Add Item
-                  </span>
-                  <span className="ant-text-danger me-4">
-                    <CloseCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
-                    Delete catalog
-                  </span>
-
-                  <div className="ms-auto col-lg-3">
-                    <Input
-                      placeholder="Search catalog by name"
-                      text="search"
-                      className="ant-search-button"
-                      suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-                      onChange={filterCatalogItems}
-                    />
-                  </div>
-                </div>
-              </div>
               <Tab.Content className="mt-2">
                 <Tab.Pane eventKey="first">
+                  <div className="p-2">
+                    <div className="fillter d-lg-flex align-items-center">
+                      <span
+                        className="ant-blue-plus me-4"
+                        onClick={() => {
+                          setIsModal("subcategory");
+                          setTitle("Sub Category");
+                        }}
+                      >
+                        <PlusCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Sub Category
+                      </span>
+                      <span
+                        className="ant-blue-plus me-4"
+                        onClick={() => {
+                          setIsModal("additem");
+                          setTitle("Add Item");
+                        }}
+                      >
+                        <PlusCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Add Item
+                      </span>
+                      <span className="ant-text-danger me-4">
+                        <CloseCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Delete catalog
+                      </span>
+
+                      <div className="ms-auto col-lg-3">
+                        <Input
+                          placeholder="Search catalog by name"
+                          text="search"
+                          className="ant-search-button"
+                          suffix={
+                            <SearchOutlined style={{ fontSize: "18px" }} />
+                          }
+                          onChange={filterCatalogItems}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <Table
                     bordered={false}
-                    scroll={{ y: 400 }}
+                    scroll={{ y: 700 }}
                     className="components-table-demo-nested  scroll-style"
                     columns={columns}
                     expandable={{
@@ -384,6 +386,36 @@ export default function Catlog() {
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
+                  <div className="p-2">
+                    <div className="fillter d-lg-flex align-items-center">
+                      <span className="ant-blue-plus me-4">
+                        <PlusCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Add Services
+                      </span>
+                      {/* <span className="ant-text-danger me-4">
+                        <CloseCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Delete catalog
+                      </span> */}
+
+                      <div className="ms-auto col-lg-3">
+                        <Input
+                          placeholder="Search catalog by name"
+                          text="search"
+                          className="ant-search-button"
+                          suffix={
+                            <SearchOutlined style={{ fontSize: "18px" }} />
+                          }
+                          onChange={filterCatalogItems}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <CatalogServices />
                 </Tab.Pane>
                 <Tab.Pane eventKey="three">Comming Soon Packages</Tab.Pane>
