@@ -19,17 +19,15 @@ import {
 import {
   PlusCircleOutlined,
   SaveOutlined,
-  EditOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { drag, ellps, eye } from "../../utils/svg.file";
+import { eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
-import { searchFormulaByName } from "../../api/formula";
+import { createUserEstimation, searchFormulaByName } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
-import DeleteModal from "../modal/deleteModal.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -44,7 +42,7 @@ export default function AddEstimates(props) {
   const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
-
+  
   const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
 
@@ -322,7 +320,10 @@ export default function AddEstimates(props) {
   }
 
   async function handleSaveEstimations() {
-    console.log({ selectedFormulas });
+    const body = { services: selectedFormulas, userId: props.custInfo.id };
+    console.log({ body, props });
+    const response = await createUserEstimation(body);
+    console.log("respones: ", response);
   }
 
   const genExtra = () => <CloseCircleFilled />;
