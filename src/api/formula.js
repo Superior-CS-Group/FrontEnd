@@ -64,3 +64,29 @@ export const searchFormulaByName = async (searchString) => {
   });
   return response;
 };
+
+export const createUserEstimation = async (body) => {
+  const response = await api.request({
+    url: "/v2/user-stimation/create-user-estimation",
+    method: "POST",
+    data: body,
+  });
+  return response;
+};
+
+export const updateUserEstimation = async (estimationId, data) => {
+  const response = await api.request({
+    url: `/v2/user-stimation/update-user-estimation/:${estimationId}`,
+    method: "PUT",
+    data,
+  });
+  return response;
+};
+
+export const getUserEstimation = async () => {
+  const response = await api.request({
+    url: "/v2/user-stimation/update-user-estimation",
+    method: "GET",
+  });
+  return response;
+};
