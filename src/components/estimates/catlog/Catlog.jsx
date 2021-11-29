@@ -34,14 +34,11 @@ export default function Catlog() {
   const [isLoadingVariation, setIsLoadingVariation] = useState(null);
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
-<<<<<<< HEAD
   const [isAddService, setIsAddService] = useState(false);
   const handleAddModal = () => {
     setIsAddService(true);
   };
-=======
   const [visible, setVisible] = useState(false);
->>>>>>> 18ef64982de0ced8f1eec4cc8dd2e37c8eed944d
   const handelUpdate = () => {
     setIsUpdate(!isUpdate);
   };
