@@ -12,7 +12,7 @@ import fillter from "../../images/fillter.png";
 
 export default function Datatable() {
   const params = useParams();
-
+  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
   const [state, setState] = useState({
     estimateResults: [],
     data: [],
@@ -266,6 +266,7 @@ export default function Datatable() {
                 className="me-2 cursor-btn"
                 onClick={(e) => {
                   DeleteModal(customerData[0]._id, "customerLead");
+                  setShowDeleteModal(true);
                 }}
               >
                 {Datel}
@@ -312,6 +313,18 @@ export default function Datatable() {
     });
     console.log("filterData: ", filteredData);
     setState({ ...state, filteredData, filter: value });
+  };
+
+  const showModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleOk = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleCancel = () => {
+    setShowDeleteModal(false);
   };
 
   return (
