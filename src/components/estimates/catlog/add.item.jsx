@@ -110,35 +110,6 @@ export default function AddItem({
   return (
     <>
       <div className="ant-upload-box">
-        <Row gutter={[24, 0]}>
-          <Col md={6}>
-            <div className="ant-image-upload">
-              <span className="ant-star-icon">{star}</span>
-              <span className="ant-star-tick ant-position d-none">
-                <CheckOutlined />
-              </span>
-              <span className="ant-star-delete ant-position">
-                <CloseOutlined />
-              </span>
-              <img src={element} alt="" />
-            </div>
-            <Progress
-              percent={50}
-              showInfo={false}
-              strokeColor="#34C759"
-              strokeWidth={3}
-              strokeLinecap="round"
-            />
-          </Col>
-          <Col md={6}>
-            <div className="ant-image-upload border-dash">
-              <div className="d-flex align-items-center  justify-content-center h-100 upload-input">
-                <input type="file" />
-                {upload}
-              </div>
-            </div>
-          </Col>
-        </Row>
         <Form layout="vertical">
           <Row gutter={[24, 0]}>
             <Col span={24}>
@@ -154,7 +125,7 @@ export default function AddItem({
                 <span className="text-danger small">{errors.name}</span>
               </Form.Item>
             </Col>
-            <Col md={8}>
+            <Col md={12}>
               <Form.Item label="Price">
                 <Input
                   prefix={<DollarCircleOutlined />}
@@ -170,7 +141,7 @@ export default function AddItem({
                 <span className="text-danger small">{errors.price}</span>
               </Form.Item>
             </Col>
-            <Col md={8}>
+            <Col md={12}>
               <Form.Item label="Unit" className="ant-smily-select">
                 <Input
                   className="ant-furmulla-input radius-30"
@@ -183,7 +154,7 @@ export default function AddItem({
                 <span className="text-danger small">{errors.unit}</span>
               </Form.Item>
             </Col>
-            <Col md={8}>
+            {/* <Col md={8}>
               <Form.Item label="Quantity">
                 <Input
                   className="ant-furmulla-input radius-30"
@@ -211,19 +182,60 @@ export default function AddItem({
                 />
                 <span className="text-danger small">{errors.description}</span>
               </Form.Item>
+            </Col> */}
+          </Row>
+          <Row gutter={[24, 0]}>
+            <Col md={6}>
+              <div className="ant-image-upload">
+                <span className="ant-star-icon">{star}</span>
+                <span className="ant-star-tick ant-position d-none">
+                  <CheckOutlined />
+                </span>
+                <span className="ant-star-delete ant-position">
+                  <CloseOutlined />
+                </span>
+                <img src={element} alt="" />
+              </div>
+              <Progress
+                percent={50}
+                showInfo={false}
+                strokeColor="#34C759"
+                strokeWidth={3}
+                strokeLinecap="round"
+              />
             </Col>
-            <Col md={24} className="text-end">
+            <Col md={6}>
+              <div className="ant-image-upload border-dash">
+                <div className="d-flex align-items-center  justify-content-center h-100 upload-input">
+                  <input type="file" />
+                  {upload}
+                </div>
+              </div>
+            </Col>
+            <Col md={24} className="text-end mt-3">
               <Button
                 type="link"
-                className="radius-30 px-4 me-2"
+                danger
+                className="radius-30 px-4 me-2 btn-width"
                 onClick={handleClose}
                 disabled={loading}
+                size="large"
+              >
+                Delete Items
+              </Button>
+              <Button
+                type="link"
+                className="radius-30 px-4 me-2 btn-width"
+                onClick={handleClose}
+                disabled={loading}
+                size="large"
               >
                 Cancel
               </Button>
               <Button
                 type="primary"
-                className="radius-30 px-4"
+                size="large"
+                className="radius-30 px-4 btn-width"
                 onClick={handleSave}
                 disabled={loading}
               >
