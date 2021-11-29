@@ -63,10 +63,16 @@ export default function LeadInfo() {
           distance: result.data.Data.distance,
           otherNote: result.data.Data.otherNote,
           otherInformation: result.data.Data.otherInformation,
-          spouseName: result.data.Data.spouse[0].name,
-          spouseEmail: result.data.Data.spouse[0].email,
-          spousePhone: result.data.Data.spouse[0].phone,
-          spouseOtherInfo: result.data.Data.spouse[0].otherInfo,
+          spouseName: result.data.Data.spouse[0]
+            ? result.data.Data.spouse[0].name
+            : "",
+          spouseEmail: result.data.Data.spouse[0]
+            ? result.data.Data.spouse[0].email
+            : "",
+          spousePhone: result.data.Data.spouse[0]
+            ? result.data.Data.spouse[0].phone
+            : "",
+          spouseOtherInfo: result.data.Data.spouse[0] ? result.data.Data.spouse[0].otherInfo:"",
         });
       };
 
@@ -539,7 +545,6 @@ export default function LeadInfo() {
                     name="spouseName"
                     value={state.spouseName}
                     onChange={handleAllChange}
-                    suffix={<CheckOutlined />}
                   />
                 </Form.Item>{" "}
                 <Form.Item label="Email">
@@ -548,7 +553,6 @@ export default function LeadInfo() {
                     name="spouseEmail"
                     value={state.spouseEmail}
                     onChange={handleAllChange}
-                    suffix={<CheckOutlined />}
                   />
                   <div role="alert" class="text-danger">
                     {state.errors.spouseEmail}
@@ -560,7 +564,6 @@ export default function LeadInfo() {
                     name="spousePhone"
                     value={state.spousePhone}
                     onChange={handleAllChange}
-                    suffix={<CheckOutlined />}
                   />
                 </Form.Item>
               </Col>

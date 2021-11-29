@@ -23,6 +23,7 @@ import {
 } from "../../../api/catalogue";
 import CatalogServices from "./catalog.services";
 import AddService from "./addService.component";
+import EditItem from "./edit.item";
 
 export default function Catlog() {
   const [title, setTitle] = useState("Sub Category");
@@ -35,8 +36,13 @@ export default function Catlog() {
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
   const [isAddService, setIsAddService] = useState(false);
+  const [IsEditData, setIsEditData] = useState(false);
+
   const handleAddModal = () => {
     setIsAddService(true);
+  };
+  const handleEditModal = () => {
+    setIsEditData(true);
   };
   const [visible, setVisible] = useState(false);
   const handelUpdate = () => {
@@ -92,6 +98,7 @@ export default function Catlog() {
                 type="text"
                 shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
+                onClick={handleEditModal}
               >
                 <EditOutlined className="text-primary" />
               </Button>
@@ -120,11 +127,13 @@ export default function Catlog() {
   const handleOk = () => {
     setIsModal(false);
     setIsAddService(false);
+    setIsEditData(false);
   };
 
   const handleCancel = () => {
     setIsAddService(false);
     setIsModal("");
+    setIsEditData(false);
   };
 
   const getCatalog = async () => {
@@ -190,7 +199,6 @@ export default function Catlog() {
       dataIndex: "name",
       key: "name",
       className: "font-bold w-275",
-     
     },
     {
       title: "Prize",
@@ -480,6 +488,15 @@ export default function Catlog() {
         title={title}
         handleAddModal={handleAddModal}
         isAddService={isAddService}
+        // isModal={isModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        width={575}
+      />
+      <EditItem
+        title={title}
+        handleEditModal={handleEditModal}
+        IsEditData={IsEditData}
         // isModal={isModal}
         handleOk={handleOk}
         handleCancel={handleCancel}
