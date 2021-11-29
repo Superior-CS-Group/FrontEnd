@@ -1,9 +1,12 @@
-import { Modal, Button, Space, Row, Col } from "antd";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { Modal, Space, Row, Col, Button } from "antd";
+import {
+  ExclamationCircleOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import { deleteCustomerLead } from "../../api/delete";
 
 const { confirm } = Modal;
-export default function DeleteModal(removeId, table, updateData, props) {
+export default function DeleteModal(props, removeId, table, updateData) {
   // confirm({
   //   title: "Do you Want to delete these items?",
   //   icon: <ExclamationCircleOutlined />,
@@ -19,21 +22,29 @@ export default function DeleteModal(removeId, table, updateData, props) {
   //     console.log("Cancel");
   //   },
   // });
-
-  <Modal
-  // title="Warning!"
-  // visible={props.showDeleteModal}
-  // onCancel={props.handleDeleteClose}
-  // onOk={props.handleDeleteOk}
-  >
-    {/* <p>{props.content}</p> */}
-    <Row>
-      <Col md={12}>
-        <Button>Cancel</Button>
-      </Col>
-      <Col md={12}>
-        <Button>Delete</Button>
-      </Col>
-    </Row>
-  </Modal>;
+  return (
+    <>
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={props.ShowDeleteModal}
+        onCancel={props.handleDeleteClose}
+        onOk={props.handleDeleteOk}
+        footer={null}
+        width={350}
+        closeIcon={<InfoCircleOutlined />}
+      >
+        <p>{props.content}</p>
+        <Row>
+          <Col md={12} className="text-center">
+            <Button type="text">Cancel</Button>
+          </Col>
+          <Col md={12}>
+            <Button type="link">Delete</Button>
+          </Col>
+        </Row>
+      </Modal>
+      ;
+    </>
+  );
 }
