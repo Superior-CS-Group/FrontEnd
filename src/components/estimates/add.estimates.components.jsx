@@ -658,7 +658,7 @@ export default function AddEstimates(props) {
                                       <h4>
                                         {processFormula(
                                           element.value,
-                                          null,
+                                          element.formula || [],
                                           formula.elements
                                         )}
                                       </h4>

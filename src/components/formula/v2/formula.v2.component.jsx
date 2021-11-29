@@ -83,9 +83,15 @@ function FormulaV2() {
     }
   }, [formulaDetails]);
 
-  const handleChange = (value, name, index) => {
+  const handleChange = (value, name, index, newMaterial) => {
     const newElementList = [...elementList];
     newElementList[index][name] = value;
+    if (newMaterial) {
+      const processed = processMaterial(newMaterial);
+      newElementList[index].formula = [
+        ...new Set([...(newElementList[index].formula || []), ...processed]),
+      ];
+    }
     setElementList([...newElementList]);
   };
   const handleNewElement = () => {
@@ -127,6 +133,7 @@ function FormulaV2() {
     }
     if (material) {
       let processed = processMaterial(material);
+      console.log("rpoc: ", processed);
       newMaterials[index].formula = [
         ...new Set([...(newMaterials[index].formula || []), ...processed]),
       ];
