@@ -318,7 +318,7 @@ export default function Catlog() {
                   </div>
                   <Table
                     bordered={false}
-                    scroll={{ y: 400 }}
+                    scroll={{ y: 700 }}
                     className="components-table-demo-nested  scroll-style"
                     columns={columns}
                     expandable={{
