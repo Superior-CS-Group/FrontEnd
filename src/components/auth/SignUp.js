@@ -8,8 +8,7 @@ import company from "../../images/company.png";
 import lock from "../../images/lock.png";
 import { signUpStepOneSchema } from "../../validators/auth/auth.validator";
 import { signup } from "../../api/auth";
-
-
+import { PhoneOutlined, MailOutlined } from "@ant-design/icons";
 function SignUp() {
   const [form, setForm] = useState({
     email: "",
@@ -54,7 +53,21 @@ function SignUp() {
       </div>
       <Form>
         <InputField
+          value=""
           icon={<img src={user} alt="" />}
+          placeholder="Full Name"
+          label="Full Name"
+          type="text"
+          name="Full Name"
+          dclass="ant-icon-space mb-3"
+          onChange={handleAllChange}
+        />
+
+        <div role="alert" class="text-danger">
+          {errors.companyName}
+        </div>
+        <InputField
+          icon={<MailOutlined className="bg-color-icon" />}
           placeholder="Username / Email"
           label="Email Address"
           type="text"
@@ -69,9 +82,24 @@ function SignUp() {
           value=""
           icon={<img src={company} alt="" />}
           placeholder="Company Name"
-          label="company"
+          label="Company"
           type="text"
           name="companyName"
+          dclass="ant-icon-space mb-3"
+          onChange={handleAllChange}
+        />
+
+        <div role="alert" class="text-danger">
+          {errors.companyName}
+        </div>
+
+        <InputField
+          value=""
+          icon={<PhoneOutlined className="bg-color-icon" />}
+          placeholder="Phone Number"
+          label="Phone Number"
+          type="text"
+          name="Phone Number"
           dclass="ant-icon-space mb-3"
           onChange={handleAllChange}
         />

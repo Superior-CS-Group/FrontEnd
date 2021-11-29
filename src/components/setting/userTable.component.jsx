@@ -10,7 +10,7 @@ import { deleteCatalog } from "../../api/catalogue";
 import { getUserList } from "../../api/admin.js";
 import { LockOutlined } from "@ant-design/icons";
 import ChangePasswordUser from "../modal/changePassword.component";
-export default function UserTable() {
+export default function UserTable(props) {
   const params = useParams();
 
   const [isModalShow, setIsModalShow] = useState(false);
@@ -119,7 +119,10 @@ export default function UserTable() {
                 style={{ backgroundColor: "#52c41a" }}
               />
               <Tooltip title="Change Password">
-                <LockOutlined className="cursor-btn pass-key-btn" />
+                <LockOutlined
+                  className="cursor-btn pass-key-btn"
+                  onClick={showModalPassword}
+                />
               </Tooltip>
             </>
           ),
@@ -166,7 +169,7 @@ export default function UserTable() {
         />
       </ReactDragListView.DragColumn>
       <ChangePasswordUser
-        showModal={showModalPassword}
+        showModalPassword={showModalPassword}
         handleCancel={handleCancel}
         handleOk={handleOk}
         isModalShow={isModalShow}
