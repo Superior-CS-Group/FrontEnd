@@ -21,6 +21,8 @@ import {
   getVariationsByCatalogId,
 } from "../../../api/catalogue";
 import CatalogServices from "./catalog.services";
+import AddService from "./addService.component";
+import EditItem from "./edit.item";
 
 export default function Catlog() {
   const [title, setTitle] = useState("Sub Category");
@@ -32,6 +34,15 @@ export default function Catlog() {
   const [isLoadingVariation, setIsLoadingVariation] = useState(null);
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
+  const [isAddService, setIsAddService] = useState(false);
+  const [IsEditData, setIsEditData] = useState(false);
+
+  const handleAddModal = () => {
+    setIsAddService(true);
+  };
+  const handleEditModal = () => {
+    setIsEditData(true);
+  };
   const [visible, setVisible] = useState(false);
   const handelUpdate = () => {
     setIsUpdate(!isUpdate);
@@ -50,7 +61,7 @@ export default function Catlog() {
             <>
               <div className="d-flex align-items-center">
                 {" "}
-                <div className="ant-catalog-img me-2">
+                <div className="ant-catalog-img me-3">
                   <Image
                     preview={{ visible: false }}
                     src={log}
@@ -86,6 +97,7 @@ export default function Catlog() {
                 type="text"
                 shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
+                onClick={handleEditModal}
               >
                 <EditOutlined className="text-primary" />
               </Button>
@@ -113,10 +125,14 @@ export default function Catlog() {
   };
   const handleOk = () => {
     setIsModal(false);
+    setIsAddService(false);
+    setIsEditData(false);
   };
 
   const handleCancel = () => {
+    setIsAddService(false);
     setIsModal("");
+    setIsEditData(false);
   };
 
   const getCatalog = async () => {
@@ -182,7 +198,7 @@ export default function Catlog() {
       title: "Pipe",
       dataIndex: "name",
       key: "name",
-      className: "font-bold",
+      className: "font-bold w-275",
     },
     {
       title: "Prize",
@@ -420,7 +436,10 @@ export default function Catlog() {
                 <Tab.Pane eventKey="second">
                   <div className="p-2">
                     <div className="fillter d-lg-flex align-items-center">
-                      <span className="ant-blue-plus me-4">
+                      <span
+                        className="ant-blue-plus me-4"
+                        onClick={handleAddModal}
+                      >
                         <PlusCircleOutlined
                           style={{ fontSize: "18px" }}
                           className="me-2"
@@ -463,6 +482,24 @@ export default function Catlog() {
         handleOk={handleOk}
         handleCancel={handleCancel}
         content={renderItem()}
+        width={575}
+      />
+      <AddService
+        title={title}
+        handleAddModal={handleAddModal}
+        isAddService={isAddService}
+        // isModal={isModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        width={575}
+      />
+      <EditItem
+        title={title}
+        handleEditModal={handleEditModal}
+        IsEditData={IsEditData}
+        // isModal={isModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
         width={575}
       />
     </>

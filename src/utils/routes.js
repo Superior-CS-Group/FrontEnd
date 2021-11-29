@@ -19,12 +19,12 @@ import EmailSetting from "../components/setting/emailsetting.component";
 import UserList from "../components/setting/userList.component";
 
 const routes = [
-  {
-    path: "/Catalog",
-    exact: true,
-    name: "catalog",
-    component: <Catalog />,
-  },
+  // {
+  //   path: "/Catalog",
+  //   exact: true,
+  //   name: "catalog",
+  //   component: <Catalog />,
+  // },
   {
     path: "/dashboard",
     excat: true,
@@ -111,7 +111,7 @@ const routes = [
     component: <FormulaV2 />,
   },
   {
-    path: "/new-catalog",
+    path: "/catalog",
     exact: true,
     name: "catalog",
     component: <Catlog />,

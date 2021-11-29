@@ -226,7 +226,7 @@ export default function AddItem({
               </div>
             </Col>
             <Col md={24} className="text-end mt-3">
-              <Button
+              {/* <Button
                 type="link"
                 danger
                 className="radius-30 px-4 me-2 btn-width"
@@ -235,7 +235,7 @@ export default function AddItem({
                 size="large"
               >
                 Delete Items
-              </Button>
+              </Button> */}
               <Button
                 type="link"
                 className="radius-30 px-4 me-2 btn-width"

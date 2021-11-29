@@ -2427,6 +2427,15 @@ img.preview-logo {
   color: #605b5b;
   font-size: 26px;
 }
+.warning-modal .ant-modal-body {
+  text-align: center;
+}
+.warning-modal .ant-modal-close-x {
+  border: none !important;
+}
+.warning-modal .ant-modal-title {
+  font-size: 20px !important;
+}
 
 .btn-width {
   width: 150px;
@@ -2441,4 +2450,10 @@ img.preview-logo {
 
 .ant-catalog-img .ant-image-mask {
   border-radius: 9px;
+}
+.warning-modal .ant-modal-header {
+  border-bottom: 2px solid #f1f1f1;
+}
+.w-275 {
+  width: 275px;
 }
