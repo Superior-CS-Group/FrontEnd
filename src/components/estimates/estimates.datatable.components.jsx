@@ -27,7 +27,7 @@ export default function Datatable() {
       {
         title: (
           <>
-            Estimate Date <span className="float-end me-2">{drag}</span>
+            Lead Added <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "date",
@@ -235,7 +235,7 @@ export default function Datatable() {
       setState({
         estimateResults: result.data,
       });
-      // console.log(localStorage.getItem("token"));
+      console.log(result.data.Data);
 
       for (let i = 0; i < result.data.Data.length; i++) {
         let estimateData = result.data.Data[i];
@@ -283,7 +283,7 @@ export default function Datatable() {
           date: customerData[0].createdAt.split("T")[0],
           address: customerData[0].address,
           autoFollowUp: followRemind,
-          estimaitonSent: estimateData.estimaitonSent,
+          estimaitonSent: estimateData.estimaitonSent ? "Yes ": "No",
           estimaitonStatus: customerData[0].estimaitonStatus,
           estimaitonSentDate: estimateData.estimaitonSentDate,
           daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
