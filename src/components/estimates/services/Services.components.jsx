@@ -2,21 +2,33 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import FillterTabs from "../fillterTabs.components";
-import { Card, Table, Modal, Form, Input, Button, Select } from "antd";
+import { Card, Table, Modal, Form, Input, Button } from "antd";
 import { Link, Navigate } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
 import { ellps, Datel } from "../../../utils/svg.file";
 import { createFormula, getAllFormula } from "../../../api/formula";
+import DeleteModal from "../../modal/deleteModal.component";
 
 export default function Services() {
   const [ismadalvisable, setMadalvisable] = useState(false);
   const [data, setData] = useState([]);
+  const [filtredData, setFiltredData] = useState([]);
   const [title, setTitle] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   React.useEffect(() => {
     fetchFormula();
   }, []);
-
+  const handleDeleteData = () => {
+    setShowDeleteModal(true);
+  };
+  const handleDeleteOk = () => {
+    setShowDeleteModal(false);
+  };
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
   async function fetchFormula() {
     const result = await getAllFormula();
     if (result.remote === "success") {
@@ -29,6 +41,7 @@ export default function Services() {
         };
       });
       setData(data);
+      setFiltredData(data);
     }
     console.log(result);
   }
@@ -38,11 +51,6 @@ export default function Services() {
   const handleCancel = () => {
     setMadalvisable(false);
   };
-  const { Option } = Select;
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
 
   async function handleCreateFormula(e) {
     e.preventDefault();
@@ -98,7 +106,12 @@ export default function Services() {
               {view}
             </Link>
             &nbsp;
-            <span className="me-2 cursor-btn del-btn-svg">{Datel}</span>
+            <span
+              className="me-2 cursor-btn del-btn-svg"
+              onClick={handleDeleteData}
+            >
+              {Datel}
+            </span>
           </>
         );
       },
@@ -113,6 +126,14 @@ export default function Services() {
         selectedRows
       );
     },
+  };
+
+  const handleFilterService = (e) => {
+    const { value } = e.target;
+    const filtredData = data.filter((item) => {
+      return item.title.toLowerCase().includes(value.toLowerCase());
+    });
+    setFiltredData(filtredData);
   };
 
   if (redirect) {
@@ -130,11 +151,12 @@ export default function Services() {
         <FillterTabs
           name="Default View"
           placeholder="Search services by name"
+          onChange={handleFilterService}
         />
         <div className="p-2 ant-table-seprate">
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={filtredData}
             className="ant-table-color ant-th-style scroll-style munscher"
             rowSelection={rowSelection}
             pagination={false}
@@ -169,6 +191,12 @@ export default function Services() {
           </div> */}
         </div>
       </Card>
+      {/* <DeleteModal
+        handleDeleteData={handleDeleteData}
+        ShowDeleteModal={showDeleteModal}
+        handleCancel={handleDeleteClose}
+        handleDeleteOk={handleDeleteOk}
+      /> */}
       <Modal
         title="Create new Service"
         visible={ismadalvisable}

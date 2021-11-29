@@ -12,7 +12,14 @@ const typeOfOptions = [
   { type: "result_locked", title: "Result (Locked)" },
 ];
 
-function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
+function ElementCard({
+  element,
+  handleChange,
+  idx,
+  elementList,
+  onFocusOut,
+  handleRemoveElement,
+}) {
   const { Option } = Select;
   const [unit, setUnit] = React.useState([]);
   const [view, setView] = React.useState([]);
@@ -84,72 +91,78 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
       case "prefilled":
         return (
           <>
-            <Col md={8} className="mb-3">
-              <label>Enter Prefilled Amount</label>
-            </Col>
-            <Col md={16}>
-              <Input
-                placeholder="0"
-                className="ant-furmulla-input"
-                onChange={(e) =>
-                  handleChange(e.target.value, e.target.name, idx)
-                }
-                value={element.value}
-                name="value"
-                onBlur={onFocusOut}
-                type="number"
-              />
-            </Col>
+            <Row gutter={[24, 0]} className="mb-3">
+              <Col md={8} className="mb-3">
+                <label>Enter Prefilled Amount</label>
+              </Col>
+              <Col md={16}>
+                <Input
+                  placeholder="0"
+                  className="ant-furmulla-input"
+                  onChange={(e) =>
+                    handleChange(e.target.value, e.target.name, idx)
+                  }
+                  value={element.value}
+                  name="value"
+                  onBlur={onFocusOut}
+                  type="number"
+                />
+              </Col>
+            </Row>
           </>
         );
       case "result_editable":
         return (
           <>
-            <Col md={8}>
-              <label>Formula(editable)</label>
-            </Col>
-            <Col md={16}>
-              <ReactMentionInput
-                className="ant-furmulla-input"
-                elementList={elementList.map((element) => ({
-                  display: element.name,
-                  id: element._id,
-                }))}
-                onChange={(e) => {
-                  e = { target: { ...e.target, name: "value" } };
-                  handleChange(e.target.value, e.target.name, idx);
-                }}
-                placeholder="Enter Formula use '@' for the dynamic values"
-                value={element.value}
-                onBlur={onFocusOut}
-                noMaterial
-              />
-            </Col>
+            <Row gutter={[24, 0]} className="mb-3">
+              <Col md={8}>
+                <label>Formula(editable)</label>
+              </Col>
+              <Col md={16}>
+                <ReactMentionInput
+                  className="ant-furmulla-input"
+                  elementList={elementList.map((element) => ({
+                    display: element.name,
+                    id: element._id,
+                  }))}
+                  onChange={(e) => {
+                    e = { target: { ...e.target, name: "value" } };
+                    handleChange(e.target.value, e.target.name, idx);
+                  }}
+                  placeholder="Enter Formula use '@' for the dynamic values"
+                  value={element.value}
+                  onBlur={onFocusOut}
+                  noMaterial
+                />
+              </Col>
+            </Row>
           </>
         );
       case "result_locked":
         return (
           <>
-            <Col md={8}>
-              <label>Formula(locked)</label>
-            </Col>
-            <Col md={16}>
-              <ReactMentionInput
-                className="ant-furmulla-input"
-                elementList={elementList.map((element) => ({
-                  display: element.name,
-                  id: element._id,
-                }))}
-                onChange={(e) => {
-                  e = { target: { ...e.target, name: "value" } };
-                  handleChange(e.target.value, e.target.name, idx);
-                }}
-                placeholder="Enter Formula use '@' for the dynamic values"
-                value={element.value}
-                onBlur={onFocusOut}
-                noMaterial
-              />
-            </Col>
+            <Row gutter={[24, 0]} className="mb-3">
+              <Col md={8}>
+                <label>Formula(locked)</label>
+              </Col>
+              <Col md={16}>
+                <ReactMentionInput
+                  className="ant-furmulla-input"
+                  elementList={elementList.map((element) => ({
+                    display: element.name,
+                    id: element._id,
+                  }))}
+                  onChange={(e) => {
+                    e = { target: { ...e.target, name: "value" } };
+                    handleChange(e.target.value, e.target.name, idx);
+                  }}
+                  placeholder="Enter Formula use '@' for the dynamic values"
+                  value={element.value}
+                  onBlur={onFocusOut}
+                  noMaterial
+                />
+              </Col>
+            </Row>
           </>
         );
       default:
@@ -163,9 +176,14 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
           !element.automatic ? "ant-cover-success" : "ant-cover-gray"
         } px-2 py-4`}
       >
-        <span className="delect">
-          <DeleteOutlined className="text-danger" onClick={DeleteModal} />
-        </span>
+        {!element.disabled && (
+          <span className="delect">
+            <DeleteOutlined
+              className="text-danger"
+              onClick={() => handleRemoveElement(idx)}
+            />
+          </span>
+        )}
         <div className="ant-automic">{element.auto}</div>
         {/* <span className="ant-edit-furmulla">
           <EditOutlined />
@@ -194,7 +212,7 @@ function ElementCard({ element, handleChange, idx, elementList, onFocusOut }) {
             <Select
               className="select-w"
               size="large"
-              defaultValue={element.type}
+              value={element.type}
               style={{ width: "100%" }}
               onChange={(value) => {
                 handleChange(value, "type", idx);

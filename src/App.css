@@ -8,7 +8,7 @@ body {
 .login-bg {
   background: url("../src/images/bg-login.png") no-repeat center top;
   background-size: cover;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .radius-40 {
@@ -1981,7 +1981,7 @@ ul.work-scope-list li {
 
   font-weight: 500;
   font-size: 17.4728px;
-  line-height: 20px;
+  line-height: 23px;
   color: #fff;
   cursor: pointer;
 }
@@ -2417,4 +2417,12 @@ img.preview-logo {
   max-width: 100px;
   max-height: 100px;
   margin-top: 20px;
+}
+.pass-key-btn {
+  color: #1890ff;
+  font-size: 17px;
+}
+.bg-color-icon {
+  color: #605b5b;
+  font-size: 26px;
 }

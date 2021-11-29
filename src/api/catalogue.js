@@ -25,7 +25,7 @@ export async function getCatalogItem() {
 
 export async function getVariationsByCatalogId(id) {
   const response = await api.request({
-    url: `/v2/catalog/get-allVariation-by-catalog/${id}`,
+    url: `/v2/catalog/get-all-variation-by-catalog?catalogId=${id}`,
     method: "GET",
   });
   return response;
