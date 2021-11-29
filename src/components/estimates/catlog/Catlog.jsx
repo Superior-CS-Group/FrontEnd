@@ -8,7 +8,6 @@ import {
   CloseCircleOutlined,
   UpCircleFilled,
   DownCircleFilled,
-  EditTwoTone,
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
@@ -136,6 +135,7 @@ export default function Catlog() {
     const newElements = [];
     filtredCatalogItem.forEach((element) => {
       newElements.push({
+        images: element.images,
         key: element._id,
         _id: element._id,
         name: element.name,
@@ -391,7 +391,7 @@ export default function Catlog() {
                               <div className="ant-catalog-img">
                                 <Image
                                   preview={{ visible: false }}
-                                  src={log}
+                                  src={record.images[0] || log}
                                   onClick={() => setVisible(true)}
                                   alt=""
                                 />
@@ -402,9 +402,9 @@ export default function Catlog() {
                                       onVisibleChange: (vis) => setVisible(vis),
                                     }}
                                   >
-                                    <Image src={log} />
-                                    <Image src={log} />
-                                    <Image src={log} />
+                                    {record.images.map((image, idx) => (
+                                      <Image src={image} key={idx} alt="" />
+                                    ))}
                                   </Image.PreviewGroup>
                                 </div>
                               </div>
