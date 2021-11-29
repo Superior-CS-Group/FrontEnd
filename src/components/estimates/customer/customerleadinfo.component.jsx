@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Select, Tabs, Button, Card, Switch } from "antd";
+import { Row, Col, Select, Tabs, Button, Card, Switch,message } from "antd";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
 import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -106,8 +106,9 @@ export default function CustomerLeadInfo() {
         ...state,
         errors: [],
         autoReminderEmail: e,
-        message: "Data Updated!",
+        // message: "Data Updated!",
       });
+      message.success("Data Updated!", 5);
     } else {
       setState({
         ...state,
@@ -132,8 +133,9 @@ export default function CustomerLeadInfo() {
         ...state,
         errors: [],
         estimaitonStatus: e,
-        message: "Data Updated!",
+        // message: "Data Updated!",
       });
+      message.success("Data Updated!", 5);
     } else {
       setState({
         ...state,

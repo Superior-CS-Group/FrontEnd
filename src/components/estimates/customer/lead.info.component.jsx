@@ -46,7 +46,7 @@ export default function LeadInfo() {
       const body = { id };
       const fetchData = async () => {
         const result = await postData(`customer/get-info`, body);
-
+         
         // setResponseData(result.data);
         // console.log(responseData.Data.address);
         setState({
