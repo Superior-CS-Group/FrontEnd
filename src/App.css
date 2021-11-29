@@ -2426,3 +2426,12 @@ img.preview-logo {
   color: #605b5b;
   font-size: 26px;
 }
+.warning-modal .ant-modal-body {
+  text-align: center;
+}
+.warning-modal .ant-modal-close-x {
+  border: none;
+}
+.warning-modal .warning-modal{
+  font-size: 20px;
+}

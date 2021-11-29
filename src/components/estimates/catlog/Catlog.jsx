@@ -22,6 +22,7 @@ import {
   getVariationsByCatalogId,
 } from "../../../api/catalogue";
 import CatalogServices from "./catalog.services";
+import AddService from "./addService.component";
 
 export default function Catlog() {
   const [title, setTitle] = useState("Sub Category");
@@ -33,6 +34,10 @@ export default function Catlog() {
   const [isLoadingVariation, setIsLoadingVariation] = useState(null);
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
+  const [isAddService, setIsAddService] = useState(false);
+  const handleAddModal = () => {
+    setIsAddService(true);
+  };
   const handelUpdate = () => {
     setIsUpdate(!isUpdate);
   };
@@ -103,9 +108,11 @@ export default function Catlog() {
   };
   const handleOk = () => {
     setIsModal(false);
+    setIsAddService(false);
   };
 
   const handleCancel = () => {
+    setIsAddService(false);
     setIsModal("");
   };
 
@@ -388,7 +395,10 @@ export default function Catlog() {
                 <Tab.Pane eventKey="second">
                   <div className="p-2">
                     <div className="fillter d-lg-flex align-items-center">
-                      <span className="ant-blue-plus me-4">
+                      <span
+                        className="ant-blue-plus me-4"
+                        onClick={handleAddModal}
+                      >
                         <PlusCircleOutlined
                           style={{ fontSize: "18px" }}
                           className="me-2"
@@ -431,6 +441,15 @@ export default function Catlog() {
         handleOk={handleOk}
         handleCancel={handleCancel}
         content={renderItem()}
+        width={575}
+      />
+      <AddService
+        title={title}
+        handleAddModal={handleAddModal}
+        isAddService={isAddService}
+        // isModal={isModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
         width={575}
       />
     </>

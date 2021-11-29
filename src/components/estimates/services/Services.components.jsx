@@ -15,13 +15,15 @@ export default function Services() {
   const [filtredData, setFiltredData] = useState([]);
   const [title, setTitle] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
 
   React.useEffect(() => {
     fetchFormula();
   }, []);
   const handleDeleteData = () => {
     setShowDeleteModal(true);
+    console.log("hdfjhsdfjfs");
+    alert("chrck nwrew");
   };
   const handleDeleteOk = () => {
     setShowDeleteModal(false);
@@ -191,12 +193,13 @@ export default function Services() {
           </div> */}
         </div>
       </Card>
-      {/* <DeleteModal
+      <DeleteModal
         handleDeleteData={handleDeleteData}
-        ShowDeleteModal={showDeleteModal}
+        ShowDeleteModal={ShowDeleteModal}
         handleCancel={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
-      /> */}
+        content={<>You are about to delete all the catalog</>}
+      />
       <Modal
         title="Create new Service"
         visible={ismadalvisable}
