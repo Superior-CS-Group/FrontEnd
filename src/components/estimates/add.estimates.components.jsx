@@ -26,7 +26,12 @@ import {
 } from "@ant-design/icons";
 import { drag, ellps, eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
-import { searchFormulaByName } from "../../api/formula";
+import {
+  createUserEstimation,
+  searchFormulaByName,
+  getUserEstimation,
+  updateUserEstimation,
+} from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
 import DeleteModal from "../modal/deleteModal.component";
@@ -44,7 +49,7 @@ export default function AddEstimates(props) {
   const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
-
+  const [estimationId, setEstimationId] = React.useState(null);
   const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
 
@@ -183,6 +188,20 @@ export default function AddEstimates(props) {
       ),
     },
   ];
+
+  React.useEffect(() => {
+    fetchPrevFormula();
+  }, []);
+
+  async function fetchPrevFormula() {
+    const fetched = await getUserEstimation(props.custInfo.id);
+    console.log("fetched: ", fetched.data.data);
+    if (fetched.remote === "success" && fetched.data.data.length > 0) {
+      setSelectedFormulas(fetched.data.data[0].services);
+      setEstimationId(fetched.data.data[0]._id);
+    }
+  }
+
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
@@ -328,14 +347,25 @@ export default function AddEstimates(props) {
       return [];
     }
   }
-  const genExtra = () => (
-    <CloseCircleFilled
-      // onClick={(event) => {
-      //   event.stopPropagation();
-      // }}
-      onClick={DeleteModal}
-    />
-  );
+
+  async function handleSaveEstimations() {
+    const body = { services: selectedFormulas, userId: props.custInfo.id };
+    console.log({ body, props });
+    if (estimationId) {
+      const updated = await updateUserEstimation(estimationId, body);
+      console.log(updated);
+    } else {
+      await createUserEstimation(body);
+    }
+  }
+
+  const genExtra = () => <CloseCircleFilled onClick={handleRemoveService} />;
+
+  const handleRemoveService = (index) => {
+    const newSelectedFormulas = [...selectedFormulas];
+    newSelectedFormulas.splice(index, 1);
+    setSelectedFormulas(newSelectedFormulas);
+  };
   return (
     <>
       <div className="">
@@ -782,7 +812,7 @@ export default function AddEstimates(props) {
         </Row>
       </div>
       <div className="ant-floating">
-        <Button type="primary">
+        <Button type="primary" onClick={handleSaveEstimations}>
           <SaveOutlined />
         </Button>
       </div>
