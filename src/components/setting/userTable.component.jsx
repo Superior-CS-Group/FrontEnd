@@ -1,24 +1,20 @@
-import React, { useEffect, useState, Component } from "react";
-import { Table, Checkbox, Button, Modal, Radio } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Badge, Tooltip, Input } from "antd";
 import ReactDragListView from "react-drag-listview";
-import { Datel, drag, edit } from "../../utils/svg.file";
-// import Material from "./material.components";
-// import Services from "./services.components";
+import { drag } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
-import { getData, postData } from "../../utils/fetchApi.js";
-import { deleteCatalog } from "../../api/catalogue";
+import { postData } from "../../utils/fetchApi.js";
 import { getUserList } from "../../api/admin.js";
+import { LockOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 
-export default function UserTable() {
+import ChangePasswordUser from "../modal/changePassword.component";
+export default function UserTable(props) {
   const params = useParams();
 
+  const [isModalShow, setIsModalShow] = useState(false);
   const [state, setState] = useState({
     columns: [
-      // {
-      //   title: <Checkbox />,
-      //   dataIndex: "key",
-      // },
-
       {
         title: (
           <>
@@ -59,11 +55,13 @@ export default function UserTable() {
         ),
         dataIndex: "cdate",
       },
-      // {
-      //   title: "Action",
-      //   dataIndex: "action",
-      // },
+      {
+        title: "Status",
+        dataIndex: "Status",
+      },
     ],
+    data: [],
+    filtredData: [],
   });
 
   // const that = state;
@@ -80,21 +78,12 @@ export default function UserTable() {
     nodeSelector: "th",
   };
 
-  const deleteServiceHandleSubmit = async (id) => {
-    // console.log(id);
-
-    const body = {
-      _id: id,
-    };
-    // console.log("body: ", body);
-  };
-
   useEffect(() => {
     const data = [];
 
     const fetchData = async () => {
       const body = { type: "service" };
-      const result = await postData(`services/list-by-type`, body);
+      await postData(`services/list-by-type`, body);
 
       const result2 = await getUserList();
       console.log(result2.data, "result2   result2");
@@ -109,54 +98,83 @@ export default function UserTable() {
           currency: catalogueData.currency,
           timeZone: catalogueData.timeZone,
           cdate: catalogueData.createdAt.split("T")[0],
-          // action: (
-          //   <>
-          //     {" "}
-          //     <Button className="ant-edit-button me-3" onClick={showModal}>
-          //       <span className="me-2">{edit}</span> Edit
-          //     </Button>
-          //     <Button danger className="ant-danger-button">
-          //       <span className="me-2">{Datel}</span>{" "}
-          //       <span
-          //         className="align-text"
-          //         onClick={deleteServiceHandleSubmit(catalogueData._id)}
-          //       >
-          //         Delete
-          //       </span>
-          //     </Button>
-          //   </>
-          // ),
+          Status: (
+            <>
+              <Badge
+                className="cursor-btn site-badge-count-109 me-2"
+                count="Activate"
+                style={{ backgroundColor: "#52c41a" }}
+              />
+              <Tooltip title="Change Password">
+                <LockOutlined
+                  className="cursor-btn pass-key-btn"
+                  onClick={showModalPassword}
+                />
+              </Tooltip>
+            </>
+          ),
         });
       }
       // console.log("data: ", data);
-      setState({ ...state, data });
+      setState({ ...state, data, filtredData: data });
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
-  const showModal = () => {
-    setState({
-      visible: true,
-    });
+  const showModalPassword = () => {
+    setIsModalShow(true);
   };
 
-  const hideModal = () => {
-    setState({
-      visible: false,
+  const handleOk = () => {
+    setIsModalShow(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalShow(false);
+  };
+
+  const handleFilterData = (e) => {
+    const { value } = e.target;
+    const filtredData = state.data.filter((item) => {
+      return (
+        item.companyName.toLowerCase().includes(value.toLowerCase()) ||
+        item.email.toLowerCase().includes(value.toLowerCase())
+      );
     });
+    setState({ ...state, filtredData });
   };
 
   return (
     <>
+      <div className="p-3 card-shadow pe-4 ps-5">
+        <div className="fillter d-lg-flex align-items-center">
+          <div className="ms-auto col-lg-3">
+            <Input
+              placeholder="Search by User "
+              text="search"
+              className="ant-search-button"
+              suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
+              onChange={handleFilterData}
+            />
+          </div>
+        </div>
+      </div>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
           className="ant-table-color"
           columns={state.columns}
           pagination={false}
-          dataSource={state.data}
+          dataSource={state.filtredData}
           bordered={false}
         />
       </ReactDragListView.DragColumn>
+      <ChangePasswordUser
+        showModalPassword={showModalPassword}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        isModalShow={isModalShow}
+      />
     </>
   );
 }
