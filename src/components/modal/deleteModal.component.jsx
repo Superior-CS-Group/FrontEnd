@@ -3,7 +3,6 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { deleteCustomerLead } from "../../api/delete";
 
 const { confirm } = Modal;
-
 export default function DeleteModal(removeId, table, updateData, props) {
   // confirm({
   //   title: "Do you Want to delete these items?",
@@ -21,8 +20,13 @@ export default function DeleteModal(removeId, table, updateData, props) {
   //   },
   // });
 
-  <Modal title="Warning!" visible={props.ShowDeleteModal} onOk={props.handleOk}>
-    <p>{props.content}</p>
+  <Modal
+  // title="Warning!"
+  // visible={props.showDeleteModal}
+  // onCancel={props.handleDeleteClose}
+  // onOk={props.handleDeleteOk}
+  >
+    {/* <p>{props.content}</p> */}
     <Row>
       <Col md={12}>
         <Button>Cancel</Button>
