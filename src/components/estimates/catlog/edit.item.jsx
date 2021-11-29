@@ -7,7 +7,7 @@ import { validateCreateItemInput } from "../../../validators/catalog/catalog.val
 import { createCatalogItem, createVariation } from "../../../api/catalogue";
 import { fileToBase64 } from "../../../utils/fileBase64";
 
-export default function AddItem({
+export default function EditItem({
   handleCancel,
   selectedSubCatalog,
   setSelectedSubCatalog,
@@ -226,7 +226,7 @@ export default function AddItem({
               </div>
             </Col>
             <Col md={24} className="text-end mt-3">
-              {/* <Button
+              <Button
                 type="link"
                 danger
                 className="radius-30 px-4 me-2 btn-width"
@@ -235,7 +235,7 @@ export default function AddItem({
                 size="large"
               >
                 Delete Items
-              </Button> */}
+              </Button>
               <Button
                 type="link"
                 className="radius-30 px-4 me-2 btn-width"

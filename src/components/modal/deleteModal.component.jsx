@@ -37,7 +37,9 @@ export default function DeleteModal(props, removeId, table, updateData) {
         <p>{props.content}</p>
         <Row>
           <Col md={12} className="text-center">
-            <Button type="text">Cancel</Button>
+            <Button type="text" onClick={props.handleDeleteClose}>
+              Cancel
+            </Button>
           </Col>
           <Col md={12}>
             <Button type="link">Delete</Button>

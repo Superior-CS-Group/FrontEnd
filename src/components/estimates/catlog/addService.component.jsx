@@ -129,12 +129,10 @@ export default function AddService(
                     className="ant-furmulla-input radius-30"
                     name="name"
                     onChange={handleInputChange}
-                    value={itemDetails.name}
                   />
-                  <span className="text-danger small">{errors.name}</span>
                 </Form.Item>
               </Col>
-              <Col md={12}>
+              <Col md={8}>
                 <Form.Item label="Hours">
                   <Input
                     prefix={<DollarCircleOutlined />}
@@ -143,14 +141,11 @@ export default function AddService(
                     className="ant-furmulla-input radius-30"
                     name="Hours"
                     onChange={handleInputChange}
-                    type="number"
-                    min="1"
-                    value={itemDetails.price}
+                    type="text"
                   />
-                  <span className="text-danger small">{errors.price}</span>
                 </Form.Item>
               </Col>
-              <Col md={12}>
+              <Col md={8}>
                 <Form.Item label="Days" className="ant-smily-select">
                   <Input
                     className="ant-furmulla-input radius-30"
@@ -158,24 +153,19 @@ export default function AddService(
                     size="large"
                     name="Days"
                     onChange={handleInputChange}
-                    value={itemDetails.unit}
                   />
-                  <span className="text-danger small">{errors.unit}</span>
                 </Form.Item>
               </Col>
-              <Col md={24}>
+              <Col md={8}>
                 <Form.Item label="Production Rate">
                   <Input
                     className="ant-furmulla-input radius-30"
                     placeholder="Production Rate"
                     size="large"
-                    name="Production Rate"
+                    name="Production"
                     onChange={handleInputChange}
                     type="text"
-                    min="1"
-                    value={itemDetails.quantity}
                   />
-                  <span className="text-danger small">{errors.quantity}</span>
                 </Form.Item>
               </Col>
 

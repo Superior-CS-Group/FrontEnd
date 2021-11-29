@@ -22,8 +22,6 @@ export default function Services() {
   }, []);
   const handleDeleteData = () => {
     setShowDeleteModal(true);
-    console.log("hdfjhsdfjfs");
-    alert("chrck nwrew");
   };
   const handleDeleteOk = () => {
     setShowDeleteModal(false);
@@ -196,9 +194,9 @@ export default function Services() {
       <DeleteModal
         handleDeleteData={handleDeleteData}
         ShowDeleteModal={ShowDeleteModal}
-        handleCancel={handleDeleteClose}
+        handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
-        content={<>You are about to delete all the catalog</>}
+        content={<>You are about to delete all the Service</>}
       />
       <Modal
         title="Create new Service"
