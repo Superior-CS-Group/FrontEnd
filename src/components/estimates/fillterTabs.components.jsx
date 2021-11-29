@@ -77,6 +77,11 @@ export default function FillterTabs(props) {
               text="search"
               className="ant-search-button"
               suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
+              onChange={(e) => {
+                if (props.onChange) {
+                  props.onChange(e);
+                }
+              }}
             />
           </div>
         </div>
