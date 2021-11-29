@@ -564,10 +564,6 @@ export default function LeadInfo() {
                     name="spousePhone"
                     value={state.spousePhone}
                     onChange={handleAllChange}
-<<<<<<< HEAD
-                    
-=======
->>>>>>> 2ab18839f8fae2125a145af813e258d6c610182b
                   />
                 </Form.Item>
               </Col>
