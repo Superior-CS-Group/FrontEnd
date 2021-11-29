@@ -24,7 +24,7 @@ import {
   CloseCircleOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { drag, ellps, eye } from "../../utils/svg.file";
+import { eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 import {
   createUserEstimation,
@@ -34,7 +34,6 @@ import {
 } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
-import DeleteModal from "../modal/deleteModal.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -191,6 +190,7 @@ export default function AddEstimates(props) {
 
   React.useEffect(() => {
     fetchPrevFormula();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchPrevFormula() {
@@ -263,10 +263,11 @@ export default function AddEstimates(props) {
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
-          title: `@{{catalog||${item._id}||${item.title}}}`,
+          title: `@{{catalog||${item._id}||${item.name}}}`,
           price: item.price,
         };
       });
+      console.log("userMateriasl: ", usedMaterials);
       usedMaterials.forEach((material) => {
         const regex = new RegExp(escapeRegExp(material.title), "g");
         formula = formula.replace(regex, material.price);
@@ -293,6 +294,7 @@ export default function AddEstimates(props) {
       });
     }
     try {
+      console.log("formuolaSt: ", formula);
       const result = Number(eval(formula).toFixed(2));
       return result;
     } catch (error) {
@@ -314,6 +316,7 @@ export default function AddEstimates(props) {
       let cost =
         quantity *
         processFormula(material.cost || "", material.formula, elements);
+      console.log("charge: ", material.charge);
       let charge = processFormula(
         material.charge.replace("{Cost}", cost) || "",
         material.formula,
@@ -322,7 +325,6 @@ export default function AddEstimates(props) {
 
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
-      console.log(material, "material");
       return { ...material, cost, charge, quantity };
     });
     formula.totalMaterialsCost = totalMaterialsCost;
@@ -577,7 +579,6 @@ export default function AddEstimates(props) {
                             if (element.type === "dropdown") {
                               processDropdown(element.dropdown, element);
                             }
-                            console.log("elelfdsakjlkds: ", element);
                             return (
                               <Col lg={6} span={24} key={idx}>
                                 <Card
@@ -587,10 +588,10 @@ export default function AddEstimates(props) {
                                   }`}
                                   bodyStyle={{ padding: "16px" }}
                                 >
-                                  <div className="text-end drgicon">
+                                  {/* <div className="text-end drgicon">
                                     <span className="me-1">{drag}</span>{" "}
                                     <span>{ellps}</span>
-                                  </div>
+                                  </div> */}
                                   <span>{element.name}</span>
 
                                   <div className="d-flex align-items-center justify-content-between">
