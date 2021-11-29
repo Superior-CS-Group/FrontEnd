@@ -1,167 +1,171 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { useEffect, useState, Component } from "react";
+import { Table, Checkbox, Button, Modal, Radio } from "antd";
+import ReactDragListView from "react-drag-listview";
+import { Datel, drag, edit } from "../../../utils/svg.file";
 
-import FillterTabs from "../fillterTabs.components";
-import { Card, Table, Modal, Form, Input, Button, Select } from "antd";
-import { Link, Navigate } from "react-router-dom";
-import { EyeOutlined } from "@ant-design/icons";
-import { ellps, Datel } from "../../../utils/svg.file";
-import { createFormula, getAllFormula } from "../../../api/formula";
+import { useParams } from "react-router-dom";
+import { getData, postData } from "../../../utils/fetchApi";
+import { deleteCatalog } from "../../../api/catalogue";
 
 export default function CatalogServices() {
-  const [ismadalvisable, setMadalvisable] = useState(false);
-  const [data, setData] = useState([]);
-  const [title, setTitle] = useState("");
-  const [redirect, setRedirect] = useState(false);
-  React.useEffect(() => {
-    fetchFormula();
-  }, []);
+  const params = useParams();
 
-  async function fetchFormula() {
-    const result = await getAllFormula();
-    if (result.remote === "success") {
-      console.log(result.data.data);
-      const data = result.data.data.map((item, idx) => {
-        return {
-          key: idx,
-          ...item,
-          view: <EyeOutlined />,
-        };
-      });
-      setData(data);
-    }
-    console.log(result);
-  }
-  const showModal = () => {
-    setMadalvisable(true);
-  };
-  const handleCancel = () => {
-    setMadalvisable(false);
-  };
-  const { Option } = Select;
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
-
-  async function handleCreateFormula(e) {
-    e.preventDefault();
-    const body = {
-      title,
-    };
-    console.log(body);
-    const result = await createFormula(body);
-    console.log(result);
-    if (result.remote === "success") {
-      console.log("result", result);
-      setRedirect(`/catalog`);
-      // setRedirect(`/v2/formula-tree?formulaId=${result.data.data._id}`);
-    }
-  }
-
-  const columns = [
-    {
-      title: (
-        <>
-          Service Name <span className="float-end">{ellps}</span>
-        </>
-      ),
-      dataIndex: "title",
-      render: (text) => <a>{text} </a>,
-      width: 530,
-    },
-    {
-      title: (
-        <>
-          Formula <span className="float-end">{ellps}</span>
-        </>
-      ),
-      dataIndex: "formula",
-      width: 450,
-    },
-    {
-      key: "_id",
-      width: 300,
-      title: (
-        <Button onClick={showModal} type="primary">
-          Add
-        </Button>
-      ),
-      dataIndex: "view",
-      className: "text-end",
-      render: (view, tags) => {
-        return (
-          <>
-            <Link
-              to={`/v2/formula-tree?formulaId=${tags._id}`}
-              style={{ color: "inherit" }}
-            >
-              {view}
-            </Link>
-            &nbsp;
-            <span className="me-2 cursor-btn del-btn-svg">{Datel}</span>
-          </>
-        );
+  const [state, setState] = useState({
+    columns: [
+      {
+        title: <Checkbox />,
+        dataIndex: "key",
+        width: 50,
       },
-    },
-  ];
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
+      {
+        title: (
+          <>
+            Services Name <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "name",
+        width: 500,
+      },
+      {
+        title: (
+          <>
+            Hours <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "hours",
+        width: 150,
+      },
+      {
+        title: (
+          <>
+            Days <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "days",
+        width: 200,
+      },
+      {
+        title: (
+          <>
+            Production Rate <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "price",
+        width:250,
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        className: "text-nowrap",
+        width: 200,
+      },
+    ],
+  });
+
+  // const that = state;
+  const dragProps = {
+    onDragEnd(fromIndex, toIndex) {
+      const columns = [...state.columns];
+      const item = columns.splice(fromIndex, 1)[0];
+      columns.splice(toIndex, 0, item);
+      setState({
+        ...state,
+        columns,
+      });
     },
+    nodeSelector: "th",
   };
 
-  if (redirect) {
-    return <Navigate to={redirect} />;
-  }
+  const deleteServiceHandleSubmit = async (id) => {
+    console.log(id);
+
+    const body = {
+      _id: id,
+    };
+    console.log("body: ", body);
+    // const updateCustomer = await deleteCatalog(body);
+    // if (updateCustomer.remote === "success") {
+    //   setState({
+    //     ...state,
+    //     message: "Data Deleted!",
+    //   });
+    // } else {
+    //   setState({
+    //     ...state,
+    //     errors: updateCustomer.remote.data.errors,
+    //     isLoading: false,
+    //   });
+    // }
+  };
+
+  useEffect(() => {
+    const data = [];
+
+    const fetchData = async () => {
+      const body = { type: "service" };
+      const result = await postData(`services/list-by-type`, body);
+
+      // console.log(result.data.Data);
+
+      for (let i = 0; i < result.data.Data.length; i++) {
+        let catalogueData = result.data.Data[i];
+        data.push({
+          key: <Checkbox />,
+
+          name: catalogueData.title,
+          hours: catalogueData.hours,
+          days: catalogueData.price,
+          price: catalogueData.price,
+          action: (
+            <>
+              <Button danger className="ant-danger-button me-3">
+                <span className="me-2">{Datel}</span>{" "}
+                <span
+                  className="align-text"
+                  onClick={deleteServiceHandleSubmit(catalogueData._id)}
+                >
+                  Delete
+                </span>
+              </Button>
+              <Button className="ant-edit-button " onClick={showModal}>
+                <span className="me-2">{edit}</span> Edit
+              </Button>
+            </>
+          ),
+        });
+      }
+      // console.log("data: ", data);
+      setState({ ...state, data });
+    };
+    fetchData();
+  }, [params]);
+
+  const showModal = () => {
+    setState({
+      visible: true,
+    });
+  };
+
+  const hideModal = () => {
+    setState({
+      visible: false,
+    });
+  };
+
   return (
     <>
-      <div className="p-2 ant-table-seprate">
+      <ReactDragListView.DragColumn {...dragProps}>
         <Table
-          columns={columns}
-          dataSource={data}
-          className="ant-table-color ant-th-style scroll-style munscher"
-          rowSelection={rowSelection}
+          columns={state.columns}
           pagination={false}
+          dataSource={state.data}
           bordered={false}
-          scroll={{ y: 300 }}
+          className="ant-table-color scroll-style munscher"
+          scroll={{ y: 600 }}
         />
-      </div>
-
-      <Modal
-        title="Create new Service"
-        visible={ismadalvisable}
-        onCancel={handleCancel}
-        footer={false}
-        centered
-        className="radius-20"
-      >
-        <Form layout="vertical">
-          <Form.Item label="Service Name">
-            <Input
-              placeholder="Grading"
-              size="large"
-              className="ant-modal-input"
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item className="text-end mb-0">
-            <Button
-              type="primary"
-              size="large"
-              className="radius-30 ant-primary-btn font-15 px-5"
-              onClick={handleCreateFormula}
-            >
-              Next
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      </ReactDragListView.DragColumn>
+     
     </>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Input, Table, Button } from "antd";
+import { Card, Input, Table, Button, Image } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import {
   PlusCircleOutlined,
@@ -9,8 +9,8 @@ import {
   UpCircleFilled,
   DownCircleFilled,
   EditTwoTone,
-  DeleteTwoTone,
-  PlusCircleTwoTone,
+  DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import SmallLoader from "../../loader/smallLoader";
 import CataLogModal from "./catalog.modal";
@@ -33,6 +33,7 @@ export default function Catlog() {
   const [isLoadingVariation, setIsLoadingVariation] = useState(null);
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
+  const [visible, setVisible] = useState(false);
   const handelUpdate = () => {
     setIsUpdate(!isUpdate);
   };
@@ -50,15 +51,32 @@ export default function Catlog() {
             <>
               <div className="d-flex align-items-center">
                 {" "}
-                <div className="ant-catalog-img me-3 w-64">
-                  <img src={log} alt="" />
+                <div className="ant-catalog-img me-2">
+                  <Image
+                    preview={{ visible: false }}
+                    src={log}
+                    onClick={() => setVisible(true)}
+                    alt=""
+                  />
+                  <div style={{ display: "none" }}>
+                    <Image.PreviewGroup
+                      preview={{
+                        visible,
+                        onVisibleChange: (vis) => setVisible(vis),
+                      }}
+                    >
+                      <Image src={log} />
+                      <Image src={log} />
+                      <Image src={log} />
+                    </Image.PreviewGroup>
+                  </div>
                 </div>
                 <span> {variation.name}</span>
               </div>
             </>
           ),
 
-          price: variation.price,
+          price: `$${variation.price}`,
           quantity: variation.quantity,
           unit: variation.unit,
           description: variation.description,
@@ -68,16 +86,9 @@ export default function Catlog() {
               <Button
                 type="text"
                 shape="circle"
-                className="me-2 d-inline-flex align-items-center justify-content-center"
-              >
-                <DeleteTwoTone />
-              </Button>
-              <Button
-                type="text"
-                shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
               >
-                <EditTwoTone />
+                <EditOutlined className="text-primary" />
               </Button>
             </>
           ),
@@ -128,7 +139,7 @@ export default function Catlog() {
         key: element._id,
         _id: element._id,
         name: element.name,
-        price: element.price,
+        price: element.price ? `$${element.price}` : "",
         quantity: element.quantity,
         description: element.description,
         type: element.type,
@@ -141,7 +152,7 @@ export default function Catlog() {
                 className="me-2 d-inline-flex align-items-center justify-content-center"
                 onClick={() => setSelectedSubCatalog(element._id)}
               >
-                <PlusCircleTwoTone />
+                <PlusCircleOutlined className="text-primary" />
               </Button>
             )}
             <Button
@@ -149,14 +160,14 @@ export default function Catlog() {
               shape="circle"
               className="me-2 d-inline-flex align-items-center justify-content-center"
             >
-              <DeleteTwoTone />
+              <DeleteOutlined className="text-danger" />
             </Button>
             <Button
               type="text"
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
             >
-              <EditTwoTone />
+              <EditOutlined className="text-primary" />
             </Button>
           </>
         ),
@@ -265,58 +276,60 @@ export default function Catlog() {
               </Nav.Item>
             </Nav>
             <div className="p-3 card-shadow ">
-              <div className="p-2">
-                <div className="fillter d-lg-flex align-items-center">
-                  <span
-                    className="ant-blue-plus me-4"
-                    onClick={() => {
-                      setIsModal("subcategory");
-                      setTitle("Sub Category");
-                    }}
-                  >
-                    <PlusCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
-                    Sub Category
-                  </span>
-                  <span
-                    className="ant-blue-plus me-4"
-                    onClick={() => {
-                      setIsModal("additem");
-                      setTitle("Add Item");
-                    }}
-                  >
-                    <PlusCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
-                    Add Item
-                  </span>
-                  <span className="ant-text-danger me-4">
-                    <CloseCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
-                    Delete catalog
-                  </span>
-
-                  <div className="ms-auto col-lg-3">
-                    <Input
-                      placeholder="Search catalog by name"
-                      text="search"
-                      className="ant-search-button"
-                      suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-                      onChange={filterCatalogItems}
-                    />
-                  </div>
-                </div>
-              </div>
               <Tab.Content className="mt-2">
                 <Tab.Pane eventKey="first">
+                  <div className="p-2">
+                    <div className="fillter d-lg-flex align-items-center">
+                      <span
+                        className="ant-blue-plus me-4"
+                        onClick={() => {
+                          setIsModal("subcategory");
+                          setTitle("Sub Category");
+                        }}
+                      >
+                        <PlusCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Sub Category
+                      </span>
+                      <span
+                        className="ant-blue-plus me-4"
+                        onClick={() => {
+                          setIsModal("additem");
+                          setTitle("Add Item");
+                        }}
+                      >
+                        <PlusCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Add Item
+                      </span>
+                      <span className="ant-text-danger me-4">
+                        <CloseCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Delete catalog
+                      </span>
+
+                      <div className="ms-auto col-lg-3">
+                        <Input
+                          placeholder="Search catalog by name"
+                          text="search"
+                          className="ant-search-button"
+                          suffix={
+                            <SearchOutlined style={{ fontSize: "18px" }} />
+                          }
+                          onChange={filterCatalogItems}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <Table
                     bordered={false}
-                    scroll={{ y: 400 }}
+                    scroll={{ y: 700 }}
                     className="components-table-demo-nested  scroll-style"
                     columns={columns}
                     expandable={{
@@ -334,7 +347,9 @@ export default function Catlog() {
                               className="text-center"
                               onClick={() => setSelectedSubCatalog(render._id)}
                             >
-                              <h1>Add Item..</h1>
+                              <h1 className="font-16 mb-0 cursor-btn py-3">
+                                Add Item..
+                              </h1>
                             </div>
                           );
                         }
@@ -354,6 +369,7 @@ export default function Catlog() {
                         if (record.type === "subCatalog") {
                           return expanded ? (
                             <UpCircleFilled
+                              className="font-24"
                               style={{ color: "#3483FA" }}
                               onClick={(e) => {
                                 onExpand(record, e);
@@ -361,6 +377,7 @@ export default function Catlog() {
                             />
                           ) : (
                             <DownCircleFilled
+                              className="font-24"
                               style={{ color: "#3483FA" }}
                               onClick={(e) => {
                                 onExpand(record, e);
@@ -372,7 +389,24 @@ export default function Catlog() {
                           return (
                             <>
                               <div className="ant-catalog-img">
-                                <img src={log} alt="" />
+                                <Image
+                                  preview={{ visible: false }}
+                                  src={log}
+                                  onClick={() => setVisible(true)}
+                                  alt=""
+                                />
+                                <div style={{ display: "none" }}>
+                                  <Image.PreviewGroup
+                                    preview={{
+                                      visible,
+                                      onVisibleChange: (vis) => setVisible(vis),
+                                    }}
+                                  >
+                                    <Image src={log} />
+                                    <Image src={log} />
+                                    <Image src={log} />
+                                  </Image.PreviewGroup>
+                                </div>
                               </div>
                             </>
                           );
@@ -384,6 +418,36 @@ export default function Catlog() {
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
+                  <div className="p-2">
+                    <div className="fillter d-lg-flex align-items-center">
+                      <span className="ant-blue-plus me-4">
+                        <PlusCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Add Services
+                      </span>
+                      {/* <span className="ant-text-danger me-4">
+                        <CloseCircleOutlined
+                          style={{ fontSize: "18px" }}
+                          className="me-2"
+                        />{" "}
+                        Delete catalog
+                      </span> */}
+
+                      <div className="ms-auto col-lg-3">
+                        <Input
+                          placeholder="Search catalog by name"
+                          text="search"
+                          className="ant-search-button"
+                          suffix={
+                            <SearchOutlined style={{ fontSize: "18px" }} />
+                          }
+                          onChange={filterCatalogItems}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <CatalogServices />
                 </Tab.Pane>
                 <Tab.Pane eventKey="three">Comming Soon Packages</Tab.Pane>

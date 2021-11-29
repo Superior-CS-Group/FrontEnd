@@ -1,13 +1,8 @@
 import React from "react";
-import { Row, Col, Progress, Form, Input, Button } from "antd";
-import { star, upload } from "../../../utils/svg.file";
-import {
-  CheckOutlined,
-  CloseOutlined,
-  DollarCircleOutlined,
-} from "@ant-design/icons";
+import { Row, Col, Form, Input, Button } from "antd";
+import { upload } from "../../../utils/svg.file";
+import { CloseOutlined, DollarCircleOutlined } from "@ant-design/icons";
 
-import element from "../../../images/placeholder.jpg";
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
 import { createCatalogItem, createVariation } from "../../../api/catalogue";
 import { fileToBase64 } from "../../../utils/fileBase64";
@@ -128,35 +123,6 @@ export default function AddItem({
   return (
     <>
       <div className="ant-upload-box">
-        <Row gutter={[24, 0]}>
-          {itemDetails.images.map((image, index) => {
-            return (
-              <Col md={6} key={index}>
-                <div className="ant-image-upload">
-                  {/* <span className="ant-star-icon">{star}</span> */}
-                  {/* <span className="ant-star-tick ant-position d-none">
-                    <CheckOutlined />
-                  </span> */}
-                  <span
-                    className="ant-star-delete ant-position"
-                    onClick={() => handleRemoveImage(index)}
-                  >
-                    <CloseOutlined />
-                  </span>
-                  <img src={image} alt="" />
-                </div>
-              </Col>
-            );
-          })}
-          <Col md={6}>
-            <div className="ant-image-upload border-dash">
-              <div className="d-flex align-items-center  justify-content-center h-100 upload-input">
-                <input type="file" onChange={handleImageChange} />
-                {upload}
-              </div>
-            </div>
-          </Col>
-        </Row>
         <Form layout="vertical">
           <Row gutter={[24, 0]}>
             <Col span={24}>
@@ -201,7 +167,22 @@ export default function AddItem({
                 <span className="text-danger small">{errors.unit}</span>
               </Form.Item>
             </Col>
-            {/* <Col md={24}>
+            {/* <Col md={8}>
+              <Form.Item label="Quantity">
+                <Input
+                  className="ant-furmulla-input radius-30"
+                  placeholder="Quantity"
+                  size="large"
+                  name="quantity"
+                  onChange={handleInputChange}
+                  type="number"
+                  min="1"
+                  value={itemDetails.quantity}
+                />
+                <span className="text-danger small">{errors.quantity}</span>
+              </Form.Item>
+            </Col>
+            <Col md={24}>
               <Form.Item label="Description">
                 <TextArea
                   className="ant-furmulla-input radius-30 p-3"
@@ -215,18 +196,59 @@ export default function AddItem({
                 <span className="text-danger small">{errors.description}</span>
               </Form.Item>
             </Col> */}
-            <Col md={24} className="text-end">
+          </Row>
+          <Row gutter={[24, 0]}>
+            {itemDetails.images.map((image, index) => {
+              return (
+                <Col md={6} key={index}>
+                  <div className="ant-image-upload">
+                    {/* <span className="ant-star-icon">{star}</span> */}
+                    {/* <span className="ant-star-tick ant-position d-none">
+                    <CheckOutlined />
+                  </span> */}
+                    <span
+                      className="ant-star-delete ant-position"
+                      onClick={() => handleRemoveImage(index)}
+                    >
+                      <CloseOutlined />
+                    </span>
+                    <img src={image} alt="" />
+                  </div>
+                </Col>
+              );
+            })}
+            <Col md={6}>
+              <div className="ant-image-upload border-dash">
+                <div className="d-flex align-items-center  justify-content-center h-100 upload-input">
+                  <input type="file" onChange={handleImageChange} />
+                  {upload}
+                </div>
+              </div>
+            </Col>
+            <Col md={24} className="text-end mt-3">
               <Button
                 type="link"
-                className="radius-30 px-4 me-2"
+                danger
+                className="radius-30 px-4 me-2 btn-width"
                 onClick={handleClose}
                 disabled={loading}
+                size="large"
+              >
+                Delete Items
+              </Button>
+              <Button
+                type="link"
+                className="radius-30 px-4 me-2 btn-width"
+                onClick={handleClose}
+                disabled={loading}
+                size="large"
               >
                 Cancel
               </Button>
               <Button
                 type="primary"
-                className="radius-30 px-4"
+                size="large"
+                className="radius-30 px-4 btn-width"
                 onClick={handleSave}
                 disabled={loading}
               >

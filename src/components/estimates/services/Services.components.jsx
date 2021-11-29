@@ -7,6 +7,7 @@ import { Link, Navigate } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
 import { ellps, Datel } from "../../../utils/svg.file";
 import { createFormula, getAllFormula } from "../../../api/formula";
+import DeleteModal from "../../modal/deleteModal.component";
 
 export default function Services() {
   const [ismadalvisable, setMadalvisable] = useState(false);
@@ -14,10 +15,20 @@ export default function Services() {
   const [filtredData, setFiltredData] = useState([]);
   const [title, setTitle] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   React.useEffect(() => {
     fetchFormula();
   }, []);
-
+  const handleDeleteData = () => {
+    setShowDeleteModal(true);
+  };
+  const handleDeleteOk = () => {
+    setShowDeleteModal(false);
+  };
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
   async function fetchFormula() {
     const result = await getAllFormula();
     if (result.remote === "success") {
@@ -95,7 +106,12 @@ export default function Services() {
               {view}
             </Link>
             &nbsp;
-            <span className="me-2 cursor-btn del-btn-svg">{Datel}</span>
+            <span
+              className="me-2 cursor-btn del-btn-svg"
+              onClick={handleDeleteData}
+            >
+              {Datel}
+            </span>
           </>
         );
       },
@@ -175,6 +191,12 @@ export default function Services() {
           </div> */}
         </div>
       </Card>
+      {/* <DeleteModal
+        handleDeleteData={handleDeleteData}
+        ShowDeleteModal={showDeleteModal}
+        handleCancel={handleDeleteClose}
+        handleDeleteOk={handleDeleteOk}
+      /> */}
       <Modal
         title="Create new Service"
         visible={ismadalvisable}
