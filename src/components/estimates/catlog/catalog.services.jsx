@@ -1,8 +1,6 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 
-import FillterTabs from "../fillterTabs.components";
-import { Card, Table, Modal, Form, Input, Button, Select } from "antd";
+import { Table, Modal, Form, Input, Button, Select } from "antd";
 import { Link, Navigate } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
 import { ellps, Datel } from "../../../utils/svg.file";
