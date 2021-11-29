@@ -192,20 +192,36 @@ export default function AddEstimates(props) {
     setFormulas(newFormula.data.data);
   }
   async function handleSelectFormula(formula) {
-    const elements = formula.elements;
-    const newElements = [];
-    for (let i = 0; i < elements.length; i++) {
-      if (elements[i].type === "dropdown") {
-        newElements.push({
-          ...elements[i],
-          options: await processDropdown(elements[i].dropdown),
-        });
-      } else {
-        newElements.push(elements[i]);
-      }
-    }
-    formula.elements = newElements;
     console.log("formula: ", formula);
+    formula = {
+      ...formula,
+      elements: formula.elements?.map((element) => ({ ...element })) || [],
+      materials: formula.materials?.map((material) => ({ ...material })) || [],
+    };
+
+    const formulaElements = formula.elements;
+    const newElements = [];
+    console.log("|formulaElements|", formulaElements, formulaElements.length);
+    for (let i = 0; i < formulaElements.length; i++) {
+      console.log("newElements");
+      if (formulaElements[i].type === "dropdown") {
+        const options = await processDropdown(formulaElements[i].dropdown);
+        console.log("options: ", options);
+        newElements.push({
+          ...formulaElements[i],
+          options,
+        });
+        console.log("dropdown", newElements);
+      } else {
+        console.log("not dropdown", formulaElements[i]);
+        newElements.push(formulaElements[i]);
+      }
+      console.log("newElements2 ");
+    }
+    console.log("formulaList2: ", formula);
+
+    formula.elements = newElements;
+    console.log("formulaList: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
   }
   function handleEditField(e, index, subField, subIndex) {
@@ -303,6 +319,7 @@ export default function AddEstimates(props) {
   }
 
   async function processDropdown(id) {
+    console.log("id: ", id);
     const elements = await getVariationsByCatalogId(id);
     console.log(elements);
     if (elements.remote === "success") {

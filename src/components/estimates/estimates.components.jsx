@@ -10,7 +10,6 @@ import {
 import { Button, Card, Select, Input, DatePicker } from "antd";
 import { Nav } from "react-bootstrap";
 
-import fillter from "../../images/fillter.png";
 import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
 import { getData } from "../../utils/fetchApi.js";
@@ -153,32 +152,7 @@ export default class MainEstimates extends Component {
               </Nav.Item>
             </Nav>
           </div>
-          <div className="p-3 card-shadow pe-4 ps-5">
-            <div className="fillter d-lg-flex align-items-center">
-              <span
-                className="inline-block me-5 fillter-btn cursor-btn"
-                onClick={this.showModal}
-              >
-                <img src={fillter} className="me-3" alt="" /> Filter and Sort
-              </span>
 
-              {/* <span className="ant-blue-plus">
-                <PlusCircleOutlined
-                  style={{ fontSize: "18px" }}
-                  className="me-2"
-                />{" "}
-                Add Column
-              </span> */}
-              <div className="ms-auto col-lg-3">
-                <Input
-                  placeholder="Search customers by name"
-                  text="search"
-                  className="ant-search-button"
-                  suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-                />
-              </div>
-            </div>
-          </div>
           <div className="p-2 ant-table-seprate">
             <Datatable />
 

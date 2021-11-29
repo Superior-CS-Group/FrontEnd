@@ -1,20 +1,15 @@
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const isLogin = localStorage.getItem("token");
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isLogin ? (
-          <Component {...props} currentUser={JSON.parse(isLogin)} />
-        ) : (
-          <Redirect to="/dashboard" />
-        )
-      }
-    />
-  );
-};
+function PrivateRoute({ children }) {
+  let auth = localStorage.getItem("token");
+  let location = useLocation();
+
+  if (!auth) {
+    return <Navigate to="/auth" state={{ from: location }} />;
+  }
+
+  return children;
+}
 
 export default PrivateRoute;
