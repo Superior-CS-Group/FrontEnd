@@ -25,7 +25,12 @@ import {
 } from "@ant-design/icons";
 import { eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
-import { createUserEstimation, searchFormulaByName } from "../../api/formula";
+import {
+  createUserEstimation,
+  searchFormulaByName,
+  getUserEstimation,
+  updateUserEstimation,
+} from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
 const { Panel } = Collapse;
@@ -42,7 +47,7 @@ export default function AddEstimates(props) {
   const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
-
+  const [estimationId, setEstimationId] = React.useState(null);
   const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
 
@@ -181,6 +186,20 @@ export default function AddEstimates(props) {
       ),
     },
   ];
+
+  React.useEffect(() => {
+    fetchPrevFormula();
+  }, []);
+
+  async function fetchPrevFormula() {
+    const fetched = await getUserEstimation(props.custInfo.id);
+    console.log("fetched: ", fetched.data.data);
+    if (fetched.remote === "success") {
+      setSelectedFormulas(fetched.data.data[0].services);
+      setEstimationId(fetched.data.data[0]._id);
+    }
+  }
+
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
@@ -334,8 +353,12 @@ export default function AddEstimates(props) {
   async function handleSaveEstimations() {
     const body = { services: selectedFormulas, userId: props.custInfo.id };
     console.log({ body, props });
-    const response = await createUserEstimation(body);
-    console.log("respones: ", response);
+    if (estimationId) {
+      const updated = await updateUserEstimation(estimationId, body);
+      console.log(updated);
+    } else {
+      await createUserEstimation(body);
+    }
   }
 
   const genExtra = () => <CloseCircleFilled />;

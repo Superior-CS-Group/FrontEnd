@@ -67,7 +67,7 @@ export const searchFormulaByName = async (searchString) => {
 
 export const createUserEstimation = async (body) => {
   const response = await api.request({
-    url: "/v2/user-stimation/create-user-estimation",
+    url: "/v2/user-estimation/create-user-estimation",
     method: "POST",
     data: body,
   });
@@ -76,16 +76,17 @@ export const createUserEstimation = async (body) => {
 
 export const updateUserEstimation = async (estimationId, data) => {
   const response = await api.request({
-    url: `/v2/user-stimation/update-user-estimation/:${estimationId}`,
+    url: `/v2/user-estimation/update-user-estimation/${estimationId}`,
     method: "PUT",
     data,
   });
   return response;
 };
 
-export const getUserEstimation = async () => {
+export const getUserEstimation = async (userId) => {
+  console.log("user: ", userId);
   const response = await api.request({
-    url: "/v2/user-stimation/update-user-estimation",
+    url: `/v2/user-estimation/get-user-estimation/${userId}`,
     method: "GET",
   });
   return response;
