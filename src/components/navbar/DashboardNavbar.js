@@ -41,10 +41,10 @@ export default class DashboardNavbar extends Component {
               {" "}
               <NavLink to="/new-catalog">New Catalog</NavLink>
             </Menu.Item>
-            <Menu.Item key="es1">
+            {/* <Menu.Item key="es1">
               {" "}
               <NavLink to="/catalog">Catalog</NavLink>
-            </Menu.Item>
+            </Menu.Item> */}
 
             <Menu.Item key="es2">
               {" "}
