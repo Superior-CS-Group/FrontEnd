@@ -42,7 +42,7 @@ export default function AddEstimates(props) {
   const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
-  
+
   const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
 
@@ -190,25 +190,36 @@ export default function AddEstimates(props) {
     setFormulas(newFormula.data.data);
   }
   async function handleSelectFormula(formula) {
+    console.log("formula: ", formula);
     formula = {
       ...formula,
       elements: formula.elements?.map((element) => ({ ...element })) || [],
       materials: formula.materials?.map((material) => ({ ...material })) || [],
     };
 
-    const elements = formula.elements;
+    const formulaElements = formula.elements;
     const newElements = [];
-    for (let i = 0; i < elements.length; i++) {
-      if (elements[i].type === "dropdown") {
+    console.log("|formulaElements|", formulaElements, formulaElements.length);
+    for (let i = 0; i < formulaElements.length; i++) {
+      console.log("newElements");
+      if (formulaElements[i].type === "dropdown") {
+        const options = await processDropdown(formulaElements[i].dropdown);
+        console.log("options: ", options);
         newElements.push({
-          ...elements[i],
-          options: await processDropdown(elements[i].dropdown),
+          ...formulaElements[i],
+          options,
         });
+        console.log("dropdown", newElements);
       } else {
-        newElements.push(elements[i]);
+        console.log("not dropdown", formulaElements[i]);
+        newElements.push(formulaElements[i]);
       }
+      console.log("newElements2 ");
     }
+    console.log("formulaList2: ", formula);
+
     formula.elements = newElements;
+    console.log("formulaList: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
     setFormulas([]);
   }
@@ -311,6 +322,7 @@ export default function AddEstimates(props) {
   }
 
   async function processDropdown(id) {
+    console.log("id: ", id);
     const elements = await getVariationsByCatalogId(id);
     if (elements.remote === "success") {
       return elements.data.data;

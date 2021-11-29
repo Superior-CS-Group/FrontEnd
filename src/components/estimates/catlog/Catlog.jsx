@@ -39,11 +39,9 @@ export default function Catlog() {
 
   const loadVariations = async (id) => {
     setIsLoadingVariation(id);
-    console.log("id: ", id);
     const response = await getVariationsByCatalogId(id);
     if (response.remote === "success") {
       const variationsResponse = response.data.data;
-      console.log("variationRes: ", variationsResponse);
       const prcessedVariations = variationsResponse.map((variation) => {
         return {
           key: variation._id,
@@ -196,7 +194,9 @@ export default function Catlog() {
   const renderItem = () => {
     switch (isModal) {
       case "subcategory":
-        return <Addelement />;
+        return (
+          <Addelement handleCancel={handleCancel} handelUpdate={handelUpdate} />
+        );
       case "additem":
         return (
           <AddItem

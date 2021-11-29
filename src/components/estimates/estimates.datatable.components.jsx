@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Button } from "antd";
+import { Table, Checkbox, Input } from "antd";
 import ReactDragListView from "react-drag-listview";
-import { drag, Datel, edit } from "../../utils/svg.file";
+import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
+import { SearchOutlined } from "@ant-design/icons";
+
+import fillter from "../../images/fillter.png";
+
 export default function Datatable() {
   const params = useParams();
 
   const [state, setState] = useState({
     estimateResults: [],
     data: [],
-    estimateResults: [],
+    filteredData: [],
     columns: [
       {
         title: <Checkbox />,
@@ -183,7 +187,7 @@ export default function Datatable() {
         dataIndex: "action",
         width: 100,
         fixed: "right",
-        className:"text-center"
+        className: "text-center",
       },
     ],
   });
@@ -262,26 +266,13 @@ export default function Datatable() {
                 className="me-2 cursor-btn"
                 onClick={(e) => {
                   DeleteModal(customerData[0]._id, "customerLead");
-                  // console.log("state: ", state);
-                  // const newData = [...state.data].filter((elem) => {
-                  //   console.log(
-                  //     elem._id !== customerData[0]._id,
-                  //     elem._id,
-                  //     customerData[0]._id
-                  //   );
-                  //   return elem._id !== customerData[0]._id;
-                  // });
-                  // console.log(newData, "data");
-                  // setState({
-                  //   ...state,
-                  //   data: newData,
-                  // });
                 }}
               >
                 {Datel}
               </span>
             </>
           ),
+          filterName: customerData[0].name,
           name: (
             <Link to={`/customer-lead/${customerData[0]._id}`}>
               {customerData[0].name}
@@ -307,19 +298,49 @@ export default function Datatable() {
         });
       }
       // console.log("data: ", data);
-      setState({ ...state, data });
+      setState({ ...state, data, filteredData: data });
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-  console.log("state: ", state);
+
+  const filterData = (e) => {
+    const { value } = e.target;
+    console.log("value: ", value);
+    const filteredData = state.data.filter((item) => {
+      return item.filterName.toLowerCase().includes(value.toLowerCase());
+    });
+    console.log("filterData: ", filteredData);
+    setState({ ...state, filteredData, filter: value });
+  };
+
   return (
     <>
+      <div className="p-3 card-shadow pe-4 ps-5">
+        <div className="fillter d-lg-flex align-items-center">
+          <span
+            className="inline-block me-5 fillter-btn cursor-btn"
+            // onClick={this.showModal}
+          >
+            <img src={fillter} className="me-3" alt="" /> Filter and Sort
+          </span>
+
+          <div className="ms-auto col-lg-3">
+            <Input
+              placeholder="Search customers by name"
+              text="search"
+              className="ant-search-button"
+              suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
+              onChange={filterData}
+            />
+          </div>
+        </div>
+      </div>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
-          
           columns={state.columns}
           pagination={false}
-          dataSource={state.data}
+          dataSource={state.filteredData}
           bordered={false}
           className="ant-table-estmating scroll-style"
           scroll={{ x: 400, y: 500 }}
