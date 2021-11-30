@@ -7,13 +7,14 @@ import { useParams } from "react-router-dom";
 import { getData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
 import { SearchOutlined } from "@ant-design/icons";
+import FilterSorting from "./filter/filter.sorting.component";
 
 import fillter from "../../images/fillter.png";
 
 export default function Datatable(props) {
   const params = useParams();
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [ModalVisible, setModalVisible] = useState(false);
   const [state, setState] = useState({
     estimateResults: [],
     data: [],
@@ -191,7 +192,6 @@ export default function Datatable(props) {
         className: "text-center",
       },
     ],
-  
   });
 
   const [newEstimateData, setNewEstimateData] = useState([]);
@@ -324,13 +324,24 @@ export default function Datatable(props) {
   const handleDeleteClose = () => {
     setShowDeleteModal(false);
   };
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
         <div className="fillter d-lg-flex align-items-center">
           <span
             className="inline-block me-5 fillter-btn cursor-btn"
-            // onClick={this.showModal}
+            onClick={showModal}
           >
             <img src={fillter} className="me-3" alt="" /> Filter and Sort
           </span>
@@ -362,6 +373,13 @@ export default function Datatable(props) {
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
         content={<>You are about to delete all the Service</>}
+      />
+
+      <FilterSorting
+        showModal={showModal}
+        ModalVisible={ModalVisible}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
       />
     </>
   );
