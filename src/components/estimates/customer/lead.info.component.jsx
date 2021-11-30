@@ -3,7 +3,7 @@ import { Collapse, Input, Form, Row, Col, Button, message } from "antd";
 import "react-phone-number-input/style.css";
 import { UserOutlined, CheckOutlined } from "@ant-design/icons";
 import { postData } from "../../../utils/fetchApi.js";
-
+import PhoneInput from 'react-phone-number-input'
 import { useParams, Navigate } from "react-router-dom";
 
 export default function LeadInfo() {
@@ -433,6 +433,12 @@ export default function LeadInfo() {
                     value={state.country}
                     onChange={handleAllChange}
                   />
+                  {/* <PhoneInput
+                    international
+                    defaultCountry="RU"
+                    value={value}
+                    onChange={setValue}
+                  /> */}
                   {/* <div role="alert" class="text-danger">
                     {state.errors.country}
                   </div> */}
