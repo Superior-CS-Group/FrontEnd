@@ -379,8 +379,8 @@ export default function Datatable(props) {
         ShowDeleteModal={ShowDeleteModal}
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
-        deleteEstimateId={deleteEstimateId}
-        deleteEstimateIdx={deleteEstimateIdx}
+        deleteId={deleteEstimateId}
+        deleteIdx={deleteEstimateIdx}
         content={<>Are you sure delete this item?</>}
       />
     </>

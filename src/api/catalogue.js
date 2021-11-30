@@ -57,3 +57,66 @@ export async function searchCatalogByName(name, type) {
   });
   return response;
 }
+
+export async function removeCatalog(data) {
+  const response = await api.request({
+    url: "/v2/catalog/remove-catalog",
+    method: "POST",
+    data,
+  });
+  if (response.remote === "success") {
+    return {
+      remote: response.remote,
+      data: response.data,
+    };
+  }
+  return response;
+}
+
+
+export async function updateCatalog(data) {
+  const response = await api.request({
+    url: "/v2/catalog/update-catalog",
+    method: "POST",
+    data,
+  });
+  if (response.remote === "success") {
+    return {
+      remote: response.remote,
+      data: response.data,
+    };
+  }
+  return response;
+}
+
+
+export async function removeVariation(data) {
+  const response = await api.request({
+    url: "/v2/catalog/remove-variation",
+    method: "POST",
+    data,
+  });
+  if (response.remote === "success") {
+    return {
+      remote: response.remote,
+      data: response.data,
+    };
+  }
+  return response;
+}
+
+
+export async function updateVariation(data) {
+  const response = await api.request({
+    url: "/v2/catalog/update-variation",
+    method: "POST",
+    data,
+  });
+  if (response.remote === "success") {
+    return {
+      remote: response.remote,
+      data: response.data,
+    };
+  }
+  return response;
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Input, Table, Button, Image } from "antd";
+import { Card, Input, Table, Button, Image, message } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import {
   PlusCircleOutlined,
@@ -16,15 +16,20 @@ import CataLogModal from "./catalog.modal";
 import Addelement from "./add.element";
 import AddItem from "./add.item";
 import log from "../../../images/placeholder.jpg";
+import DeleteModal from "../../modal/deleteModal.component";
 import {
   getCatalogItem,
   getVariationsByCatalogId,
+  removeCatalog,
 } from "../../../api/catalogue";
 import CatalogServices from "./catalog.services";
 import AddService from "./addService.component";
 import EditItem from "./edit.item";
 
 export default function Catlog() {
+  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
+  const [ListShowPreview, setListShowPreview] = useState(false);
+  const [deleteCatelogId, setdeleteCatelogId] = useState();
   const [title, setTitle] = useState("Sub Category");
   const [isModal, setIsModal] = useState("");
   const [catalogItem, setCatalogItem] = useState([]);
@@ -176,7 +181,10 @@ export default function Catlog() {
               shape="circle"
               className="me-2 d-inline-flex align-items-center justify-content-center"
             >
-              <DeleteOutlined className="text-danger" />
+              <DeleteOutlined
+                className="text-danger"
+                onClick={(e) => removeCatalogData(element._id)}
+              />
             </Button>
             <Button
               type="text"
@@ -192,6 +200,29 @@ export default function Catlog() {
     setExpandedRowRender(newElements);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtredCatalogItem.length]);
+
+  const removeCatalogData = async (id) => {
+    setdeleteCatelogId(id)
+    setShowDeleteModal(true);
+    
+  };
+
+ 
+  const handleDeleteOk = (id) => {
+    console.log("deleteId", id);
+    const body = { id: id };
+    setShowDeleteModal(false);
+    const response = removeCatalog(body)
+    
+    if (response.remote === "success") {
+      
+    }
+    message.success("Data Deleted", 5);
+    setShowDeleteModal(false);
+  };
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
 
   const columns = [
     {
@@ -501,6 +532,14 @@ export default function Catlog() {
         handleOk={handleOk}
         handleCancel={handleCancel}
         width={575}
+      />
+      <DeleteModal
+        DeleteModalEstimate={removeCatalogData}
+        ShowDeleteModal={ShowDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        handleDeleteOk={handleDeleteOk}
+        deleteId={deleteCatelogId}
+        content={<>You are about to delete all the Service</>}
       />
     </>
   );
