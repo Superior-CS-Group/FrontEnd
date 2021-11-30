@@ -285,7 +285,7 @@ export default function CustomerLeadInfo(props) {
             ) : (
               <div className="card-show mt-3">
                 {console.log("state.resultData", state.resultData)}
-{props.show}
+                {props.show}
                 <EstimationList />
 
                 {/* <AddEstimates

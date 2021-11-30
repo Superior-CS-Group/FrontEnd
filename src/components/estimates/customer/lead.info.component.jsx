@@ -46,7 +46,7 @@ export default function LeadInfo() {
       const body = { id };
       const fetchData = async () => {
         const result = await postData(`customer/get-info`, body);
-         
+
         // setResponseData(result.data);
         // console.log(responseData.Data.address);
         setState({
@@ -72,7 +72,9 @@ export default function LeadInfo() {
           spousePhone: result.data.Data.spouse[0]
             ? result.data.Data.spouse[0].phone
             : "",
-          spouseOtherInfo: result.data.Data.spouse[0] ? result.data.Data.spouse[0].otherInfo:"",
+          spouseOtherInfo: result.data.Data.spouse[0]
+            ? result.data.Data.spouse[0].otherInfo
+            : "",
         });
       };
 
@@ -104,8 +106,7 @@ export default function LeadInfo() {
     if (!state.email) {
       errors.email = "Email Id is  blank";
       message.error(errors.email, 5);
-    }
-    else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
+    } else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
       errors.email = "Email is not valid";
       message.error(errors.email, 5);
     }
@@ -136,7 +137,7 @@ export default function LeadInfo() {
     // if (!this.state.otherInformation) {
     //   errors.otherInformation = "Address is not blank";
     // }
-    
+
     // if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.spouseEmail)) {
     //   errors.spouseEmail = "Email is not valid";
     //   message.error(errors.spouseEmail, 5);

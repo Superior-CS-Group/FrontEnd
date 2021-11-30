@@ -2462,7 +2462,7 @@ img.preview-logo {
 .ant-table-wrapper.components-table-demo-nested.ant-thead-block
   .ant-table-thead {
   display: table-header-group;
-  }
+}
 .status-drop {
   width: 330px;
 }
@@ -2476,3 +2476,8 @@ img.preview-logo {
 /* .status-drop .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
   width: 500px !important;
 } */
+
+.ant-message-notice-content {
+  width: 250px;
+  text-align: left;
+}

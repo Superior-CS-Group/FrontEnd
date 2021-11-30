@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, message,Skeleton } from "antd";
+import { Table, Checkbox, Input, message, Skeleton } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";

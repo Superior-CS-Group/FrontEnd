@@ -5,9 +5,8 @@ import {
   LeftOutlined,
   RightOutlined,
   PlusCircleOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Select, Input, DatePicker } from "antd";
+import { Button, Card, Select, Skeleton } from "antd";
 import { Nav } from "react-bootstrap";
 
 import Datatable from "./estimates.datatable.components";
@@ -29,8 +28,10 @@ export default class MainEstimates extends Component {
     this.setState({
       estimateResults: result.data,
       estimateData: result.data.Data,
+      loading: true,
     });
     // console.log("estimateResults:", this.state.estimateData);
+  
   };
 
   state = {
@@ -88,6 +89,7 @@ export default class MainEstimates extends Component {
                       className="shadow estimate-card m-3"
                       style={{ borderRadius: "10px" }}
                     >
+                    
                       <div className="d-flex align-items-start justify-content-between mb-3">
                         <div className="ant-estimate-text">
                           <span>Estimate</span>
@@ -118,6 +120,7 @@ export default class MainEstimates extends Component {
                           </h3>
                         </div>
                       </div>
+                    
                     </Card>
                   </Link>
                 </>
