@@ -1279,6 +1279,7 @@ input[type="tel"] {
   border-radius: 100%;
   border: 2px solid #1a73e8;
   padding: 5px;
+  font-size: 13px;
 }
 .filter-section-modal-div input {
   border-radius: 20px;
@@ -2457,7 +2458,9 @@ img.preview-logo {
 .w-275 {
   width: 275px;
 }
-
-.ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
-  width: 500px !important;
+.status-drop {
+  width: 330px;
 }
+/* .status-drop .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
+  width: 500px !important;
+} */

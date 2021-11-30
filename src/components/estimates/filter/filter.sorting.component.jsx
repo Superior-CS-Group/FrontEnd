@@ -55,8 +55,9 @@ export default class FilterSorting extends Component {
     return (
       <>
         <Modal
-          width={1000}
-          className="modal-filter"
+          style={{ top: 15 }}
+          // width={1000}
+          className="modal-filter modal-radius"
           visible={this.props.ModalVisible}
           onOk={this.props.handleOk}
           onCancel={this.props.handleCancel}
@@ -64,50 +65,35 @@ export default class FilterSorting extends Component {
         >
           <div className="filter-section-modal-div">
             <div className="head-div-filter d-lg-flex align-items-center">
-              <h3 className="inline-block me-5 mb-4 " onClick={this.showModal}>
+              <h3 className="inline-block me-4 mb-4 " onClick={this.showModal}>
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </h3>
             </div>
 
-            <h5>Sort By</h5>
-            <Row>
-              <Col md={4}></Col>
-              <Col md={20}>
+            <Row gutter={[24, 0]}>
+              <h5>Sort By</h5>
+              <Col md={24}>
                 <Form layout="vertical" autoComplete="off">
-                  <Row>
-                    <Col md={8}>
+                  <Row gutter={[24, 0]}>
+                    <Col md={12}>
                       <Form.Item name="Column" label="Column">
-                        <Select
-                          defaultValue="lucy"
-                          style={{ width: 200 }}
-                          onChange={handleChange}
-                        >
-                          <Option value="jack">Jack</Option>
-                          <Option value="lucy">Lucy</Option>
-                          <Option value="disabled" disabled>
-                            Disabled
-                          </Option>
-                          <Option value="Yiminghe">yiminghe</Option>
+                        <Select defaultValue="lucy" onChange={handleChange}>
+                          <Option value="jack">Column 1</Option>
+                          <Option value="lucy">Column 2</Option>
+
+                          <Option value="Yiminghe">Column 3</Option>
                         </Select>
                       </Form.Item>
                     </Col>
-                    <Col md={8}>
+                    <Col md={12}>
                       <Form.Item name="Column" label="According to">
-                        <Select
-                          defaultValue="lucy"
-                          style={{ width: 200 }}
-                          onChange={handleChange}
-                        >
-                          <Option value="jack">Jack</Option>
-                          <Option value="lucy">Lucy</Option>
-                          <Option value="disabled" disabled>
-                            Disabled
-                          </Option>
-                          <Option value="Yiminghe">yiminghe</Option>
+                        <Select defaultValue="Newest" onChange={handleChange}>
+                          <Option value="jack">Newest</Option>
+                          <Option value="lucy">Oldest</Option>
                         </Select>
                       </Form.Item>
                     </Col>
-                    <Col md={8}>
+                    {/* <Col md={8}>
                       <Form.Item name="Column" label="Sort">
                         <Select
                           defaultValue="lucy"
@@ -122,19 +108,20 @@ export default class FilterSorting extends Component {
                           <Option value="Yiminghe">yiminghe</Option>
                         </Select>
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Form>
               </Col>
             </Row>
             <Divider />
-            <h5>Filter</h5>
+
             <Row>
-              <Col md={4}></Col>
-              <Col md={20}>
+              {" "}
+              <h5>Filter</h5>
+              <Col md={24}>
                 <Form layout="vertical" autoComplete="off">
                   <Row>
-                    <Col md={8}>
+                    {/* <Col md={8}>
                       <Form.Item name="Column" label="Column">
                         <Select
                           defaultValue="lucy"
@@ -167,7 +154,7 @@ export default class FilterSorting extends Component {
                         <Input type="text" placeholder="text..." />
                       </Form.Item>
                     </Col>
-                    <Divider />
+                    <Divider /> */}
                     <Col md={6}>
                       <b>Lead Estatus</b>
                     </Col>
@@ -224,14 +211,14 @@ export default class FilterSorting extends Component {
                         </Col>
                       </Row>
                     </Col>
-                    <Divider />
+                    {/* <Divider />
                     <Col md={6}>
                       <b>Sales Person</b>
                     </Col>
                     <Col md={18}>
                       <Row>
                         <Col md={8}>
-                          {/* <Form.Item name="Column" label="Sales Person"> */}
+
                           <Select
                             defaultValue="lucy"
                             style={{ width: 200 }}
@@ -242,10 +229,9 @@ export default class FilterSorting extends Component {
 
                             <Option value="Yiminghe">yiminghe</Option>
                           </Select>
-                          {/* </Form.Item> */}
                         </Col>
                       </Row>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Form>
               </Col>
@@ -269,7 +255,7 @@ export default class FilterSorting extends Component {
                     />{" "}
                     Clean Filters
                   </span>
-                  <div className="ms-auto col-lg-2">
+                  <div className="ms-auto col-lg-4">
                     <Button
                       ghost
                       type="primary"
