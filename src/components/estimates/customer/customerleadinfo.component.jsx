@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Select, Tabs, Button, Card, Switch,message } from "antd";
+import { Row, Col, Select, Tabs, Button, Card, Switch, message } from "antd";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
 import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -7,10 +7,11 @@ import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
 import LeadInfo from "./lead.info.component";
 import AddEstimates from "../add.estimates.components";
 import { updateCustomerDetails } from "../../../api/customer.js";
+import EstimationList from "../estimation/estimation.list.component.jsx";
 function onChange(checked) {
   console.log(`switch to ${checked}`);
 }
-export default function CustomerLeadInfo() {
+export default function CustomerLeadInfo(props) {
   const params = useParams();
 
   const [state, setState] = useState({
@@ -227,7 +228,7 @@ export default function CustomerLeadInfo() {
 
                       <Select
                         size="large"
-                        className="me-4 ant-bg-primary "
+                        className="me-4 ant-bg-primary status-drop"
                         bordered={false}
                         style={{ fontSize: "14px" }}
                         value={state.estimaitonStatus}
@@ -284,7 +285,10 @@ export default function CustomerLeadInfo() {
             ) : (
               <div className="card-show mt-3">
                 {console.log("state.resultData", state.resultData)}
-                <AddEstimates
+{props.show}
+                <EstimationList />
+
+                {/* <AddEstimates
                   custInfo={{
                     id: state.customerid,
                     name: state.customerName,
@@ -292,7 +296,7 @@ export default function CustomerLeadInfo() {
                     address1: state.customerAddress1,
                     address: state.customerAddress,
                   }}
-                />
+                /> */}
               </div>
             )}
           </Col>

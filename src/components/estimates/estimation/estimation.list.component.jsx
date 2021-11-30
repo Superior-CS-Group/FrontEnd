@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, Skeleton } from "antd";
+import { Table, Checkbox, Input } from "antd";
 import ReactDragListView from "react-drag-listview";
-import { drag, Datel } from "../../utils/svg.file";
+import { drag, Datel } from "../../../utils/svg.file";
 import { useParams } from "react-router-dom";
-import { getData } from "../../utils/fetchApi.js";
-import DeleteModal from "../modal/deleteModal.component";
+import { getData } from "../../../utils/fetchApi";
+import DeleteModal from "../../modal/deleteModal.component";
 import { SearchOutlined } from "@ant-design/icons";
 
-import fillter from "../../images/fillter.png";
+import fillter from "../../../images/fillter.png";
 
-export default function Datatable(props) {
+export default function EstimationList(props) {
   const params = useParams();
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
+  const [ListShowPreview, setListShowPreview] = useState(false);
 
   const [state, setState] = useState({
     estimateResults: [],
@@ -28,16 +29,6 @@ export default function Datatable(props) {
       {
         title: (
           <>
-            Lead Added <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "date",
-        width: 200,
-      },
-
-      {
-        title: (
-          <>
             Customer Name <span className="float-end me-2">{drag}</span>
           </>
         ),
@@ -47,48 +38,13 @@ export default function Datatable(props) {
       {
         title: (
           <>
-            Email Id <span className="float-end me-2">{drag}</span>
+            Estimation No <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "email",
-        width: 300,
-      },
-      {
-        title: (
-          <>
-            Contact No <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "contactNo",
+        dataIndex: "Estimation No",
         width: 200,
       },
-      {
-        title: (
-          <>
-            Address <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "address",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Softwere Follow Up <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "autoFollowUp",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimate Sent <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonSent",
-        width: 200,
-      },
+
       {
         title: (
           <>
@@ -99,90 +55,7 @@ export default function Datatable(props) {
         className: "text-green",
         width: 200,
       },
-      {
-        title: (
-          <>
-            Estimaiton Sent Date <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonSentDate",
-        width: 300,
-      },
-      {
-        title: (
-          <>
-            Days Took To Send Estimate{" "}
-            <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "daysItTookToSendEstimate",
-        width: 300,
-      },
-      {
-        title: (
-          <>
-            Design <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "design",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Design Paed <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "designPaid",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Phone Follow Up <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "noOfPhoneFollowUp",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Last Date Phone Follow Up{" "}
-            <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "lastDatePhoneFollowUp",
-        width: 300,
-      },
-      {
-        title: (
-          <>
-            Email Follow Up <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "noOfEmailFollowUp",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Last Date Email Follow Up{" "}
-            <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "lastDateEmailFollowUp",
-        width: 300,
-      },
-      {
-        title: (
-          <>
-            Close Date <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonCloseDate",
-        width: 200,
-      },
+
       {
         title: "Action",
         dataIndex: "action",
@@ -228,7 +101,9 @@ export default function Datatable(props) {
       setNewEstimateData([...newEstimateData2]);
     }
   }
-
+  const handleShowEstimatePreview = () => {
+    setListShowPreview(true);
+  };
   useEffect(() => {
     const data = [];
     const fetchData = async () => {
@@ -275,7 +150,10 @@ export default function Datatable(props) {
           ),
           filterName: customerData[0].name,
           name: (
-            <Link to={`/customer-lead/${customerData[0]._id}`}>
+            <Link
+              to={`/customer-lead/${customerData[0]._id}`}
+              onClick={handleShowEstimatePreview}
+            >
               {customerData[0].name}
             </Link>
           ),
@@ -325,43 +203,45 @@ export default function Datatable(props) {
   };
   return (
     <>
-      <div className="p-3 card-shadow pe-4 ps-5">
-        <div className="fillter d-lg-flex align-items-center">
-          <span
-            className="inline-block me-5 fillter-btn cursor-btn"
-            // onClick={this.showModal}
-          >
-            <img src={fillter} className="me-3" alt="" /> Filter and Sort
-          </span>
+      <div className="card-shadow p-2">
+        <div className="p-3 card-shadow pe-4 ps-5">
+          <div className="fillter d-lg-flex align-items-center">
+            {/* <span
+              className="inline-block me-5 fillter-btn cursor-btn"
+              // onClick={this.showModal}
+            >
+              <img src={fillter} className="me-3" alt="" /> Filter and Sort
+            </span> */}
 
-          <div className="ms-auto col-lg-3">
-            <Input
-              placeholder="Search customers by name"
-              text="search"
-              className="ant-search-button"
-              suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-              onChange={filterData}
-            />
+            <div className="ms-auto col-lg-3">
+              <Input
+                placeholder="Search customers by name"
+                text="search"
+                className="ant-search-button"
+                suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
+                onChange={filterData}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <ReactDragListView.DragColumn {...dragProps}>
-        <Table
-          columns={state.columns}
-          pagination={false}
-          dataSource={state.filteredData}
-          bordered={false}
-          className="ant-table-estmating scroll-style vertical-align"
-          scroll={{ x: 400, y: 500 }}
+        <ReactDragListView.DragColumn {...dragProps}>
+          <Table
+            columns={state.columns}
+            pagination={false}
+            dataSource={state.filteredData}
+            bordered={false}
+            className="ant-table-estmating scroll-style"
+            scroll={{ x: 400, y: 500 }}
+          />
+        </ReactDragListView.DragColumn>
+        <DeleteModal
+          DeleteModalEstimate={DeleteModalEstimate}
+          ShowDeleteModal={ShowDeleteModal}
+          handleDeleteClose={handleDeleteClose}
+          handleDeleteOk={handleDeleteOk}
+          content={<>You are about to delete all the Service</>}
         />
-      </ReactDragListView.DragColumn>
-      <DeleteModal
-        DeleteModalEstimate={DeleteModalEstimate}
-        ShowDeleteModal={ShowDeleteModal}
-        handleDeleteClose={handleDeleteClose}
-        handleDeleteOk={handleDeleteOk}
-        content={<>You are about to delete all the Service</>}
-      />
+      </div>
     </>
   );
 }
