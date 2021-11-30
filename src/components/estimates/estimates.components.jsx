@@ -8,7 +8,7 @@ import {
   SearchOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Select, Input, DatePicker } from "antd";
+import { Button, Card, Select, Skeleton } from "antd";
 import { Nav } from "react-bootstrap";
 
 import Datatable from "./estimates.datatable.components";
@@ -40,6 +40,7 @@ export default class MainEstimates extends Component {
     this.setState({
       estimateResults: result.data,
       estimateData: result.data.Data,
+      loading: true,
     });
     // console.log("estimateResults:", this.state.estimateData);
   };
