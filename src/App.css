@@ -2485,3 +2485,7 @@ img.preview-logo {
 .ant-catalog-img .ant-image-mask-info {
   font-size: 9px;
 }
+
+.ant-catalog-img .ant-image-mask-info span {
+  display: block;
+}
