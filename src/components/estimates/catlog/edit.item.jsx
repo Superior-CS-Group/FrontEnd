@@ -95,6 +95,7 @@ export default function EditItem(
         response = await createCatalogItem(itemDetails);
         console.log("resposne: ", response);
       }
+
       if (response.remote === "success") {
         setTimeout(() => {
           setLoading(false);
