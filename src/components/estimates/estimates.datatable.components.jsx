@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input } from "antd";
+import { Table, Checkbox, Input, Skeleton } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -12,7 +12,7 @@ import fillter from "../../images/fillter.png";
 
 export default function Datatable() {
   const params = useParams();
-
+  const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     estimateResults: [],
     data: [],
@@ -190,6 +190,7 @@ export default function Datatable() {
         className: "text-center",
       },
     ],
+  
   });
 
   const [newEstimateData, setNewEstimateData] = useState([]);
@@ -283,7 +284,7 @@ export default function Datatable() {
           date: customerData[0].createdAt.split("T")[0],
           address: customerData[0].address,
           autoFollowUp: followRemind,
-          estimaitonSent: estimateData.estimaitonSent ? "Yes ": "No",
+          estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
           estimaitonStatus: customerData[0].estimaitonStatus,
           estimaitonSentDate: estimateData.estimaitonSentDate,
           daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
@@ -338,14 +339,12 @@ export default function Datatable() {
       </div>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
-        
           columns={state.columns}
           pagination={false}
           dataSource={state.filteredData}
           bordered={false}
-          className="ant-table-estmating scroll-style"
+          className="ant-table-estmating scroll-style vertical-align"
           scroll={{ x: 400, y: 500 }}
-          
         />
       </ReactDragListView.DragColumn>
     </>
