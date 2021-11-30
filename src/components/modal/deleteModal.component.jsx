@@ -30,6 +30,8 @@ export default function DeleteModal(props, removeId, table, updateData) {
         visible={props.ShowDeleteModal}
         onCancel={props.handleDeleteClose}
         onOk={props.handleDeleteOk}
+        deleteEstimateId={props.deleteEstimateId}
+        deleteEstimateIdx={props.deleteEstimateIdx}
         footer={null}
         width={350}
         closeIcon={<InfoCircleOutlined />}
@@ -42,7 +44,17 @@ export default function DeleteModal(props, removeId, table, updateData) {
             </Button>
           </Col>
           <Col md={12}>
-            <Button type="link">Delete</Button>
+            <Button
+              type="link"
+              onClick={(e) =>
+                props.handleDeleteOk(
+                  props.deleteEstimateId,
+                  props.deleteEstimateIdx
+                )
+              }
+            >
+              Delete
+            </Button>
           </Col>
         </Row>
       </Modal>
