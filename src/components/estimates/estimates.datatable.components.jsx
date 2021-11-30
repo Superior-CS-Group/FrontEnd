@@ -191,7 +191,6 @@ export default function Datatable(props) {
         className: "text-center",
       },
     ],
-  
   });
 
   const [newEstimateData, setNewEstimateData] = useState([]);

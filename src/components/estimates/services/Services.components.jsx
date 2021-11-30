@@ -157,11 +157,11 @@ export default function Services() {
           <Table
             columns={columns}
             dataSource={filtredData}
-            className="ant-table-color ant-th-style scroll-style munscher"
+            className="ant-table-color ant-th-style scroll-style munscher vertical-align"
             rowSelection={rowSelection}
             pagination={false}
             bordered={false}
-            scroll={{ y: 300 }}
+            scroll={{ y: 500 }}
           />
           {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
             <div className="ms-auto pe-3 ant-select-box ">
