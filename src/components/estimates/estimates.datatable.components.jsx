@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { getData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
 import { SearchOutlined } from "@ant-design/icons";
+import FilterSorting from "./filter/filter.sorting.component";
 
 import fillter from "../../images/fillter.png";
 import { deleteCustomerLead } from "../../api/delete";
@@ -14,6 +15,7 @@ import { deleteCustomerLead } from "../../api/delete";
 export default function Datatable(props) {
   const params = useParams();
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
+  const [ModalVisible, setModalVisible] = useState(false);
   const [deleteEstimateId, setdeleteEstimateId] = useState();
   const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
   const [estimateResults, setdestimateResults] = useState([]);
@@ -342,13 +344,24 @@ export default function Datatable(props) {
   const handleDeleteClose = () => {
     setShowDeleteModal(false);
   };
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
         <div className="fillter d-lg-flex align-items-center">
           <span
             className="inline-block me-5 fillter-btn cursor-btn"
-            // onClick={this.showModal}
+            onClick={showModal}
           >
             <img src={fillter} className="me-3" alt="" /> Filter and Sort
           </span>
@@ -382,6 +395,13 @@ export default function Datatable(props) {
         deleteEstimateId={deleteEstimateId}
         deleteEstimateIdx={deleteEstimateIdx}
         content={<>Are you sure delete this item?</>}
+      />
+
+      <FilterSorting
+        showModal={showModal}
+        ModalVisible={ModalVisible}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
       />
     </>
   );

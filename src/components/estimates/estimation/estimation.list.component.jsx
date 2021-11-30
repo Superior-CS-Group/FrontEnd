@@ -29,10 +29,10 @@ export default function EstimationList(props) {
       {
         title: (
           <>
-            Customer Name <span className="float-end me-2">{drag}</span>
+            Date <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "name",
+        dataIndex: "date",
         width: 200,
       },
       {

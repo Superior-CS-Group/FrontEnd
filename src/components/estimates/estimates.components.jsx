@@ -19,7 +19,7 @@ export default class MainEstimates extends Component {
     this.state = {
       estimateResults: [],
       estimateData: [],
-      loading: false,
+      Tabs: [],
     };
   }
 
@@ -31,9 +31,7 @@ export default class MainEstimates extends Component {
       loading: true,
     });
     // console.log("estimateResults:", this.state.estimateData);
-    setTimeout(() => {
-      this.setState({ loading: false });
-    }, 3000);
+  
   };
 
   state = {
@@ -91,7 +89,7 @@ export default class MainEstimates extends Component {
                       className="shadow estimate-card m-3"
                       style={{ borderRadius: "10px" }}
                     >
-                      {/* <Skeleton loading={this.state.loading} active> */}
+                    
                       <div className="d-flex align-items-start justify-content-between mb-3">
                         <div className="ant-estimate-text">
                           <span>Estimate</span>
@@ -122,7 +120,7 @@ export default class MainEstimates extends Component {
                           </h3>
                         </div>
                       </div>
-                      {/* </Skeleton> */}
+                    
                     </Card>
                   </Link>
                 </>
@@ -147,8 +145,29 @@ export default class MainEstimates extends Component {
                   Default View
                 </Nav.Link>
               </Nav.Item>
+              {this.state.Tabs.map((tabs, index) => {
+                return (
+                  <Nav.Item as="li" key={index}>
+                    <Nav.Link>
+                      <b class="left-curve"></b>
+                      <b class="right-curve"></b>
+                      Tab 1
+                    </Nav.Link>
+                  </Nav.Item>
+                );
+              })}
               <Nav.Item as="li">
-                <Nav.Link>
+                <Nav.Link
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.setState([
+                      ...this.state.Tabs,
+                      { title: "title", value: "" },
+                    ]);
+                    alert("this is trial");
+                    console.log(this.state.Tabs,"check array ")
+                  }}
+                >
                   <b class="left-curve"></b>
                   <b class="right-curve"></b>
                   <span>
