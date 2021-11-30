@@ -2,12 +2,12 @@ import { Col, Input, Row, Select } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
-import DeleteModal from "../../../modal/deleteModal.component";
 import { searchCatalogByName } from "../../../../api/catalogue";
 const typeOfOptions = [
   { type: "manual", title: "Manual Entry" },
   { type: "prefilled", title: "Prefilled but Editable" },
   { type: "dropdown", title: "Dropdown" },
+  { type: "boolean", title: "Boolean" },
   { type: "result_editable", title: "Result (Editable)" },
   { type: "result_locked", title: "Result (Locked)" },
 ];
@@ -51,7 +51,6 @@ function ElementCard({
     searchCatalog();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue]);
-
   const renderSection = () => {
     switch (typeOfElement) {
       case "dropdown":
@@ -73,6 +72,7 @@ function ElementCard({
                     .toLowerCase()
                     .includes(input.toLowerCase());
                 }}
+                value={element.dropdown}
                 onBlur={onFocusOut}
               >
                 {suggestedCatalogs.map((catalog) => (
@@ -87,6 +87,30 @@ function ElementCard({
               </Select>
             </Col>
           </Row>
+        );
+      case "boolean":
+        return (
+          <>
+            <Row gutter={[24, 0]} className="mb-3">
+              <Col md={8}>
+                <label>Element</label>
+              </Col>
+              <Col md={16}>
+                <Select
+                  style={{ width: "100%" }}
+                  value={element.value}
+                  onChange={(value) => handleChange(value, "value", idx)}
+                  onBlur={onFocusOut}
+                >
+                  {elementList.map((element) => (
+                    <Option key={element._id} value={element._id}>
+                      {element.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+            </Row>
+          </>
         );
       case "prefilled":
         return (

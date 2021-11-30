@@ -19,7 +19,6 @@ import {
 import {
   PlusCircleOutlined,
   SaveOutlined,
-  EditOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
   DeleteOutlined,
@@ -211,7 +210,6 @@ export default function AddEstimates(props) {
     setFormulas(newFormula.data.data);
   }
   async function handleSelectFormula(formula) {
-    console.log("formula: ", formula);
     formula = {
       ...formula,
       elements: formula.elements?.map((element) => ({ ...element })) || [],
@@ -242,6 +240,7 @@ export default function AddEstimates(props) {
     formula.elements = newElements;
     console.log("formulaList: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
+    setFormulas([]);
   }
   function handleEditField(e, index, subField, subIndex) {
     const newSelectedFormulas = [...selectedFormulas];
@@ -250,16 +249,34 @@ export default function AddEstimates(props) {
     setSelectedFormulas(newSelectedFormulas);
   }
 
-  function handleEditDropdownField(e, index) {
-    console.log({ e, index });
+  function handleEditDropdownField(e, index, subIndex) {
+    const newSelectedFormula = [...selectedFormulas];
+    const selectedOption = newSelectedFormula[index].elements[
+      subIndex
+    ].options.find((el) => el._id === e);
+    newSelectedFormula[index].elements[subIndex].selected = selectedOption;
+    newSelectedFormula[index].elements[subIndex].value = selectedOption.price;
+    setSelectedFormulas(newSelectedFormula);
+  }
+
+  function handleOptionElement(value, index, subIndex, id) {
+    console.log({ value, index, subIndex });
+    const newSelectedFormula = [...selectedFormulas];
+    const optionalElement = newSelectedFormula[index].elements.find(
+      (elem) => elem._id === id
+    );
+    optionalElement.multiplicationFactor = value;
+    console.log("optionalElement: ", { optionalElement });
+    // newSelectedFormula[index].elements[subIndex] = optionalElement;
+    console.log(newSelectedFormula);
+    setSelectedFormulas(newSelectedFormula);
   }
 
   function escapeRegExp(string) {
     return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
-  function processFormula(formula, materials, elements) {
-    console.log("formula: ", { formula, materials, elements });
+  function processFormula(formula, materials, elements, multiplicationFactor) {
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
@@ -276,16 +293,25 @@ export default function AddEstimates(props) {
 
     if (elements) {
       const usedElements = elements.map((element) => {
+        console.log("elemejt: ", element);
         return {
           title: `@{{element||${element._id}||${element.name}}}`,
-          price: element.value,
+          price: (
+            Number(element.value) *
+            (element.multiplicationFactor === undefined ||
+            element.multiplicationFactor === null
+              ? 1
+              : Number(element.multiplicationFactor))
+          ).toString(),
         };
       });
 
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
+          console.log("formulaBeofreReplace: ", formula, element.price);
           formula = formula.replace(regex, element.price);
+          console.log("formulaAfterReplace: ", formula);
         } catch (error) {
           console.log("regex; ", regex);
           console.log("formula; ", formula);
@@ -294,8 +320,19 @@ export default function AddEstimates(props) {
       });
     }
     try {
-      console.log("formuolaSt: ", formula);
-      const result = Number(eval(formula).toFixed(2));
+      console.log("formuolaSt: ", formula, multiplicationFactor);
+      multiplicationFactor =
+        multiplicationFactor === undefined || multiplicationFactor === null
+          ? 1
+          : multiplicationFactor;
+      console.log({
+        formula,
+        materials,
+        elements,
+        multiplicationFactor,
+      });
+      const result =
+        Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
       return result;
     } catch (error) {
       console.log("error: ", error);
@@ -335,14 +372,13 @@ export default function AddEstimates(props) {
         totalMaterialsCost
       ).toFixed(2)
     );
-    formula.grossProfit = `${profitPercent * 100}%`;
+    formula.grossProfit = `${profitPercent}%`;
     return materials;
   }
 
   async function processDropdown(id) {
     console.log("id: ", id);
     const elements = await getVariationsByCatalogId(id);
-    console.log(elements);
     if (elements.remote === "success") {
       return elements.data.data;
     } else {
@@ -477,8 +513,8 @@ export default function AddEstimates(props) {
                 />
                 <div className="sagision">
                   <ul>
-                    {formulas.map((formula) => (
-                      <li onClick={() => handleSelectFormula(formula)}>
+                    {formulas.map((formula, idx) => (
+                      <li onClick={() => handleSelectFormula(formula, idx)}>
                         {formula.title}
                       </li>
                     ))}
@@ -568,7 +604,12 @@ export default function AddEstimates(props) {
                       extra={[
                         <>
                           ${formula.totalProjectCharge || 0}{" "}
-                          <span className="closeicon-panel">{genExtra()}</span>
+                          <span
+                            className="closeicon-panel"
+                            onClick={() => handleRemoveService(index)}
+                          >
+                            {genExtra()}
+                          </span>
                         </>,
                       ]}
                     >
@@ -587,11 +628,9 @@ export default function AddEstimates(props) {
                                     element.automatic ? "blue-card" : ""
                                   }`}
                                   bodyStyle={{ padding: "16px" }}
+                                  key={idx}
                                 >
-                                  {/* <div className="text-end drgicon">
-                                    <span className="me-1">{drag}</span>{" "}
-                                    <span>{ellps}</span>
-                                  </div> */}
+                                  <div className="text-end drgicon"></div>
                                   <span>{element.name}</span>
 
                                   <div className="d-flex align-items-center justify-content-between">
@@ -614,7 +653,11 @@ export default function AddEstimates(props) {
                                       <Select
                                         style={{ width: "100%" }}
                                         onChange={(value) =>
-                                          handleEditDropdownField(value, idx)
+                                          handleEditDropdownField(
+                                            value,
+                                            index,
+                                            idx
+                                          )
                                         }
                                       >
                                         {element.options?.map((option) => {
@@ -627,6 +670,21 @@ export default function AddEstimates(props) {
                                             </Option>
                                           );
                                         })}
+                                      </Select>
+                                    ) : element.type === "boolean" ? (
+                                      <Select
+                                        style={{ width: "100%" }}
+                                        onChange={(value) =>
+                                          handleOptionElement(
+                                            value,
+                                            index,
+                                            idx,
+                                            element.value
+                                          )
+                                        }
+                                      >
+                                        <Option value={1}>Yes</Option>
+                                        <Option value={0}>No</Option>
                                       </Select>
                                     ) : element.name === "Markup" ? (
                                       <Input
@@ -659,11 +717,12 @@ export default function AddEstimates(props) {
                                         {processFormula(
                                           element.value,
                                           element.formula || [],
-                                          formula.elements
+                                          formula.elements,
+                                          element.multiplicationFactor
                                         )}
                                       </h4>
                                     )}
-                                    <EditOutlined />
+                                    {/* <EditOutlined /> */}
                                   </div>
                                 </Card>
                               </Col>
@@ -763,7 +822,7 @@ export default function AddEstimates(props) {
                 >
                   {variation.map((variation, index) => {
                     return (
-                      <>
+                      <React.Fragment key={index}>
                         <List.Item
                           className="border-0 font-d position-relative"
                           extra={[
@@ -783,7 +842,7 @@ export default function AddEstimates(props) {
                         >
                           <Input placeholder="" style={{ width: "88%" }} />
                         </List.Item>
-                      </>
+                      </React.Fragment>
                     );
                   })}
                 </List>

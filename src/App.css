@@ -1279,6 +1279,7 @@ input[type="tel"] {
   border-radius: 100%;
   border: 2px solid #1a73e8;
   padding: 5px;
+  font-size: 13px;
 }
 .filter-section-modal-div input {
   border-radius: 20px;
@@ -2458,6 +2459,20 @@ img.preview-logo {
   width: 275px;
 }
 
-.ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
-  width: 500px !important;
+.ant-table-wrapper.components-table-demo-nested.ant-thead-block
+  .ant-table-thead {
+  display: table-header-group;
+  }
+.status-drop {
+  width: 330px;
 }
+.vertical-align .ant-table-tbody tr {
+  vertical-align: top;
+}
+.ant-table-wrapper.components-table-demo-nested.ant-thead-block table td {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+/* .status-drop .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
+  width: 500px !important;
+} */

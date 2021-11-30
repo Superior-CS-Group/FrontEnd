@@ -346,7 +346,7 @@ export default function Catlog() {
                   <Table
                     bordered={false}
                     scroll={{ y: 700 }}
-                    className="components-table-demo-nested  scroll-style"
+                    className="components-table-demo-nested  scroll-style "
                     columns={columns}
                     expandable={{
                       expandedRowRender: (render) => {
@@ -485,7 +485,7 @@ export default function Catlog() {
         width={575}
       />
       <AddService
-        title={title}
+        title="Add Service"
         handleAddModal={handleAddModal}
         isAddService={isAddService}
         // isModal={isModal}
