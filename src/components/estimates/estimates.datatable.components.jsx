@@ -10,8 +10,9 @@ import { SearchOutlined } from "@ant-design/icons";
 
 import fillter from "../../images/fillter.png";
 
-export default function Datatable() {
+export default function Datatable(props) {
   const params = useParams();
+  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
 
   const [state, setState] = useState({
     estimateResults: [],
@@ -265,7 +266,7 @@ export default function Datatable() {
               <span
                 className="me-2 cursor-btn"
                 onClick={(e) => {
-                  DeleteModal(customerData[0]._id, "customerLead");
+                  DeleteModalEstimate(customerData[0]._id, "customerLead");
                 }}
               >
                 {Datel}
@@ -283,7 +284,7 @@ export default function Datatable() {
           date: customerData[0].createdAt.split("T")[0],
           address: customerData[0].address,
           autoFollowUp: followRemind,
-          estimaitonSent: estimateData.estimaitonSent ? "Yes ": "No",
+          estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
           estimaitonStatus: customerData[0].estimaitonStatus,
           estimaitonSentDate: estimateData.estimaitonSentDate,
           daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
@@ -313,7 +314,15 @@ export default function Datatable() {
     console.log("filterData: ", filteredData);
     setState({ ...state, filteredData, filter: value });
   };
-
+  const DeleteModalEstimate = () => {
+    setShowDeleteModal(true);
+  };
+  const handleDeleteOk = () => {
+    setShowDeleteModal(false);
+  };
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
@@ -338,16 +347,21 @@ export default function Datatable() {
       </div>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
-        
           columns={state.columns}
           pagination={false}
           dataSource={state.filteredData}
           bordered={false}
           className="ant-table-estmating scroll-style"
           scroll={{ x: 400, y: 500 }}
-          
         />
       </ReactDragListView.DragColumn>
+      <DeleteModal
+        DeleteModalEstimate={DeleteModalEstimate}
+        ShowDeleteModal={ShowDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        handleDeleteOk={handleDeleteOk}
+        content={<>You are about to delete all the Service</>}
+      />
     </>
   );
 }
