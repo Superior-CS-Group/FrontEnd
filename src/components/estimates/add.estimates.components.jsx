@@ -259,11 +259,24 @@ export default function AddEstimates(props) {
     setSelectedFormulas(newSelectedFormula);
   }
 
+  function handleOptionElement(value, index, subIndex, id) {
+    console.log({ value, index, subIndex });
+    const newSelectedFormula = [...selectedFormulas];
+    const optionalElement = newSelectedFormula[index].elements.find(
+      (elem) => elem._id === id
+    );
+    optionalElement.multiplicationFactor = value;
+    console.log("optionalElement: ", { optionalElement });
+    // newSelectedFormula[index].elements[subIndex] = optionalElement;
+    console.log(newSelectedFormula);
+    setSelectedFormulas(newSelectedFormula);
+  }
+
   function escapeRegExp(string) {
     return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
-  function processFormula(formula, materials, elements) {
+  function processFormula(formula, materials, elements, multiplicationFactor) {
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
@@ -280,16 +293,25 @@ export default function AddEstimates(props) {
 
     if (elements) {
       const usedElements = elements.map((element) => {
+        console.log("elemejt: ", element);
         return {
           title: `@{{element||${element._id}||${element.name}}}`,
-          price: element.value,
+          price: (
+            Number(element.value) *
+            (element.multiplicationFactor === undefined ||
+            element.multiplicationFactor === null
+              ? 1
+              : Number(element.multiplicationFactor))
+          ).toString(),
         };
       });
 
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
+          console.log("formulaBeofreReplace: ", formula, element.price);
           formula = formula.replace(regex, element.price);
+          console.log("formulaAfterReplace: ", formula);
         } catch (error) {
           console.log("regex; ", regex);
           console.log("formula; ", formula);
@@ -298,8 +320,19 @@ export default function AddEstimates(props) {
       });
     }
     try {
-      console.log("formuolaSt: ", formula);
-      const result = Number(eval(formula).toFixed(2));
+      console.log("formuolaSt: ", formula, multiplicationFactor);
+      multiplicationFactor =
+        multiplicationFactor === undefined || multiplicationFactor === null
+          ? 1
+          : multiplicationFactor;
+      console.log({
+        formula,
+        materials,
+        elements,
+        multiplicationFactor,
+      });
+      const result =
+        Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
       return result;
     } catch (error) {
       console.log("error: ", error);
@@ -638,6 +671,21 @@ export default function AddEstimates(props) {
                                           );
                                         })}
                                       </Select>
+                                    ) : element.type === "boolean" ? (
+                                      <Select
+                                        style={{ width: "100%" }}
+                                        onChange={(value) =>
+                                          handleOptionElement(
+                                            value,
+                                            index,
+                                            idx,
+                                            element.value
+                                          )
+                                        }
+                                      >
+                                        <Option value={1}>Yes</Option>
+                                        <Option value={0}>No</Option>
+                                      </Select>
                                     ) : element.name === "Markup" ? (
                                       <Input
                                         onChange={(e) => {
@@ -669,7 +717,8 @@ export default function AddEstimates(props) {
                                         {processFormula(
                                           element.value,
                                           element.formula || [],
-                                          formula.elements
+                                          formula.elements,
+                                          element.multiplicationFactor
                                         )}
                                       </h4>
                                     )}
