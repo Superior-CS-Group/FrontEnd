@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input } from "antd";
+import { Table, Checkbox, Input, Button } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import DeleteModal from "../../modal/deleteModal.component";
 import { SearchOutlined } from "@ant-design/icons";
 
 import fillter from "../../../images/fillter.png";
+import { Nav } from "react-bootstrap";
 
 export default function EstimationList(props) {
   const params = useParams();
@@ -20,12 +21,6 @@ export default function EstimationList(props) {
     data: [],
     filteredData: [],
     columns: [
-      {
-        title: <Checkbox />,
-        dataIndex: "key",
-        width: 50,
-      },
-
       {
         title: (
           <>
@@ -204,18 +199,22 @@ export default function EstimationList(props) {
   return (
     <>
       <div className="card-shadow p-2">
-        <div className="p-3 card-shadow pe-4 ps-5">
+        <div className="p-3 card-shadow pe-4">
           <div className="fillter d-lg-flex align-items-center">
-            {/* <span
+            <span
               className="inline-block me-5 fillter-btn cursor-btn"
               // onClick={this.showModal}
             >
-              <img src={fillter} className="me-3" alt="" /> Filter and Sort
-            </span> */}
+              <Link to="#">
+                <Button className="radius-30" type="primary">
+                  Make New Estimation
+                </Button>
+              </Link>
+            </span>
 
             <div className="ms-auto col-lg-3">
               <Input
-                placeholder="Search customers by name"
+                placeholder="Search"
                 text="search"
                 className="ant-search-button"
                 suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
