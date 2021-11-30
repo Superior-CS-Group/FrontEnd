@@ -485,7 +485,7 @@ export default function Catlog() {
         width={575}
       />
       <AddService
-        title={title}
+        title="Add Service"
         handleAddModal={handleAddModal}
         isAddService={isAddService}
         // isModal={isModal}

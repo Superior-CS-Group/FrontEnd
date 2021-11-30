@@ -2458,22 +2458,20 @@ img.preview-logo {
 .w-275 {
   width: 275px;
 }
+
+.ant-table-wrapper.components-table-demo-nested.ant-thead-block
+  .ant-table-thead {
+  display: table-header-group;
+  }
 .status-drop {
   width: 330px;
 }
 .vertical-align .ant-table-tbody tr {
   vertical-align: top;
 }
-
-.components-table-demo-nested .ant-table-tbody {
-  height: 400px;
-}
-
-.components-table-demo-nested
-  .ant-table-tbody
-  .ant-table-expand
-  .ant-table-tbody {
-  height: auto;
+.ant-table-wrapper.components-table-demo-nested.ant-thead-block table td {
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 /* .status-drop .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
   width: 500px !important;

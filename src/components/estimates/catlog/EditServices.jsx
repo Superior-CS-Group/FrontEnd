@@ -1,12 +1,12 @@
 import React from "react";
-import { Row, Col, Progress, Form, Input, Button, Modal } from "antd";
-import { star, upload } from "../../../utils/svg.file";
+import { Row, Col, Form, Input, Button, Modal } from "antd";
+
 import { DollarCircleOutlined } from "@ant-design/icons";
 
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
 import { createCatalogItem, createVariation } from "../../../api/catalogue";
 
-export default function AddService(
+export default function EditService(
   props,
   handleCancel,
   selectedSubCatalog,
@@ -108,7 +108,7 @@ export default function AddService(
       <Modal
         className="modal-radius"
         title={props.title}
-        visible={props.isAddService}
+        visible={props.isEditservices}
         onOk={props.handleOk}
         onCancel={props.handleCancel}
         footer={null}
@@ -124,6 +124,7 @@ export default function AddService(
                     className="ant-furmulla-input radius-30"
                     name="name"
                     onChange={handleInputChange}
+                    defaultValue="Services Name"
                   />
                 </Form.Item>
               </Col>
@@ -137,6 +138,7 @@ export default function AddService(
                     name="Hours"
                     onChange={handleInputChange}
                     type="text"
+                    value="5"
                   />
                 </Form.Item>
               </Col>
@@ -148,6 +150,7 @@ export default function AddService(
                     size="large"
                     name="Days"
                     onChange={handleInputChange}
+                    value="10"
                   />
                 </Form.Item>
               </Col>
@@ -160,11 +163,22 @@ export default function AddService(
                     name="Production"
                     onChange={handleInputChange}
                     type="text"
+                    value="5"
                   />
                 </Form.Item>
               </Col>
 
               <Col md={24} className="text-end">
+                <Button
+                  type="link"
+                  danger
+                  className="radius-30 px-4 me-2 btn-width"
+                  onClick={props.handleCancel}
+                  disabled={loading}
+                  size="large"
+                >
+                  Delete Services
+                </Button>
                 <Button
                   type="link"
                   className="radius-30 px-4 me-2 btn-width"
@@ -181,7 +195,7 @@ export default function AddService(
                   onClick={handleSave}
                   disabled={loading}
                 >
-                  {loading ? "Adding..." : "Add"}
+                  {loading ? "Saving..." : "Save"}
                 </Button>
               </Col>
             </Row>

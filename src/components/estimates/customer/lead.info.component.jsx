@@ -98,23 +98,27 @@ export default function LeadInfo() {
   const validateFields = () => {
     const errors = {};
     if (!state.name) {
-      errors.name = "Customer Name is not blank";
+      errors.name = "Customer Name is  blank";
       message.error(errors.name, 5);
     }
     if (!state.email) {
-      errors.email = "Email Id is not blank";
+      errors.email = "Email Id is  blank";
+      message.error(errors.email, 5);
+    }
+    else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
+      errors.email = "Email is not valid";
       message.error(errors.email, 5);
     }
     if (!state.contactNo) {
-      errors.contactNo = "Contact No is not blank";
+      errors.contactNo = "Contact No is  blank";
       message.error(errors.contactNo, 5);
     }
     if (!state.country) {
-      errors.country = "Country is not blank";
+      errors.country = "Country is  blank";
       message.error(errors.country, 5);
     }
     if (!state.states) {
-      errors.states = "State is not blank";
+      errors.states = "State is  blank";
       message.error(errors.states, 5);
     }
     if (!state.city) {
@@ -122,24 +126,21 @@ export default function LeadInfo() {
       message.error(errors.city, 5);
     }
     if (!state.postalCode) {
-      errors.postalCode = "Postal Code is not blank";
+      errors.postalCode = "Postal Code is  blank";
       message.error(errors.postalCode, 5);
     }
     if (!state.address) {
-      errors.address = "Address is not blank";
+      errors.address = "Address is  blank";
       message.error(errors.address, 5);
     }
     // if (!this.state.otherInformation) {
     //   errors.otherInformation = "Address is not blank";
     // }
-    if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
-      errors.email = "Email is not valid";
-      message.error(errors.email, 5);
-    }
-    if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.spouseEmail)) {
-      errors.spouseEmail = "Email is not valid";
-      message.error(errors.spouseEmail, 5);
-    }
+    
+    // if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.spouseEmail)) {
+    //   errors.spouseEmail = "Email is not valid";
+    //   message.error(errors.spouseEmail, 5);
+    // }
     return {
       errors,
       isValid: !Object.keys(errors).length,
@@ -373,9 +374,9 @@ export default function LeadInfo() {
                     value={state.name}
                     onChange={handleAllChange}
                   />
-                  <div role="alert" class="text-danger">
+                  {/* <div role="alert" class="text-danger">
                     {state.errors.name}
-                  </div>
+                  </div> */}
                 </Form.Item>{" "}
                 <Form.Item label="Email">
                   <Input
@@ -384,9 +385,9 @@ export default function LeadInfo() {
                     value={state.email}
                     onChange={handleAllChange}
                   />
-                  <div role="alert" class="text-danger">
+                  {/* <div role="alert" class="text-danger">
                     {state.errors.email}
-                  </div>
+                  </div> */}
                   <div role="alert" class="text-danger">
                     {state.message}
                   </div>
@@ -404,9 +405,9 @@ export default function LeadInfo() {
                         value={state.contactNo}
                         onChange={handleAllChange}
                       />
-                      <div role="alert" class="text-danger">
+                      {/* <div role="alert" class="text-danger">
                         {state.errors.contactNo}
-                      </div>
+                      </div> */}
                     </Form.Item>
                   </Col>
                   <Col md={12}>
@@ -431,9 +432,9 @@ export default function LeadInfo() {
                     value={state.country}
                     onChange={handleAllChange}
                   />
-                  <div role="alert" class="text-danger">
+                  {/* <div role="alert" class="text-danger">
                     {state.errors.country}
-                  </div>
+                  </div> */}
                 </Form.Item>
                 <Row gutter={[24, 0]}>
                   <Col md={12}>
@@ -444,9 +445,9 @@ export default function LeadInfo() {
                         value={state.city}
                         onChange={handleAllChange}
                       />
-                      <div role="alert" class="text-danger">
+                      {/* <div role="alert" class="text-danger">
                         {state.errors.city}
-                      </div>
+                      </div> */}
                     </Form.Item>
                   </Col>{" "}
                   <Col md={12}>
@@ -457,9 +458,9 @@ export default function LeadInfo() {
                         value={state.states}
                         onChange={handleAllChange}
                       />
-                      <div role="alert" class="text-danger">
+                      {/* <div role="alert" class="text-danger">
                         {state.errors.states}
-                      </div>
+                      </div> */}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -472,9 +473,9 @@ export default function LeadInfo() {
                         value={state.address}
                         onChange={handleAllChange}
                       />
-                      <div role="alert" class="text-danger">
+                      {/* <div role="alert" class="text-danger">
                         {state.errors.address}
-                      </div>
+                      </div> */}
                     </Form.Item>
                   </Col>{" "}
                   <Col md={12}>
@@ -485,9 +486,9 @@ export default function LeadInfo() {
                         value={state.postalCode}
                         onChange={handleAllChange}
                       />
-                      <div role="alert" class="text-danger">
+                      {/* <div role="alert" class="text-danger">
                         {state.errors.postalCode}
-                      </div>
+                      </div> */}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -501,9 +502,9 @@ export default function LeadInfo() {
                     value={state.otherInformation}
                     onChange={handleAllChange}
                   />
-                  <div role="alert" class="text-danger">
+                  {/* <div role="alert" class="text-danger">
                     {state.errors.otherInformation}
-                  </div>
+                  </div> */}
                 </Form.Item>
               </Col>
               <Col md={24}>
@@ -554,9 +555,9 @@ export default function LeadInfo() {
                     value={state.spouseEmail}
                     onChange={handleAllChange}
                   />
-                  <div role="alert" class="text-danger">
+                  {/* <div role="alert" class="text-danger">
                     {state.errors.spouseEmail}
-                  </div>
+                  </div> */}
                 </Form.Item>
                 <Form.Item label="Phone">
                   <Input

@@ -6,17 +6,24 @@ import { Datel, drag, edit } from "../../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi";
 import { deleteCatalog } from "../../../api/catalogue";
+import { EditOutlined } from "@ant-design/icons";
+import EditService from "./EditServices";
 
 export default function CatalogServices() {
-  const params = useParams();
+  const [isEditServices, setIsEditServices] = useState(false);
+  const handleEditservices = () => {
+    setIsEditServices(true);
+  };
+  const handleOk = () => {
+    setIsEditServices(false);
+  };
 
+  const handleCancel = () => {
+    setIsEditServices(false);
+  };
   const [state, setState] = useState({
     columns: [
-      {
-        title: <Checkbox />,
-        dataIndex: "key",
-        width: 50,
-      },
+       
 
       {
         title: (
@@ -52,7 +59,7 @@ export default function CatalogServices() {
           </>
         ),
         dataIndex: "price",
-        width:250,
+        width: 250,
       },
       {
         title: "Action",
@@ -62,6 +69,25 @@ export default function CatalogServices() {
       },
     ],
   });
+  const data = [];
+  for (let i = 0; i < 46; i++) {
+    data.push({
+       
+      name: `Edward King ${i}`,
+      hours: 32,
+      days: 32,
+      price: "5",
+      action: (
+        <Button
+          type="text"
+          shape="circle"
+          className="d-inline-flex align-items-center justify-content-center"
+        >
+          <EditOutlined className="text-primary" onClick={handleEditservices} />
+        </Button>
+      ),
+    });
+  }
 
   // const that = state;
   const dragProps = {
@@ -77,95 +103,26 @@ export default function CatalogServices() {
     nodeSelector: "th",
   };
 
-  const deleteServiceHandleSubmit = async (id) => {
-    console.log(id);
-
-    const body = {
-      _id: id,
-    };
-    console.log("body: ", body);
-    // const updateCustomer = await deleteCatalog(body);
-    // if (updateCustomer.remote === "success") {
-    //   setState({
-    //     ...state,
-    //     message: "Data Deleted!",
-    //   });
-    // } else {
-    //   setState({
-    //     ...state,
-    //     errors: updateCustomer.remote.data.errors,
-    //     isLoading: false,
-    //   });
-    // }
-  };
-
-  useEffect(() => {
-    const data = [];
-
-    const fetchData = async () => {
-      const body = { type: "service" };
-      const result = await postData(`services/list-by-type`, body);
-
-      // console.log(result.data.Data);
-
-      for (let i = 0; i < result.data.Data.length; i++) {
-        let catalogueData = result.data.Data[i];
-        data.push({
-          key: <Checkbox />,
-
-          name: catalogueData.title,
-          hours: catalogueData.hours,
-          days: catalogueData.price,
-          price: catalogueData.price,
-          action: (
-            <>
-              <Button danger className="ant-danger-button me-3">
-                <span className="me-2">{Datel}</span>{" "}
-                <span
-                  className="align-text"
-                  onClick={deleteServiceHandleSubmit(catalogueData._id)}
-                >
-                  Delete
-                </span>
-              </Button>
-              <Button className="ant-edit-button " onClick={showModal}>
-                <span className="me-2">{edit}</span> Edit
-              </Button>
-            </>
-          ),
-        });
-      }
-      // console.log("data: ", data);
-      setState({ ...state, data });
-    };
-    fetchData();
-  }, [params]);
-
-  const showModal = () => {
-    setState({
-      visible: true,
-    });
-  };
-
-  const hideModal = () => {
-    setState({
-      visible: false,
-    });
-  };
-
   return (
     <>
       <ReactDragListView.DragColumn {...dragProps}>
         <Table
           columns={state.columns}
           pagination={false}
-          dataSource={state.data}
+          dataSource={data}
           bordered={false}
-          className="ant-table-color scroll-style munscher"
-          scroll={{ y: 600 }}
+          className="components-table-demo-nested ant-thead-block scroll-style"
+          scroll={{ y: 360 }}
         />
       </ReactDragListView.DragColumn>
-     
+      <EditService
+        title="Edit Service"
+        handleEditservices={handleEditservices}
+        isEditservices={isEditServices}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        width={575}
+      />
     </>
   );
 }

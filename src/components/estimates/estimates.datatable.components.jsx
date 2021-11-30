@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, Skeleton } from "antd";
+import { Table, Checkbox, Input, message,Skeleton } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -10,11 +10,15 @@ import { SearchOutlined } from "@ant-design/icons";
 import FilterSorting from "./filter/filter.sorting.component";
 
 import fillter from "../../images/fillter.png";
+import { deleteCustomerLead } from "../../api/delete";
 
 export default function Datatable(props) {
   const params = useParams();
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
   const [ModalVisible, setModalVisible] = useState(false);
+  const [deleteEstimateId, setdeleteEstimateId] = useState();
+  const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
+  const [estimateResults, setdestimateResults] = useState([]);
   const [state, setState] = useState({
     estimateResults: [],
     data: [],
@@ -192,6 +196,7 @@ export default function Datatable(props) {
         className: "text-center",
       },
     ],
+    deleteEstimateId: "",
   });
 
   const [newEstimateData, setNewEstimateData] = useState([]);
@@ -234,10 +239,10 @@ export default function Datatable(props) {
     const data = [];
     const fetchData = async () => {
       const result = await getData(`estimation/upcoming-estimation`);
-      setState({
+      setdestimateResults({
         estimateResults: result.data,
       });
-      console.log(result.data.Data);
+      // console.log(estimateResults);
 
       for (let i = 0; i < result.data.Data.length; i++) {
         let estimateData = result.data.Data[i];
@@ -267,7 +272,7 @@ export default function Datatable(props) {
               <span
                 className="me-2 cursor-btn"
                 onClick={(e) => {
-                  DeleteModalEstimate(customerData[0]._id, "customerLead");
+                  DeleteModalEstimate(customerData[0]._id, i);
                 }}
               >
                 {Datel}
@@ -315,11 +320,26 @@ export default function Datatable(props) {
     console.log("filterData: ", filteredData);
     setState({ ...state, filteredData, filter: value });
   };
-  const DeleteModalEstimate = () => {
+  const DeleteModalEstimate = (id, idx) => {
+    setdeleteEstimateId(id);
+    setdeleteEstimateIdx(idx);
     setShowDeleteModal(true);
+    console.log("deleteIdx", idx);
   };
-  const handleDeleteOk = () => {
+  const handleDeleteOk = (id, idx) => {
+    console.log("deleteId", id, idx);
+    const body = { id: id };
     setShowDeleteModal(false);
+    // deleteCustomerLead(body)
+    message.success("Data Deleted", 5);
+
+    let restultData = estimateResults.estimateResults.Data;
+    console.log(restultData);
+    if (idx > -1) {
+      restultData.splice(idx, 1);
+    }
+    console.log(restultData);
+    setdestimateResults({ estimateResults: restultData });
   };
   const handleDeleteClose = () => {
     setShowDeleteModal(false);
@@ -372,7 +392,9 @@ export default function Datatable(props) {
         ShowDeleteModal={ShowDeleteModal}
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
-        content={<>You are about to delete all the Service</>}
+        deleteEstimateId={deleteEstimateId}
+        deleteEstimateIdx={deleteEstimateIdx}
+        content={<>Are you sure delete this item?</>}
       />
 
       <FilterSorting
