@@ -285,10 +285,10 @@ export default function CustomerLeadInfo(props) {
             ) : (
               <div className="card-show mt-3">
                 {console.log("state.resultData", state.resultData)}
-{props.show}
-                <EstimationList />
+                {props.show}
+                {/* <EstimationList /> */}
 
-                {/* <AddEstimates
+                <AddEstimates
                   custInfo={{
                     id: state.customerid,
                     name: state.customerName,
@@ -296,7 +296,7 @@ export default function CustomerLeadInfo(props) {
                     address1: state.customerAddress1,
                     address: state.customerAddress,
                   }}
-                /> */}
+                />
               </div>
             )}
           </Col>

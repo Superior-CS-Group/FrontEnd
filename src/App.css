@@ -976,7 +976,7 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   margin-top: -4px;
 }
 .radius-12 {
-  border-radius: 12px;
+  border-radius: 12px !important;
 }
 .count-card span,
 .danger-card span,
@@ -2462,7 +2462,7 @@ img.preview-logo {
 .ant-table-wrapper.components-table-demo-nested.ant-thead-block
   .ant-table-thead {
   display: table-header-group;
-  }
+}
 .status-drop {
   width: 330px;
 }
@@ -2476,3 +2476,24 @@ img.preview-logo {
 /* .status-drop .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
   width: 500px !important;
 } */
+.catlog-tabs li.nav-item a {
+  display: flex;
+  align-items: center;
+}
+
+.catlog-tabs li.nav-item a span {
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.filter-section-modal-div span {
+  font-size: 13px;
+}
+.ant-message-notice-content {
+  width: 250px;
+  text-align: left;
+}
+
+.ant-catalog-img .ant-image-mask-info {
+  font-size: 9px;
+}

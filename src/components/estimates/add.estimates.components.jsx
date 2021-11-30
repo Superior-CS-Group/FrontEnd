@@ -511,7 +511,7 @@ export default function AddEstimates(props) {
                     </span>,
                   ]}
                 />
-                <div className="sagision">
+                <div className="sagision radius-12">
                   <ul>
                     {formulas.map((formula, idx) => (
                       <li onClick={() => handleSelectFormula(formula, idx)}>

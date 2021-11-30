@@ -49,7 +49,7 @@ export default function EditItem(
       unit: "",
       quantity: "",
     });
-    handleCancel();
+    // handleCancel();
   };
 
   const handleImageChange = async (e) => {
@@ -248,7 +248,7 @@ export default function EditItem(
                 <Button
                   type="link"
                   className="radius-30 px-4 me-2 btn-width"
-                  onClick={handleClose}
+                  onClick={props.handleCancel}
                   disabled={loading}
                   size="large"
                 >

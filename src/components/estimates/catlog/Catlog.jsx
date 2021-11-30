@@ -87,7 +87,7 @@ export default function Catlog() {
             </>
           ),
 
-          price: `$${variation.price}`,
+          price: `$${variation.price} ${variation.unit}`,
           quantity: variation.quantity,
           unit: variation.unit,
           description: variation.description,
@@ -156,7 +156,7 @@ export default function Catlog() {
         key: element._id,
         _id: element._id,
         name: element.name,
-        price: element.price ? `$${element.price}` : "",
+        price: element.price ? `$${element.price}  ${element.unit}` : "",
         quantity: element.quantity,
         description: element.description,
         type: element.type,
