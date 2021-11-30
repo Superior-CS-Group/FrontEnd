@@ -10,9 +10,10 @@ import { SearchOutlined } from "@ant-design/icons";
 
 import fillter from "../../images/fillter.png";
 
-export default function Datatable() {
+export default function Datatable(props) {
   const params = useParams();
-  const [loading, setLoading] = useState(false);
+  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
+
   const [state, setState] = useState({
     estimateResults: [],
     data: [],
@@ -266,7 +267,7 @@ export default function Datatable() {
               <span
                 className="me-2 cursor-btn"
                 onClick={(e) => {
-                  DeleteModal(customerData[0]._id, "customerLead");
+                  DeleteModalEstimate(customerData[0]._id, "customerLead");
                 }}
               >
                 {Datel}
@@ -314,7 +315,15 @@ export default function Datatable() {
     console.log("filterData: ", filteredData);
     setState({ ...state, filteredData, filter: value });
   };
-
+  const DeleteModalEstimate = () => {
+    setShowDeleteModal(true);
+  };
+  const handleDeleteOk = () => {
+    setShowDeleteModal(false);
+  };
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
@@ -347,6 +356,13 @@ export default function Datatable() {
           scroll={{ x: 400, y: 500 }}
         />
       </ReactDragListView.DragColumn>
+      <DeleteModal
+        DeleteModalEstimate={DeleteModalEstimate}
+        ShowDeleteModal={ShowDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        handleDeleteOk={handleDeleteOk}
+        content={<>You are about to delete all the Service</>}
+      />
     </>
   );
 }

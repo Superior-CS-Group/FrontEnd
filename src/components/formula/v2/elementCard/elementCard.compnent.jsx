@@ -240,7 +240,7 @@ function ElementCard({
           </Col>
           <Col md={16}>
             <Select
-              defaultValue={element.unit}
+              value={element.unit}
               onChange={(value) => {
                 handleChange(value, "unit", idx);
               }}
@@ -270,7 +270,7 @@ function ElementCard({
               mode="multiple"
               size="large"
               allowClear
-              defaultValue={[...(element.view || [])]}
+              value={[...(element.view || [])]}
               onChange={(e) => handleChange(e, "view", idx)}
               className="select-w"
               style={{ width: "100%" }}
