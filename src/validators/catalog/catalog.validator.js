@@ -11,7 +11,7 @@ export function validateCreateItemInput(input) {
   }
   if (!input.unit) {
     errors.unit = "Unit is required";
-  } else if (isNaN(input.unit)) {
+  } else if (!isNaN(input.unit)) {
     errors.unit = "Invalid Unit";
   }
   // if (!input.quantity) {

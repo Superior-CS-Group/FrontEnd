@@ -15,7 +15,7 @@ export default function Addelement({ handelUpdate, handleCancel }) {
         return;
       }
       const response = await createCatalogItem({ name, type: "subCatalog" });
-      if (response.remote) {
+      if (response.remote === "success") {
         console.log("remteo: ", response);
         setTimeout(() => {
           handelUpdate();
@@ -25,6 +25,7 @@ export default function Addelement({ handelUpdate, handleCancel }) {
       } else {
         console.log("response: ", response);
         setLoading(false);
+        setErrors(response.errors.errors);
       }
     } catch (error) {
       console.log("error", error);
