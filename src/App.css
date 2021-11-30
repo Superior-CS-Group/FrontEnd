@@ -2481,3 +2481,7 @@ img.preview-logo {
   width: 250px;
   text-align: left;
 }
+
+.ant-catalog-img .ant-image-mask-info {
+  font-size: 9px;
+}
