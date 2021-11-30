@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input } from "antd";
+import { Table, Checkbox, Input, Skeleton } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -191,6 +191,7 @@ export default function Datatable(props) {
         className: "text-center",
       },
     ],
+  
   });
 
   const [newEstimateData, setNewEstimateData] = useState([]);
@@ -351,7 +352,7 @@ export default function Datatable(props) {
           pagination={false}
           dataSource={state.filteredData}
           bordered={false}
-          className="ant-table-estmating scroll-style"
+          className="ant-table-estmating scroll-style vertical-align"
           scroll={{ x: 400, y: 500 }}
         />
       </ReactDragListView.DragColumn>

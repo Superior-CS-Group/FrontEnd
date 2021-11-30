@@ -2458,6 +2458,17 @@ img.preview-logo {
   width: 275px;
 }
 
-.ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
-  width: 500px !important;
+.vertical-align .ant-table-tbody tr {
+  vertical-align: top;
+}
+
+.components-table-demo-nested .ant-table-tbody {
+  height: 400px;
+}
+
+.components-table-demo-nested
+  .ant-table-tbody
+  .ant-table-expand
+  .ant-table-tbody {
+  height: auto;
 }
