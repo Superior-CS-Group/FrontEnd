@@ -23,11 +23,7 @@ export default function CatalogServices() {
   };
   const [state, setState] = useState({
     columns: [
-      {
-        title: <Checkbox />,
-        dataIndex: "key",
-        width: 50,
-      },
+       
 
       {
         title: (
@@ -76,7 +72,7 @@ export default function CatalogServices() {
   const data = [];
   for (let i = 0; i < 46; i++) {
     data.push({
-      key: <Checkbox />,
+       
       name: `Edward King ${i}`,
       hours: 32,
       days: 32,

@@ -328,6 +328,7 @@ export default function Datatable(props) {
     console.log("deleteId", id, idx);
     const body = { id: id };
     setShowDeleteModal(false);
+    // deleteCustomerLead(body)
     message.success("Data Deleted", 5);
 
     let restultData = estimateResults.estimateResults.Data;
@@ -336,7 +337,7 @@ export default function Datatable(props) {
       restultData.splice(idx, 1);
     }
     console.log(restultData);
-    setdestimateResults({ ...state, estimateResults: restultData });
+    setdestimateResults({ estimateResults: restultData });
   };
   const handleDeleteClose = () => {
     setShowDeleteModal(false);
