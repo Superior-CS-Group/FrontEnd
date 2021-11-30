@@ -11,7 +11,7 @@ function ReactMentionInput({
   noMaterial,
 }) {
   const handleCatalog = (query, callback) => {
-    return searchCatalogByName(query, "catalog")
+    return searchCatalogByName(query, "catalogAndServices")
       .then((res) => {
         if (res.remote === "success") {
           return res.data.data.map((item) => {

@@ -1,11 +1,8 @@
-import React, { useEffect, useState, Component } from "react";
-import { Table, Checkbox, Button, Modal, Radio } from "antd";
+import React, { useState } from "react";
+import { Table, Button } from "antd";
 import ReactDragListView from "react-drag-listview";
-import { Datel, drag, edit } from "../../../utils/svg.file";
+import { drag } from "../../../utils/svg.file";
 
-import { useParams } from "react-router-dom";
-import { getData, postData } from "../../../utils/fetchApi";
-import { deleteCatalog } from "../../../api/catalogue";
 import { EditOutlined } from "@ant-design/icons";
 import EditService from "./EditServices";
 
@@ -23,8 +20,6 @@ export default function CatalogServices() {
   };
   const [state, setState] = useState({
     columns: [
-       
-
       {
         title: (
           <>
@@ -72,7 +67,6 @@ export default function CatalogServices() {
   const data = [];
   for (let i = 0; i < 46; i++) {
     data.push({
-       
       name: `Edward King ${i}`,
       hours: 32,
       days: 32,
@@ -89,7 +83,6 @@ export default function CatalogServices() {
     });
   }
 
-  // const that = state;
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
       const columns = [...state.columns];
