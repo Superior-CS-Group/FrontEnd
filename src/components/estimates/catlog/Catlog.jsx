@@ -54,6 +54,9 @@ export default function Catlog() {
   const handleAddModal = () => {
     setIsAddService(true);
   };
+  const handleEditCatalog = () => {
+    setIsEditData(true);
+  };
   const handleEditModal = async (id) => {
     console.log(id, "idddddddd");
     const body = { id: id };
@@ -222,7 +225,10 @@ export default function Catlog() {
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
             >
-              <EditOutlined className="text-primary" />
+              <EditOutlined
+                className="text-primary"
+                onClick={handleEditCatalog}
+              />
             </Button>
           </>
         ),
@@ -543,6 +549,7 @@ export default function Catlog() {
       />
       <EditItem
         title={title}
+        handleEditCatalog={handleEditCatalog}
         handleEditModal={handleEditModal}
         IsEditData={IsEditData}
         deleteId={deleteCatelogId}

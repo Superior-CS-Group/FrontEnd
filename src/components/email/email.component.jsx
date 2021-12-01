@@ -271,7 +271,7 @@ export default class EmailSend extends Component {
                                 <DownOutlined />
                               </a>
                             </Dropdown>
-                          </span>
+                          </span>          
                         </Col>
                         <Col md={20}></Col>
                         <Col md={2} className="text-right">
