@@ -24,10 +24,10 @@ export default function EditItem(
 
   const [loading, setLoading] = React.useState(false);
   const [itemDetails, setItemDetails] = React.useState({
-    name: "",
-    price: "",
+    name: props.variationName,
+    price: props.variationPrice,
     description: "",
-    unit: "",
+    unit: props.variationUnit,
     quantity: "",
     images: [],
     type: "catalog",

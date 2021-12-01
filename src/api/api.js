@@ -1,7 +1,7 @@
 import axios from "axios";
 // http://digimonk.net:1629/api
 // http://localhost:5001/api
-const baseURL = "http://localhost:5001/api";
+const baseURL = "http://digimonk.net:1629/api";
 
 const axiosInstance = async () => {
   const instance = axios.create({
