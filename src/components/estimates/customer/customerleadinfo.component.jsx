@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Select, Tabs, Button, Card, Switch, message } from "antd";
-import { useParams } from "react-router-dom";
+import { Row, Col, Select, Button, Card, Switch, message } from "antd";
+import { useParams, useLocation, Link } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
 import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
 // import Button from "@restart/ui/esm/Button";
@@ -8,9 +8,7 @@ import LeadInfo from "./lead.info.component";
 import AddEstimates from "../add.estimates.components";
 import { updateCustomerDetails } from "../../../api/customer.js";
 import EstimationList from "../estimation/estimation.list.component.jsx";
-function onChange(checked) {
-  console.log(`switch to ${checked}`);
-}
+
 export default function CustomerLeadInfo(props) {
   const params = useParams();
 
@@ -28,6 +26,20 @@ export default function CustomerLeadInfo(props) {
     estimaitonStatus: "",
     resultData: [],
   });
+  const [estimaitonId, setEstimationId] = useState("");
+  const { search } = useLocation();
+
+  const [isAddingNew, setIsAddingNew] = useState(false);
+
+  const toggleAddNew = () => {
+    setIsAddingNew(!isAddingNew);
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const query = new URLSearchParams(search);
+    setEstimationId(query.get("estimationId"));
+  }, [search]);
 
   useEffect(() => {
     const id = params.id;
@@ -68,9 +80,11 @@ export default function CustomerLeadInfo(props) {
 
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onChangeTab = (val) => {
+    setIsAddingNew(false);
     if (val === "Lead") {
       setState({
         ...state,
@@ -86,28 +100,20 @@ export default function CustomerLeadInfo(props) {
     }
   };
 
-  const { Option } = Select;
   const { size } = state;
-  function onChange(value) {
-    // console.log(`selected ${value}`);
-  }
 
   const autoReminderEmailHandleSubmit = async (e) => {
-    // console.log(`selected ${e}`);
     let id = params.id;
     const body = {
       id: id,
       autoReminderEmail: e,
     };
-    // console.log("body: ", body);
     const updateCustomer = await updateCustomerDetails(body);
-    // console.log(updateCustomer, "update details");
     if (updateCustomer.remote === "success") {
       setState({
         ...state,
         errors: [],
         autoReminderEmail: e,
-        // message: "Data Updated!",
       });
       message.success("Data Updated!", 5);
     } else {
@@ -120,7 +126,6 @@ export default function CustomerLeadInfo(props) {
   };
 
   const updateStatusHandleSubmit = async (e) => {
-    // console.log(`selected ${e}`);
     let id = params.id;
     const body = {
       id: id,
@@ -128,13 +133,11 @@ export default function CustomerLeadInfo(props) {
     };
     console.log("body: ", body);
     const updateCustomer = await updateCustomerDetails(body);
-    // console.log(updateCustomer, "update details");
     if (updateCustomer.remote === "success") {
       setState({
         ...state,
         errors: [],
         estimaitonStatus: e,
-        // message: "Data Updated!",
       });
       message.success("Data Updated!", 5);
     } else {
@@ -146,49 +149,12 @@ export default function CustomerLeadInfo(props) {
     }
   };
 
-  const updateActiveStatushandleSubmit = async (e) => {
-    // console.log(localStorage.getItem("token"));
-    let id = params.id;
-
-    // setState({ ...state, activeStatus: e, isLoading: true });
-    // console.log("body: activeStatus ", state.activeStatus);
-    let activeStatus1;
-    if (e === "Active") {
-      activeStatus1 = true;
-    } else {
-      activeStatus1 = false;
-    }
-    const body = {
-      id: id,
-      activeStatus: activeStatus1,
-    };
-    // console.log("body: ", body);
-
-    try {
-      await postData(`customer/update-info`, body);
-      setState({
-        ...state,
-        errors: [],
-        activeStatus: e,
-        message: "Data Updated!",
-      });
-    } catch (err) {
-      console.log("error", err, err.response);
-
-      setState({
-        ...state,
-        errors: err.response.data.errors,
-        isLoading: false,
-      });
-    }
-  };
   return (
     <>
       <div className="bg-estimates">
         <div className="heading">
           <h1>Customer Leads</h1>
         </div>
-        {console.log(params.id, "params.id")}
         <Row>
           <Col md={24}>
             <Card
@@ -264,12 +230,14 @@ export default function CustomerLeadInfo(props) {
                       >
                         Lead Info
                       </li>
-                      <li
-                        onClick={() => onChangeTab("Estimate")}
-                        className={!state.tabShow ? "active" : ""}
-                      >
-                        Estimate
-                      </li>
+                      <Link to={`/customer-lead/${params.id}`}>
+                        <li
+                          onClick={() => onChangeTab("Estimate")}
+                          className={!state.tabShow ? "active" : ""}
+                        >
+                          Estimate
+                        </li>
+                      </Link>
                     </ul>
                   </div>
                 </>
@@ -284,19 +252,21 @@ export default function CustomerLeadInfo(props) {
               </div>
             ) : (
               <div className="card-show mt-3">
-                {console.log("state.resultData", state.resultData)}
                 {props.show}
-                {/* <EstimationList /> */}
-
-                <AddEstimates
-                  custInfo={{
-                    id: state.customerid,
-                    name: state.customerName,
-                    email: state.customerEmail,
-                    address1: state.customerAddress1,
-                    address: state.customerAddress,
-                  }}
-                />
+                {!estimaitonId && !isAddingNew ? (
+                  <EstimationList toggleAddNew={toggleAddNew} />
+                ) : (
+                  <AddEstimates
+                    custInfo={{
+                      id: state.customerid,
+                      name: state.customerName,
+                      email: state.customerEmail,
+                      address1: state.customerAddress1,
+                      address: state.customerAddress,
+                    }}
+                    estimationId={estimaitonId}
+                  />
+                )}
               </div>
             )}
           </Col>

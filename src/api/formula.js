@@ -91,3 +91,11 @@ export const getUserEstimation = async (userId) => {
   });
   return response;
 };
+
+export const getUserEstimationDetailsById = async (estimationId) => {
+  const response = await api.request({
+    url: `/v2/user-estimation/get-user-estimation-details-by-id/${estimationId}`,
+    method: "GET",
+  });
+  return response;
+};

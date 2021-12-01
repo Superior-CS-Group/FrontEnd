@@ -1,192 +1,86 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, Button } from "antd";
+import { Table, Input, Button } from "antd";
 import ReactDragListView from "react-drag-listview";
-import { drag, Datel } from "../../../utils/svg.file";
-import { useParams } from "react-router-dom";
-import { getData } from "../../../utils/fetchApi";
+import { drag } from "../../../utils/svg.file";
+import { Link, useParams, useLocation } from "react-router-dom";
 import DeleteModal from "../../modal/deleteModal.component";
 import { SearchOutlined } from "@ant-design/icons";
+import { getUserEstimation } from "../../../api/formula";
 
-import fillter from "../../../images/fillter.png";
-import { Nav } from "react-bootstrap";
-
-export default function EstimationList(props) {
+export default function EstimationList({ toggleAddNew }) {
   const params = useParams();
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
   const [ListShowPreview, setListShowPreview] = useState(false);
+  const [columns, setColumns] = useState([
+    {
+      title: (
+        <>
+          Estimation No <span className="float-end me-2">{drag}</span>
+        </>
+      ),
+      dataIndex: "estimationNumber",
+      width: 200,
+    },
+    {
+      title: (
+        <>
+          Date <span className="float-end me-2">{drag}</span>
+        </>
+      ),
+      dataIndex: "createdAt",
+      width: 200,
+    },
 
-  const [state, setState] = useState({
-    estimateResults: [],
-    data: [],
-    filteredData: [],
-    columns: [
-      {
-        title: (
-          <>
-            Date <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "date",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimation No <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "Estimation No",
-        width: 200,
-      },
+    {
+      title: (
+        <>
+          Status <span className="float-end me-2">{drag}</span>
+        </>
+      ),
+      dataIndex: "status",
+      className: "text-green",
+      width: 200,
+    },
+  ]);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  async function fetchUserFormula() {
+    const fetched = await getUserEstimation(params.id);
+    if (fetched.remote === "success" && fetched.data.data.length) {
+      const newData = fetched.data.data.map((item) => {
+        return {
+          ...item,
+          key: item._id,
+          estimationNumber: (
+            <Link to={`?estimationId=${item._id}`}>
+              {item.estimationNumber}
+            </Link>
+          ),
+          createdAt: item.createdAt.split("T")[0],
+        };
+      });
+      setData(newData);
+      setFilteredData(newData);
+    } else {
+      console.log("fetched: ", fetched);
+    }
+  }
 
-      {
-        title: (
-          <>
-            Status <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonStatus",
-        className: "text-green",
-        width: 200,
-      },
+  useEffect(() => {
+    fetchUserFormula();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-      {
-        title: "Action",
-        dataIndex: "action",
-        width: 100,
-        fixed: "right",
-        className: "text-center",
-      },
-    ],
-  });
-
-  const [newEstimateData, setNewEstimateData] = useState([]);
-
-  // const that = state;
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
-      const columns = [...state.columns];
-      const item = columns.splice(fromIndex, 1)[0];
-      columns.splice(toIndex, 0, item);
-      setState({
-        ...state,
-        columns,
-      });
+      const newColumns = [...columns];
+      const item = newColumns.splice(fromIndex, 1)[0];
+      newColumns.splice(toIndex, 0, item);
+      setColumns(newColumns);
     },
     nodeSelector: "th",
   };
 
-  function handleAllChecked(e, id, name, email) {
-    let newEstimateData1;
-    console.log(e.target.checked, e.target);
-    if (e.target.checked) {
-      newEstimateData1 = {
-        leadId: id,
-        leadName: name,
-        leadEmail: email,
-      };
-
-      setNewEstimateData([...newEstimateData, newEstimateData1]);
-      console.log("newEstimateData", newEstimateData);
-    } else {
-      var newEstimateData2 = newEstimateData.filter(
-        (item) => item.leadId !== id
-      );
-      setNewEstimateData([...newEstimateData2]);
-    }
-  }
-  const handleShowEstimatePreview = () => {
-    setListShowPreview(true);
-  };
-  useEffect(() => {
-    const data = [];
-    const fetchData = async () => {
-      const result = await getData(`estimation/upcoming-estimation`);
-      setState({
-        estimateResults: result.data,
-      });
-      console.log(result.data.Data);
-
-      for (let i = 0; i < result.data.Data.length; i++) {
-        let estimateData = result.data.Data[i];
-        // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
-        let customerData = estimateData.customerLeadId;
-        let followRemind;
-        if (customerData[0].autoReminderEmail === true) {
-          followRemind = "Yes";
-        } else {
-          followRemind = "No";
-        }
-        data.push({
-          key: (
-            <Checkbox
-              onChange={(e) =>
-                handleAllChecked(
-                  e,
-                  customerData[0]._id,
-                  customerData[0].name,
-                  customerData[0].email
-                )
-              }
-            />
-          ),
-          action: (
-            <>
-              <span
-                className="me-2 cursor-btn"
-                onClick={(e) => {
-                  DeleteModalEstimate(customerData[0]._id, "customerLead");
-                }}
-              >
-                {Datel}
-              </span>
-            </>
-          ),
-          filterName: customerData[0].name,
-          name: (
-            <Link
-              to={`/customer-lead/${customerData[0]._id}`}
-              onClick={handleShowEstimatePreview}
-            >
-              {customerData[0].name}
-            </Link>
-          ),
-          email: customerData[0].email,
-          contactNo: customerData[0].contactNo,
-          date: customerData[0].createdAt.split("T")[0],
-          address: customerData[0].address,
-          autoFollowUp: followRemind,
-          estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
-          estimaitonStatus: customerData[0].estimaitonStatus,
-          estimaitonSentDate: estimateData.estimaitonSentDate,
-          daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
-          design: estimateData.design,
-          designPaid: estimateData.designPaid,
-          noOfPhoneFollowUp: estimateData.noOfPhoneFollowUp,
-          lastDatePhoneFollowUp: estimateData.lastDatePhoneFollowUp,
-          noOfEmailFollowUp: estimateData.noOfEmailFollowUp,
-          lastDateEmailFollowUp: estimateData.lastDateEmailFollowUp,
-          estimaitonCloseDate: estimateData.estimaitonCloseDate,
-          _id: customerData[0]._id,
-        });
-      }
-      // console.log("data: ", data);
-      setState({ ...state, data, filteredData: data });
-    };
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
-
-  const filterData = (e) => {
-    const { value } = e.target;
-    console.log("value: ", value);
-    const filteredData = state.data.filter((item) => {
-      return item.filterName.toLowerCase().includes(value.toLowerCase());
-    });
-    console.log("filterData: ", filteredData);
-    setState({ ...state, filteredData, filter: value });
-  };
   const DeleteModalEstimate = () => {
     setShowDeleteModal(true);
   };
@@ -205,11 +99,15 @@ export default function EstimationList(props) {
               className="inline-block me-5 fillter-btn cursor-btn"
               // onClick={this.showModal}
             >
-              <Link to="#">
-                <Button className="radius-30" type="primary">
-                  Make New Estimation
-                </Button>
-              </Link>
+              {/* <Link to="#"> */}
+              <Button
+                className="radius-30"
+                type="primary"
+                onClick={toggleAddNew}
+              >
+                Make New Estimation
+              </Button>
+              {/* </Link> */}
             </span>
 
             <div className="ms-auto col-lg-3">
@@ -218,16 +116,15 @@ export default function EstimationList(props) {
                 text="search"
                 className="ant-search-button"
                 suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-                onChange={filterData}
               />
             </div>
           </div>
         </div>
         <ReactDragListView.DragColumn {...dragProps}>
           <Table
-            columns={state.columns}
+            columns={columns}
             pagination={false}
-            dataSource={state.filteredData}
+            dataSource={filteredData}
             bordered={false}
             className="ant-table-estmating scroll-style"
             scroll={{ x: 400, y: 500 }}

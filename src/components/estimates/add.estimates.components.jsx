@@ -1,7 +1,6 @@
 /* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-// import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import {
   Row,
   Col,
@@ -14,22 +13,23 @@ import {
   Select,
   DatePicker,
   Form,
+  Modal,
 } from "antd";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   PlusCircleOutlined,
   SaveOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
   DeleteOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import { eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 import {
   createUserEstimation,
   searchFormulaByName,
-  getUserEstimation,
   updateUserEstimation,
+  getUserEstimationDetailsById,
 } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
@@ -50,7 +50,8 @@ export default function AddEstimates(props) {
   const [estimationId, setEstimationId] = React.useState(null);
   const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
-
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [selectIndex, setSelectIndex] = React.useState(null);
   const columns = [
     {
       title: "Materials needed:",
@@ -193,11 +194,10 @@ export default function AddEstimates(props) {
   }, []);
 
   async function fetchPrevFormula() {
-    const fetched = await getUserEstimation(props.custInfo.id);
-    console.log("fetched: ", fetched.data.data);
-    if (fetched.remote === "success" && fetched.data.data.length > 0) {
-      setSelectedFormulas(fetched.data.data[0].services);
-      setEstimationId(fetched.data.data[0]._id);
+    const fetched = await getUserEstimationDetailsById(props.estimationId);
+    if (fetched.remote === "success" && fetched.data.data) {
+      setSelectedFormulas(fetched.data.data.services);
+      setEstimationId(fetched.data.data._id);
     }
   }
 
@@ -218,27 +218,19 @@ export default function AddEstimates(props) {
 
     const formulaElements = formula.elements;
     const newElements = [];
-    console.log("|formulaElements|", formulaElements, formulaElements.length);
     for (let i = 0; i < formulaElements.length; i++) {
-      console.log("newElements");
       if (formulaElements[i].type === "dropdown") {
         const options = await processDropdown(formulaElements[i].dropdown);
-        console.log("options: ", options);
         newElements.push({
           ...formulaElements[i],
           options,
         });
-        console.log("dropdown", newElements);
       } else {
-        console.log("not dropdown", formulaElements[i]);
         newElements.push(formulaElements[i]);
       }
-      console.log("newElements2 ");
     }
-    console.log("formulaList2: ", formula);
 
     formula.elements = newElements;
-    console.log("formulaList: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
     setFormulas([]);
   }
@@ -284,7 +276,6 @@ export default function AddEstimates(props) {
           price: item.price,
         };
       });
-      console.log("userMateriasl: ", usedMaterials);
       usedMaterials.forEach((material) => {
         const regex = new RegExp(escapeRegExp(material.title), "g");
         formula = formula.replace(regex, material.price);
@@ -293,7 +284,6 @@ export default function AddEstimates(props) {
 
     if (elements) {
       const usedElements = elements.map((element) => {
-        console.log("elemejt: ", element);
         return {
           title: `@{{element||${element._id}||${element.name}}}`,
           price: (
@@ -309,9 +299,7 @@ export default function AddEstimates(props) {
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
-          console.log("formulaBeofreReplace: ", formula, element.price);
           formula = formula.replace(regex, element.price);
-          console.log("formulaAfterReplace: ", formula);
         } catch (error) {
           console.log("regex; ", regex);
           console.log("formula; ", formula);
@@ -320,7 +308,6 @@ export default function AddEstimates(props) {
       });
     }
     try {
-      console.log("formuolaSt: ", formula, multiplicationFactor);
       multiplicationFactor =
         multiplicationFactor === undefined || multiplicationFactor === null
           ? 1
@@ -350,16 +337,16 @@ export default function AddEstimates(props) {
         material.formula,
         elements
       );
+
       let cost =
         quantity *
         processFormula(material.cost || "", material.formula, elements);
-      console.log("charge: ", material.charge);
       let charge = processFormula(
         material.charge.replace("{Cost}", cost) || "",
         material.formula,
         elements
       );
-
+      processClientContract(formula, material.formula, elements);
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
       return { ...material, cost, charge, quantity };
@@ -377,7 +364,6 @@ export default function AddEstimates(props) {
   }
 
   async function processDropdown(id) {
-    console.log("id: ", id);
     const elements = await getVariationsByCatalogId(id);
     if (elements.remote === "success") {
       return elements.data.data;
@@ -388,22 +374,72 @@ export default function AddEstimates(props) {
 
   async function handleSaveEstimations() {
     const body = { services: selectedFormulas, userId: props.custInfo.id };
-    console.log({ body, props });
     if (estimationId) {
       const updated = await updateUserEstimation(estimationId, body);
       console.log(updated);
     } else {
-      await createUserEstimation(body);
+      const response = await createUserEstimation(body);
+      if (response.remote === "success") {
+        setEstimationId(response.data.userEstimation._id);
+      }
     }
   }
 
-  const genExtra = () => <CloseCircleFilled onClick={handleRemoveService} />;
+  const genExtra = () => (
+    <CloseCircleFilled onClick={() => setIsDeleting(true)} />
+  );
 
-  const handleRemoveService = (index) => {
+  const handleRemoveService = () => {
     const newSelectedFormulas = [...selectedFormulas];
-    newSelectedFormulas.splice(index, 1);
+    newSelectedFormulas.splice(selectIndex, 1);
     setSelectedFormulas(newSelectedFormulas);
+    setSelectIndex(null);
+    setIsDeleting(false);
   };
+
+  const processClientContract = (formula, materials, elements) => {
+    let newContract = formula.clientContract;
+    if (materials) {
+      const usedMaterials = materials.map((item) => {
+        return {
+          title: `@{{catalog||${item._id}||${item.name}}}`,
+          price: item.price,
+        };
+      });
+      usedMaterials.forEach((material) => {
+        const regex = new RegExp(escapeRegExp(material.title), "g");
+        newContract = newContract.replace(regex, material.price);
+      });
+      console.log("useMaterials: ", formula);
+    }
+
+    if (elements) {
+      const usedElements = elements.map((element) => {
+        return {
+          title: `@{{element||${element._id}||${element.name}}}`,
+          price: (
+            Number(element.value) *
+            (element.multiplicationFactor === undefined ||
+            element.multiplicationFactor === null
+              ? 1
+              : Number(element.multiplicationFactor))
+          ).toString(),
+        };
+      });
+
+      usedElements.forEach((element) => {
+        const regex = new RegExp(escapeRegExp(element.title), "g");
+        try {
+          newContract = newContract.replace(regex, element.price);
+        } catch (error) {
+          console.log("regex; ", regex);
+        }
+      });
+    }
+    formula.processedClientContract = newContract;
+    return newContract;
+  };
+
   return (
     <>
       <div className="">
@@ -536,7 +572,7 @@ export default function AddEstimates(props) {
           <Col span={8} className="text-end pe-5">
             <Link
               to={{
-                pathname: `/contract-preview/${props.custInfo.id}`,
+                pathname: `/contract-preview/${props.custInfo.id}?estimationId=${estimationId}`,
                 state: {
                   custInfo: props.custInfo.id,
                 },
@@ -606,7 +642,10 @@ export default function AddEstimates(props) {
                           ${formula.totalProjectCharge || 0}{" "}
                           <span
                             className="closeicon-panel"
-                            onClick={() => handleRemoveService(index)}
+                            onClick={() => {
+                              setSelectIndex(index);
+                              setIsDeleting(true);
+                            }}
                           >
                             {genExtra()}
                           </span>
@@ -617,9 +656,6 @@ export default function AddEstimates(props) {
                         {formula.elements
                           .filter((elem) => elem.view.includes(view))
                           .map((element, idx) => {
-                            if (element.type === "dropdown") {
-                              processDropdown(element.dropdown, element);
-                            }
                             return (
                               <Col lg={6} span={24} key={idx}>
                                 <Card
@@ -659,6 +695,7 @@ export default function AddEstimates(props) {
                                             idx
                                           )
                                         }
+                                        value={element.selected?._id}
                                       >
                                         {element.options?.map((option) => {
                                           return (
@@ -738,6 +775,12 @@ export default function AddEstimates(props) {
                           size="middle"
                           pagination={false}
                         />
+                      </Card>
+                      <Card
+                        title="Client Contract"
+                        className="radius-12 ant-estimate-table-card mt-3"
+                      >
+                        <pre>{formula.processedClientContract}</pre>
                       </Card>
                     </Panel>
                   );
@@ -876,6 +919,33 @@ export default function AddEstimates(props) {
           <SaveOutlined />
         </Button>
       </div>
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={isDeleting}
+        footer={null}
+        closeIcon={<InfoCircleOutlined />}
+      >
+        <p>Are you sure you want to delete item ?</p>
+        <Row>
+          <Col md={12} className="text-center">
+            <Button
+              type="text"
+              onClick={() => {
+                setSelectIndex(null);
+                setIsDeleting(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </Col>
+          <Col md={12}>
+            <Button type="link" onClick={() => handleRemoveService()}>
+              Delete
+            </Button>
+          </Col>
+        </Row>
+      </Modal>
     </>
   );
 }

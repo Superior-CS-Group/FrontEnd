@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import PreviewBanner from "../../../src/images/estimate-banner.png";
 import MountSky from "../../../src/images/mount-sky.png";
-import { Divider, Button, Input, Row, Col, Form } from "antd";
-import { edit } from "../../utils/svg.file";
+import { Divider, Input, Row, Col, Form } from "antd";
 import logo from "../../images/small-logo.png";
 import planting from "../../images/planting.jpg";
 import TeamPic from "../../images/team.jpg";
-import ReactQuill from "react-quill";
 import SimpleEMailSent from "../email/simple.emailsent.component";
 import ModalMain from "../modal/modal.component";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, Navigate } from "react-router-dom";
 import { postData } from "../../utils/fetchApi";
 import { sendEstimateContract } from "../../api/estimate-contract";
+import { getUserEstimationDetailsById } from "../../api/formula";
 
 export default function ContractPreview(props) {
   const params = useParams();
-
+  const { search } = useLocation();
   const [state, setState] = useState({
     activeStatus: "Active",
     customerid: "",
@@ -26,26 +25,38 @@ export default function ContractPreview(props) {
     estimaitonStatus: "",
     resultData: [],
   });
-
-  const [editPreviewDiv, setEditPreviewDiv] = useState(false);
-  const [editPreviewText, setEditPreviewText] = useState(false);
-  const [editorHtml, setEditorHtml] = useState("");
+  const [estimationId, setEstimationId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [ModalVisible, setModalVisible] = useState(false);
+  const [estimationDetails, setEstimationDetails] = useState({});
 
-  let handleEdit = () => {
-    setEditPreviewDiv(true);
-    setEditPreviewText(false);
-  };
-  let updateData = () => {
-    setEditPreviewDiv(false);
-    setEditPreviewText(true);
-  };
-  let handleChange = (html) => {
-    setEditorHtml(html);
-  };
+  useEffect(() => {
+    setIsLoading(true);
+    const query = new URLSearchParams(search);
+    const estimationId = query.get("estimationId");
+    setEstimationId(estimationId);
+    setIsLoading(false);
+  }, [search]);
+
   let handleCancel = () => {
     setModalVisible(false);
   };
+
+  const getEstimationDetails = async () => {
+    const response = await getUserEstimationDetailsById(estimationId);
+    if (response.remote === "success") {
+      setEstimationDetails(response.data.data);
+    } else {
+      setEstimationId(null);
+    }
+  };
+
+  useEffect(() => {
+    if (estimationId) {
+      getEstimationDetails();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [estimationId]);
 
   useEffect(() => {
     const id = params.id;
@@ -53,12 +64,11 @@ export default function ContractPreview(props) {
     if (id) {
       const body = { id };
       const fetchData = async () => {
-        const emailSettingResult = await postData(`customer/get-info`, body);
+        await postData(`customer/get-info`, body);
 
         const result = await postData(`customer/get-info`, body);
         // console.log("result.data.Data",result.data.Data)
         let userstatus;
-        let autoReminder;
 
         if (result.data.Data.activeStatus === true) {
           userstatus = "Active";
@@ -87,8 +97,8 @@ export default function ContractPreview(props) {
 
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-  // console.log(state.resultData, "resultDataresultData");
 
   let modalShow = async () => {
     const custId = params.id;
@@ -103,13 +113,17 @@ export default function ContractPreview(props) {
     setModalVisible(true);
   };
 
+  if (!estimationId && !isLoading) {
+    return <Navigate to={`/customer-lead/${params.id}`} />;
+  }
+
   return (
     <>
       <div className="card-shadow p-3" style={{ borderRadius: "25px" }}>
-        <img src={PreviewBanner} className="estimateImg" />
+        <img src={PreviewBanner} className="estimateImg" alt="" />
         <div className="estimate-preview-detail">
           <div className="estiamte-preview-head">
-            <img src={MountSky} />
+            <img src={MountSky} alt="" />
             <div className="text-right-estimate-header">
               <h5>Mountain Sky Proposal</h5>
               <span>Sales: Admin </span>
@@ -159,117 +173,31 @@ export default function ContractPreview(props) {
           <Divider />
           <div className="mt-3 mb-3">
             <h3>Scope of Work</h3>
-            <div className="work-scope-div-main mt-2 mb-3">
-              <div className="work-scope-div">
-                <div className="work-scope-top-left">
-                  <img src={PreviewBanner} className="work-scope-img" />
-                </div>
-                <div className="work-scope-top-right">
-                  <h4>Demolition & Prep</h4>
-                  <h5>$3600.00</h5>
-                </div>
-              </div>
-              <div className="d-lg-flex justify-content-between p-4 ">
-                {editPreviewDiv ? (
-                  <>
-                    <div className="edit-preview-text">
-                      <ReactQuill
-                        // theme={theme}
-                        onChange={handleChange}
-                        value={editorHtml}
-                        bounds={".app"}
-                        placeholder={props.placeholder}
-                      />
-                      <div className="text-right mt-2">
-                        <Button type="primary" onClick={updateData}>
-                          Update
-                        </Button>
+            {estimationDetails.services &&
+              estimationDetails.services.map((item, index) => {
+                return (
+                  <div className="work-scope-div-main mt-2 mb-3">
+                    <div className="work-scope-div">
+                      <div className="work-scope-top-left">
+                        <img
+                          src={PreviewBanner}
+                          className="work-scope-img"
+                          alt=""
+                        />
+                      </div>
+                      <div className="work-scope-top-right">
+                        <h4>{item.title}</h4>
+                        <h5>${item.totalProjectCharge}</h5>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <ul className="work-scope-list">
-                    <li>Remove the current landscape as discussed</li>
-                    <li>Prep area for landscape/hardscape to be installed</li>
-                    <li>Haul off and dispose of all materials</li>
-                  </ul>
-                )}
-
-                <span className="edit-preview-list" onClick={handleEdit}>
-                  {edit}
-                </span>
-              </div>
-            </div>
-
-            <div className="work-scope-div-main mt-2 mb-3">
-              <div className="work-scope-div">
-                <div className="work-scope-top-left">
-                  <img src={PreviewBanner} className="work-scope-img" />
-                </div>
-                <div className="work-scope-top-right">
-                  <h4>Planting</h4>
-                  <h5>$17800.00</h5>
-                </div>
-              </div>
-              <div className="d-lg-flex justify-content-between p-4 ">
-                {editPreviewDiv ? (
-                  <>
-                    <div className="edit-preview-text">
-                      <ReactQuill
-                        // theme={theme}
-                        onChange={handleChange}
-                        value={editorHtml}
-                        bounds={".app"}
-                        placeholder={props.placeholder}
-                      />
-                      <div className="text-right mt-2">
-                        <Button type="primary" onClick={updateData}>
-                          Update
-                        </Button>
-                      </div>
+                    <div className="d-lg-flex justify-content-between p-4 ">
+                      <ul className="work-scope-list">
+                        <pre>{item.processedClientContract}</pre>
+                      </ul>
                     </div>
-                  </>
-                ) : (
-                  <ul className="work-scope-list">
-                    <li>Install the following plants and trees</li>
-                    <li>
-                      <b>(Dynamic Value)</b> F15 Flats
-                    </li>
-                    <li>
-                      <b>(Dynamic Value)</b> 1 gallon plants
-                    </li>
-                    <li>
-                      <b>(Dynamic Value)</b> 5 gallon plants
-                    </li>
-                    <li>
-                      <b>(Dynamic Value)</b> 10 gallon plants
-                    </li>
-                    <li>
-                      {" "}
-                      <b>(Dynamic Value)</b> 1.5" caliper tree{" "}
-                    </li>
-                    <li>
-                      <b>(Dynamic Value)</b> Evergreen trees
-                    </li>
-                    <li>
-                      All plants, shrubs and trees will be installed with
-                      topsoil
-                    </li>
-                    <li>
-                      Excat plant cost may vary depending on type of plant free
-                      selected
-                    </li>
-                    <li>
-                      <img src={planting} />
-                    </li>
-                  </ul>
-                )}
-
-                <span className="edit-preview-list" onClick={handleEdit}>
-                  {edit}
-                </span>
-              </div>
-            </div>
+                  </div>
+                );
+              })}
 
             <div className="text-right sub-total-div mt-4 pb-4">
               <ul>
@@ -313,7 +241,7 @@ export default function ContractPreview(props) {
               </Row>
 
               <h4 className="mt-4">Meet Our Team!</h4>
-              <img src={TeamPic} className="team-pic" />
+              <img src={TeamPic} className="team-pic" alt="" />
             </div>
 
             <div className="term-for-project mt-5">
@@ -732,9 +660,7 @@ export default function ContractPreview(props) {
                 <Row>
                   <Col md={11}>
                     {" "}
-                    <Form.Item 
-                      label="Contractor Signature"
-                    >
+                    <Form.Item label="Contractor Signature">
                       <Input
                         placeholder="Contractor Signature"
                         type="text"
@@ -745,7 +671,7 @@ export default function ContractPreview(props) {
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item  label="Date">
+                    <Form.Item label="Date">
                       <Input
                         placeholder="Date"
                         type="text"
@@ -755,7 +681,7 @@ export default function ContractPreview(props) {
                   </Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item   label="Owner">
+                    <Form.Item label="Owner">
                       <Input
                         placeholder="Owner"
                         type="text"
@@ -766,7 +692,7 @@ export default function ContractPreview(props) {
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item   label="Company">
+                    <Form.Item label="Company">
                       <Input
                         placeholder="Company"
                         type="text"
@@ -776,10 +702,7 @@ export default function ContractPreview(props) {
                   </Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item
-                      
-                      label="Customer Signature"
-                    >
+                    <Form.Item label="Customer Signature">
                       <Input
                         placeholder="Customer Signature"
                         type="text"
@@ -790,7 +713,7 @@ export default function ContractPreview(props) {
                   <Col md={2}></Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item   label="Date">
+                    <Form.Item label="Date">
                       <Input
                         placeholder="Date"
                         type="text"
@@ -800,7 +723,7 @@ export default function ContractPreview(props) {
                   </Col>
                   <Col md={11}>
                     {" "}
-                    <Form.Item   label="Customer Name">
+                    <Form.Item label="Customer Name">
                       <Input
                         placeholder="Customer Name"
                         type="text"
