@@ -97,6 +97,15 @@ export default function Datatable(props) {
       {
         title: (
           <>
+            Estimate No. <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "estimate No",
+        width: 200,
+      },
+      {
+        title: (
+          <>
             Status <span className="float-end me-2">{drag}</span>
           </>
         ),

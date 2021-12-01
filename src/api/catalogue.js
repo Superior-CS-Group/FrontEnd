@@ -31,6 +31,33 @@ export async function getVariationsByCatalogId(id) {
   return response;
 }
 
+export async function getServices(pageNumber, pageSize) {
+  pageSize = pageSize || 10;
+  const response = await api.request({
+    url: `/v2/catalog/get-all-services?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    method: "GET",
+  });
+  return response;
+}
+
+export async function createService(data) {
+  const response = await api.request({
+    url: "/v2/catalog/create-service",
+    method: "POST",
+    data,
+  });
+  return response;
+}
+
+export async function updateService(serviceId, data) {
+  const response = await api.request({
+    url: `/v2/catalog/update-service/${serviceId}`,
+    method: "PUT",
+    data,
+  });
+  return response;
+}
+
 export async function createCatalogItem(data) {
   const response = await api.request({
     url: "/v2/catalog/create-catalog",

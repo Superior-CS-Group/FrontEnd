@@ -26,6 +26,7 @@ import {
 import CatalogServices from "./catalog.services";
 import AddService from "./addService.component";
 import EditItem from "./edit.item";
+import Services from "./services/services.component";
 
 export default function Catlog() {
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
@@ -104,7 +105,7 @@ export default function Catlog() {
             </>
           ),
 
-          price: `$${variation.price} / ${variation.unit}`,
+          price: `$${variation.price} ${variation.unit}`,
           quantity: variation.quantity,
           unit: variation.unit,
           description: variation.description,
@@ -173,7 +174,7 @@ export default function Catlog() {
         key: element._id,
         _id: element._id,
         name: element.name,
-        price: element.price ? `$${element.price} / ${element.unit}` : "",
+        price: element.price ? `$${element.price}  ${element.unit}` : "",
         quantity: element.quantity,
         description: element.description,
         type: element.type,
@@ -475,40 +476,7 @@ export default function Catlog() {
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
-                  <div className="p-2">
-                    <div className="fillter d-lg-flex align-items-center">
-                      <span
-                        className="ant-blue-plus me-4"
-                        onClick={handleAddModal}
-                      >
-                        <PlusCircleOutlined
-                          style={{ fontSize: "18px" }}
-                          className="me-2"
-                        />{" "}
-                        Add Services
-                      </span>
-                      {/* <span className="ant-text-danger me-4">
-                        <CloseCircleOutlined
-                          style={{ fontSize: "18px" }}
-                          className="me-2"
-                        />{" "}
-                        Delete catalog
-                      </span> */}
-
-                      <div className="ms-auto col-lg-3">
-                        <Input
-                          placeholder="Search catalog by name"
-                          text="search"
-                          className="ant-search-button"
-                          suffix={
-                            <SearchOutlined style={{ fontSize: "18px" }} />
-                          }
-                          onChange={filterCatalogItems}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <CatalogServices />
+                  <Services />
                 </Tab.Pane>
                 <Tab.Pane eventKey="three">Comming Soon Packages</Tab.Pane>
               </Tab.Content>

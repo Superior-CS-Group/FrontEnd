@@ -5,6 +5,8 @@ import {
   LeftOutlined,
   RightOutlined,
   PlusCircleOutlined,
+  SearchOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Select, Skeleton } from "antd";
 import { Nav } from "react-bootstrap";
@@ -20,9 +22,19 @@ export default class MainEstimates extends Component {
       estimateResults: [],
       estimateData: [],
       Tabs: [],
+      newTabs: {},
     };
   }
+  addTabs = () => {
+    this.setState({ Tabs: [...this.state.Tabs, this.state.newTabs] });
+  };
 
+  RemoveTabs = (index) => {
+    this.state.newTabs = [...this.state.Tabs];
+    this.state.Tabs.splice(index, -1);
+    this.setState({ Tabs: this.state.newTabs });
+    console.log(this.state.Tabs, "check remove array");
+  };
   componentDidMount = async () => {
     const result = await getData(`estimation/upcoming-estimation`);
     this.setState({
@@ -31,7 +43,6 @@ export default class MainEstimates extends Component {
       loading: true,
     });
     // console.log("estimateResults:", this.state.estimateData);
-  
   };
 
   state = {
@@ -89,7 +100,6 @@ export default class MainEstimates extends Component {
                       className="shadow estimate-card m-3"
                       style={{ borderRadius: "10px" }}
                     >
-                    
                       <div className="d-flex align-items-start justify-content-between mb-3">
                         <div className="ant-estimate-text">
                           <span>Estimate</span>
@@ -120,7 +130,6 @@ export default class MainEstimates extends Component {
                           </h3>
                         </div>
                       </div>
-                    
                     </Card>
                   </Link>
                 </>
@@ -151,23 +160,17 @@ export default class MainEstimates extends Component {
                     <Nav.Link>
                       <b class="left-curve"></b>
                       <b class="right-curve"></b>
-                      Tab 1
+                      Tab {index}{" "}
+                      <CloseOutlined
+                        className="cursor-btn"
+                        onClick={this.RemoveTabs}
+                      />
                     </Nav.Link>
                   </Nav.Item>
                 );
               })}
               <Nav.Item as="li">
-                <Nav.Link
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.setState([
-                      ...this.state.Tabs,
-                      { title: "title", value: "" },
-                    ]);
-                    alert("this is trial");
-                    console.log(this.state.Tabs,"check array ")
-                  }}
-                >
+                <Nav.Link onClick={this.addTabs}>
                   <b class="left-curve"></b>
                   <b class="right-curve"></b>
                   <span>
