@@ -3,7 +3,7 @@ import { Collapse, Input, Form, Row, Col, Button, message } from "antd";
 import "react-phone-number-input/style.css";
 import { UserOutlined, CheckOutlined } from "@ant-design/icons";
 import { postData } from "../../../utils/fetchApi.js";
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput from "react-phone-number-input";
 import { useParams, Navigate } from "react-router-dom";
 
 export default function LeadInfo() {
@@ -95,43 +95,44 @@ export default function LeadInfo() {
         otherInformation: "",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   const validateFields = () => {
     const errors = {};
     if (!state.name) {
-      errors.name = "Customer Name is  blank";
+      errors.name = "Customer Name is required";
       message.error(errors.name, 5);
     }
     if (!state.email) {
-      errors.email = "Email Id is  blank";
+      errors.email = "Email Id is required";
       message.error(errors.email, 5);
     } else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
-      errors.email = "Email is not valid";
+      errors.email = "Invalid Email";
       message.error(errors.email, 5);
     }
     if (!state.contactNo) {
-      errors.contactNo = "Contact No is  blank";
+      errors.contactNo = "Contact No is required";
       message.error(errors.contactNo, 5);
     }
     if (!state.country) {
-      errors.country = "Country is  blank";
+      errors.country = "Country is required";
       message.error(errors.country, 5);
     }
     if (!state.states) {
-      errors.states = "State is  blank";
+      errors.states = "State is required";
       message.error(errors.states, 5);
     }
     if (!state.city) {
-      errors.city = "City is not blank";
+      errors.city = "City is required";
       message.error(errors.city, 5);
     }
     if (!state.postalCode) {
-      errors.postalCode = "Postal Code is  blank";
+      errors.postalCode = "Postal Code is required";
       message.error(errors.postalCode, 5);
     }
     if (!state.address) {
-      errors.address = "Address is  blank";
+      errors.address = "Address is required";
       message.error(errors.address, 5);
     }
     // if (!this.state.otherInformation) {
@@ -203,7 +204,7 @@ export default function LeadInfo() {
     // console.log("body: ", body);
 
     try {
-      const result = await postData(`customer/add`, body);
+      await postData(`customer/add`, body);
       // console.log("result: ", result);
       setState({
         ...state,

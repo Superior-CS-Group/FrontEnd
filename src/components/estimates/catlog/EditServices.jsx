@@ -15,7 +15,6 @@ export default function EditService({
   errors,
   deleteServiecs,
 }) {
-  console.log(selectedService, "selectedService");
   if (selectedService) {
     // var isEditservices = {
     //   name: selectedService.name,

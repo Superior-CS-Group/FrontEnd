@@ -1,11 +1,23 @@
 import React from "react";
 import { Row, Col, Form, Input, Button } from "antd";
-import { createCatalogItem } from "../../../api/catalogue";
+import { createCatalogItem, updateCatalog } from "../../../api/catalogue";
 
-export default function Addelement({ handelUpdate, handleCancel }) {
+export default function Addelement({
+  handelUpdate,
+  handleCancel,
+  selectedElement,
+  setSelectedElement,
+}) {
   const [name, setName] = React.useState("");
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
+  React.useEffect(() => {
+    if (selectedElement && selectedElement._id) {
+      setName(selectedElement.name);
+    } else {
+      setName("");
+    }
+  }, [selectedElement]);
   const handleSave = async (e) => {
     try {
       e.preventDefault();
@@ -14,12 +26,22 @@ export default function Addelement({ handelUpdate, handleCancel }) {
         setErrors({ name: "Name is required" });
         return;
       }
-      const response = await createCatalogItem({ name, type: "subCatalog" });
+      let response = {};
+      if (selectedElement && selectedElement._id) {
+        response = await updateCatalog({
+          name,
+          type: "subCatalog",
+          _id: selectedElement._id,
+        });
+      } else {
+        response = await createCatalogItem({ name, type: "subCatalog" });
+      }
       if (response.remote === "success") {
         console.log("remteo: ", response);
         setTimeout(() => {
           handelUpdate();
           handleCancel();
+          setSelectedElement({});
           setLoading(false);
         }, 1000);
       } else {
@@ -52,7 +74,13 @@ export default function Addelement({ handelUpdate, handleCancel }) {
 
             <Col md={24} className="text-end">
               <Button type="primary" className="radius-9" onClick={handleSave}>
-                {loading ? "Adding..." : "Add"}
+                {selectedElement && selectedElement._id && !loading
+                  ? "Update"
+                  : selectedElement && selectedElement._id && loading
+                  ? "Updating..."
+                  : loading
+                  ? "Adding..."
+                  : "Add"}
               </Button>
             </Col>
           </Row>

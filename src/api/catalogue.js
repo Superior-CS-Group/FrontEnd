@@ -1,17 +1,10 @@
 import api from "./api";
 
-export async function deleteCatalog(data) {
+export async function deleteCatalog(id) {
   const response = await api.request({
-    url: "/services/remove-service-catelog",
-    method: "POST",
-    data,
+    url: `/v2/catalog/delete-catalog/${id}`,
+    method: "DELETE",
   });
-  if (response.remote === "success") {
-    return {
-      remote: response.remote,
-      data: response.data,
-    };
-  }
   return response;
 }
 
@@ -73,7 +66,6 @@ export async function removeServices(data) {
   return response;
 }
 
-
 export async function createCatalogItem(data) {
   const response = await api.request({
     url: "/v2/catalog/create-catalog",
@@ -101,43 +93,20 @@ export async function searchCatalogByName(name, type) {
   return response;
 }
 
-export async function removeCatalog(data) {
-  const response = await api.request({
-    url: "/v2/catalog/remove-catalog",
-    method: "POST",
-    data,
-  });
-  if (response.remote === "success") {
-    return {
-      remote: response.remote,
-      data: response.data,
-    };
-  }
-  return response;
-}
-
-
 export async function updateCatalog(data) {
   const response = await api.request({
-    url: "/v2/catalog/update-catalog",
+    url: `/v2/catalog/update-catalog/${data._id}`,
     method: "PUT",
     data,
   });
-  if (response.remote === "success") {
-    return {
-      remote: response.remote,
-      data: response.data,
-    };
-  }
+  console.log("responseDS: ", response);
   return response;
 }
 
-
-export async function removeVariation(data) {
+export async function removeVariation(id) {
   const response = await api.request({
-    url: "/v2/catalog/remove-variation",
-    method: "POST",
-    data,
+    url: `/v2/catalog/delete-variation/${id}`,
+    method: "DELETE",
   });
   if (response.remote === "success") {
     return {
@@ -148,10 +117,9 @@ export async function removeVariation(data) {
   return response;
 }
 
-
 export async function updateVariation(data) {
   const response = await api.request({
-    url: "/v2/catalog/update-variation",
+    url: `/v2/catalog/update-variation/${data._id}`,
     method: "PUT",
     data,
   });
@@ -168,7 +136,7 @@ export async function getVariationItem(data) {
   const response = await api.request({
     url: "/v2/catalog/get-variation",
     method: "POST",
-    data
+    data,
   });
   return response;
 }

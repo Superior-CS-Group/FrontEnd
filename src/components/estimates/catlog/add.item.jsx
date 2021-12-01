@@ -4,16 +4,23 @@ import { upload } from "../../../utils/svg.file";
 import { CloseOutlined, DollarCircleOutlined } from "@ant-design/icons";
 
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
-import { createCatalogItem, createVariation } from "../../../api/catalogue";
+import {
+  createCatalogItem,
+  createVariation,
+  updateCatalog,
+  updateVariation,
+} from "../../../api/catalogue";
 import { fileToBase64 } from "../../../utils/fileBase64";
 
 export default function AddItem({
-  props,
   handleCancel,
   selectedSubCatalog,
   setSelectedSubCatalog,
   handelUpdate,
+  selectedElement,
+  setSelectedElement,
 }) {
+  console.log("selectedElement: ", selectedElement, selectedSubCatalog);
   const [loading, setLoading] = React.useState(false);
   const [itemDetails, setItemDetails] = React.useState({
     name: "",
@@ -31,6 +38,22 @@ export default function AddItem({
     unit: "",
     quantity: "",
   });
+
+  React.useEffect(() => {
+    if (selectedElement && selectedElement._id) {
+      setItemDetails(selectedElement);
+    } else {
+      setItemDetails({
+        name: "",
+        price: "",
+        description: "",
+        unit: "",
+        quantity: "",
+        images: [],
+        type: "catalog",
+      });
+    }
+  }, [selectedElement]);
 
   const handleClose = () => {
     setItemDetails({
@@ -84,23 +107,31 @@ export default function AddItem({
       if (!isValid) {
         throw errors;
       }
-      console.log("itemDetails: ", itemDetails);
       let response = {};
       if (selectedSubCatalog) {
-        response = await createVariation({
-          ...itemDetails,
-          catelogId: selectedSubCatalog,
-        });
+        if (selectedElement && selectedElement._id) {
+          response = await updateVariation({
+            ...itemDetails,
+          });
+        } else {
+          response = await createVariation({
+            ...itemDetails,
+            catelogId: selectedSubCatalog,
+          });
+        }
+      } else if (selectedElement._id) {
+        response = await updateCatalog(itemDetails);
       } else {
         response = await createCatalogItem(itemDetails);
-        console.log("resposne: ", response);
       }
       if (response.remote === "success") {
+        console.log("responesUpdate: ", response);
         setTimeout(() => {
           setLoading(false);
           handleClose();
+          handelUpdate(selectedSubCatalog);
           setSelectedSubCatalog("");
-          handelUpdate();
+          setSelectedElement({});
         }, 1000);
       } else {
         setErrors(response.errors.errors);
@@ -121,9 +152,7 @@ export default function AddItem({
       images,
     });
   };
-  console.log(props,"additem props")
   return (
-    
     <>
       <div className="ant-upload-box">
         <Form layout="vertical">
@@ -255,7 +284,13 @@ export default function AddItem({
                 onClick={handleSave}
                 disabled={loading}
               >
-                {loading ? "Adding..." : "Add"}
+                {selectedElement && selectedElement._id && !loading
+                  ? "Update"
+                  : selectedElement && selectedElement._id && loading
+                  ? "Updating..."
+                  : loading
+                  ? "Adding..."
+                  : "Add"}
               </Button>
             </Col>
           </Row>
