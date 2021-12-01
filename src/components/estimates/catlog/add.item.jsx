@@ -8,6 +8,7 @@ import { createCatalogItem, createVariation } from "../../../api/catalogue";
 import { fileToBase64 } from "../../../utils/fileBase64";
 
 export default function AddItem({
+  props,
   handleCancel,
   selectedSubCatalog,
   setSelectedSubCatalog,
@@ -120,7 +121,9 @@ export default function AddItem({
       images,
     });
   };
+  console.log(props)
   return (
+    
     <>
       <div className="ant-upload-box">
         <Form layout="vertical">

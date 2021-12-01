@@ -116,7 +116,11 @@ export default function Catlog() {
                 type="text"
                 shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
-                onClick={(e) => handleEditModal(variation._id)}
+                // onClick={(e) => handleEditModal(variation._id)}
+                onClick={(e) => {
+                  setIsModal("additem",variation._id);
+                  setTitle("Add Item");
+                }}
               >
                 <EditOutlined className="text-primary" />
               </Button>
@@ -274,10 +278,10 @@ export default function Catlog() {
             handelUpdate={handelUpdate}
             setSelectedSubCatalog={setSelectedSubCatalog}
             itemDetails={{
-              deleteCatelogId: deleteCatelogId,
-              variationName: variationName,
-              variationName: variationPrice,
-              variationName: variationUnit,
+              CatelogId: deleteCatelogId,
+              name: variationName,
+              price: variationPrice,
+              unit: variationUnit,
             }}
           />
         );
