@@ -104,7 +104,7 @@ export async function removeCatalog(data) {
 export async function updateCatalog(data) {
   const response = await api.request({
     url: "/v2/catalog/update-catalog",
-    method: "POST",
+    method: "PUT",
     data,
   });
   if (response.remote === "success") {
@@ -136,7 +136,7 @@ export async function removeVariation(data) {
 export async function updateVariation(data) {
   const response = await api.request({
     url: "/v2/catalog/update-variation",
-    method: "POST",
+    method: "PUT",
     data,
   });
   if (response.remote === "success") {

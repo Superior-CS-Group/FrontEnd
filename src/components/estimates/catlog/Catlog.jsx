@@ -273,6 +273,12 @@ export default function Catlog() {
             selectedSubCatalog={selectedSubCatalog}
             handelUpdate={handelUpdate}
             setSelectedSubCatalog={setSelectedSubCatalog}
+            itemDetails={{
+              deleteCatelogId: deleteCatelogId,
+              variationName: variationName,
+              variationName: variationPrice,
+              variationName: variationUnit,
+            }}
           />
         );
 
