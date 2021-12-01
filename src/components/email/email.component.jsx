@@ -29,7 +29,7 @@ export default class EmailSend extends Component {
       toShow: "",
       templateData: [],
       smallLoader: true,
-
+      value: "",
       /////
     };
     this.handleChange = this.handleChange.bind(this);
@@ -37,8 +37,13 @@ export default class EmailSend extends Component {
   handleChange(value) {
     this.setState({ text: value });
   }
+  // handleNew = (event) => {
+  //   this.setState({ [event.target.name]: event.target.value });
+  //   console.log(event.target.value, "value");
+  // };
   handleChange(html) {
     this.setState({ editorHtml: html });
+    console.log(this.state.editorHtml, "thierhitheith");
   }
   onChangeTab = (val) => {
     if (val === "still-interested") {
@@ -120,7 +125,9 @@ export default class EmailSend extends Component {
           />
         );
       case "simpleSendEmail":
-        return <SimpleEMailSent />;
+        return (
+          <SimpleEMailSent handleCancel={() => this.setState({ toShow: "" })} />
+        );
       case "scheduleemailsent":
         return (
           <ScheduleEmailSent
@@ -144,6 +151,10 @@ export default class EmailSend extends Component {
         </Menu.Item>
       </Menu>
     );
+
+    const handleTabData = () => {
+      console.log("check new new ewn");
+    };
     return (
       <>
         <div
@@ -180,10 +191,16 @@ export default class EmailSend extends Component {
                       defaultActiveKey={this.state.templateData[0]?._id}
                     >
                       <Nav className="catlog-tabs" as="ul">
-                        {this.state.templateData.map((datavalue) => {
+                        {this.state.templateData.map((datavalue, i) => {
                           return (
                             <Nav.Item as="li">
-                              <Nav.Link eventKey={datavalue._id}>
+                              <Nav.Link
+                                eventKey={datavalue._id}
+                                onClick={(e) => {
+                                  handleTabData(datavalue._id, i);
+                                  console.log(datavalue._id, "this is id");
+                                }}
+                              >
                                 <b class="left-curve"></b>
                                 <b class="right-curve"></b>
                                 {datavalue.name} <MoreOutlined />
@@ -274,16 +291,17 @@ export default class EmailSend extends Component {
                                   <Form layout="vertical">
                                     <Form.Item label="Email Subject">
                                       <Input
+                                        name="subject"
                                         type="text"
                                         onChange={this.handleChange}
-                                        value={datavalue.subject}
+                                        defaultValue={datavalue.subject}
                                         placeholder="Still Interested"
                                       />
                                     </Form.Item>
                                     <Form.Item label="Description">
                                       <ReactQuill
                                         onChange={this.handleChange}
-                                        value={datavalue.bodyPart}
+                                        defaultValue={datavalue.bodyPart}
                                         bounds={".app"}
                                         placeholder={this.props.placeholder}
                                       />
