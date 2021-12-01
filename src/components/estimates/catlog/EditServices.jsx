@@ -42,7 +42,7 @@ export default function EditService({
                     className="ant-furmulla-input radius-30"
                     name="name"
                     onChange={handleInputChange}
-                    value={selectedService.name}
+                    value={selectedService ? selectedService.name : ""}
                   />
                   <span className="text-danger">{errors.name}</span>
                 </Form.Item>

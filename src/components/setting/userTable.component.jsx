@@ -7,13 +7,15 @@ import { postData } from "../../utils/fetchApi.js";
 import { getUserList } from "../../api/admin.js";
 import { LockOutlined } from "@ant-design/icons";
 import { SearchOutlined } from "@ant-design/icons";
-
 import ChangePasswordUser from "../modal/changePassword.component";
+import SmallLoader from "../loader/smallLoader.js";
+
 export default function UserTable(props) {
   const params = useParams();
 
   const [isModalShow, setIsModalShow] = useState(false);
   const [state, setState] = useState({
+    smallLoader: true,
     columns: [
       {
         title: (
@@ -120,7 +122,11 @@ export default function UserTable(props) {
         });
       }
       // console.log("data: ", data);
-      setState({ ...state, data, filtredData: data });
+      setTimeout(
+        () =>
+          setState({ ...state, data, filtredData: data, smallLoader: false }),
+        1000
+      );
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,28 +157,42 @@ export default function UserTable(props) {
 
   return (
     <>
-      <div className="p-3 card-shadow pe-4 ps-5">
-        <div className="fillter d-lg-flex align-items-center">
-          <div className="ms-auto col-lg-3">
-            <Input
-              placeholder="Search by User "
-              text="search"
-              className="ant-search-button"
-              suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-              onChange={handleFilterData}
-            />
+      {state.smallLoader ? (
+        <>
+          <div className="text-center d-flex align-items-center justify-content-center ht-100">
+            <span className="">
+              <SmallLoader />
+              <p className="mt-2">Loading Please Wait....</p>
+            </span>
           </div>
-        </div>
-      </div>
-      <ReactDragListView.DragColumn {...dragProps}>
-        <Table
-          className="ant-table-color"
-          columns={state.columns}
-          pagination={false}
-          dataSource={state.filtredData}
-          bordered={false}
-        />
-      </ReactDragListView.DragColumn>
+        </>
+      ) : (
+        <>
+          <div className="p-3 card-shadow pe-4 ps-5">
+            <div className="fillter d-lg-flex align-items-center">
+              <div className="ms-auto col-lg-3">
+                <Input
+                  placeholder="Search by User "
+                  text="search"
+                  className="ant-search-button"
+                  suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
+                  onChange={handleFilterData}
+                />
+              </div>
+            </div>
+          </div>
+          <ReactDragListView.DragColumn {...dragProps}>
+            <Table
+              className="ant-table-color"
+              columns={state.columns}
+              pagination={false}
+              dataSource={state.filtredData}
+              bordered={false}
+            />
+          </ReactDragListView.DragColumn>
+        </>
+      )}
+
       <ChangePasswordUser
         showModalPassword={showModalPassword}
         handleCancel={handleCancel}

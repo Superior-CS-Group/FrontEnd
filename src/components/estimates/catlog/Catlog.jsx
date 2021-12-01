@@ -48,7 +48,9 @@ export default function Catlog() {
   const [variationPrice, setVariationPrice] = useState("");
   const [variationUnit, setVariationUnit] = useState("");
   const [selectedVariation, setSelectedVariation] = useState({});
-
+  const [state, setState] = useState({
+    smallLoader: true,
+  });
   const handleAddModal = () => {
     setIsAddService(true);
   };
@@ -168,6 +170,13 @@ export default function Catlog() {
       setCatalogItem(response.data.data);
       setFilteredCatalogItem(response.data.data);
     }
+    setTimeout(
+      () =>
+        setState({
+          smallLoader: false,
+        }),
+      1000
+    );
   };
 
   React.useEffect(() => {
@@ -400,95 +409,110 @@ export default function Catlog() {
                       </div>
                     </div>
                   </div>
-                  <Table
-                    bordered={false}
-                    scroll={{ y: 700 }}
-                    className="components-table-demo-nested  scroll-style "
-                    columns={columns}
-                    expandable={{
-                      expandedRowRender: (render) => {
-                        if (isLoadingVariation === render._id) {
-                          return (
-                            <div className="text-center overflow-hidden">
-                              <SmallLoader />
-                            </div>
-                          );
-                        }
-                        if (!variations[render._id]?.length) {
-                          return (
-                            <div
-                              className="text-center"
-                              onClick={() => setSelectedSubCatalog(render._id)}
-                            >
-                              <h1 className="font-16 mb-0 cursor-btn py-3">
-                                Add Item..
-                              </h1>
-                            </div>
-                          );
-                        }
-
-                        return (
-                          <Table
-                            columns={columns}
-                            dataSource={variations[render._id]}
-                            pagination={false}
-                            bordered={false}
-                            className="ant-table-expand  mt-3"
-                          />
-                        );
-                      },
-                      rowExpandable: (element) => element.type === "subCatalog",
-                      expandIcon: ({ expanded, onExpand, record }) => {
-                        if (record.type === "subCatalog") {
-                          return expanded ? (
-                            <UpCircleFilled
-                              className="font-24"
-                              style={{ color: "#3483FA" }}
-                              onClick={(e) => {
-                                onExpand(record, e);
-                              }}
-                            />
-                          ) : (
-                            <DownCircleFilled
-                              className="font-24"
-                              style={{ color: "#3483FA" }}
-                              onClick={(e) => {
-                                onExpand(record, e);
-                                loadVariations(record._id);
-                              }}
-                            />
-                          );
-                        } else {
-                          return (
-                            <>
-                              <div className="ant-catalog-img">
-                                <Image
-                                  preview={{ visible: false }}
-                                  src={record.images[0] || log}
-                                  onClick={() => setVisible(true)}
-                                  alt=""
-                                />
-                                <div style={{ display: "none" }}>
-                                  <Image.PreviewGroup
-                                    preview={{
-                                      visible,
-                                      onVisibleChange: (vis) => setVisible(vis),
-                                    }}
-                                  >
-                                    {record.images.map((image, idx) => (
-                                      <Image src={image} key={idx} alt="" />
-                                    ))}
-                                  </Image.PreviewGroup>
-                                </div>
+                  {state.smallLoader ? (
+                    <>
+                      <div className="text-center d-flex align-items-center justify-content-center ht-100">
+                        <span className="">
+                          <SmallLoader />
+                          <p className="mt-2">Loading Please Wait....</p>
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <Table
+                      bordered={false}
+                      scroll={{ y: 700 }}
+                      className="components-table-demo-nested  scroll-style "
+                      columns={columns}
+                      expandable={{
+                        expandedRowRender: (render) => {
+                          if (isLoadingVariation === render._id) {
+                            return (
+                              <div className="text-center overflow-hidden">
+                                <SmallLoader />
                               </div>
-                            </>
+                            );
+                          }
+                          if (!variations[render._id]?.length) {
+                            return (
+                              <div
+                                className="text-center"
+                                onClick={() =>
+                                  setSelectedSubCatalog(render._id)
+                                }
+                              >
+                                <h1 className="font-16 mb-0 cursor-btn py-3">
+                                  Add Item..
+                                </h1>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <Table
+                              columns={columns}
+                              dataSource={variations[render._id]}
+                              pagination={false}
+                              bordered={false}
+                              className="ant-table-expand  mt-3"
+                            />
                           );
-                        }
-                      },
-                    }}
-                    dataSource={expandedRowRender}
-                    pagination={false}
-                  />
+                        },
+                        rowExpandable: (element) =>
+                          element.type === "subCatalog",
+                        expandIcon: ({ expanded, onExpand, record }) => {
+                          if (record.type === "subCatalog") {
+                            return expanded ? (
+                              <UpCircleFilled
+                                className="font-24"
+                                style={{ color: "#3483FA" }}
+                                onClick={(e) => {
+                                  onExpand(record, e);
+                                }}
+                              />
+                            ) : (
+                              <DownCircleFilled
+                                className="font-24"
+                                style={{ color: "#3483FA" }}
+                                onClick={(e) => {
+                                  onExpand(record, e);
+                                  loadVariations(record._id);
+                                }}
+                              />
+                            );
+                          } else {
+                            return (
+                              <>
+                                <div className="ant-catalog-img">
+                                  <Image
+                                    preview={{ visible: false }}
+                                    src={record.images[0] || log}
+                                    onClick={() => setVisible(true)}
+                                    alt=""
+                                  />
+                                  <div style={{ display: "none" }}>
+                                    <Image.PreviewGroup
+                                      preview={{
+                                        visible,
+                                        onVisibleChange: (vis) =>
+                                          setVisible(vis),
+                                      }}
+                                    >
+                                      {record.images.map((image, idx) => (
+                                        <Image src={image} key={idx} alt="" />
+                                      ))}
+                                    </Image.PreviewGroup>
+                                  </div>
+                                </div>
+                              </>
+                            );
+                          }
+                        },
+                      }}
+                      dataSource={expandedRowRender}
+                      pagination={false}
+                    />
+                  )}
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
                   <Services />

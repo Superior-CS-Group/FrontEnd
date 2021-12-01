@@ -2501,3 +2501,7 @@ img.preview-logo {
 .ant-catalog-img .ant-image-mask-info span {
   display: block;
 }
+.ht-100 {
+  min-height: 300px;
+  overflow: hidden;
+}
