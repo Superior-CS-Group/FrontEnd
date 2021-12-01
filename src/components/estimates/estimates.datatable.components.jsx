@@ -39,7 +39,15 @@ export default function Datatable(props) {
         dataIndex: "date",
         width: 200,
       },
-
+      {
+        title: (
+          <>
+            Scheduled Date <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "scheduleDate",
+        width: 200,
+      },
       {
         title: (
           <>
@@ -288,6 +296,7 @@ export default function Datatable(props) {
               </span>
             </>
           ),
+          scheduleDate: customerData[0].scheduleDate,
           filterName: customerData[0].name,
           name: (
             <Link to={`/customer-lead/${customerData[0]._id}`}>
@@ -401,8 +410,8 @@ export default function Datatable(props) {
         ShowDeleteModal={ShowDeleteModal}
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
-        deleteEstimateId={deleteEstimateId}
-        deleteEstimateIdx={deleteEstimateIdx}
+        deleteId={deleteEstimateId}
+        deleteIdx={deleteEstimateIdx}
         content={<>Are you sure delete this item?</>}
       />
 

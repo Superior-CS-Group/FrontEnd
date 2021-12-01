@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Input, Table, Button, Image } from "antd";
+import { Card, Input, Table, Button, Image, message } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import {
   PlusCircleOutlined,
@@ -16,9 +16,12 @@ import CataLogModal from "./catalog.modal";
 import Addelement from "./add.element";
 import AddItem from "./add.item";
 import log from "../../../images/placeholder.jpg";
+import DeleteModal from "../../modal/deleteModal.component";
 import {
   getCatalogItem,
+  getVariationItem,
   getVariationsByCatalogId,
+  removeCatalog,
 } from "../../../api/catalogue";
 import CatalogServices from "./catalog.services";
 import AddService from "./addService.component";
@@ -26,6 +29,9 @@ import EditItem from "./edit.item";
 import Services from "./services/services.component";
 
 export default function Catlog() {
+  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
+  const [ListShowPreview, setListShowPreview] = useState(false);
+  const [deleteCatelogId, setdeleteCatelogId] = useState();
   const [title, setTitle] = useState("Sub Category");
   const [isModal, setIsModal] = useState("");
   const [catalogItem, setCatalogItem] = useState([]);
@@ -37,12 +43,33 @@ export default function Catlog() {
   const [variations, setVariations] = useState({});
   const [isAddService, setIsAddService] = useState(false);
   const [IsEditData, setIsEditData] = useState(false);
-
+  const [IsAddData, setIsAddData] = useState(false);
+  const [variationName, setVariationName] = useState("");
+  const [variationPrice, setVariationPrice] = useState("");
+  const [variationUnit, setVariationUnit] = useState("");
+  const [selectedVariation, setSelectedVariation] = useState({});
+  const [state, setState] = useState({
+    smallLoader: true,
+  });
   const handleAddModal = () => {
     setIsAddService(true);
   };
-  const handleEditModal = () => {
+  const handleEditCatalog = () => {
     setIsEditData(true);
+  };
+  const handleEditModal = async (id) => {
+    console.log(id, "idddddddd");
+    const body = { id: id };
+    const getVariationData = await getVariationItem(body);
+    setVariationName(getVariationData.data.data.name);
+    setVariationPrice(getVariationData.data.data.price);
+    setVariationUnit(getVariationData.data.data.unit);
+    setdeleteCatelogId(getVariationData.data.data._id);
+    console.log(getVariationData, "getVariationData");
+    // setIsAddData(true);
+    console.log(variationName, "VariationName");
+    setIsModal("additem");
+    setTitle("Edit Item");
   };
   const [visible, setVisible] = useState(false);
   const handelUpdate = () => {
@@ -98,7 +125,11 @@ export default function Catlog() {
                 type="text"
                 shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
-                onClick={handleEditModal}
+                onClick={(e) => handleEditModal(variation._id)}
+                // onClick={(e) => {
+                //   setIsModal("additem",variation._id);
+                //   setTitle("Add Item");
+                // }}
               >
                 <EditOutlined className="text-primary" />
               </Button>
@@ -142,6 +173,13 @@ export default function Catlog() {
       setCatalogItem(response.data.data);
       setFilteredCatalogItem(response.data.data);
     }
+    setTimeout(
+      () =>
+        setState({
+          smallLoader: false,
+        }),
+      1000
+    );
   };
 
   React.useEffect(() => {
@@ -177,14 +215,20 @@ export default function Catlog() {
               shape="circle"
               className="me-2 d-inline-flex align-items-center justify-content-center"
             >
-              <DeleteOutlined className="text-danger" />
+              <DeleteOutlined
+                className="text-danger"
+                onClick={(e) => removeCatalogData(element._id)}
+              />
             </Button>
             <Button
               type="text"
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
             >
-              <EditOutlined className="text-primary" />
+              <EditOutlined
+                className="text-primary"
+                onClick={handleEditCatalog}
+              />
             </Button>
           </>
         ),
@@ -193,6 +237,26 @@ export default function Catlog() {
     setExpandedRowRender(newElements);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtredCatalogItem.length]);
+
+  const removeCatalogData = async (id) => {
+    setdeleteCatelogId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteOk = (id) => {
+    console.log("deleteId", id);
+    const body = { id: id };
+    setShowDeleteModal(false);
+    const response = removeCatalog(body);
+
+    if (response.remote === "success") {
+    }
+    message.success("Data Deleted", 5);
+    setShowDeleteModal(false);
+  };
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
 
   const columns = [
     {
@@ -230,8 +294,15 @@ export default function Catlog() {
           <AddItem
             handleCancel={handleCancel}
             selectedSubCatalog={selectedSubCatalog}
+            // IsAddData={IsAddData}
             handelUpdate={handelUpdate}
             setSelectedSubCatalog={setSelectedSubCatalog}
+            itemDetails={{
+              CatelogId: deleteCatelogId,
+              name: variationName,
+              price: variationPrice,
+              unit: variationUnit,
+            }}
           />
         );
 
@@ -344,95 +415,110 @@ export default function Catlog() {
                       </div>
                     </div>
                   </div>
-                  <Table
-                    bordered={false}
-                    scroll={{ y: 700 }}
-                    className="components-table-demo-nested  scroll-style "
-                    columns={columns}
-                    expandable={{
-                      expandedRowRender: (render) => {
-                        if (isLoadingVariation === render._id) {
-                          return (
-                            <div className="text-center overflow-hidden">
-                              <SmallLoader />
-                            </div>
-                          );
-                        }
-                        if (!variations[render._id]?.length) {
-                          return (
-                            <div
-                              className="text-center"
-                              onClick={() => setSelectedSubCatalog(render._id)}
-                            >
-                              <h1 className="font-16 mb-0 cursor-btn py-3">
-                                Add Item..
-                              </h1>
-                            </div>
-                          );
-                        }
-
-                        return (
-                          <Table
-                            columns={columns}
-                            dataSource={variations[render._id]}
-                            pagination={false}
-                            bordered={false}
-                            className="ant-table-expand  mt-3"
-                          />
-                        );
-                      },
-                      rowExpandable: (element) => element.type === "subCatalog",
-                      expandIcon: ({ expanded, onExpand, record }) => {
-                        if (record.type === "subCatalog") {
-                          return expanded ? (
-                            <UpCircleFilled
-                              className="font-24"
-                              style={{ color: "#3483FA" }}
-                              onClick={(e) => {
-                                onExpand(record, e);
-                              }}
-                            />
-                          ) : (
-                            <DownCircleFilled
-                              className="font-24"
-                              style={{ color: "#3483FA" }}
-                              onClick={(e) => {
-                                onExpand(record, e);
-                                loadVariations(record._id);
-                              }}
-                            />
-                          );
-                        } else {
-                          return (
-                            <>
-                              <div className="ant-catalog-img">
-                                <Image
-                                  preview={{ visible: false }}
-                                  src={record.images[0] || log}
-                                  onClick={() => setVisible(true)}
-                                  alt=""
-                                />
-                                <div style={{ display: "none" }}>
-                                  <Image.PreviewGroup
-                                    preview={{
-                                      visible,
-                                      onVisibleChange: (vis) => setVisible(vis),
-                                    }}
-                                  >
-                                    {record.images.map((image, idx) => (
-                                      <Image src={image} key={idx} alt="" />
-                                    ))}
-                                  </Image.PreviewGroup>
-                                </div>
+                  {state.smallLoader ? (
+                    <>
+                      <div className="text-center d-flex align-items-center justify-content-center ht-100">
+                        <span className="">
+                          <SmallLoader />
+                          <p className="mt-2">Loading Please Wait....</p>
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <Table
+                      bordered={false}
+                      scroll={{ y: 700 }}
+                      className="components-table-demo-nested  scroll-style "
+                      columns={columns}
+                      expandable={{
+                        expandedRowRender: (render) => {
+                          if (isLoadingVariation === render._id) {
+                            return (
+                              <div className="text-center overflow-hidden">
+                                <SmallLoader />
                               </div>
-                            </>
+                            );
+                          }
+                          if (!variations[render._id]?.length) {
+                            return (
+                              <div
+                                className="text-center"
+                                onClick={() =>
+                                  setSelectedSubCatalog(render._id)
+                                }
+                              >
+                                <h1 className="font-16 mb-0 cursor-btn py-3">
+                                  Add Item..
+                                </h1>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <Table
+                              columns={columns}
+                              dataSource={variations[render._id]}
+                              pagination={false}
+                              bordered={false}
+                              className="ant-table-expand  mt-3"
+                            />
                           );
-                        }
-                      },
-                    }}
-                    dataSource={expandedRowRender}
-                    pagination={false}
-                  />
+                        },
+                        rowExpandable: (element) =>
+                          element.type === "subCatalog",
+                        expandIcon: ({ expanded, onExpand, record }) => {
+                          if (record.type === "subCatalog") {
+                            return expanded ? (
+                              <UpCircleFilled
+                                className="font-24"
+                                style={{ color: "#3483FA" }}
+                                onClick={(e) => {
+                                  onExpand(record, e);
+                                }}
+                              />
+                            ) : (
+                              <DownCircleFilled
+                                className="font-24"
+                                style={{ color: "#3483FA" }}
+                                onClick={(e) => {
+                                  onExpand(record, e);
+                                  loadVariations(record._id);
+                                }}
+                              />
+                            );
+                          } else {
+                            return (
+                              <>
+                                <div className="ant-catalog-img">
+                                  <Image
+                                    preview={{ visible: false }}
+                                    src={record.images[0] || log}
+                                    onClick={() => setVisible(true)}
+                                    alt=""
+                                  />
+                                  <div style={{ display: "none" }}>
+                                    <Image.PreviewGroup
+                                      preview={{
+                                        visible,
+                                        onVisibleChange: (vis) =>
+                                          setVisible(vis),
+                                      }}
+                                    >
+                                      {record.images.map((image, idx) => (
+                                        <Image src={image} key={idx} alt="" />
+                                      ))}
+                                    </Image.PreviewGroup>
+                                  </div>
+                                </div>
+                              </>
+                            );
+                          }
+                        },
+                      }}
+                      dataSource={expandedRowRender}
+                      pagination={false}
+                    />
+                  )}
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
                   <Services />
@@ -463,12 +549,25 @@ export default function Catlog() {
       />
       <EditItem
         title={title}
+        handleEditCatalog={handleEditCatalog}
         handleEditModal={handleEditModal}
         IsEditData={IsEditData}
+        deleteId={deleteCatelogId}
+        variationName={variationName}
+        variationPrice={variationPrice}
+        variationUnit={variationUnit}
         // isModal={isModal}
         handleOk={handleOk}
         handleCancel={handleCancel}
         width={575}
+      />
+      <DeleteModal
+        DeleteModalEstimate={removeCatalogData}
+        ShowDeleteModal={ShowDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        handleDeleteOk={handleDeleteOk}
+        deleteId={deleteCatelogId}
+        content={<>Do you real want to delete?</>}
       />
     </>
   );

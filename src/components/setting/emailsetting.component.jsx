@@ -4,7 +4,7 @@ import { Form, Input, Col, Row, Button, message, Upload } from "antd";
 
 import { fileToBase64 } from "../../utils/fileBase64.js";
 import { getEmailSetting, updateEmailSetting } from "../../api/admin";
-
+import SmallLoader from "../loader/smallLoader";
 // import Swal from "sweetalert2";
 
 export default function EmailSetting() {
@@ -20,7 +20,8 @@ export default function EmailSetting() {
     resultData: [],
     isLoader: true,
     errors: {},
-    errorUsername:""
+    errorUsername: "",
+    smallLoader: true,
   });
   const [host, setHost] = useState("");
   const [username, setUsername] = useState("");
@@ -39,7 +40,15 @@ export default function EmailSetting() {
           setPassword(response.data.password);
           setPort(response.data.port);
           setfromEmail(response.data.fromEmail);
-          setState({ profileImage: response.data.logo, isLoader: true });
+          setTimeout(
+            () =>
+              setState({
+                profileImage: response.data.logo,
+                isLoader: true,
+                smallLoader: false,
+              }),
+            1000
+          );
         }
       } else {
       }
@@ -146,68 +155,77 @@ export default function EmailSetting() {
       <div className="d-flex align-items-center justify-content-between mb-4">
         <BreadcrumbBar name="Setting" subname="Email-setting" />
       </div>{" "}
-      <div className="card-shadow p-4" style={{ borderRadius: "25px" }}>
-        <div role="alert" class="text-success">
-          {state.message}
-        </div>
-        <Form layout="vertical">
-          <Row gutter={[24, 0]}>
-            <Col md={12}>
-              <Form.Item label="Host Name">
-                {/* <span style={{display: "none"}}>{host}</span> */}
-                <Input
-                  placeholder="Host"
-                  name="host"
-                  value={host}
-                  onChange={(e) => setHost(e.target.value)}
-                />
-                
-              </Form.Item>
-              <Form.Item label="User ">
-                <Input
-                  placeholder="Username"
-                  name="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </Form.Item>
-              <Form.Item label="Password">
-                <Input
-                  placeholder="Password"
-                  name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Form.Item>
-              <Form.Item label="Port">
-                <Input
-                  placeholder="Port"
-                  name="port"
-                  value={port}
-                  onChange={(e) => setPort(e.target.value)}
-                />
-              </Form.Item>
-            </Col>
-            <Col md={12}>
-              {" "}
-              <Form.Item label="From Email">
-                <Input
-                  placeholder="From Email"
-                  name="fromEmail"
-                  value={fromEmail}
-                  onChange={(e) => setfromEmail(e.target.value)}
-                />
-              </Form.Item>
-              <Form.Item
-                label="CRM Logo"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-                className="main-logo-label"
-                // extra="long"
-              >
-                <input type="file" onChange={handleProfileImage} />
-                <img src={state.profileImage} className="preview-logo" />
-                {/* <Upload
+      {state.smallLoader ? (
+        <>
+          <div className="text-center d-flex align-items-center justify-content-center ht-100">
+            <span className="">
+              <SmallLoader />
+              <p className="mt-2">Loading Please Wait....</p>
+            </span>
+          </div>
+        </>
+      ) : (
+        <div className="card-shadow p-4" style={{ borderRadius: "25px" }}>
+          <div role="alert" class="text-success">
+            {state.message}
+          </div>
+          <Form layout="vertical">
+            <Row gutter={[24, 0]}>
+              <Col md={12}>
+                <Form.Item label="Host Name">
+                  {/* <span style={{display: "none"}}>{host}</span> */}
+                  <Input
+                    placeholder="Host"
+                    name="host"
+                    value={host}
+                    onChange={(e) => setHost(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item label="User ">
+                  <Input
+                    placeholder="Username"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item label="Password">
+                  <Input
+                    placeholder="Password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item label="Port">
+                  <Input
+                    placeholder="Port"
+                    name="port"
+                    value={port}
+                    onChange={(e) => setPort(e.target.value)}
+                  />
+                </Form.Item>
+              </Col>
+              <Col md={12}>
+                {" "}
+                <Form.Item label="From Email">
+                  <Input
+                    placeholder="From Email"
+                    name="fromEmail"
+                    value={fromEmail}
+                    onChange={(e) => setfromEmail(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="CRM Logo"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  className="main-logo-label"
+                  // extra="long"
+                >
+                  <input type="file" onChange={handleProfileImage} />
+                  <img src={state.profileImage} className="preview-logo" />
+                  {/* <Upload
                   listType="picture"
                   className="check-input-logo" 
                 >
@@ -215,27 +233,28 @@ export default function EmailSetting() {
                     Drag or Click to Upload Logo
                   </Button>
                 </Upload> */}
-              </Form.Item>
-            </Col>
-            <Col md={24}>
-              {" "}
-              {/* <Form.Item name="description" label="Description">
+                </Form.Item>
+              </Col>
+              <Col md={24}>
+                {" "}
+                {/* <Form.Item name="description" label="Description">
                 <Input.TextArea />
               </Form.Item> */}
-              <div className="text-right">
-                <Button
-                  type="primary"
-                  shape="round"
-                  className=""
-                  onClick={handleSave}
-                >
-                  Save
-                </Button>
-              </div>
-            </Col>
-          </Row>
-        </Form>
-      </div>
+                <div className="text-right">
+                  <Button
+                    type="primary"
+                    shape="round"
+                    className=""
+                    onClick={handleSave}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </div>
+      )}
     </>
   );
 }

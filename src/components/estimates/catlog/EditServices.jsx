@@ -13,12 +13,19 @@ export default function EditService({
   handleOk,
   isEditservices,
   errors,
+  deleteServiecs,
 }) {
+  console.log(selectedService, "selectedService");
+  if (selectedService) {
+    // var isEditservices = {
+    //   name: selectedService.name,
+    // };
+  }
   return (
     <>
       <Modal
         className="modal-radius"
-        title={title}
+        title={selectedService ? "Edit Services" : "Add Services"}
         visible={isEditservices}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -35,6 +42,7 @@ export default function EditService({
                     className="ant-furmulla-input radius-30"
                     name="name"
                     onChange={handleInputChange}
+                    value={selectedService ? selectedService.name : ""}
                   />
                   <span className="text-danger">{errors.name}</span>
                 </Form.Item>
@@ -50,6 +58,11 @@ export default function EditService({
                     onChange={handleInputChange}
                     type="number"
                     min={1}
+                    value={
+                      selectedService
+                        ? selectedService.hours
+                        : isEditservices.hours
+                    }
                   />
                   <span className="text-danger">{errors.hours}</span>
                 </Form.Item>
@@ -64,6 +77,9 @@ export default function EditService({
                     onChange={handleInputChange}
                     min={1}
                     type="number"
+                    value={
+                      selectedService ? selectedService.day : isEditservices.day
+                    }
                   />
                   <span className="text-danger">{errors.day}</span>
                 </Form.Item>
@@ -78,6 +94,11 @@ export default function EditService({
                     onChange={handleInputChange}
                     type="number"
                     min={1}
+                    value={
+                      selectedService
+                        ? selectedService.price
+                        : isEditservices.price
+                    }
                   />
                   <span className="text-danger">{errors.productionRate}</span>
                 </Form.Item>
@@ -91,6 +112,7 @@ export default function EditService({
                     className="radius-30 px-4 me-2 btn-width"
                     onClick={handleCancel}
                     disabled={loading}
+                    onClick={(e) => deleteServiecs(selectedService._id)}
                     size="large"
                   >
                     Delete Services
@@ -105,15 +127,27 @@ export default function EditService({
                 >
                   Cancel
                 </Button>
-                <Button
-                  size="large"
-                  type="primary"
-                  className="radius-30 px-4 btn-width"
-                  onClick={handleSave}
-                  disabled={loading}
-                >
-                  {loading ? "Saving..." : "Save"}
-                </Button>
+                {selectedService ? (
+                  <Button
+                    size="large"
+                    type="primary"
+                    className="radius-30 px-4 btn-width"
+                    onClick={handleSave}
+                    disabled={loading}
+                  >
+                    {loading ? "Updating..." : "Update"}
+                  </Button>
+                ) : (
+                  <Button
+                    size="large"
+                    type="primary"
+                    className="radius-30 px-4 btn-width"
+                    onClick={handleSave}
+                    disabled={loading}
+                  >
+                    {loading ? "Saving..." : "Save"}
+                  </Button>
+                )}
               </Col>
             </Row>
           </Form>
