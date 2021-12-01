@@ -14,7 +14,7 @@ import { Nav } from "react-bootstrap";
 import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
 import { getData } from "../../utils/fetchApi.js";
-
+import Loader from "../loader/index.js";
 export default class MainEstimates extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +23,7 @@ export default class MainEstimates extends Component {
       estimateData: [],
       Tabs: [],
       newTabs: {},
+      bigLoader: true,
     };
   }
   addTabs = () => {
@@ -41,6 +42,7 @@ export default class MainEstimates extends Component {
       estimateResults: result.data,
       estimateData: result.data.Data,
       loading: true,
+      bigLoader: false,
     });
     // console.log("estimateResults:", this.state.estimateData);
   };
@@ -72,72 +74,83 @@ export default class MainEstimates extends Component {
           <h1>Estimates</h1>
           <p>Upcoming Estimates</p>
         </div>
-        {this.state.estimateData.length ? (
-          <Carousel
-            className="mb-3"
-            show={3}
-            slide={3}
-            infinite={true}
-            swiping={true}
-            leftArrow={[
-              <div className="button-arrow">
-                <LeftOutlined />
-              </div>,
-            ]}
-            rightArrow={[
-              <div className="button-arrow ms-2">
-                <RightOutlined />
-              </div>,
-            ]}
-          >
-            {this.state.estimateData.map((value) => {
-              // console.log(value.customerLeadId[0].email,"valuecustomerLeadId")
-              return (
-                <>
-                  <Link to={`/customer-lead/${value.customerLeadId[0]._id}`}>
-                    <Card
-                      bordered={false}
-                      className="shadow estimate-card m-3"
-                      style={{ borderRadius: "10px" }}
-                    >
-                      <div className="d-flex align-items-start justify-content-between mb-3">
-                        <div className="ant-estimate-text">
-                          <span>Estimate</span>
-                          <h2>#{value.leadInvoinceNo}</h2>
-                        </div>
-                        <Button className="ant-moving-button">
-                          {value.customerLeadId[0].estimaitonStatus}
-                        </Button>
-                      </div>
-                      <div className="ant-estimate-text mb-3">
-                        <span>Customer Name</span>
-                        <h3>{value.customerLeadId[0].name}</h3>
-                      </div>
-                      <div className="d-flex align-items-start justify-content-between">
-                        <div className="ant-estimate-text text-ellpis">
-                          <span>Address</span>
-                          <h3>{value.customerLeadId[0].address}</h3>
-                        </div>
-                        <div className="ant-estimate-text">
-                          <span>Job Farness</span>
-                          <h3>
-                            {value.customerLeadId[0].distance}
-                            <small
-                              style={{ marginLeft: "2px", fontSize: "12px" }}
-                            >
-                              Km
-                            </small>
-                          </h3>
-                        </div>
-                      </div>
-                    </Card>
-                  </Link>
-                </>
-              );
-            })}
-          </Carousel>
+        {this.state.bigLoader ? (
+          <Loader />
         ) : (
-          ""
+          <>
+            {this.state.estimateData.length ? (
+              <Carousel
+                className="mb-3"
+                show={3}
+                slide={3}
+                infinite={true}
+                swiping={true}
+                leftArrow={[
+                  <div className="button-arrow">
+                    <LeftOutlined />
+                  </div>,
+                ]}
+                rightArrow={[
+                  <div className="button-arrow ms-2">
+                    <RightOutlined />
+                  </div>,
+                ]}
+              >
+                {this.state.estimateData.map((value) => {
+                  // console.log(value.customerLeadId[0].email,"valuecustomerLeadId")
+                  return (
+                    <>
+                      <Link
+                        to={`/customer-lead/${value.customerLeadId[0]._id}`}
+                      >
+                        <Card
+                          bordered={false}
+                          className="shadow estimate-card m-3"
+                          style={{ borderRadius: "10px" }}
+                        >
+                          <div className="d-flex align-items-start justify-content-between mb-3">
+                            <div className="ant-estimate-text">
+                              <span>Estimate</span>
+                              <h2>#{value.leadInvoinceNo}</h2>
+                            </div>
+                            <Button className="ant-moving-button">
+                              {value.customerLeadId[0].estimaitonStatus}
+                            </Button>
+                          </div>
+                          <div className="ant-estimate-text mb-3">
+                            <span>Customer Name</span>
+                            <h3>{value.customerLeadId[0].name}</h3>
+                          </div>
+                          <div className="d-flex align-items-start justify-content-between">
+                            <div className="ant-estimate-text text-ellpis">
+                              <span>Address</span>
+                              <h3>{value.customerLeadId[0].address}</h3>
+                            </div>
+                            <div className="ant-estimate-text">
+                              <span>Job Farness</span>
+                              <h3>
+                                {value.customerLeadId[0].distance}
+                                <small
+                                  style={{
+                                    marginLeft: "2px",
+                                    fontSize: "12px",
+                                  }}
+                                >
+                                  Km
+                                </small>
+                              </h3>
+                            </div>
+                          </div>
+                        </Card>
+                      </Link>
+                    </>
+                  );
+                })}
+              </Carousel>
+            ) : (
+              ""
+            )}
+          </>
         )}
         <Card
           bordered={false}
