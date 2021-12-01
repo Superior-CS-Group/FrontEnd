@@ -38,12 +38,17 @@ export default class MainEstimates extends Component {
   };
   componentDidMount = async () => {
     const result = await getData(`estimation/upcoming-estimation`);
-    this.setState({
-      estimateResults: result.data,
-      estimateData: result.data.Data,
-      loading: true,
-      bigLoader: false,
-    });
+    setTimeout(
+      () =>
+        this.setState({
+          estimateResults: result.data,
+          estimateData: result.data.Data,
+          loading: true,
+
+          bigLoader: false,
+        }),
+      1000
+    );
     // console.log("estimateResults:", this.state.estimateData);
   };
 

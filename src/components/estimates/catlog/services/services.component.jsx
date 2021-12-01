@@ -1,5 +1,5 @@
 import { Input } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { drag } from "../../../../utils/svg.file";
 import ReactDragListView from "react-drag-listview";
 import { Table, Button } from "antd";
@@ -12,8 +12,13 @@ import {
 } from "@ant-design/icons";
 import { validateCreateServiceInput } from "../../../../validators/catalog/catalog.validator";
 import EditService from "../EditServices";
+import SmallLoader from "../../../loader/smallLoader";
+import { useEffect } from "react";
 
 function Services() {
+  const [state, setState] = useState({
+    smallLoader: true,
+  });
   const [columns, setColumns] = React.useState([
     {
       title: (
@@ -104,6 +109,13 @@ function Services() {
       });
       setData(processedData);
     }
+    setTimeout(
+      () =>
+        setState({
+          smallLoader: false,
+        }),
+      1000
+    );
   };
 
   React.useEffect(() => {
@@ -181,16 +193,27 @@ function Services() {
           </div>
         </div>
       </div>
-      <ReactDragListView.DragColumn {...dragProps}>
-        <Table
-          columns={columns}
-          pagination={false}
-          dataSource={data}
-          bordered={false}
-          className="components-table-demo-nested ant-thead-block scroll-style"
-          scroll={{ y: 360 }}
-        />
-      </ReactDragListView.DragColumn>
+      {state.smallLoader ? (
+        <>
+          <div className="text-center d-flex align-items-center justify-content-center ht-100">
+            <span className="">
+              <SmallLoader />
+              <p className="mt-2">Loading Please Wait....</p>
+            </span>
+          </div>
+        </>
+      ) : (
+        <ReactDragListView.DragColumn {...dragProps}>
+          <Table
+            columns={columns}
+            pagination={false}
+            dataSource={data}
+            bordered={false}
+            className="components-table-demo-nested ant-thead-block scroll-style"
+            scroll={{ y: 360 }}
+          />
+        </ReactDragListView.DragColumn>
+      )}
       <EditService
         title="Edit Service"
         handleInputChange={handleChange}
