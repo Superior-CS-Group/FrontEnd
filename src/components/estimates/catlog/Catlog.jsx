@@ -19,6 +19,7 @@ import log from "../../../images/placeholder.jpg";
 import DeleteModal from "../../modal/deleteModal.component";
 import {
   getCatalogItem,
+  getVariationItem,
   getVariationsByCatalogId,
   removeCatalog,
 } from "../../../api/catalogue";
@@ -41,11 +42,23 @@ export default function Catlog() {
   const [variations, setVariations] = useState({});
   const [isAddService, setIsAddService] = useState(false);
   const [IsEditData, setIsEditData] = useState(false);
+  const [variationName, setVariationName] = useState("");
+  const [variationPrice, setVariationPrice] = useState("");
+  const [variationUnit, setVariationUnit] = useState("");
+  const [selectedVariation, setSelectedVariation] = useState({});
 
   const handleAddModal = () => {
     setIsAddService(true);
   };
-  const handleEditModal = () => {
+  const handleEditModal = async (id) => {
+    // console.log(id, "idddddddd");
+    const body = { id: id };
+    const getVariationData = await getVariationItem(body);
+    setVariationName(getVariationData.data.data.name);
+    setVariationPrice(getVariationData.data.data.price);
+    setVariationUnit(getVariationData.data.data.unit);
+    setdeleteCatelogId(getVariationData.data.data._id);
+    // console.log(getVariationData.data.data, "getVariationData");
     setIsEditData(true);
   };
   const [visible, setVisible] = useState(false);
@@ -102,7 +115,7 @@ export default function Catlog() {
                 type="text"
                 shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
-                onClick={handleEditModal}
+                onClick={(e) => handleEditModal(variation._id)}
               >
                 <EditOutlined className="text-primary" />
               </Button>
@@ -202,20 +215,17 @@ export default function Catlog() {
   }, [filtredCatalogItem.length]);
 
   const removeCatalogData = async (id) => {
-    setdeleteCatelogId(id)
+    setdeleteCatelogId(id);
     setShowDeleteModal(true);
-    
   };
 
- 
   const handleDeleteOk = (id) => {
     console.log("deleteId", id);
     const body = { id: id };
     setShowDeleteModal(false);
-    const response = removeCatalog(body)
-    
+    const response = removeCatalog(body);
+
     if (response.remote === "success") {
-      
     }
     message.success("Data Deleted", 5);
     setShowDeleteModal(false);
@@ -528,6 +538,10 @@ export default function Catlog() {
         title={title}
         handleEditModal={handleEditModal}
         IsEditData={IsEditData}
+        deleteId={deleteCatelogId}
+        variationName={variationName}
+        variationPrice={variationPrice}
+        variationUnit={variationUnit}
         // isModal={isModal}
         handleOk={handleOk}
         handleCancel={handleCancel}
@@ -539,7 +553,7 @@ export default function Catlog() {
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
         deleteId={deleteCatelogId}
-        content={<>You are about to delete all the Service</>}
+        content={<>Do you real want to delete?</>}
       />
     </>
   );

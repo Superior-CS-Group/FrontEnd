@@ -120,3 +120,12 @@ export async function updateVariation(data) {
   }
   return response;
 }
+
+export async function getVariationItem(data) {
+  const response = await api.request({
+    url: "/v2/catalog/get-variation",
+    method: "POST",
+    data
+  });
+  return response;
+}
