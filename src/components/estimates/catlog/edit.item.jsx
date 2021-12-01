@@ -75,7 +75,7 @@ export default function EditItem(
       [e.target.name]: Number(e.target.value) || e.target.value,
     });
   };
-  console.log(props, "props ddddd");
+  // console.log(props, "props ddddd");
   const handleSave = async (e) => {
     e.preventDefault();
     setErrors({
@@ -92,7 +92,7 @@ export default function EditItem(
       if (!isValid) {
         throw errors;
       }
-      console.log("itemDetails: ", itemDetails);
+      // console.log("itemDetails: ", itemDetails);
       let response = {};
       if (selectedSubCatalog) {
         response = await createVariation({

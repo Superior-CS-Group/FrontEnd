@@ -1,9 +1,13 @@
-import { Input } from "antd";
+import { Input, message } from "antd";
 import React, { useState } from "react";
 import { drag } from "../../../../utils/svg.file";
 import ReactDragListView from "react-drag-listview";
 import { Table, Button } from "antd";
-import { createService, getServices } from "../../../../api/catalogue";
+import {
+  createService,
+  getServices,
+  removeServices,
+} from "../../../../api/catalogue";
 
 import {
   PlusCircleOutlined,
@@ -12,10 +16,15 @@ import {
 } from "@ant-design/icons";
 import { validateCreateServiceInput } from "../../../../validators/catalog/catalog.validator";
 import EditService from "../EditServices";
+import DeleteModal from "../../../modal/deleteModal.component";
+
 import SmallLoader from "../../../loader/smallLoader";
-import { useEffect } from "react";
 
 function Services() {
+  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
+
+
+
   const [state, setState] = useState({
     smallLoader: true,
   });
@@ -63,6 +72,7 @@ function Services() {
       width: 200,
     },
   ]);
+  const [deleteServiceId, setdeleteServiceId] = React.useState({});
   const [errors, setErrors] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -75,8 +85,23 @@ function Services() {
     hours: "",
     day: "",
     productionRate: "",
-  });
-
+  }); 
+  const handleDeleteOk = async () => {
+    const body = {
+      id: deleteServiceId,
+    };
+    const response = await removeServices(body);
+    handleUpdate();
+    message.success("Services Deleted", 5);
+    setShowDeleteModal(false);
+    setIsModal(false);
+  };
+  const DeleteCatalogService = () => {
+    setShowDeleteModal(true);
+  };
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
   const handleUpdate = () => {
     setIsUpdate(true);
     setTimeout(() => setIsUpdate(false), 100);
@@ -136,9 +161,10 @@ function Services() {
     let response = {};
     if (!selectedService) {
       response = await createService(body);
-      console.log(response);
+      console.log("response");
     } else {
-      // todo update service
+      const body = { ...serviceDetails };
+      console.log("selectedService", body);
     }
     if (response.remote === "success") {
       handleUpdate();
@@ -152,9 +178,12 @@ function Services() {
   };
 
   const handleChange = (e) => {
-    const newServiceDetails = { ...serviceDetails };
-    newServiceDetails[e.target.name] = e.target.value;
-    setServiceDetails(newServiceDetails);
+     
+      const newServiceDetails = { ...serviceDetails };
+      newServiceDetails[e.target.name] = e.target.value;
+      setServiceDetails(newServiceDetails);
+    console.log(e,"eeeeeeeee")
+    
   };
 
   const dragProps = {
@@ -168,6 +197,11 @@ function Services() {
     nodeSelector: "th",
   };
 
+  const deleteServiecs = (id) => {
+    console.log(id, "deleteId servd");
+    setdeleteServiceId(id);
+    setShowDeleteModal(true);
+  };
   const togglePopup = () => {
     setIsModal(!isModal);
   };
@@ -226,7 +260,17 @@ function Services() {
         loading={isLoading}
         handleSave={saveService}
         selectedService={selectedService}
+        deleteServiecs={deleteServiecs}
         errors={errors}
+      />
+
+      <DeleteModal
+        deleteServiecs={deleteServiecs}
+        ShowDeleteModal={ShowDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        handleDeleteOk={handleDeleteOk}
+        // deleteId={deleteCatelogId}
+        content={<>Do you real want to delete?</>}
       />
     </div>
   );
