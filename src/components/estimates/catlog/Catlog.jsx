@@ -43,6 +43,7 @@ export default function Catlog() {
   const [variations, setVariations] = useState({});
   const [isAddService, setIsAddService] = useState(false);
   const [IsEditData, setIsEditData] = useState(false);
+  const [IsAddData, setIsAddData] = useState(false);
   const [variationName, setVariationName] = useState("");
   const [variationPrice, setVariationPrice] = useState("");
   const [variationUnit, setVariationUnit] = useState("");
@@ -52,15 +53,18 @@ export default function Catlog() {
     setIsAddService(true);
   };
   const handleEditModal = async (id) => {
-    // console.log(id, "idddddddd");
+    console.log(id, "idddddddd");
     const body = { id: id };
     const getVariationData = await getVariationItem(body);
     setVariationName(getVariationData.data.data.name);
     setVariationPrice(getVariationData.data.data.price);
     setVariationUnit(getVariationData.data.data.unit);
     setdeleteCatelogId(getVariationData.data.data._id);
-    // console.log(getVariationData.data.data, "getVariationData");
-    setIsEditData(true);
+    console.log(getVariationData, "getVariationData");
+    // setIsAddData(true);
+    console.log(variationName, "VariationName");
+    setIsModal("additem");
+    setTitle("Edit Item");
   };
   const [visible, setVisible] = useState(false);
   const handelUpdate = () => {
@@ -116,11 +120,11 @@ export default function Catlog() {
                 type="text"
                 shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
-                // onClick={(e) => handleEditModal(variation._id)}
-                onClick={(e) => {
-                  setIsModal("additem",variation._id);
-                  setTitle("Add Item");
-                }}
+                onClick={(e) => handleEditModal(variation._id)}
+                // onClick={(e) => {
+                //   setIsModal("additem",variation._id);
+                //   setTitle("Add Item");
+                // }}
               >
                 <EditOutlined className="text-primary" />
               </Button>
@@ -275,6 +279,7 @@ export default function Catlog() {
           <AddItem
             handleCancel={handleCancel}
             selectedSubCatalog={selectedSubCatalog}
+            // IsAddData={IsAddData}
             handelUpdate={handelUpdate}
             setSelectedSubCatalog={setSelectedSubCatalog}
             itemDetails={{

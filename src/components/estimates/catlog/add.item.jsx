@@ -121,7 +121,7 @@ export default function AddItem({
       images,
     });
   };
-  console.log(props)
+  console.log(props,"additem props")
   return (
     
     <>

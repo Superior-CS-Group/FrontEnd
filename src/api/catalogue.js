@@ -58,6 +58,22 @@ export async function updateService(serviceId, data) {
   return response;
 }
 
+export async function removeServices(data) {
+  const response = await api.request({
+    url: "/v2/catalog/remove-services",
+    method: "post",
+    data,
+  });
+  if (response.remote === "success") {
+    return {
+      remote: response.remote,
+      data: response.data,
+    };
+  }
+  return response;
+}
+
+
 export async function createCatalogItem(data) {
   const response = await api.request({
     url: "/v2/catalog/create-catalog",
