@@ -8,7 +8,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import { ellps, Datel } from "../../../utils/svg.file";
 import { createFormula, getAllFormula } from "../../../api/formula";
 import DeleteModal from "../../modal/deleteModal.component";
-
+import SmallLoader from "../../loader/smallLoader";
 export default function Services() {
   const [ismadalvisable, setMadalvisable] = useState(false);
   const [data, setData] = useState([]);
@@ -16,7 +16,9 @@ export default function Services() {
   const [title, setTitle] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [state, setState] = useState({
+    smallLoader: true,
+  });
   React.useEffect(() => {
     fetchFormula();
   }, []);
@@ -43,6 +45,13 @@ export default function Services() {
       setData(data);
       setFiltredData(data);
     }
+    setTimeout(
+      () =>
+        setState({
+          smallLoader: false,
+        }),
+      1000
+    );
     console.log(result);
   }
   const showModal = () => {
@@ -154,15 +163,26 @@ export default function Services() {
           onChange={handleFilterService}
         />
         <div className="p-2 ant-table-seprate">
-          <Table
-            columns={columns}
-            dataSource={filtredData}
-            className="ant-table-color ant-th-style scroll-style munscher vertical-align"
-            rowSelection={rowSelection}
-            pagination={false}
-            bordered={false}
-            scroll={{ y: 500 }}
-          />
+          {state.smallLoader ? (
+            <>
+              <div className="text-center d-flex align-items-center justify-content-center ht-100">
+                <span className="">
+                  <SmallLoader />
+                  <p className="mt-2">Loading Please Wait....</p>
+                </span>
+              </div>
+            </>
+          ) : (
+            <Table
+              columns={columns}
+              dataSource={filtredData}
+              className="ant-table-color ant-th-style scroll-style munscher vertical-align"
+              rowSelection={rowSelection}
+              pagination={false}
+              bordered={false}
+              scroll={{ y: 500 }}
+            />
+          )}
           {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
             <div className="ms-auto pe-3 ant-select-box ">
               <span className="me-3">Action:</span>

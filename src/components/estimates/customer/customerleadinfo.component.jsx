@@ -28,7 +28,6 @@ export default function CustomerLeadInfo(props) {
     statusList: [],
     estimaitonStatus: "",
     resultData: [],
-    smallLoader: true,
   });
 
   useEffect(() => {

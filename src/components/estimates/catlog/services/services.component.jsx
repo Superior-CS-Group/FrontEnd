@@ -203,16 +203,18 @@ function Services() {
           </div>
         </>
       ) : (
-        <ReactDragListView.DragColumn {...dragProps}>
-          <Table
-            columns={columns}
-            pagination={false}
-            dataSource={data}
-            bordered={false}
-            className="components-table-demo-nested ant-thead-block scroll-style"
-            scroll={{ y: 360 }}
-          />
-        </ReactDragListView.DragColumn>
+        <>
+          <ReactDragListView.DragColumn {...dragProps}>
+            <Table
+              columns={columns}
+              pagination={false}
+              dataSource={data}
+              bordered={false}
+              className="components-table-demo-nested ant-thead-block scroll-style"
+              scroll={{ y: 360 }}
+            />
+          </ReactDragListView.DragColumn>
+        </>
       )}
       <EditService
         title="Edit Service"
