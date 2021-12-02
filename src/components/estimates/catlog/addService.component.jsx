@@ -1,6 +1,5 @@
 import React from "react";
-import { Row, Col, Progress, Form, Input, Button, Modal } from "antd";
-import { star, upload } from "../../../utils/svg.file";
+import { Row, Col, Form, Input, Button, Modal } from "antd";
 import { DollarCircleOutlined } from "@ant-design/icons";
 
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
@@ -13,7 +12,6 @@ export default function AddService(
   setSelectedSubCatalog,
   handelUpdate
 ) {
-  const { TextArea } = Input;
   const [loading, setLoading] = React.useState(false);
   const [itemDetails, setItemDetails] = React.useState({
     name: "",

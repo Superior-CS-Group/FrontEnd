@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Input, Table, Button, Image, message } from "antd";
+import { Card, Input, Table, Button, Image, Modal, Row, Col } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import {
   PlusCircleOutlined,
@@ -10,28 +11,23 @@ import {
   DownCircleFilled,
   DeleteOutlined,
   EditOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import SmallLoader from "../../loader/smallLoader";
 import CataLogModal from "./catalog.modal";
 import Addelement from "./add.element";
 import AddItem from "./add.item";
 import log from "../../../images/placeholder.jpg";
-import DeleteModal from "../../modal/deleteModal.component";
 import {
+  deleteCatalog,
   getCatalogItem,
-  getVariationItem,
   getVariationsByCatalogId,
-  removeCatalog,
+  removeVariation,
 } from "../../../api/catalogue";
-import CatalogServices from "./catalog.services";
 import AddService from "./addService.component";
-import EditItem from "./edit.item";
 import Services from "./services/services.component";
 
 export default function Catlog() {
-  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
-  const [ListShowPreview, setListShowPreview] = useState(false);
-  const [deleteCatelogId, setdeleteCatelogId] = useState();
   const [title, setTitle] = useState("Sub Category");
   const [isModal, setIsModal] = useState("");
   const [catalogItem, setCatalogItem] = useState([]);
@@ -42,37 +38,72 @@ export default function Catlog() {
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
   const [isAddService, setIsAddService] = useState(false);
-  const [IsEditData, setIsEditData] = useState(false);
-  const [IsAddData, setIsAddData] = useState(false);
-  const [variationName, setVariationName] = useState("");
-  const [variationPrice, setVariationPrice] = useState("");
-  const [variationUnit, setVariationUnit] = useState("");
-  const [selectedVariation, setSelectedVariation] = useState({});
+  const [selectedElement, setSelectedElement] = useState({});
+  const [search, setSearch] = useState("");
+
   const [state, setState] = useState({
     smallLoader: true,
   });
   const handleAddModal = () => {
     setIsAddService(true);
   };
-  const handleEditCatalog = () => {
-    setIsEditData(true);
+  const handleSelectedElement = (data, action) => {
+    setSelectedElement({
+      ...data,
+      action,
+    });
   };
-  const handleEditModal = async (id) => {
-    console.log(id, "idddddddd");
-    const body = { id: id };
-    const getVariationData = await getVariationItem(body);
-    setVariationName(getVariationData.data.data.name);
-    setVariationPrice(getVariationData.data.data.price);
-    setVariationUnit(getVariationData.data.data.unit);
-    setdeleteCatelogId(getVariationData.data.data._id);
-    console.log(getVariationData, "getVariationData");
-    // setIsAddData(true);
-    console.log(variationName, "VariationName");
-    setIsModal("additem");
-    setTitle("Edit Item");
+
+  const handleRemoveElement = async () => {
+    let response = {};
+    if (
+      selectedElement &&
+      ["subCatalog", "catalog"].includes(selectedElement.type)
+    ) {
+      response = await deleteCatalog(selectedElement._id);
+    } else {
+      response = await removeVariation(selectedElement._id);
+    }
+    console.log("response: ", response);
+    let newCatalogItem = [...catalogItem];
+    newCatalogItem = newCatalogItem.filter(
+      (item) => item._id !== selectedElement._id
+    );
+    let newFiltredCatalogItem = [...filtredCatalogItem];
+    newFiltredCatalogItem = newFiltredCatalogItem.filter(
+      (item) => item._id !== selectedElement._id
+    );
+    let newVariations = [...(variations[selectedElement._id] || [])];
+    newVariations = newVariations.filter(
+      (item) => item._id !== selectedElement._id
+    );
+    setCatalogItem(newCatalogItem);
+    setFilteredCatalogItem(newFiltredCatalogItem);
+    setVariations({
+      ...variations,
+      [selectedElement.catelogId]: newVariations,
+    });
+    setSelectedElement({});
   };
+
+  React.useEffect(() => {
+    if (selectedElement && selectedElement.action === "edit") {
+      if (selectedElement.type === "catalog") {
+        setIsModal("additem");
+      } else if (selectedElement.type === "subCatalog") {
+        setIsModal("subcategory");
+      } else if (selectedElement.type === "variation") {
+        setSelectedSubCatalog(selectedElement.catelogId);
+      }
+    } else if (selectedElement && selectedElement.action === "delete") {
+      console.log("delete");
+    }
+  }, [Object.keys(selectedElement).length]);
   const [visible, setVisible] = useState(false);
-  const handelUpdate = () => {
+  const handelUpdate = (variationId) => {
+    if (variationId) {
+      loadVariations(variationId);
+    }
     setIsUpdate(!isUpdate);
   };
 
@@ -124,12 +155,24 @@ export default function Catlog() {
               <Button
                 type="text"
                 shape="circle"
+                className="me-2 d-inline-flex align-items-center justify-content-center"
+                onClick={() => handleSelectedElement(variation, "delete")}
+              >
+                <DeleteOutlined
+                  className="text-danger"
+                  // onClick={(e) => removeCatalogData(element._id)}
+                />
+              </Button>
+              <Button
+                type="text"
+                shape="circle"
                 className="d-inline-flex align-items-center justify-content-center"
-                onClick={(e) => handleEditModal(variation._id)}
-                // onClick={(e) => {
-                //   setIsModal("additem",variation._id);
-                //   setTitle("Add Item");
-                // }}
+                onClick={() =>
+                  handleSelectedElement(
+                    { ...variation, type: "variation" },
+                    "edit"
+                  )
+                }
               >
                 <EditOutlined className="text-primary" />
               </Button>
@@ -137,7 +180,6 @@ export default function Catlog() {
           ),
         };
       });
-      console.log("valria: ", { ...variations, [id]: prcessedVariations });
       setVariations({ ...variations, [id]: prcessedVariations });
     }
     setTimeout(() => {
@@ -158,20 +200,22 @@ export default function Catlog() {
   const handleOk = () => {
     setIsModal(false);
     setIsAddService(false);
-    setIsEditData(false);
+    setSelectedElement({});
   };
 
   const handleCancel = () => {
     setIsAddService(false);
     setIsModal("");
-    setIsEditData(false);
+    setSelectedElement({});
   };
 
   const getCatalog = async () => {
     const response = await getCatalogItem();
     if (response.remote === "success") {
-      setCatalogItem(response.data.data);
-      setFilteredCatalogItem(response.data.data);
+      setCatalogItem([...response.data.data]);
+      setFilteredCatalogItem([...response.data.data]);
+      setSearch("a"); // force update
+      setSearch(""); // force update
     }
     setTimeout(
       () =>
@@ -214,20 +258,22 @@ export default function Catlog() {
               type="text"
               shape="circle"
               className="me-2 d-inline-flex align-items-center justify-content-center"
+              onClick={() => handleSelectedElement(element, "delete")}
             >
               <DeleteOutlined
                 className="text-danger"
-                onClick={(e) => removeCatalogData(element._id)}
+                // onClick={(e) => removeCatalogData(element._id)}
               />
             </Button>
             <Button
               type="text"
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
+              onClick={() => handleSelectedElement(element, "edit")}
             >
               <EditOutlined
                 className="text-primary"
-                onClick={handleEditCatalog}
+                // onClick={handleEditCatalog}
               />
             </Button>
           </>
@@ -237,26 +283,6 @@ export default function Catlog() {
     setExpandedRowRender(newElements);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtredCatalogItem.length]);
-
-  const removeCatalogData = async (id) => {
-    setdeleteCatelogId(id);
-    setShowDeleteModal(true);
-  };
-
-  const handleDeleteOk = (id) => {
-    console.log("deleteId", id);
-    const body = { id: id };
-    setShowDeleteModal(false);
-    const response = removeCatalog(body);
-
-    if (response.remote === "success") {
-    }
-    message.success("Data Deleted", 5);
-    setShowDeleteModal(false);
-  };
-  const handleDeleteClose = () => {
-    setShowDeleteModal(false);
-  };
 
   const columns = [
     {
@@ -287,22 +313,22 @@ export default function Catlog() {
     switch (isModal) {
       case "subcategory":
         return (
-          <Addelement handleCancel={handleCancel} handelUpdate={handelUpdate} />
+          <Addelement
+            handleCancel={handleCancel}
+            handelUpdate={handelUpdate}
+            selectedElement={selectedElement}
+            setSelectedElement={setSelectedElement}
+          />
         );
       case "additem":
         return (
           <AddItem
             handleCancel={handleCancel}
             selectedSubCatalog={selectedSubCatalog}
-            // IsAddData={IsAddData}
             handelUpdate={handelUpdate}
             setSelectedSubCatalog={setSelectedSubCatalog}
-            itemDetails={{
-              CatelogId: deleteCatelogId,
-              name: variationName,
-              price: variationPrice,
-              unit: variationUnit,
-            }}
+            selectedElement={selectedElement}
+            setSelectedElement={setSelectedElement}
           />
         );
 
@@ -310,13 +336,16 @@ export default function Catlog() {
         return "";
     }
   };
-  const filterCatalogItems = (e) => {
-    const value = e.target.value;
+  const filterCatalogItems = () => {
     const newCatalog = catalogItem.filter((item) => {
-      return item.name.toLowerCase().includes(value.toLowerCase());
+      return item.name.toLowerCase().includes(search.toLowerCase().trim());
     });
     setFilteredCatalogItem(newCatalog);
   };
+
+  React.useEffect(() => {
+    filterCatalogItems();
+  }, [search]);
 
   return (
     <>
@@ -410,7 +439,8 @@ export default function Catlog() {
                           suffix={
                             <SearchOutlined style={{ fontSize: "18px" }} />
                           }
-                          onChange={filterCatalogItems}
+                          onChange={(e) => setSearch(e.target.value)}
+                          value={search}
                         />
                       </div>
                     </div>
@@ -547,28 +577,27 @@ export default function Catlog() {
         handleCancel={handleCancel}
         width={575}
       />
-      <EditItem
-        title={title}
-        handleEditCatalog={handleEditCatalog}
-        handleEditModal={handleEditModal}
-        IsEditData={IsEditData}
-        deleteId={deleteCatelogId}
-        variationName={variationName}
-        variationPrice={variationPrice}
-        variationUnit={variationUnit}
-        // isModal={isModal}
-        handleOk={handleOk}
-        handleCancel={handleCancel}
-        width={575}
-      />
-      <DeleteModal
-        DeleteModalEstimate={removeCatalogData}
-        ShowDeleteModal={ShowDeleteModal}
-        handleDeleteClose={handleDeleteClose}
-        handleDeleteOk={handleDeleteOk}
-        deleteId={deleteCatelogId}
-        content={<>Do you real want to delete?</>}
-      />
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={selectedElement.action === "delete"}
+        footer={null}
+        closeIcon={<InfoCircleOutlined />}
+      >
+        <p>Are you sure you want to delete element ?</p>
+        <Row>
+          <Col md={12} className="text-center">
+            <Button type="text" onClick={() => setSelectedElement({})}>
+              Cancel
+            </Button>
+          </Col>
+          <Col md={12}>
+            <Button type="link" onClick={handleRemoveElement}>
+              Delete
+            </Button>
+          </Col>
+        </Row>
+      </Modal>
     </>
   );
 }
