@@ -23,6 +23,7 @@ function FormulaV2() {
   const [isUpdated, setIsUpdated] = React.useState(false);
   const [clientContract, setClientContract] = React.useState("");
   const [redirect, setRedirect] = React.useState(null);
+  const [catalogs, setCatalogs] = React.useState([]);
 
   const params = useLocation();
   React.useEffect(() => {
@@ -62,6 +63,9 @@ function FormulaV2() {
         materials: materials,
         clientContract: clientContract,
         title: title,
+        catalogs: catalogs.filter(
+          (item, pos) => catalogs.indexOf(item) === pos
+        ),
       };
       setTimeout(() => updateFormulaDetails(body), 1000);
     }
@@ -91,6 +95,7 @@ function FormulaV2() {
       newElementList[index].formula = [
         ...new Set([...(newElementList[index].formula || []), ...processed]),
       ];
+      setCatalogs([...(catalogs || []), ...processed]);
     }
     setElementList([...newElementList]);
   };
@@ -137,6 +142,7 @@ function FormulaV2() {
       newMaterials[index].formula = [
         ...new Set([...(newMaterials[index].formula || []), ...processed]),
       ];
+      setCatalogs([...(catalogs || []), ...processed]);
     }
     // }
     setMaterials([...newMaterials]);

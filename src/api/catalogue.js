@@ -8,9 +8,9 @@ export async function deleteCatalog(id) {
   return response;
 }
 
-export async function getCatalogItem() {
+export async function getCatalogItem(id) {
   const response = await api.request({
-    url: "/v2/catalog/get-all-catalog",
+    url: `/v2/catalog/get-all-catalog?catalogId=${id}`,
     method: "GET",
   });
   return response;

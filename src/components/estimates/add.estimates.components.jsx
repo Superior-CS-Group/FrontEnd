@@ -243,6 +243,13 @@ export default function AddEstimates(props) {
 
   function handleEditDropdownField(e, index, subIndex) {
     const newSelectedFormula = [...selectedFormulas];
+    console.log(
+      "newSelectedFormula",
+      newSelectedFormula[index].elements[subIndex],
+      index,
+      subIndex,
+      e
+    );
     const selectedOption = newSelectedFormula[index].elements[
       subIndex
     ].options.find((el) => el._id === e);
@@ -252,15 +259,12 @@ export default function AddEstimates(props) {
   }
 
   function handleOptionElement(value, index, subIndex, id) {
-    console.log({ value, index, subIndex });
     const newSelectedFormula = [...selectedFormulas];
     const optionalElement = newSelectedFormula[index].elements.find(
       (elem) => elem._id === id
     );
     optionalElement.multiplicationFactor = value;
-    console.log("optionalElement: ", { optionalElement });
     // newSelectedFormula[index].elements[subIndex] = optionalElement;
-    console.log(newSelectedFormula);
     setSelectedFormulas(newSelectedFormula);
   }
 
@@ -268,7 +272,16 @@ export default function AddEstimates(props) {
     return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
-  function processFormula(formula, materials, elements, multiplicationFactor) {
+  function processFormula(
+    formula,
+    materials,
+    elements,
+    multiplicationFactor,
+    name
+  ) {
+    if (name === "Days w/ 5 guys") {
+      console.log("labour: ", formula);
+    }
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
@@ -276,26 +289,28 @@ export default function AddEstimates(props) {
           price: item.price,
         };
       });
+
       usedMaterials.forEach((material) => {
         const regex = new RegExp(escapeRegExp(material.title), "g");
         formula = formula.replace(regex, material.price);
       });
     }
-
+    if (name === "Days w/ 5 guys") {
+      console.log("labour1: ", formula);
+    }
     if (elements) {
       const usedElements = elements.map((element) => {
         return {
           title: `@{{element||${element._id}||${element.name}}}`,
-          price: (
-            Number(element.value) *
-            (element.multiplicationFactor === undefined ||
+          price: `${element.value} * ${
+            element.multiplicationFactor === undefined ||
             element.multiplicationFactor === null
               ? 1
-              : Number(element.multiplicationFactor))
-          ).toString(),
+              : element.multiplicationFactor
+          }`,
+          usedMaterials: element.formula,
         };
       });
-
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
@@ -307,22 +322,29 @@ export default function AddEstimates(props) {
         }
       });
     }
+    if (name === "Days w/ 5 guys") {
+      console.log("labour2: ", formula);
+    }
     try {
       multiplicationFactor =
         multiplicationFactor === undefined || multiplicationFactor === null
           ? 1
           : multiplicationFactor;
-      console.log({
-        formula,
-        materials,
-        elements,
-        multiplicationFactor,
-      });
+
+      if (formula.match(/@\{\{[^\}]+\}\}/gi) && materials.length) {
+        formula = processFormula(formula, materials);
+      }
+      if (name === "Days w/ 5 guys") {
+        console.log("labour3: ", formula);
+      }
       const result =
         Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
+      if (name === "Days w/ 5 guys") {
+        console.log("labor3", formula);
+      }
+
       return result;
     } catch (error) {
-      console.log("error: ", error);
       return 0;
     }
   }
@@ -334,18 +356,21 @@ export default function AddEstimates(props) {
     const materials = [...formula.materials].map((material) => {
       let quantity = processFormula(
         material.quantity || "",
-        material.formula,
-        elements
+        formula.catalogs || [],
+        elements,
+        undefined,
+        material.name
       );
 
       let cost =
         quantity *
-        processFormula(material.cost || "", material.formula, elements);
+        processFormula(material.cost || "", formula.catalogs || [], elements);
       let charge = processFormula(
         material.charge.replace("{Cost}", cost) || "",
-        material.formula,
+        formula.catalog || [],
         elements
       );
+
       processClientContract(formula, material.formula, elements);
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
@@ -353,12 +378,10 @@ export default function AddEstimates(props) {
     });
     formula.totalMaterialsCost = totalMaterialsCost;
     formula.totalProjectCharge = totalMaterialsCharge;
-    const profitPercent = Number(
-      (
-        (totalMaterialsCharge - totalMaterialsCost) /
-        totalMaterialsCost
-      ).toFixed(2)
-    );
+    const profitPercent = (
+      Number((totalMaterialsCharge / totalMaterialsCost) * 100) - 100
+    ).toFixed(2);
+    console.log("profitPercent", profitPercent, `${profitPercent}%`);
     formula.grossProfit = `${profitPercent}%`;
     return materials;
   }
@@ -376,7 +399,6 @@ export default function AddEstimates(props) {
     const body = { services: selectedFormulas, userId: props.custInfo.id };
     if (estimationId) {
       const updated = await updateUserEstimation(estimationId, body);
-      console.log(updated);
     } else {
       const response = await createUserEstimation(body);
       if (response.remote === "success") {
@@ -410,7 +432,6 @@ export default function AddEstimates(props) {
         const regex = new RegExp(escapeRegExp(material.title), "g");
         newContract = newContract.replace(regex, material.price);
       });
-      console.log("useMaterials: ", formula);
     }
 
     if (elements) {
@@ -431,9 +452,7 @@ export default function AddEstimates(props) {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
           newContract = newContract.replace(regex, element.price);
-        } catch (error) {
-          console.log("regex; ", regex);
-        }
+        } catch (error) {}
       });
     }
     formula.processedClientContract = newContract;
@@ -653,118 +672,126 @@ export default function AddEstimates(props) {
                       ]}
                     >
                       <Row gutter={[24, 0]}>
-                        {formula.elements
-                          .filter((elem) => elem.view.includes(view))
-                          .map((element, idx) => {
-                            return (
-                              <Col lg={6} span={24} key={idx}>
-                                <Card
-                                  bordered={false}
-                                  className={`radius-12 mb-3  count-card ${
-                                    element.automatic ? "blue-card" : ""
-                                  }`}
-                                  bodyStyle={{ padding: "16px" }}
-                                  key={idx}
-                                >
-                                  <div className="text-end drgicon"></div>
-                                  <span>{element.name}</span>
+                        {formula.elements.map((element, idx) => {
+                          return (
+                            <Col
+                              lg={6}
+                              span={24}
+                              key={idx}
+                              style={{
+                                display: element.view?.includes(view)
+                                  ? "block"
+                                  : "none",
+                              }}
+                            >
+                              <Card
+                                bordered={false}
+                                className={`radius-12 mb-3  count-card ${
+                                  element.automatic ? "blue-card" : ""
+                                }`}
+                                bodyStyle={{ padding: "16px" }}
+                                key={idx}
+                              >
+                                <div className="text-end drgicon"></div>
+                                <span>{element.name}</span>
 
-                                  <div className="d-flex align-items-center justify-content-between">
-                                    {element.type === "manual" ||
-                                    element.type === "prefilled" ? (
-                                      <Input
-                                        onChange={(e) => {
-                                          handleEditField(
-                                            e,
-                                            index,
-                                            "elements",
-                                            idx
-                                          );
-                                        }}
-                                        name="value"
-                                        value={element.value}
-                                        type="number"
-                                      />
-                                    ) : element.type === "dropdown" ? (
-                                      <Select
-                                        style={{ width: "100%" }}
-                                        onChange={(value) =>
-                                          handleEditDropdownField(
-                                            value,
-                                            index,
-                                            idx
-                                          )
-                                        }
-                                        value={element.selected?._id}
-                                      >
-                                        {element.options?.map((option) => {
-                                          return (
-                                            <Option
-                                              value={option._id}
-                                              key={option._id}
-                                            >
-                                              {option.name}
-                                            </Option>
-                                          );
-                                        })}
-                                      </Select>
-                                    ) : element.type === "boolean" ? (
-                                      <Select
-                                        style={{ width: "100%" }}
-                                        onChange={(value) =>
-                                          handleOptionElement(
-                                            value,
-                                            index,
-                                            idx,
-                                            element.value
-                                          )
-                                        }
-                                      >
-                                        <Option value={1}>Yes</Option>
-                                        <Option value={0}>No</Option>
-                                      </Select>
-                                    ) : element.name === "Markup" ? (
-                                      <Input
-                                        onChange={(e) => {
-                                          handleEditField(
-                                            e,
-                                            index,
-                                            "elements",
-                                            idx
-                                          );
-                                        }}
-                                        name="value"
-                                        value={element.value}
-                                        type="number"
-                                      />
-                                    ) : element.name === "Total Cost" ? (
-                                      <Input
-                                        name="value"
-                                        value={formula.totalMaterialsCost}
-                                        disabled
-                                      />
-                                    ) : element.name === "Gross Profit" ? (
-                                      <Input
-                                        name="value"
-                                        value={formula.grossProfit}
-                                        disabled
-                                      />
-                                    ) : (
-                                      <h4>
-                                        {processFormula(
-                                          element.value,
-                                          element.formula || [],
-                                          formula.elements,
-                                          element.multiplicationFactor
-                                        )}
-                                      </h4>
-                                    )}
-                                    {/* <EditOutlined /> */}
-                                  </div>
-                                </Card>
-                              </Col>
-                            );
-                          })}
+                                <div className="d-flex align-items-center justify-content-between">
+                                  {element.type === "manual" ||
+                                  element.type === "prefilled" ? (
+                                    <Input
+                                      onChange={(e) => {
+                                        handleEditField(
+                                          e,
+                                          index,
+                                          "elements",
+                                          idx
+                                        );
+                                      }}
+                                      name="value"
+                                      value={element.value}
+                                      type="number"
+                                    />
+                                  ) : element.type === "dropdown" ? (
+                                    <Select
+                                      style={{ width: "100%" }}
+                                      onChange={(value) =>
+                                        handleEditDropdownField(
+                                          value,
+                                          index,
+                                          idx
+                                        )
+                                      }
+                                      value={element.selected?._id}
+                                    >
+                                      {element.options?.map((option) => {
+                                        return (
+                                          <Option
+                                            value={option._id}
+                                            key={option._id}
+                                          >
+                                            {option.name}
+                                          </Option>
+                                        );
+                                      })}
+                                    </Select>
+                                  ) : element.type === "boolean" ? (
+                                    <Select
+                                      style={{ width: "100%" }}
+                                      onChange={(value) =>
+                                        handleOptionElement(
+                                          value,
+                                          index,
+                                          idx,
+                                          element.value
+                                        )
+                                      }
+                                    >
+                                      <Option value={1}>Yes</Option>
+                                      <Option value={0}>No</Option>
+                                    </Select>
+                                  ) : element.name === "Markup" ? (
+                                    <Input
+                                      onChange={(e) => {
+                                        handleEditField(
+                                          e,
+                                          index,
+                                          "elements",
+                                          idx
+                                        );
+                                      }}
+                                      name="value"
+                                      value={element.value}
+                                      type="number"
+                                    />
+                                  ) : element.name === "Total Cost" ? (
+                                    <Input
+                                      name="value"
+                                      value={formula.totalMaterialsCost}
+                                      disabled
+                                    />
+                                  ) : element.name === "Gross Profit" ? (
+                                    <Input
+                                      name="value"
+                                      value={formula.grossProfit}
+                                      disabled
+                                    />
+                                  ) : (
+                                    <h4>
+                                      {processFormula(
+                                        element.value,
+                                        element.formula || [],
+                                        formula.elements,
+                                        element.multiplicationFactor,
+                                        element.name
+                                      )}
+                                    </h4>
+                                  )}
+                                  {/* <EditOutlined /> */}
+                                </div>
+                              </Card>
+                            </Col>
+                          );
+                        })}
                       </Row>
 
                       <Card className="radius-12 ant-estimate-table-card">

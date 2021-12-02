@@ -38,8 +38,8 @@ export default function Catlog() {
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
   const [isAddService, setIsAddService] = useState(false);
-  const [selectedElement, setSelectedElement] = useState({});
   const [search, setSearch] = useState("");
+  const [selectedElement, setSelectedElement] = useState({});
 
   const [state, setState] = useState({
     smallLoader: true,

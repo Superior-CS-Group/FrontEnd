@@ -2,7 +2,7 @@ import { Col, Input, Row, Select } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
-import { searchCatalogByName } from "../../../../api/catalogue";
+import { getCatalogItem, searchCatalogByName } from "../../../../api/catalogue";
 const typeOfOptions = [
   { type: "manual", title: "Manual Entry" },
   { type: "prefilled", title: "Prefilled but Editable" },
@@ -21,14 +21,15 @@ function ElementCard({
   handleRemoveElement,
 }) {
   const { Option } = Select;
-  const [unit, setUnit] = React.useState([]);
+  // const [unit, setUnit] = React.useState([]);
+  const [tempName, setTempName] = React.useState("");
   const [view, setView] = React.useState([]);
   const [typeOfElement, setTypeOfElement] = React.useState("");
   const [suggestedCatalogs, setSuggestedCatalogs] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState("");
 
   React.useEffect(() => {
-    setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
+    // setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
     setTypeOfElement(element.type || "manual");
     setView([
       { type: "client", title: "Client view" },
@@ -47,6 +48,14 @@ function ElementCard({
     }
   }
 
+  async function getSubCatalog(id) {
+    const catalogs = await getCatalogItem(id);
+    console.log("catalogs: ", catalogs);
+    if (catalogs.remote === "success") {
+      setTempName(catalogs.data.data[0].name);
+    }
+  }
+
   React.useEffect(() => {
     searchCatalog();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,6 +63,9 @@ function ElementCard({
   const renderSection = () => {
     switch (typeOfElement) {
       case "dropdown":
+        if (element.dropdown) {
+          getSubCatalog(element.dropdown);
+        }
         return (
           <Row gutter={[24, 0]} className="mb-3">
             <Col md={8} className="mb-3">
@@ -72,7 +84,7 @@ function ElementCard({
                     .toLowerCase()
                     .includes(input.toLowerCase());
                 }}
-                value={element.dropdown}
+                value={tempName || element.dropdown}
                 onBlur={onFocusOut}
               >
                 {suggestedCatalogs.map((catalog) => (
@@ -258,7 +270,7 @@ function ElementCard({
 
         {renderSection()}
 
-        <Row gutter={[8, 0]} className="align-items-center mb-3">
+        {/* <Row gutter={[8, 0]} className="align-items-center mb-3">
           <Col md={8}>
             <label>Unit Type:</label>
           </Col>
@@ -284,7 +296,7 @@ function ElementCard({
               })}
             </Select>
           </Col>
-        </Row>
+        </Row> */}
         <Row gutter={[8, 0]} className="align-items-center">
           <Col md={8}>
             <label>View</label>
