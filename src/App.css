@@ -429,7 +429,7 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   background: #fff;
   position: relative;
   z-index: 1;
-  margin-top: -6px;
+  /* margin-top: -6px; */
 }
 
 .fillter-btn {
@@ -1557,6 +1557,8 @@ ul.work-scope-list li {
 .team-pic {
   width: 100%;
   border-radius: 25px;
+  height: 400px;
+  object-fit: cover;
 }
 .sub-total-div li {
   list-style: none;
@@ -2504,4 +2506,15 @@ img.preview-logo {
 .ht-100 {
   min-height: 300px;
   overflow: hidden;
+}
+ul.catlog-tabs.nav:after {
+  content: "";
+  right: 0px;
+  position: absolute;
+  width: 14px;
+  top: 54px;
+  height: 20px;
+  /* border-top-right-radius: 20px; */
+  background: #1a73e8;
+  border-radius: 0px 0px 5px 5px;
 }

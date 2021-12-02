@@ -207,7 +207,7 @@ export default class MainEstimates extends Component {
                 </Nav>
               </div>
 
-              <div className="p-2 ant-table-seprate">
+              <div className="ant-table-seprate">
                 <Datatable />
 
                 <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
