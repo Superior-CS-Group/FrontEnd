@@ -77,6 +77,7 @@ function Services() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [pageNumber, setPageNumber] = React.useState(1);
   const [isUpdate, setIsUpdate] = React.useState(false);
+  const [isAddService, setIsAddService] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [selectedService, setSelectedService] = React.useState(null);
   const [serviceDetails, setServiceDetails] = React.useState({
@@ -125,7 +126,7 @@ function Services() {
                 className="text-primary"
                 onClick={() => {
                   setSelectedService(item);
-                  togglePopup();
+                  togglePopup("edit");
                 }}
               />
             </Button>
@@ -149,13 +150,14 @@ function Services() {
   }, [isUpdate]);
 
   const saveService = async () => {
-    const body = { ...serviceDetails };
+    const body = { ...selectedService };
     setErrors({});
     setIsLoading(true);
     const { isValid, errors } = validateCreateServiceInput(body);
     console.log("body: ", body, errors);
     if (!isValid) {
       setErrors(errors);
+      setIsLoading(false);
       return;
     }
     let response = {};
@@ -178,11 +180,14 @@ function Services() {
   };
 
   const handleChange = (e) => {
+    e.preventDefault();
      
       const newServiceDetails = { ...serviceDetails };
+      console.log(e.target.value)
       newServiceDetails[e.target.name] = e.target.value;
       setServiceDetails(newServiceDetails);
-    console.log(e,"eeeeeeeee")
+      setSelectedService(newServiceDetails);
+    console.log(newServiceDetails,"eeeeeeeee")
     
   };
 
@@ -201,16 +206,24 @@ function Services() {
     console.log(id, "deleteId servd");
     setdeleteServiceId(id);
     setShowDeleteModal(true);
+   
   };
-  const togglePopup = () => {
+  const togglePopup = (actio) => {
     setIsModal(!isModal);
+    if(actio === 'add'){
+    setIsAddService(true);
+    setErrors({});
+    }
+    else
+    setIsAddService(false);
+   
   };
 
   return (
     <div>
       <div className="p-2">
         <div className="fillter d-lg-flex align-items-center">
-          <span className="ant-blue-plus me-4" onClick={togglePopup}>
+          <span className="ant-blue-plus me-4" onClick={()=>togglePopup("add")}>
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
             Add Services
           </span>
@@ -252,7 +265,7 @@ function Services() {
       )}
       <EditService
         title="Edit Service"
-        handleInputChange={handleChange}
+         handleInputChange={handleChange}
         isEditservices={isModal}
         handleOk={() => console.log("ok")}
         handleCancel={togglePopup}
@@ -262,6 +275,8 @@ function Services() {
         selectedService={selectedService}
         deleteServiecs={deleteServiecs}
         errors={errors}
+        isAddService={isAddService}
+       
       />
 
       <DeleteModal

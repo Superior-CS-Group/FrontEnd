@@ -383,7 +383,7 @@ export default function Catlog() {
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li">
-                <Nav.Link>
+                <Nav.Link> 
                   <b class="left-curve"></b>
                   <b class="right-curve"></b>
                   <span>
@@ -497,6 +497,7 @@ export default function Catlog() {
                         rowExpandable: (element) =>
                           element.type === "subCatalog",
                         expandIcon: ({ expanded, onExpand, record }) => {
+                          console.log('eeeeeeee',record);
                           if (record.type === "subCatalog") {
                             return expanded ? (
                               <UpCircleFilled
