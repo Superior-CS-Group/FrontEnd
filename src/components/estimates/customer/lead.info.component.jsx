@@ -371,6 +371,7 @@ export default function LeadInfo() {
               <Col md={12}>
                 <Form.Item label="Full Name">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="name"
                     value={state.name}
@@ -382,6 +383,7 @@ export default function LeadInfo() {
                 </Form.Item>{" "}
                 <Form.Item label="Email">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="email"
                     value={state.email}
@@ -401,7 +403,7 @@ export default function LeadInfo() {
                       <Input
                         // international
                         // defaultCountry="RU"
-
+                        className="radius-30"
                         size="large"
                         name="contactNo"
                         value={state.contactNo}
@@ -415,6 +417,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="Job Farness">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="distance"
                         placeholder="Minute"
@@ -429,6 +432,7 @@ export default function LeadInfo() {
               <Col md={12}>
                 <Form.Item label="Country">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="country"
                     value={state.country}
@@ -448,6 +452,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="City ">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="city"
                         value={state.city}
@@ -461,6 +466,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="State">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="states"
                         value={state.states}
@@ -476,6 +482,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="Address">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="address"
                         value={state.address}
@@ -489,6 +496,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="Zip code">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="postalCode"
                         value={state.postalCode}
@@ -504,6 +512,7 @@ export default function LeadInfo() {
               <Col md={24}>
                 <Form.Item label="Other Information">
                   <TextArea
+                    className="radius-30"
                     size="large"
                     rows={4}
                     name="otherInformation"
@@ -550,6 +559,7 @@ export default function LeadInfo() {
               <Col md={12}>
                 <Form.Item label="Full Name">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="spouseName"
                     value={state.spouseName}
@@ -558,6 +568,7 @@ export default function LeadInfo() {
                 </Form.Item>{" "}
                 <Form.Item label="Email">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="spouseEmail"
                     value={state.spouseEmail}
@@ -569,6 +580,7 @@ export default function LeadInfo() {
                 </Form.Item>
                 <Form.Item label="Phone">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="spousePhone"
                     value={state.spousePhone}
@@ -580,6 +592,7 @@ export default function LeadInfo() {
               <Col md={12}>
                 <Form.Item label="Other Information">
                   <TextArea
+                    className="radius-30"
                     size="large"
                     name="spouseOtherInfo"
                     value={state.spouseOtherInfo}
