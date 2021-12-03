@@ -770,11 +770,11 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 .add-btn:hover {
   color: #fff;
 }
-
+/* 
 .tab-div li.active {
   background-color: #1890ff;
   color: #fff;
-}
+} */
 .tab-div li {
   display: inline-block;
   width: 50%;
@@ -2581,10 +2581,17 @@ tr.ant-table-measure-row {
 .green-switch .ant-switch-checked {
   background-color: #2ed47a !important;
 }
-/* .cursor-btn.del-btn-svg svg {
-  width: 11px;
-  display: none;
+.tab-div li.active {
+  /* background-color: #1890ff; */
+  position: relative;
+  border-bottom: 8px solid #1890ff;
 }
-tr:hover .cursor-btn.del-btn-svg svg {
-  display: inline-flex;
-} */
+.tab-div li.active:after {
+  content: "\A";
+  border-style: solid;
+  border-width: 12px 8px 0px 8px;
+  border-color: #1890ff transparent transparent transparent;
+  position: absolute;
+  left: 48%;
+  bottom: -20px;
+}
