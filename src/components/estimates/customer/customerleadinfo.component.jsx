@@ -233,12 +233,15 @@ export default function CustomerLeadInfo(props) {
                       </Button>
                       <Button
                         // style={{ width: "150px" }}
-                        className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
+                        className="add-btn me-4 align-items-center justify-content-center"
                         type="primary"
                         shape="round"
                         size={size}
+                        onClick={toggleAddNew}
+                        style={{
+                          display: isAddingNew ? "none" : "block",
+                        }}
                       >
-                        {" "}
                         <span style={{ marginRight: "5px" }}>{time}</span>
                         Create Estimate
                       </Button>

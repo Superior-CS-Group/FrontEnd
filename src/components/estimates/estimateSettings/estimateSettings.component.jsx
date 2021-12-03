@@ -5,6 +5,7 @@ function EstimateSettings({
   totalCharge,
   estimationSettings,
   setEstimationSettings,
+  onBlur,
 }) {
   const [estimateSettings, setEstimateSettings] = React.useState([
     {
@@ -90,6 +91,7 @@ function EstimateSettings({
                     type="number"
                     min={0}
                     max={100}
+                    onBlur={onBlur}
                   />
                 ) : (
                   <Input
@@ -99,6 +101,7 @@ function EstimateSettings({
                     disabled
                     onChange={(e) => setDiscount(e.target.value)}
                     type="number"
+                    onBlur={onBlur}
                   />
                 ),
               ]}

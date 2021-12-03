@@ -129,13 +129,13 @@ export default function EstimationList({ toggleAddNew }) {
               // onClick={this.showModal}
             >
               {/* <Link to="#"> */}
-              <Button
+              {/* <Button
                 className="radius-30"
                 type="primary"
                 onClick={toggleAddNew}
               >
                 Make New Estimation
-              </Button>
+              </Button> */}
               {/* </Link> */}
             </span>
 
