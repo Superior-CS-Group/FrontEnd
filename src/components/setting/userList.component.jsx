@@ -73,7 +73,7 @@ export default class UserList extends Component {
             </Nav>
           </div>
 
-          <div className="p-2">
+          <div className="px-2">
             <UserTable />
           </div>
         </Card>

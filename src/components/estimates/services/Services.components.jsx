@@ -39,7 +39,6 @@ export default function Services() {
         return {
           key: idx,
           ...item,
-          view: <EyeOutlined />,
         };
       });
       setData(data);
@@ -83,18 +82,28 @@ export default function Services() {
         </>
       ),
       dataIndex: "title",
-      render: (text) => <a>{text} </a>,
-      width: 450,
-    },
-    {
-      title: (
-        <>
-          Formula <span className="float-end">{ellps}</span>
-        </>
+      render: (text) => (
+        <a>
+          {text}{" "}
+          <span
+            className="me-2 cursor-btn del-btn-svg"
+            onClick={handleDeleteData}
+          >
+            {Datel}
+          </span>{" "}
+        </a>
       ),
-      dataIndex: "formula",
       width: 450,
     },
+    // {
+    //   title: (
+    //     <>
+    //       Formula <span className="float-end">{ellps}</span>
+    //     </>
+    //   ),
+    //   dataIndex: "formula",
+    //   width: 450,
+    // },
     {
       key: "_id",
       width: 300,
@@ -105,25 +114,19 @@ export default function Services() {
       ),
       dataIndex: "view",
       className: "text-end",
-      render: (view, tags) => {
-        return (
-          <>
-            <Link
-              to={`/v2/formula-tree?formulaId=${tags._id}`}
-              style={{ color: "inherit" }}
-            >
-              {view}
-            </Link>
-            &nbsp;
-            <span
-              className="me-2 cursor-btn del-btn-svg"
-              onClick={handleDeleteData}
-            >
-              {Datel}
-            </span>
-          </>
-        );
-      },
+      // render: (view, tags) => {
+      //   return (
+      //     <>
+      //       <Link
+      //         to={`/v2/formula-tree?formulaId=${tags._id}`}
+      //         style={{ color: "inherit" }}
+      //       >
+      //         {view}
+      //       </Link>
+      //       &nbsp;
+      //     </>
+      //   );
+      // },
     },
   ];
 
@@ -162,6 +165,7 @@ export default function Services() {
           placeholder="Search services by name"
           onChange={handleFilterService}
         />
+      
         <div className="p-2 ant-table-seprate">
           {state.smallLoader ? (
             <>
@@ -176,7 +180,7 @@ export default function Services() {
             <Table
               columns={columns}
               dataSource={filtredData}
-              className="ant-table-color ant-th-style scroll-style munscher vertical-align"
+              className="components-table-demo-nested ant-thead-block scroll-style"
               rowSelection={rowSelection}
               pagination={false}
               bordered={false}

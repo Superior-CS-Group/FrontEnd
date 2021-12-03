@@ -2376,7 +2376,7 @@ input::-webkit-inner-spin-button {
 }
 
 .components-table-demo-nested .ant-table-row-expand-icon-cell {
-  padding: 0px!important;
+  padding: 0px !important;
   width: 63px;
 }
 
@@ -2570,6 +2570,19 @@ ul.catlog-tabs.nav:after {
   padding: 8px 16px !important;
   overflow-wrap: break-word;
 }
+tr.ant-table-measure-row td {
+  padding: 0 !important;
+}
 tr.ant-table-measure-row {
-  display: contents;
+  box-shadow: none !important;
+}
+.green-switch .ant-switch-checked {
+  background-color: #2ed47a !important;
+}
+.cursor-btn.del-btn-svg svg {
+  width: 11px;
+  display: none;
+}
+tr:hover .cursor-btn.del-btn-svg svg {
+  display: inline-flex;
 }
