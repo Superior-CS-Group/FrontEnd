@@ -487,41 +487,22 @@ export default function AddEstimates(props) {
         {/* <BreadcrumbBar name="Estimates" subname="Add Estimate" /> */}
         <Row className="mt-4 mb-4">
           <Col span="4">
-            {isSearchingFormula ? (
-              <div>
-                <Input
-                  className="radius-30 me-2"
-                  onChange={(e) => handleFormulaSearch(e.target.value)}
-                  suffix={[
-                    <span
-                      onClick={() => setIsSearchingFormula(false)}
-                      style={{ marginTop: "-5px" }}
-                    >
-                      <CloseCircleOutlined />
-                    </span>,
-                  ]}
-                />
-                <div className="sagision radius-12 position-absolute w-100">
-                  <ul>
-                    {formulas.map((formula, idx) => (
-                      <li onClick={() => handleSelectFormula(formula, idx)}>
-                        {formula.title}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            <div>
+              <Input
+                className="radius-30 me-2"
+                onChange={(e) => handleFormulaSearch(e.target.value)}
+                placeholder="Serch Service"
+              />
+              <div className="sagision radius-12 position-absolute w-100">
+                <ul>
+                  {formulas.map((formula, idx) => (
+                    <li onClick={() => handleSelectFormula(formula, idx)}>
+                      {formula.title}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ) : (
-              <Button
-                type="primary"
-                className="radius-30 ant-primary-btn font-15 ps-2"
-                size="large"
-                onClick={() => setIsSearchingFormula(true)}
-              >
-                <PlusCircleOutlined style={{ fontSize: "24px" }} />
-                Add Service
-              </Button>
-            )}
+            </div>
           </Col>
           <Col span={8} className="text-end pe-5">
             <Link
@@ -797,11 +778,11 @@ export default function AddEstimates(props) {
                 key="3"
                 className="border-0 ant-bootom-line-effect"
               >
-                <PaymentTerms
+                {/* <PaymentTerms
                   totalCharge={totalPorjectCharge}
                   paymentTerms={paymentTerms}
                   setPaymentTerms={setPaymentTerms}
-                />
+                /> */}
               </Panel>
             </Collapse>
           </Col>

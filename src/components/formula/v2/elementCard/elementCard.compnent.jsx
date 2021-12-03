@@ -1,5 +1,5 @@
 import { Col, Input, Row, Select } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+// import { DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 import { getCatalogItem, searchCatalogByName } from "../../../../api/catalogue";
@@ -18,7 +18,7 @@ function ElementCard({
   idx,
   elementList,
   onFocusOut,
-  handleRemoveElement,
+  // handleRemoveElement,
 }) {
   const { Option } = Select;
   // const [unit, setUnit] = React.useState([]);
