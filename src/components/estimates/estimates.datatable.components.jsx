@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, message, Skeleton, Switch } from "antd";
+import { Table, Checkbox, Input, message, Switch } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -297,8 +297,9 @@ export default function Datatable(props) {
             </>
           ),
           autoFollowUp: (
-            <><div className="green-switch">
-              <Switch defaultChecked onChange={onChange} />
+            <>
+              <div className="green-switch">
+                <Switch defaultChecked onChange={onChange} />
               </div>
             </>
           ),

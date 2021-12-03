@@ -14,12 +14,11 @@ import {
   DatePicker,
   Form,
   Modal,
+  message,
 } from "antd";
 import {
-  PlusCircleOutlined,
   SaveOutlined,
   CloseCircleFilled,
-  CloseCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import { eye } from "../../utils/svg.file";
@@ -48,13 +47,13 @@ export default function AddEstimates(props) {
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
   const [estimationId, setEstimationId] = React.useState(null);
-  const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectIndex, setSelectIndex] = React.useState(null);
   const [totalPorjectCharge, setTotalProjectCharge] = React.useState(0);
   const [estimationSettings, setEstimationSettings] = React.useState({});
   const [paymentTerms, setPaymentTerms] = React.useState({});
+  const [isUpdate, setIsUpdate] = React.useState(false);
   const columns = [
     {
       title: "Materials needed:",
@@ -77,6 +76,20 @@ export default function AddEstimates(props) {
       dataIndex: "charge",
     },
   ];
+
+  const [isSaved, setIsSaved] = React.useState(false);
+  const success = (content) => {
+    const key = "updatable";
+    message.loading({ content: content, key });
+    // Dismiss manually and asynchronously
+    if (isSaved) {
+      setIsSaved(false);
+      message.success({ content: "Saved", key, duration: 2 });
+    }
+  };
+  const onFocusOut = () => {
+    setIsUpdate(!isUpdate);
+  };
 
   const markup = [
     {
@@ -332,8 +345,10 @@ export default function AddEstimates(props) {
       userId: props.custInfo.id,
       estimateSettings: estimationSettings,
     };
+    success("Saving...");
     if (estimationId) {
       await updateUserEstimation(estimationId, body);
+      setIsSaved(true);
     } else {
       const response = await createUserEstimation(body);
       if (response.remote === "success") {
@@ -393,6 +408,14 @@ export default function AddEstimates(props) {
     formula.processedClientContract = newContract;
     return newContract;
   };
+
+  React.useEffect(() => {
+    if (isUpdate) {
+      console.log("Saving.....");
+      handleSaveEstimations();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdate]);
 
   return (
     <>
@@ -623,6 +646,7 @@ export default function AddEstimates(props) {
                                           idx
                                         );
                                       }}
+                                      onBlur={onFocusOut}
                                       name="value"
                                       value={element.value}
                                       type="number"
@@ -638,6 +662,7 @@ export default function AddEstimates(props) {
                                         )
                                       }
                                       value={element.selected?._id}
+                                      onBlur={onFocusOut}
                                     >
                                       {element.options?.map((option) => {
                                         return (
@@ -661,6 +686,7 @@ export default function AddEstimates(props) {
                                           element.value
                                         )
                                       }
+                                      onBlur={onFocusOut}
                                     >
                                       <Option value={1}>Yes</Option>
                                       <Option value={0}>No</Option>
@@ -675,6 +701,7 @@ export default function AddEstimates(props) {
                                           idx
                                         );
                                       }}
+                                      onBlur={onFocusOut}
                                       name="value"
                                       value={element.value}
                                       type="number"
@@ -683,12 +710,14 @@ export default function AddEstimates(props) {
                                     <Input
                                       name="value"
                                       value={formula.totalMaterialsCost}
+                                      onBlur={onFocusOut}
                                       disabled
                                     />
                                   ) : element.name === "Gross Profit" ? (
                                     <Input
                                       name="value"
                                       value={formula.grossProfit}
+                                      onBlur={onFocusOut}
                                       disabled
                                     />
                                   ) : (
@@ -735,6 +764,7 @@ export default function AddEstimates(props) {
             <EstimationOverview
               selectedFormulas={selectedFormulas}
               setTotalProjectChargeChange={setTotalProjectCharge}
+              onBlur={onFocusOut}
             />
 
             <Collapse
@@ -753,6 +783,7 @@ export default function AddEstimates(props) {
                   totalCharge={totalPorjectCharge}
                   estimationSettings={estimationSettings}
                   setEstimationSettings={setEstimationSettings}
+                  onBlur={onFocusOut}
                 />
               </Panel>
               <Panel
@@ -782,6 +813,7 @@ export default function AddEstimates(props) {
                   totalCharge={totalPorjectCharge}
                   paymentTerms={paymentTerms}
                   setPaymentTerms={setPaymentTerms}
+                  onBlur={onFocusOut}
                 /> */}
               </Panel>
             </Collapse>
