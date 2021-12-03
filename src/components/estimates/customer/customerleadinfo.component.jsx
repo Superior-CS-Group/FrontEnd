@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Select, Button, Card, Switch, message, Avatar } from "antd";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
-import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  PhoneOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 // import Button from "@restart/ui/esm/Button";
 import LeadInfo from "./lead.info.component";
 import AddEstimates from "../add.estimates.components";
 import { updateCustomerDetails } from "../../../api/customer.js";
 import EstimationList from "../estimation/estimation.list.component.jsx";
 import userProfile from "../../../images/profile-top.png";
-
+import { time } from "../../../utils/svg.file";
+import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages.jsx";
 export default function CustomerLeadInfo(props) {
   const params = useParams();
 
@@ -153,9 +158,13 @@ export default function CustomerLeadInfo(props) {
   return (
     <>
       <div className="bg-estimates">
-        <div className="heading">
-          <h1>Customer Leads</h1>
-        </div>
+        <BreadcrumbBar
+          name="Dashboard "
+          subname="Estimates"
+          subtitle="username"
+          breaclass="mb-3"
+        />
+
         <Row>
           <Col md={24}>
             <Card
@@ -166,34 +175,11 @@ export default function CustomerLeadInfo(props) {
               {params.id ? (
                 <>
                   <div className="fillter d-lg-flex align-items-center p-3">
-                    <span className="inline-block me-5 fillter-btn d-lg-flex align-items-center">
+                    <span className="inline-block user-name-div me-1 fillter-btn d-lg-flex align-items-center">
                       <Avatar src={userProfile} className="me-2" />{" "}
                       {state.customerName}
                     </span>
-                    {/* <span className="inline-block me-4">
-                      <b className="green-text">{state.estimaitonStatus}</b>
-                    </span> */}
-
-                    <div className="ms-auto col-lg-9 text-end d-inline-flex align-items-center justify-content-end">
-                      {/* <div role="alert" class="text-success">
-                        {state.message}
-                      </div> */}
-                      <div className="float-start d-inline-flex align-items-center">
-                        <span className="me-2">
-                          {console.log(
-                            state.autoReminderEmail,
-                            "111state.autoReminderEmail"
-                          )}
-                          Auto Reminder Email{" "}
-                        </span>
-                        <Switch
-                          value={state.autoReminderEmail}
-                          onChange={autoReminderEmailHandleSubmit}
-                          className="me-2"
-                          checked={state.autoReminderEmail}
-                        />
-                      </div>
-
+                    <span className="inline-block me-4">
                       <Select
                         size="large"
                         className="me-4 ant-bg-primary status-drop"
@@ -212,14 +198,49 @@ export default function CustomerLeadInfo(props) {
                           );
                         })}
                       </Select>
+                    </span>
+
+                    <div className="ms-auto col-lg-4 text-end d-inline-flex align-items-center justify-content-end ">
+                      <div className="float-start d-inline-flex align-items-center">
+                        {/* <span className="me-2">
+                          {console.log(
+                            state.autoReminderEmail,
+                            "111state.autoReminderEmail"
+                          )}
+                          Auto Reminder Email{" "}
+                        </span>
+                        <Switch
+                          value={state.autoReminderEmail}
+                          onChange={autoReminderEmailHandleSubmit}
+                          className="me-2"
+                          checked={state.autoReminderEmail}
+                        /> */}
+                        <Button type="link">
+                          <UserAddOutlined className="mr-2" /> Create Customer
+                          Login{" "}
+                        </Button>
+                      </div>
+
                       <Button
                         style={{ width: "150px" }}
                         className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
                         type="primary"
                         shape="round"
                         size={size}
+                        ghost
                       >
                         <PhoneOutlined /> Contact
+                      </Button>
+                      <Button
+                        // style={{ width: "150px" }}
+                        className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
+                        type="primary"
+                        shape="round"
+                        size={size}
+                      >
+                        {" "}
+                        <span style={{ marginRight: "5px" }}>{time}</span>
+                        Create Estimate
                       </Button>
                     </div>
                   </div>

@@ -119,12 +119,12 @@ export default function ContractPreview(props) {
 
   return (
     <>
-      <div className="card-shadow p-3" style={{ borderRadius: "25px" }}>
+      <div className="card-shadow" style={{ borderRadius: "25px" }}>
         <img src={PreviewBanner} className="estimateImg" alt="" />
         <div className="estimate-preview-detail">
           <div className="estiamte-preview-head">
             <img src={MountSky} alt="" />
-            <div className="text-right-estimate-header">
+            <div className="text-right-estimate-header text-right ">
               <h5>Mountain Sky Proposal</h5>
               <span>Sales: Admin </span>
               <br></br>
@@ -218,7 +218,7 @@ export default function ContractPreview(props) {
                 working with right away to get on our schedule!{" "}
               </p>
               <h5>Payment Terms for Project: </h5>
-              <Row>
+              <Row className="sub-total-div">
                 <Col md={16}>
                   <li>
                     <b>Deposit payment at signing of contract:-</b> #DIV/0!
@@ -736,7 +736,7 @@ export default function ContractPreview(props) {
             </div>
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-right p-4">
           <span onClick={modalShow} className="add-btn">
             Send to Customer
           </span>
