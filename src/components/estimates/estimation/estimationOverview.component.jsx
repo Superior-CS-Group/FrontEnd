@@ -34,7 +34,9 @@ function EstimationOverview({
   React.useEffect(() => {
     const totalProjectChargeAfterDiscount =
       totalProjectCharge - (totalProjectCharge * discount) / 100;
-    setTotalProjectChargeAfterDiscount(totalProjectChargeAfterDiscount);
+    setTotalProjectChargeAfterDiscount(
+      totalProjectChargeAfterDiscount.toFixed(2)
+    );
     const totalGrossProfitPercentageAfterDiscount =
       (totalProjectChargeAfterDiscount / totalProjectCost) * 100 - 100;
     setTotalGrossProfitPercentageAfterDiscount(
@@ -42,7 +44,7 @@ function EstimationOverview({
     );
     const totalGrossProfitAfterDiscount =
       totalProjectChargeAfterDiscount - totalProjectCost;
-    setTotalGrossProfitAfterDiscount(totalGrossProfitAfterDiscount);
+    setTotalGrossProfitAfterDiscount(totalGrossProfitAfterDiscount.toFixed(2));
   }, [discount, totalProjectCharge, totalProjectCost]);
 
   const listdata = [
