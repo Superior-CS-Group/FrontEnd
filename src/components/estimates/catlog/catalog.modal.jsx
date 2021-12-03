@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal } from "antd";
 export default function CataLogModal(props) {
+
   return (
     <>
       <Modal
@@ -11,6 +12,7 @@ export default function CataLogModal(props) {
         footer={false}
         width={props.width}
         className="modal-radius"
+       
       >
         {props.content}
       </Modal>
