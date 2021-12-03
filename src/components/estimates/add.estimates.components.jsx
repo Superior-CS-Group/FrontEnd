@@ -1,6 +1,6 @@
 /* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React from "react";
 import {
   Row,
   Col,
@@ -20,7 +20,6 @@ import {
   SaveOutlined,
   CloseCircleFilled,
   CloseCircleOutlined,
-  DeleteOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import { eye } from "../../utils/svg.file";
@@ -33,6 +32,8 @@ import {
 } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
+import EstimateSettings from "./estimateSettings/estimateSettings.component";
+import PaymentTerms from "./paymentTerms/paymentTerms.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -44,7 +45,6 @@ function handleChange(value) {
   console.log(`selected ${value}`);
 }
 export default function AddEstimates(props) {
-  const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
   const [estimationId, setEstimationId] = React.useState(null);
@@ -52,6 +52,9 @@ export default function AddEstimates(props) {
   const [view, setView] = React.useState("client");
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectIndex, setSelectIndex] = React.useState(null);
+  const [totalPorjectCharge, setTotalProjectCharge] = React.useState(0);
+  const [estimationSettings, setEstimationSettings] = React.useState({});
+  const [paymentTerms, setPaymentTerms] = React.useState({});
   const columns = [
     {
       title: "Materials needed:",
@@ -75,16 +78,6 @@ export default function AddEstimates(props) {
     },
   ];
 
-  const mdata = [
-    { title: "Bulit In Design Cost", cost: "$0", pricebtn: "danger-text" },
-    { title: "Fluff Number Discount?", cost: "0.00%", pricebtn: "gray-text" },
-    { title: "Discount Amount", cost: "$0.00", pricebtn: "danger-text" },
-    {
-      title: "Total Without Discount",
-      cost: "$24.551.14",
-      pricebtn: "warring-text",
-    },
-  ];
   const markup = [
     {
       title: "Can you fit ditch witch/skid",
@@ -150,44 +143,6 @@ export default function AddEstimates(props) {
     },
   ];
 
-  const payment = [
-    {
-      title: "Deposit payment at signing of contract",
-      cost: (
-        <>
-          <span className="per-input">
-            <Input
-              type="number"
-              maxLength="2"
-              placeholder="12"
-              className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue=""
-            />
-            %
-          </span>
-        </>
-      ),
-    },
-    {
-      title: "Progress payment when project is started",
-      cost: (
-        <>
-          <span className="per-input">
-            <Input
-              type="number"
-              min={1}
-              max={2}
-              placeholder="88"
-              className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue=""
-            />
-            %{" "}
-          </span>
-        </>
-      ),
-    },
-  ];
-
   React.useEffect(() => {
     fetchPrevFormula();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -198,9 +153,10 @@ export default function AddEstimates(props) {
     if (fetched.remote === "success" && fetched.data.data) {
       setSelectedFormulas(fetched.data.data.services);
       setEstimationId(fetched.data.data._id);
+      setEstimationSettings(fetched.data.data.estimateSettings);
+      setPaymentTerms(fetched.data.data.paymentTerms);
     }
   }
-
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
@@ -243,13 +199,7 @@ export default function AddEstimates(props) {
 
   function handleEditDropdownField(e, index, subIndex) {
     const newSelectedFormula = [...selectedFormulas];
-    console.log(
-      "newSelectedFormula",
-      newSelectedFormula[index].elements[subIndex],
-      index,
-      subIndex,
-      e
-    );
+
     const selectedOption = newSelectedFormula[index].elements[
       subIndex
     ].options.find((el) => el._id === e);
@@ -272,16 +222,7 @@ export default function AddEstimates(props) {
     return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
-  function processFormula(
-    formula,
-    materials,
-    elements,
-    multiplicationFactor,
-    name
-  ) {
-    if (name === "Days w/ 5 guys") {
-      console.log("labour: ", formula);
-    }
+  function processFormula(formula, materials, elements, multiplicationFactor) {
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
@@ -295,9 +236,7 @@ export default function AddEstimates(props) {
         formula = formula.replace(regex, material.price);
       });
     }
-    if (name === "Days w/ 5 guys") {
-      console.log("labour1: ", formula);
-    }
+
     if (elements) {
       const usedElements = elements.map((element) => {
         return {
@@ -322,9 +261,7 @@ export default function AddEstimates(props) {
         }
       });
     }
-    if (name === "Days w/ 5 guys") {
-      console.log("labour2: ", formula);
-    }
+
     try {
       multiplicationFactor =
         multiplicationFactor === undefined || multiplicationFactor === null
@@ -334,14 +271,9 @@ export default function AddEstimates(props) {
       if (formula.match(/@\{\{[^\}]+\}\}/gi) && materials.length) {
         formula = processFormula(formula, materials);
       }
-      if (name === "Days w/ 5 guys") {
-        console.log("labour3: ", formula);
-      }
+
       const result =
         Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
-      if (name === "Days w/ 5 guys") {
-        console.log("labor3", formula);
-      }
 
       return result;
     } catch (error) {
@@ -381,7 +313,6 @@ export default function AddEstimates(props) {
     const profitPercent = (
       Number((totalMaterialsCharge / totalMaterialsCost) * 100) - 100
     ).toFixed(2);
-    console.log("profitPercent", profitPercent, `${profitPercent}%`);
     formula.grossProfit = `${profitPercent}%`;
     return materials;
   }
@@ -396,9 +327,13 @@ export default function AddEstimates(props) {
   }
 
   async function handleSaveEstimations() {
-    const body = { services: selectedFormulas, userId: props.custInfo.id };
+    const body = {
+      services: selectedFormulas,
+      userId: props.custInfo.id,
+      estimateSettings: estimationSettings,
+    };
     if (estimationId) {
-      const updated = await updateUserEstimation(estimationId, body);
+      await updateUserEstimation(estimationId, body);
     } else {
       const response = await createUserEstimation(body);
       if (response.remote === "success") {
@@ -816,7 +751,10 @@ export default function AddEstimates(props) {
             </Card>
           </Col>
           <Col span={24} lg={8}>
-            <EstimationOverview selectedFormulas={selectedFormulas} />
+            <EstimationOverview
+              selectedFormulas={selectedFormulas}
+              setTotalProjectChargeChange={setTotalProjectCharge}
+            />
 
             <Collapse
               defaultActiveKey={["1", "2", "3"]}
@@ -830,31 +768,11 @@ export default function AddEstimates(props) {
                 key="1"
                 className="border-0 ant-bootom-line-effect"
               >
-                <List
-                  bordered={false}
-                  dataSource={mdata}
-                  size="small"
-                  renderItem={(item) => (
-                    <List.Item
-                      className="border-0 font-d"
-                      extra={[
-                        <Input
-                          placeholder="Basic usage"
-                          className={`ant-width font-bold radius-4 ${item.pricebtn}`}
-                          defaultValue={item.cost}
-                        />,
-                      ]}
-                    >
-                      {item.title}
-                    </List.Item>
-                  )}
+                <EstimateSettings
+                  totalCharge={totalPorjectCharge}
+                  estimationSettings={estimationSettings}
+                  setEstimationSettings={setEstimationSettings}
                 />
-                <div className="addbtn-ant ps-3 py-3">
-                  <a href="#" className="d-inline-flex align-items-center">
-                    <PlusCircleOutlined className="me-2" />
-                    Add new field
-                  </a>
-                </div>
               </Panel>
               <Panel
                 header="Markup Settings"
@@ -879,63 +797,11 @@ export default function AddEstimates(props) {
                 key="3"
                 className="border-0 ant-bootom-line-effect"
               >
-                <List
-                  className="mb-3"
-                  bordered={false}
-                  dataSource={payment}
-                  size="small"
-                  renderItem={(item) => (
-                    <List.Item className="border-0 font-d" extra={[item.cost]}>
-                      {item.title}
-                    </List.Item>
-                  )}
-                >
-                  {variation.map((variation, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <List.Item
-                          className="border-0 font-d position-relative"
-                          extra={[
-                            <>
-                              <Input
-                                style={{ width: "40px" }}
-                                type="number"
-                                maxLength="2"
-                                placeholder=""
-                                className="ant-width-small font-bold radius-4 gray-text"
-                                defaultValue=""
-                              />
-                              <span>%</span>{" "}
-                              <DeleteOutlined className="delete-icon" />
-                            </>,
-                          ]}
-                        >
-                          <Input placeholder="" style={{ width: "88%" }} />
-                        </List.Item>
-                      </React.Fragment>
-                    );
-                  })}
-                </List>
-                <div className="addbtn-ant ps-3 py-3">
-                  <a
-                    href="#"
-                    className="d-inline-flex align-items-center"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setVariation([
-                        ...variation,
-                        { title: "title", value: "" },
-                      ]);
-                    }}
-                  >
-                    <PlusCircleOutlined className="me-2" />
-                    Add new field
-                  </a>
-                </div>
-                <span>
-                  <b>Note:</b>{" "}
-                  <i>Payment terms will change if change orders are made</i>
-                </span>
+                <PaymentTerms
+                  totalCharge={totalPorjectCharge}
+                  paymentTerms={paymentTerms}
+                  setPaymentTerms={setPaymentTerms}
+                />
               </Panel>
             </Collapse>
           </Col>

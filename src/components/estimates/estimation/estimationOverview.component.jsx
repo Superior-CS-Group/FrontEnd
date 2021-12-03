@@ -3,13 +3,16 @@ import Meta from "antd/lib/card/Meta";
 import React from "react";
 import { arrowdown, arrowup } from "../../../utils/svg.file";
 
-function EstimationOverview({ selectedFormulas }) {
+function EstimationOverview({ selectedFormulas, setTotalProjectChargeChange }) {
   const [totalProjectCharge, setTotalProjectCharge] = React.useState(0);
   const [totalProjectCost, setTotalProjectCost] = React.useState(0);
   const [totalMaterialsCharge, setTotalMaterialsCharge] = React.useState(0);
   const [totalGrossProfit, setTotalGrossProfit] = React.useState(0);
   const [totalGrossProfitPercentage, setTotalGrossProfitPercentage] =
     React.useState(0);
+  React.useEffect(() => {
+    setTotalProjectChargeChange(totalProjectCharge);
+  }, [setTotalProjectChargeChange, totalProjectCharge]);
   const listdata = [
     {
       title: "Materials Cost",
@@ -25,7 +28,7 @@ function EstimationOverview({ selectedFormulas }) {
     },
     {
       title: "Gross Profit %",
-      rate: `$${totalGrossProfitPercentage}%`,
+      rate: `${totalGrossProfitPercentage}%`,
       pricebtn: "warring-text",
     },
     {
@@ -45,15 +48,18 @@ function EstimationOverview({ selectedFormulas }) {
       projectCost += formula.totalMaterialsCost;
       materialsCost += formula.totalMaterialsCost;
     });
-    setTotalProjectCharge(projectCharge);
-    setTotalProjectCost(projectCost);
-    setTotalMaterialsCharge(materialsCost);
+    setTotalProjectCharge(projectCharge.toFixed(2));
+    setTotalProjectCost(projectCost.toFixed(2));
+    setTotalMaterialsCharge(materialsCost.toFixed(2));
   }, [selectedFormulas]);
   React.useEffect(() => {
     if (totalProjectCharge && totalProjectCost) {
-      setTotalGrossProfit(totalProjectCharge - totalProjectCost);
+      setTotalGrossProfit((totalProjectCharge - totalProjectCost).toFixed(2));
       setTotalGrossProfitPercentage(
-        ((totalProjectCharge - totalProjectCost) / totalProjectCost) * 100
+        (
+          ((totalProjectCharge - totalProjectCost) / totalProjectCost) *
+          100
+        ).toFixed(2)
       );
     }
   }, [totalProjectCharge, totalProjectCost, totalMaterialsCharge]);
