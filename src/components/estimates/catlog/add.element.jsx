@@ -20,7 +20,7 @@ export default function Addelement({
   }, [selectedElement]);
   const handleSave = async (e) => {
     try {
-      e.preventDefault();
+    
       setLoading(true);
       if (!name) {
         setErrors({ name: "Name is required" });
@@ -67,6 +67,13 @@ export default function Addelement({
                   className="ant-furmulla-input radius-30"
                   onChange={(e) => setName(e.target.value)}
                   value={name}
+                  onKeyPress={(event) => {
+                  var key = event.keyCode || event.which;
+                  if (key === 13) {
+                      // perform your Logic on "enter" button 
+                      console.log("Enter Button has been clicked");
+                      handleSave();
+                  }}}
                 />
                 <span className="text-danger small">{errors.name}</span>
               </Form.Item>
