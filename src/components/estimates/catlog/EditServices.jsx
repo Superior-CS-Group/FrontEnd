@@ -14,17 +14,23 @@ export default function EditService({
   isEditservices,
   errors,
   deleteServiecs,
+  isAddService
 }) {
   if (selectedService) {
     // var isEditservices = {
     //   name: selectedService.name,
     // };
   }
+  console.log(('wwwwww',selectedService));
+ 
+  if(selectedService){
+    var {name,hours,day,price}=selectedService;;
+  }
   return (
     <>
       <Modal
         className="modal-radius"
-        title={selectedService ? "Edit Services" : "Add Services"}
+        title={!isAddService ? "Edit Services" : "Add Services"}
         visible={isEditservices}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -41,7 +47,7 @@ export default function EditService({
                     className="ant-furmulla-input radius-30"
                     name="name"
                     onChange={handleInputChange}
-                    value={selectedService ? selectedService.name : ""}
+                    value={!isAddService ? name : isEditservices.name}
                   />
                   <span className="text-danger">{errors.name}</span>
                 </Form.Item>
@@ -58,8 +64,8 @@ export default function EditService({
                     type="number"
                     min={1}
                     value={
-                      selectedService
-                        ? selectedService.hours
+                      !isAddService
+                        ?hours
                         : isEditservices.hours
                     }
                   />
@@ -77,7 +83,7 @@ export default function EditService({
                     min={1}
                     type="number"
                     value={
-                      selectedService ? selectedService.day : isEditservices.day
+                      !isAddService ? day : isEditservices.day
                     }
                   />
                   <span className="text-danger">{errors.day}</span>
@@ -94,8 +100,8 @@ export default function EditService({
                     type="number"
                     min={1}
                     value={
-                      selectedService
-                        ? selectedService.price
+                      !isAddService
+                        ? price
                         : isEditservices.price
                     }
                   />
@@ -104,7 +110,7 @@ export default function EditService({
               </Col>
 
               <Col md={24} className="text-end">
-                {selectedService && (
+                {!isAddService && (
                   <Button
                     type="link"
                     danger
@@ -126,7 +132,7 @@ export default function EditService({
                 >
                   Cancel
                 </Button>
-                {selectedService ? (
+                {!isAddService ? (
                   <Button
                     size="large"
                     type="primary"

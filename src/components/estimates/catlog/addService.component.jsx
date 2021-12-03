@@ -50,7 +50,7 @@ export default function AddService(
     handleCancel();
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e) => {console.log('rah',itemDetails)
     setItemDetails({
       ...itemDetails,
       [e.target.name]: Number(e.target.value) || e.target.value,
