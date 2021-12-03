@@ -26,6 +26,8 @@ import {
 } from "../../../api/catalogue";
 import AddService from "./addService.component";
 import Services from "./services/services.component";
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
 
 export default function Catlog() {
   const [title, setTitle] = useState("Sub Category");
@@ -41,6 +43,10 @@ export default function Catlog() {
   const [selectedElement, setSelectedElement] = useState({});
   const [search, setSearch] = useState("");
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const [currentImages, setCurrentImages] = useState([]);
+  // const images = ['https://onepercent.portal.superiorcsgroup.com:1629/media/users/61a0f99ef25060133ba3a61a/materials/61a0f99ef25060133ba3a61a-1638390458848.jpg','https://onepercent.portal.superiorcsgroup.com:1629/media/users/61a0f99ef25060133ba3a61a/materials/61a0f99ef25060133ba3a61a-1638390458847.jpg'];
   const [state, setState] = useState({
     smallLoader: true,
   });
@@ -96,7 +102,6 @@ export default function Catlog() {
         setSelectedSubCatalog(selectedElement.catelogId);
       }
     } else if (selectedElement && selectedElement.action === "delete") {
-      console.log("delete");
     }
   }, [Object.keys(selectedElement).length]);
   const [visible, setVisible] = useState(false);
@@ -123,11 +128,14 @@ export default function Catlog() {
                 <div className="ant-catalog-img me-3">
                   <Image
                     preview={{ visible: false }}
-                    src={log}
-                    onClick={() => setVisible(true)}
+                    src={variation.images[0] || log}
+                    onClick={(rr = variation.images) => {
+                      setCurrentImages(variation.images);
+                      setIsOpen(true);
+                    }}
                     alt=""
                   />
-                  <div style={{ display: "none" }}>
+                  {/* <div style={{ display: "none" }}>
                     <Image.PreviewGroup
                       preview={{
                         visible,
@@ -138,7 +146,7 @@ export default function Catlog() {
                       <Image src={log} />
                       <Image src={log} />
                     </Image.PreviewGroup>
-                  </div>
+                  </div> */}
                 </div>
                 <span> {variation.name}</span>
               </div>
@@ -269,8 +277,12 @@ export default function Catlog() {
               type="text"
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
-              onClick={() =>{ handleSelectedElement(element, "edit");
-              element.type === "subCatalog"?setTitle("Edit Sub Category"):setTitle("Edit Item")}}
+              onClick={() => {
+                handleSelectedElement(element, "edit");
+                element.type === "subCatalog"
+                  ? setTitle("Edit Sub Category")
+                  : setTitle("Edit Item");
+              }}
             >
               <EditOutlined
                 className="text-primary"
@@ -524,10 +536,55 @@ export default function Catlog() {
                                   <Image
                                     preview={{ visible: false }}
                                     src={record.images[0] || log}
-                                    onClick={() => setVisible(true)}
+                                    onClick={(rr = record.images) => {
+                                      catalogItem.map((r) => {
+                                        if (r._id === record.key) {
+                                          setCurrentImages(r.images);
+                                        }
+                                      });
+                                      setIsOpen(true);
+                                    }}
                                     alt=""
                                   />
-                                  <div style={{ display: "none" }}>
+                                  <div>
+                                    {isOpen && (
+                                      <Lightbox
+                                        mainSrc={
+                                          currentImages[photoIndex] || log
+                                        }
+                                        nextSrc={
+                                          currentImages[
+                                            (photoIndex + 1) %
+                                              currentImages.length
+                                          ]
+                                        }
+                                        prevSrc={
+                                          currentImages[
+                                            (photoIndex +
+                                              currentImages.length -
+                                              1) %
+                                              currentImages.length
+                                          ]
+                                        }
+                                        onCloseRequest={() => setIsOpen(false)}
+                                        onMovePrevRequest={() =>
+                                          setPhotoIndex(
+                                            (photoIndex +
+                                              currentImages.length -
+                                              1) %
+                                              currentImages.length
+                                          )
+                                        }
+                                        onMoveNextRequest={() =>
+                                          setPhotoIndex(
+                                            (photoIndex + 1) %
+                                              currentImages.length
+                                          )
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                  {/* <div style={{ display: "none" }}>
                                     <Image.PreviewGroup
                                       preview={{
                                         visible,
@@ -539,7 +596,7 @@ export default function Catlog() {
                                         <Image src={image} key={idx} alt="" />
                                       ))}
                                     </Image.PreviewGroup>
-                                  </div>
+                                  </div> */}
                                 </div>
                               </>
                             );
