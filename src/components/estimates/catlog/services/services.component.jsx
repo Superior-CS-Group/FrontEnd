@@ -152,7 +152,7 @@ function Services() {
     setErrors({});
     setIsLoading(true);
     const { isValid, errors } = validateCreateServiceInput(body);
-    console.log("body: ", body, errors);
+    console.log("body: ", body, errors, isValid);
     if (!isValid) {
       setErrors(errors);
       setIsLoading(false);
@@ -161,11 +161,13 @@ function Services() {
     let response = {};
     if (!selectedService) {
       response = await createService(body);
-      console.log("response");
     } else {
       const body = { ...serviceDetails };
       console.log("selectedService", body);
+      response = await createService(body);
     }
+    console.log("response", response);
+
     if (response.remote === "success") {
       handleUpdate();
       setTimeout(() => {
@@ -280,7 +282,7 @@ function Services() {
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
         // deleteId={deleteCatelogId}
-        content={<>Do you real want to delete?</>}
+        content={<>Do you really want to delete?</>}
       />
     </div>
   );

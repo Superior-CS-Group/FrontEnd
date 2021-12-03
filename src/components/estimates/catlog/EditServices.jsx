@@ -14,17 +14,17 @@ export default function EditService({
   isEditservices,
   errors,
   deleteServiecs,
-  isAddService
+  isAddService,
 }) {
   if (selectedService) {
     // var isEditservices = {
     //   name: selectedService.name,
     // };
   }
-  console.log(('wwwwww',selectedService));
- 
-  if(selectedService){
-    var {name,hours,day,price}=selectedService;;
+  console.log(("wwwwww", selectedService));
+
+  if (selectedService) {
+    var { name, hours, day, price } = selectedService;
   }
   return (
     <>
@@ -63,11 +63,7 @@ export default function EditService({
                     onChange={handleInputChange}
                     type="number"
                     min={1}
-                    value={
-                      !isAddService
-                        ?hours
-                        : isEditservices.hours
-                    }
+                    value={!isAddService ? hours : isEditservices.hours}
                   />
                   <span className="text-danger">{errors.hours}</span>
                 </Form.Item>
@@ -82,9 +78,7 @@ export default function EditService({
                     onChange={handleInputChange}
                     min={1}
                     type="number"
-                    value={
-                      !isAddService ? day : isEditservices.day
-                    }
+                    value={!isAddService ? day : isEditservices.day}
                   />
                   <span className="text-danger">{errors.day}</span>
                 </Form.Item>
@@ -99,11 +93,7 @@ export default function EditService({
                     onChange={handleInputChange}
                     type="number"
                     min={1}
-                    value={
-                      !isAddService
-                        ? price
-                        : isEditservices.price
-                    }
+                    value={!isAddService ? price : isEditservices.price}
                   />
                   <span className="text-danger">{errors.productionRate}</span>
                 </Form.Item>
