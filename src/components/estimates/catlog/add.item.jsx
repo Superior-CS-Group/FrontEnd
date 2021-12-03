@@ -245,7 +245,7 @@ export default function AddItem({
                  <Select
               size="large"
               name="unit"
-              defaultValue={itemDetails.unit?itemDetails.unit:"Select Unit"}
+              value={itemDetails.unit?itemDetails.unit:"Select Unit"}
               onChange={handleSelectChange}
               // suffixIcon={<img src={arrowDwon} alt="" />}
               // value={itemDetails.unit}
