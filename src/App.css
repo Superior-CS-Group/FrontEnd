@@ -2579,10 +2579,10 @@ tr.ant-table-measure-row {
 .green-switch .ant-switch-checked {
   background-color: #2ed47a !important;
 }
-.cursor-btn.del-btn-svg svg {
+/* .cursor-btn.del-btn-svg svg {
   width: 11px;
   display: none;
 }
 tr:hover .cursor-btn.del-btn-svg svg {
   display: inline-flex;
-}
+} */

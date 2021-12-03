@@ -91,12 +91,12 @@ export default function CustomerLeadInfo(props) {
 
   const onChangeTab = (val) => {
     setIsAddingNew(false);
-    if (val === "Lead") {
+    if (val === "Estimate") {
       setState({
         ...state,
         tabShow: true,
       });
-    } else if (val === "Estimate") {
+    } else if (val === "Lead") {
       setState({
         ...state,
         tabShow: false,
@@ -247,20 +247,20 @@ export default function CustomerLeadInfo(props) {
 
                   <div className="tab-div border-top">
                     <ul className="">
-                      <li
-                        onClick={() => onChangeTab("Lead")}
-                        className={state.tabShow ? "active" : ""}
-                      >
-                        Lead Info
-                      </li>
                       <Link to={`/customer-lead/${params.id}`}>
                         <li
                           onClick={() => onChangeTab("Estimate")}
-                          className={!state.tabShow ? "active" : ""}
+                          className={state.tabShow ? "active" : ""}
                         >
                           Estimate
                         </li>
                       </Link>
+                      <li
+                        onClick={() => onChangeTab("Lead")}
+                        className={!state.tabShow ? "active" : ""}
+                      >
+                        Lead
+                      </li>
                     </ul>
                   </div>
                 </>
@@ -269,7 +269,7 @@ export default function CustomerLeadInfo(props) {
               )}
             </Card>
 
-            {state.tabShow === true ? (
+            {state.tabShow === false ? (
               <div className="card-show mt-3 pb-3">
                 <LeadInfo />
               </div>

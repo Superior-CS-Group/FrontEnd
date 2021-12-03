@@ -82,17 +82,7 @@ export default function Services() {
         </>
       ),
       dataIndex: "title",
-      render: (text, tags) => (
-        <a>
-          {text}{" "}
-          <span
-            className="me-2 cursor-btn del-btn-svg"
-            onClick={() => setShowDeleteModal(tags._id)}
-          >
-            {Datel}
-          </span>{" "}
-        </a>
-      ),
+      render: (text) => <a>{text} </a>,
       width: 450,
     },
     {
@@ -105,25 +95,25 @@ export default function Services() {
       ),
       dataIndex: "view",
       className: "text-end",
-      // render: (view, tags) => {
-      //   return (
-      //     <>
-      //       <Link
-      //         to={`/v2/formula-tree?formulaId=${tags._id}`}
-      //         style={{ color: "inherit" }}
-      //       >
-      //         {view}
-      //       </Link>
-      //       &nbsp;
-      //       <span
-      //         className="me-2 cursor-btn del-btn-svg"
-      //         onClick={() => setShowDeleteModal(tags._id)}
-      //       >
-      //         {Datel}
-      //       </span>
-      //     </>
-      //   );
-      // },
+      render: (view, tags) => {
+        return (
+          <>
+            <Link
+              to={`/v2/formula-tree?formulaId=${tags._id}`}
+              style={{ color: "inherit" }}
+            >
+              {view}
+            </Link>
+            &nbsp;
+            <span
+              className="me-2 cursor-btn del-btn-svg"
+              onClick={() => setShowDeleteModal(tags._id)}
+            >
+              {Datel}
+            </span>
+          </>
+        );
+      },
     },
   ];
 

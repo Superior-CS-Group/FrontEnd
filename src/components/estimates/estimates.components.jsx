@@ -93,8 +93,8 @@ export default class MainEstimates extends Component {
               {this.state.estimateData.length ? (
                 <Carousel
                   className="mb-3"
-                  show={3}
-                  slide={3}
+                  show={4}
+                  slide={2}
                   infinite={true}
                   swiping={true}
                   leftArrow={[
