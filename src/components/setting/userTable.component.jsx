@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Table, Badge, Tooltip, Input } from "antd";
+import { Table, Badge, Tooltip, Input, message } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag } from "../../utils/svg.file";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { postData } from "../../utils/fetchApi.js";
 import { getUserList } from "../../api/admin.js";
+import { updateCustomerStatus } from "../../api/user.js";
 import { LockOutlined } from "@ant-design/icons";
 import { SearchOutlined } from "@ant-design/icons";
 import ChangePasswordUser from "../modal/changePassword.component";
@@ -12,11 +13,22 @@ import SmallLoader from "../loader/smallLoader.js";
 
 export default function UserTable(props) {
   const params = useParams();
-
+  const [userId, setUserId] = useState("");
   const [isModalShow, setIsModalShow] = useState(false);
   const [state, setState] = useState({
+    userId: "",
     smallLoader: true,
+    isRedirect: false,
+    message: "",
     columns: [
+      {
+        title: (
+          <>
+             Name <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "Name",
+      },
       {
         title: (
           <>
@@ -36,19 +48,12 @@ export default function UserTable(props) {
       {
         title: (
           <>
-            Currency <span className="float-end me-2">{drag}</span>
+            Contact No <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "currency",
+        dataIndex: "contactNo",
       },
-      {
-        title: (
-          <>
-            Time Zone <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "timeZone",
-      },
+       
       {
         title: (
           <>
@@ -80,6 +85,18 @@ export default function UserTable(props) {
     nodeSelector: "th",
   };
 
+  const updateStatusHandle = async (id) => {
+    const body = { id: id };
+    const result = await updateCustomerStatus(body);
+    // console.log(result);
+    // setRedirect("/userlist");
+    let data2 = state.data.filter((item) => item._id === id);
+    // console.log(state.data,"state.data")
+    // console.log(data2,"data222",id)
+    // setState({isRedirect:true,})
+    message.success("Status Updated", 5);
+  };
+
   useEffect(() => {
     const data = [];
 
@@ -91,30 +108,42 @@ export default function UserTable(props) {
       console.log(result2.data, "result2   result2");
 
       for (let i = 0; i < result2.data.length; i++) {
-        let catalogueData = result2.data[i];
+        let userData = result2.data[i];
         data.push({
           // key: <Checkbox />,
 
-          companyName: catalogueData.companyName,
-          email: catalogueData.email,
-          currency: catalogueData.currency,
-          timeZone: catalogueData.timeZone,
-          cdate: catalogueData.createdAt.split("T")[0],
-          Status: (
+          _id: userData._id,
+          Name: userData.name,
+          companyName: userData.companyName,
+          email: userData.email,
+          contactNo: userData.contactNo,
+          cdate: userData.createdAt.split("T")[0],
+          Status: userData.activeStatus ? (
             <>
               <Badge
                 className="cursor-btn site-badge-count-109 me-2"
-                count="Activate"
+                count="Activated"
                 style={{ backgroundColor: "#52c41a" }}
-              />
-              <Badge
-                className="cursor-btn site-badge-count-109 me-2"
-                count="Deactivate"
+                onClick={(e) => updateStatusHandle(userData._id)}
               />
               <Tooltip title="Reset Password">
                 <LockOutlined
                   className="cursor-btn pass-key-btn"
-                  onClick={showModalPassword}
+                  onClick={(e) => showModalPassword(userData._id)}
+                />
+              </Tooltip>
+            </>
+          ) : (
+            <>
+              <Badge
+                className="cursor-btn site-badge-count-109 me-2"
+                count="Deactive"
+                onClick={(e) => updateStatusHandle(userData._id)}
+              />
+              <Tooltip title="Reset Password">
+                <LockOutlined
+                  className="cursor-btn pass-key-btn"
+                  onClick={(e) => showModalPassword(userData._id)}
                 />
               </Tooltip>
             </>
@@ -132,7 +161,8 @@ export default function UserTable(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
-  const showModalPassword = () => {
+  const showModalPassword = (id) => {
+    setUserId(id);
     setIsModalShow(true);
   };
 
@@ -142,6 +172,11 @@ export default function UserTable(props) {
 
   const handleCancel = () => {
     setIsModalShow(false);
+  };
+
+  const changePasswordHandle = () => {
+
+    console.log(userId,state.newPassword);
   };
 
   const handleFilterData = (e) => {
@@ -155,6 +190,9 @@ export default function UserTable(props) {
     setState({ ...state, filtredData });
   };
 
+  // if (state.isRedirect) {
+  //   return <Navigate to="/userlist" />;
+  // }
   return (
     <>
       {state.smallLoader ? (
@@ -198,7 +236,8 @@ export default function UserTable(props) {
         showModalPassword={showModalPassword}
         handleCancel={handleCancel}
         handleOk={handleOk}
-        isModalShow={isModalShow}
+        isModalShow={isModalShow} 
+        userId={userId}
       />
     </>
   );
