@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, message, Skeleton } from "antd";
+import { Table, Checkbox, Input, message, Switch } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -296,6 +296,13 @@ export default function Datatable(props) {
               </span>
             </>
           ),
+          autoFollowUp: (
+            <>
+              <div className="green-switch">
+                <Switch defaultChecked onChange={onChange} />
+              </div>
+            </>
+          ),
           scheduleDate: customerData[0].scheduleDate,
           filterName: customerData[0].name,
           name: (
@@ -307,7 +314,7 @@ export default function Datatable(props) {
           contactNo: customerData[0].contactNo,
           date: customerData[0].createdAt.split("T")[0],
           address: customerData[0].address,
-          autoFollowUp: followRemind,
+          // autoFollowUp: followRemind,
           estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
           estimaitonStatus: customerData[0].estimaitonStatus,
           estimaitonSentDate: estimateData.estimaitonSentDate,
@@ -372,6 +379,9 @@ export default function Datatable(props) {
 
   const handleCancel = () => {
     setModalVisible(false);
+  };
+  const onChange = (checked) => {
+    console.log(`switch to ${checked}`);
   };
   return (
     <>

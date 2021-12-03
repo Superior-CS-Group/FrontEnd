@@ -15,6 +15,8 @@ import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
 import { getData } from "../../utils/fetchApi.js";
 import SmallLoader from "../loader/smallLoader";
+import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
+
 export default class MainEstimates extends Component {
   constructor(props) {
     super(props);
@@ -75,10 +77,7 @@ export default class MainEstimates extends Component {
 
     return (
       <>
-        <div className="heading">
-          <h1>Estimates</h1>
-          <p>Upcoming Estimates</p>
-        </div>
+        <BreadcrumbBar name="Dashboard " subname="Estimates" breaclass="mb-3" />
         {this.state.smallLoader ? (
           <>
             <div className="text-center d-flex align-items-center justify-content-center ht-100">
@@ -94,8 +93,8 @@ export default class MainEstimates extends Component {
               {this.state.estimateData.length ? (
                 <Carousel
                   className="mb-3"
-                  show={3}
-                  slide={3}
+                  show={4}
+                  slide={2}
                   infinite={true}
                   swiping={true}
                   leftArrow={[
@@ -177,7 +176,7 @@ export default class MainEstimates extends Component {
                     <Nav.Link className="active">
                       <b class="left-curve"></b>
                       <b class="right-curve"></b>
-                      Default View
+                      Upcoming Estimates
                     </Nav.Link>
                   </Nav.Item>
                   {this.state.Tabs.map((tabs, index) => {
@@ -207,7 +206,7 @@ export default class MainEstimates extends Component {
                 </Nav>
               </div>
 
-              <div className="ant-table-seprate">
+              <div className="ant-table-seprate main-data-table px-2">
                 <Datatable />
 
                 <div className="ant-action-box d-flex align-items-center mt-2 pb-3">

@@ -38,8 +38,8 @@ export default function Catlog() {
   const [selectedSubCatalog, setSelectedSubCatalog] = useState("");
   const [variations, setVariations] = useState({});
   const [isAddService, setIsAddService] = useState(false);
-  const [search, setSearch] = useState("");
   const [selectedElement, setSelectedElement] = useState({});
+  const [search, setSearch] = useState("");
 
   const [state, setState] = useState({
     smallLoader: true,
@@ -154,7 +154,7 @@ export default function Catlog() {
             <>
               <Button
                 type="text"
-                shape="circle"
+                shape="circl"
                 className="me-2 d-inline-flex align-items-center justify-content-center"
                 onClick={() => handleSelectedElement(variation, "delete")}
               >
@@ -269,7 +269,8 @@ export default function Catlog() {
               type="text"
               shape="circle"
               className="d-inline-flex align-items-center justify-content-center"
-              onClick={() => handleSelectedElement(element, "edit")}
+              onClick={() =>{ handleSelectedElement(element, "edit");
+              element.type === "subCatalog"?setTitle("Edit Sub Category"):setTitle("Edit Item")}}
             >
               <EditOutlined
                 className="text-primary"
@@ -383,7 +384,7 @@ export default function Catlog() {
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li">
-                <Nav.Link> 
+                <Nav.Link>
                   <b class="left-curve"></b>
                   <b class="right-curve"></b>
                   <span>
@@ -497,7 +498,6 @@ export default function Catlog() {
                         rowExpandable: (element) =>
                           element.type === "subCatalog",
                         expandIcon: ({ expanded, onExpand, record }) => {
-                          console.log('eeeeeeee',record);
                           if (record.type === "subCatalog") {
                             return expanded ? (
                               <UpCircleFilled

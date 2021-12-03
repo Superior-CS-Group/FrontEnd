@@ -23,8 +23,6 @@ import SmallLoader from "../../../loader/smallLoader";
 function Services() {
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
 
-
-
   const [state, setState] = useState({
     smallLoader: true,
   });
@@ -86,7 +84,7 @@ function Services() {
     hours: "",
     day: "",
     productionRate: "",
-  }); 
+  });
   const handleDeleteOk = async () => {
     const body = {
       id: deleteServiceId,
@@ -181,14 +179,13 @@ function Services() {
 
   const handleChange = (e) => {
     e.preventDefault();
-     
-      const newServiceDetails = { ...serviceDetails };
-      console.log(e.target.value)
-      newServiceDetails[e.target.name] = e.target.value;
-      setServiceDetails(newServiceDetails);
-      setSelectedService(newServiceDetails);
-    console.log(newServiceDetails,"eeeeeeeee")
-    
+
+    const newServiceDetails = { ...serviceDetails };
+    console.log(e.target.value);
+    newServiceDetails[e.target.name] = e.target.value;
+    setServiceDetails(newServiceDetails);
+    setSelectedService(newServiceDetails);
+    console.log(newServiceDetails, "eeeeeeeee");
   };
 
   const dragProps = {
@@ -206,24 +203,23 @@ function Services() {
     console.log(id, "deleteId servd");
     setdeleteServiceId(id);
     setShowDeleteModal(true);
-   
   };
   const togglePopup = (actio) => {
     setIsModal(!isModal);
-    if(actio === 'add'){
-    setIsAddService(true);
-    setErrors({});
-    }
-    else
-    setIsAddService(false);
-   
+    if (actio === "add") {
+      setIsAddService(true);
+      setErrors({});
+    } else setIsAddService(false);
   };
 
   return (
     <div>
       <div className="p-2">
         <div className="fillter d-lg-flex align-items-center">
-          <span className="ant-blue-plus me-4" onClick={()=>togglePopup("add")}>
+          <span
+            className="ant-blue-plus me-4"
+            onClick={() => togglePopup("add")}
+          >
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
             Add Services
           </span>
@@ -265,7 +261,7 @@ function Services() {
       )}
       <EditService
         title="Edit Service"
-         handleInputChange={handleChange}
+        handleInputChange={handleChange}
         isEditservices={isModal}
         handleOk={() => console.log("ok")}
         handleCancel={togglePopup}
@@ -276,7 +272,6 @@ function Services() {
         deleteServiecs={deleteServiecs}
         errors={errors}
         isAddService={isAddService}
-       
       />
 
       <DeleteModal

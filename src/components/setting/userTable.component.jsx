@@ -221,7 +221,8 @@ export default function UserTable(props) {
           </div>
           <ReactDragListView.DragColumn {...dragProps}>
             <Table
-              className="ant-table-color"
+              // className="ant-table-color"
+              className="components-table-demo-nested ant-thead-block scroll-style"
               columns={state.columns}
               pagination={false}
               dataSource={state.filtredData}

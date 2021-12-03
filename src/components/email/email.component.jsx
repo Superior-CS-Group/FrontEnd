@@ -291,6 +291,7 @@ export default class EmailSend extends Component {
                                   <Form layout="vertical">
                                     <Form.Item label="Email Subject">
                                       <Input
+                                        className="radius-12"
                                         name="subject"
                                         type="text"
                                         onChange={this.handleChange}
@@ -300,6 +301,7 @@ export default class EmailSend extends Component {
                                     </Form.Item>
                                     <Form.Item label="Description">
                                       <ReactQuill
+                                        className="radius-12"
                                         onChange={this.handleChange}
                                         defaultValue={datavalue.bodyPart}
                                         bounds={".app"}

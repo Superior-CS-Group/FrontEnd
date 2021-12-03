@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Button } from "antd";
+import { Table, Input, Button, Modal, Row, Col } from "antd";
 import ReactDragListView from "react-drag-listview";
-import { drag } from "../../../utils/svg.file";
-import { Link, useParams, useLocation } from "react-router-dom";
-import DeleteModal from "../../modal/deleteModal.component";
-import { SearchOutlined } from "@ant-design/icons";
-import { getUserEstimation } from "../../../api/formula";
+import { drag, Datel } from "../../../utils/svg.file";
+import { Link, useParams } from "react-router-dom";
+import { SearchOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { deleteUserEstimation, getUserEstimation } from "../../../api/formula";
 
 export default function EstimationList({ toggleAddNew }) {
   const params = useParams();
-  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
-  const [ListShowPreview, setListShowPreview] = useState(false);
+
   const [columns, setColumns] = useState([
     {
       title: (
@@ -41,9 +39,18 @@ export default function EstimationList({ toggleAddNew }) {
       className: "text-green",
       width: 200,
     },
+    {
+      title: <>Action</>,
+      dataIndex: "action",
+      className: "",
+      width: 200,
+    },
   ]);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [deleteModal, setDeleteModal] = useState(null);
+  const [isDeleteing, setIsDeleteing] = useState(false);
+
   async function fetchUserFormula() {
     const fetched = await getUserEstimation(params.id);
     if (fetched.remote === "success" && fetched.data.data.length) {
@@ -57,6 +64,16 @@ export default function EstimationList({ toggleAddNew }) {
             </Link>
           ),
           createdAt: item.createdAt.split("T")[0],
+          action: (
+            <>
+              <span
+                className="float-end me-2"
+                onClick={() => setDeleteModal(item._id)}
+              >
+                {Datel}
+              </span>
+            </>
+          ),
         };
       });
       setData(newData);
@@ -65,6 +82,27 @@ export default function EstimationList({ toggleAddNew }) {
       console.log("fetched: ", fetched);
     }
   }
+
+  const handleDelete = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    setIsDeleteing(true);
+    const newData = data.filter((item) => item._id !== deleteModal);
+    const newFiltredData = filteredData.filter(
+      (item) => item._id !== deleteModal
+    );
+    const result = await deleteUserEstimation(deleteModal);
+    console.log("resul: ", result);
+    if (result.remote === "success") {
+      setData(newData);
+      setFilteredData(newFiltredData);
+      setDeleteModal(null);
+    }
+    setTimeout(() => {
+      setIsDeleteing(false);
+    }, 1000);
+  };
 
   useEffect(() => {
     fetchUserFormula();
@@ -81,15 +119,6 @@ export default function EstimationList({ toggleAddNew }) {
     nodeSelector: "th",
   };
 
-  const DeleteModalEstimate = () => {
-    setShowDeleteModal(true);
-  };
-  const handleDeleteOk = () => {
-    setShowDeleteModal(false);
-  };
-  const handleDeleteClose = () => {
-    setShowDeleteModal(false);
-  };
   return (
     <>
       <div className="card-shadow p-2">
@@ -100,13 +129,13 @@ export default function EstimationList({ toggleAddNew }) {
               // onClick={this.showModal}
             >
               {/* <Link to="#"> */}
-              <Button
+              {/* <Button
                 className="radius-30"
                 type="primary"
                 onClick={toggleAddNew}
               >
                 Make New Estimation
-              </Button>
+              </Button> */}
               {/* </Link> */}
             </span>
 
@@ -130,13 +159,34 @@ export default function EstimationList({ toggleAddNew }) {
             scroll={{ x: 400, y: 500 }}
           />
         </ReactDragListView.DragColumn>
-        <DeleteModal
-          DeleteModalEstimate={DeleteModalEstimate}
-          ShowDeleteModal={ShowDeleteModal}
-          handleDeleteClose={handleDeleteClose}
-          handleDeleteOk={handleDeleteOk}
-          content={<>You are about to delete all the Service</>}
-        />
+        <Modal
+          className="modal-radius warning-modal"
+          title="Warning!"
+          visible={deleteModal !== null}
+          closeIcon={<InfoCircleOutlined />}
+          width={350}
+          footer={null}
+        >
+          <p>Are you sure you want to delete this service?</p>
+          <Row>
+            <Col md={12} className="text-center">
+              <Button
+                type="text"
+                onClick={() => {
+                  setDeleteModal(null);
+                }}
+                disabled={isDeleteing}
+              >
+                Cancel
+              </Button>
+            </Col>
+            <Col md={12}>
+              <Button type="link" onClick={handleDelete} disabled={isDeleteing}>
+                {isDeleteing ? "Deleting..." : "Delete"}
+              </Button>
+            </Col>
+          </Row>
+        </Modal>
       </div>
     </>
   );

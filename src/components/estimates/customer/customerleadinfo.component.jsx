@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Select, Button, Card, Switch, message, Avatar } from "antd";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
-import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  PhoneOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 // import Button from "@restart/ui/esm/Button";
 import LeadInfo from "./lead.info.component";
 import AddEstimates from "../add.estimates.components";
 import { updateCustomerDetails } from "../../../api/customer.js";
 import EstimationList from "../estimation/estimation.list.component.jsx";
 import userProfile from "../../../images/profile-top.png";
-
+import { time } from "../../../utils/svg.file";
+import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages.jsx";
 export default function CustomerLeadInfo(props) {
   const params = useParams();
 
@@ -86,12 +91,12 @@ export default function CustomerLeadInfo(props) {
 
   const onChangeTab = (val) => {
     setIsAddingNew(false);
-    if (val === "Lead") {
+    if (val === "Estimate") {
       setState({
         ...state,
         tabShow: true,
       });
-    } else if (val === "Estimate") {
+    } else if (val === "Lead") {
       setState({
         ...state,
         tabShow: false,
@@ -153,9 +158,13 @@ export default function CustomerLeadInfo(props) {
   return (
     <>
       <div className="bg-estimates">
-        <div className="heading">
-          <h1>Customer Leads</h1>
-        </div>
+        <BreadcrumbBar
+          name="Dashboard "
+          subname="Estimates"
+          subtitle="username"
+          breaclass="mb-3"
+        />
+
         <Row>
           <Col md={24}>
             <Card
@@ -166,34 +175,11 @@ export default function CustomerLeadInfo(props) {
               {params.id ? (
                 <>
                   <div className="fillter d-lg-flex align-items-center p-3">
-                    <span className="inline-block me-5 fillter-btn d-lg-flex align-items-center">
+                    <span className="inline-block user-name-div me-1 fillter-btn d-lg-flex align-items-center">
                       <Avatar src={userProfile} className="me-2" />{" "}
                       {state.customerName}
                     </span>
-                    {/* <span className="inline-block me-4">
-                      <b className="green-text">{state.estimaitonStatus}</b>
-                    </span> */}
-
-                    <div className="ms-auto col-lg-9 text-end d-inline-flex align-items-center justify-content-end">
-                      {/* <div role="alert" class="text-success">
-                        {state.message}
-                      </div> */}
-                      <div className="float-start d-inline-flex align-items-center">
-                        <span className="me-2">
-                          {console.log(
-                            state.autoReminderEmail,
-                            "111state.autoReminderEmail"
-                          )}
-                          Auto Reminder Email{" "}
-                        </span>
-                        <Switch
-                          value={state.autoReminderEmail}
-                          onChange={autoReminderEmailHandleSubmit}
-                          className="me-2"
-                          checked={state.autoReminderEmail}
-                        />
-                      </div>
-
+                    <span className="inline-block me-4">
                       <Select
                         size="large"
                         className="me-4 ant-bg-primary status-drop"
@@ -212,34 +198,72 @@ export default function CustomerLeadInfo(props) {
                           );
                         })}
                       </Select>
+                    </span>
+
+                    <div className="ms-auto col-lg-4 text-end d-inline-flex align-items-center justify-content-end ">
+                      <div className="float-start d-inline-flex align-items-center">
+                        {/* <span className="me-2">
+                          {console.log(
+                            state.autoReminderEmail,
+                            "111state.autoReminderEmail"
+                          )}
+                          Auto Reminder Email{" "}
+                        </span>
+                        <Switch
+                          value={state.autoReminderEmail}
+                          onChange={autoReminderEmailHandleSubmit}
+                          className="me-2"
+                          checked={state.autoReminderEmail}
+                        /> */}
+                        <Button type="link">
+                          <UserAddOutlined className="mr-2" /> Create Customer
+                          Login{" "}
+                        </Button>
+                      </div>
+
                       <Button
                         style={{ width: "150px" }}
                         className="add-btn me-4 d-inline-flex align-items-center justify-content-center"
                         type="primary"
                         shape="round"
                         size={size}
+                        ghost
                       >
                         <PhoneOutlined /> Contact
+                      </Button>
+                      <Button
+                        // style={{ width: "150px" }}
+                        className="add-btn me-4 align-items-center justify-content-center"
+                        type="primary"
+                        shape="round"
+                        size={size}
+                        onClick={toggleAddNew}
+                        style={{
+                          display: isAddingNew ? "none" : "block",
+                        }}
+                      >
+                        <span style={{ marginRight: "5px" }}>{time}</span>
+                        Create Estimate
                       </Button>
                     </div>
                   </div>
 
                   <div className="tab-div border-top">
                     <ul className="">
-                      <li
-                        onClick={() => onChangeTab("Lead")}
-                        className={state.tabShow ? "active" : ""}
-                      >
-                        Lead Info
-                      </li>
                       <Link to={`/customer-lead/${params.id}`}>
                         <li
                           onClick={() => onChangeTab("Estimate")}
-                          className={!state.tabShow ? "active" : ""}
+                          className={state.tabShow ? "active" : ""}
                         >
                           Estimate
                         </li>
                       </Link>
+                      <li
+                        onClick={() => onChangeTab("Lead")}
+                        className={!state.tabShow ? "active" : ""}
+                      >
+                        Lead
+                      </li>
                     </ul>
                   </div>
                 </>
@@ -248,7 +272,7 @@ export default function CustomerLeadInfo(props) {
               )}
             </Card>
 
-            {state.tabShow === true ? (
+            {state.tabShow === false ? (
               <div className="card-show mt-3 pb-3">
                 <LeadInfo />
               </div>
