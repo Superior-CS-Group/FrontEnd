@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Select, Button, Card, Switch, message } from "antd";
+import { Row, Col, Select, Button, Card, Switch, message, Avatar } from "antd";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
 import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -8,6 +8,7 @@ import LeadInfo from "./lead.info.component";
 import AddEstimates from "../add.estimates.components";
 import { updateCustomerDetails } from "../../../api/customer.js";
 import EstimationList from "../estimation/estimation.list.component.jsx";
+import userProfile from "../../../images/profile-top.png";
 
 export default function CustomerLeadInfo(props) {
   const params = useParams();
@@ -166,7 +167,8 @@ export default function CustomerLeadInfo(props) {
                 <>
                   <div className="fillter d-lg-flex align-items-center p-3">
                     <span className="inline-block me-5 fillter-btn d-lg-flex align-items-center">
-                      <UserOutlined className="me-2" /> {state.customerName}
+                      <Avatar src={userProfile} className="me-2" />{" "}
+                      {state.customerName}
                     </span>
                     {/* <span className="inline-block me-4">
                       <b className="green-text">{state.estimaitonStatus}</b>
