@@ -7,7 +7,7 @@ const typeOfOptions = [
   { type: "manual", title: "Manual Entry" },
   { type: "prefilled", title: "Prefilled but Editable" },
   { type: "dropdown", title: "Dropdown" },
-  { type: "boolean", title: "Boolean" },
+  { type: "boolean", title: "Conditional" },
   { type: "result_editable", title: "Result (Editable)" },
   { type: "result_locked", title: "Result (Locked)" },
 ];
