@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import logo from "../../images/small-logo.png";
+import logo from "../../images/mount-sky.png";
 import { Button, Menu, Badge, Dropdown, Avatar } from "antd";
 import { Link } from "react-router-dom";
 import { Help, notifation, Message } from "../../utils/svg.file";
@@ -12,7 +12,6 @@ export default class Menubar extends Component {
     window.location = "/auth";
   };
   render() {
-    
     const menu = (
       <Menu>
         <Menu.Item key="0">
@@ -20,7 +19,9 @@ export default class Menubar extends Component {
         </Menu.Item>
 
         <Menu.Divider />
-        <Menu.Item key="3" onClick={this.logout}>Log Out</Menu.Item>
+        <Menu.Item key="3" onClick={this.logout}>
+          Log Out
+        </Menu.Item>
       </Menu>
     );
     return (

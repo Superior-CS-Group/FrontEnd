@@ -1351,10 +1351,10 @@ input[type="tel"] {
 .ant-breadcrumb-text {
   font-style: normal;
   font-weight: 300;
-  font-size: 25px;
+  font-size: 20px;
   line-height: 38px;
-  text-transform: uppercase;
-  letter-spacing: 7px;
+  text-transform: capitalize;
+  letter-spacing: 5px;
 
   color: #717171;
 }
@@ -1465,9 +1465,15 @@ input[type="tel"] {
 /*----------------------Estimate preview css------------*/
 .estimateImg {
   width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 25px;
 }
 .estimate-preview-detail {
   padding: 10px 40px;
+}
+.estimate-preview-detail p {
+  color: #242730;
 }
 .estiamte-preview-head {
   display: flex;
@@ -1476,6 +1482,12 @@ input[type="tel"] {
 }
 .text-right-estimate-header p {
   margin: 0;
+}
+.text-right-estimate-header span {
+  color: #242730;
+}
+.sub-total-div {
+  color: #242730;
 }
 .work-scope-top-left .work-scope-img {
   width: 130px;
@@ -1489,7 +1501,9 @@ input[type="tel"] {
   display: flex;
   width: 100%;
 }
-
+ul.work-scope-list {
+  color: #242730;
+}
 .work-scope-top-right {
   width: 100%;
   display: flex;
@@ -1989,7 +2003,7 @@ ul.work-scope-list li {
   cursor: pointer;
 }
 .catlog-tabs li a.active {
-  color: #1a73e8;
+  color: #3483fa;
   background: #fff;
 }
 
@@ -2517,4 +2531,45 @@ ul.catlog-tabs.nav:after {
   /* border-top-right-radius: 20px; */
   background: #1a73e8;
   border-radius: 0px 0px 5px 5px;
+}
+
+/* .main-data-table .ant-table-thead > tr > th,
+.main-data-table .ant-table-tbody > tr > td,
+.main-data-table .ant-table tfoot > tr > th,
+.main-data-table .ant-table tfoot > tr > td {
+  position: relative;
+  padding: 8px 16px !important;
+  overflow-wrap: break-word;
+}
+
+.ant-table-measure-row .ant-table tr > td {
+  position: relative;
+  padding: 0 !important;
+  overflow-wrap: break-word;
+}
+.ant-table-measure-row {
+  display: none !important;
+} */
+.status-drop.ant-bg-primary.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  background: #2ed47a !important;
+  color: #fff !important;
+}
+.add-btn span svg {
+  /* font-size: 12px; */
+  width: 15px;
+}
+.user-name-div {
+  width: 200px;
+}
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td,
+.ant-table tfoot > tr > th,
+.ant-table tfoot > tr > td {
+  position: relative;
+  padding: 8px 16px !important;
+  overflow-wrap: break-word;
+}
+tr.ant-table-measure-row {
+  display: contents;
 }
