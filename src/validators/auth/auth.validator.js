@@ -11,8 +11,14 @@ export const signUpStepOneSchema = (data) => {
   } else if (!Validator.isEmail(data.email)) {
     errors.email = "Invalid Email";
   }
+  if (Validator.isEmpty(data.name)) {
+    errors.name = "Full Name is required";
+  }
   if (Validator.isEmpty(data.companyName)) {
     errors.companyName = "Company Name is required";
+  }
+  if (Validator.isEmpty(data.contactNo)) {
+    errors.contactNo = "Contact No is required";
   }
   if (Validator.isEmpty(data.password)) {
     errors.password = "Password is required";

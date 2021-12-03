@@ -18,6 +18,23 @@ import {
 import { NavLink } from "react-router-dom";
 const { SubMenu } = Menu;
 export default class DashboardNavbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userRole: "",
+    };
+  }
+
+  componentDidMount = async () => {
+    const token = localStorage.getItem("token");
+    console.log(token)
+    if (token) {
+      this.setState({ isToken: true });
+    } else {
+      this.setState({ isToken: false });
+    }
+  };
+
   render() {
     return (
       <>
