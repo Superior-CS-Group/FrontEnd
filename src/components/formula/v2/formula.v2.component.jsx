@@ -45,6 +45,9 @@ function FormulaV2() {
     if (formulaDetails.remote === "success") {
       setFormulaDetails(formulaDetails.data.data);
       setTitle(formulaDetails.data.data.title);
+      console.log("formulaDetails.data.data: ", formulaDetails.data.data);
+      const catalogs = formulaDetails.data.data?.catalogs || [];
+      setCatalogs([...catalogs]);
       setClientContract(formulaDetails.data.data.clientContract);
       setMarkupId(
         formulaDetails.data.data.elements.find(
@@ -63,10 +66,11 @@ function FormulaV2() {
         materials: materials,
         clientContract: clientContract,
         title: title,
-        catalogs: catalogs.filter(
-          (item, pos) => catalogs.indexOf(item) === pos
-        ),
+        catalogs: catalogs.filter((item, pos) => {
+          return catalogs.indexOf(item) === pos;
+        }),
       };
+      console.log("body: ", body, catalogs);
       setTimeout(() => updateFormulaDetails(body), 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

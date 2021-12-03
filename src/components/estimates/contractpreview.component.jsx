@@ -3,7 +3,6 @@ import PreviewBanner from "../../../src/images/estimate-banner.png";
 import MountSky from "../../../src/images/mount-sky.png";
 import { Divider, Input, Row, Col, Form } from "antd";
 import logo from "../../images/small-logo.png";
-import planting from "../../images/planting.jpg";
 import TeamPic from "../../images/team.jpg";
 import SimpleEMailSent from "../email/simple.emailsent.component";
 import ModalMain from "../modal/modal.component";
@@ -29,7 +28,10 @@ export default function ContractPreview(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [ModalVisible, setModalVisible] = useState(false);
   const [estimationDetails, setEstimationDetails] = useState({});
-
+  const [totalCharge, setTotalCharge] = useState(0);
+  // const [totalCost, setTotalCost] = useState(0);
+  // const [totalMaterialsCost, setTotalMaterialsCost] = useState(0);
+  const [discount, setDiscount] = useState(0);
   useEffect(() => {
     setIsLoading(true);
     const query = new URLSearchParams(search);
@@ -45,6 +47,29 @@ export default function ContractPreview(props) {
   const getEstimationDetails = async () => {
     const response = await getUserEstimationDetailsById(estimationId);
     if (response.remote === "success") {
+      const formulas = response.data.data.services;
+      let discount =
+        response.data.data?.estimateSettings?.fluffNumberDiscount || 0;
+      console.log("estimationDetails: ", response.data.data, formulas);
+      let projectCharge = 0;
+      let projectCost = 0;
+      let materialsCost = 0;
+      formulas.forEach((formula) => {
+        projectCharge += formula.totalProjectCharge;
+        projectCost += formula.totalMaterialsCost;
+        materialsCost += formula.totalMaterialsCost;
+      });
+      discount = (projectCharge * discount) / 100;
+      const projectChargeAfterDiscount = projectCharge - discount;
+      setTotalCharge(projectChargeAfterDiscount.toFixed(2));
+      setDiscount(discount.toFixed(2));
+      console.log({
+        projectCharge,
+        projectCost,
+        materialsCost,
+        projectChargeAfterDiscount,
+        discount,
+      });
       setEstimationDetails(response.data.data);
     } else {
       setEstimationId(null);
@@ -202,13 +227,14 @@ export default function ContractPreview(props) {
             <div className="text-right sub-total-div mt-4 pb-4">
               <ul>
                 <li>
-                  <b>Subtotal:</b> #DIV/0!
+                  <b>Subtotal:</b> {totalCharge}
                 </li>
                 <li>
-                  <b>Taxes/Discount:</b> #DIV/0!
+                  <b>Discount:</b> {discount}
                 </li>
                 <li>
-                  <b>Contract Total:</b> #DIV/0!
+                  <b>Contract Total:</b>{" "}
+                  {totalCharge - discount < 0 ? 0 : totalCharge - discount}
                 </li>
               </ul>
             </div>

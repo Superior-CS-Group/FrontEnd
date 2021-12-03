@@ -401,10 +401,12 @@ export default function AddEstimates(props) {
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
+          console.log("regex: ", element);
           newContract = newContract.replace(regex, element.price);
         } catch (error) {}
       });
     }
+    console.log("newContract: ", newContract);
     formula.processedClientContract = newContract;
     return newContract;
   };
@@ -765,6 +767,7 @@ export default function AddEstimates(props) {
               selectedFormulas={selectedFormulas}
               setTotalProjectChargeChange={setTotalProjectCharge}
               onBlur={onFocusOut}
+              estimationSettings={estimationSettings}
             />
 
             <Collapse
