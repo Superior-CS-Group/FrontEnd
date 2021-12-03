@@ -1,27 +1,6 @@
-import { Modal, Space, Row, Col, Button } from "antd";
-import {
-  ExclamationCircleOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { deleteCustomerLead } from "../../api/delete";
-
-const { confirm } = Modal;
+import { Modal, Row, Col, Button } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 export default function DeleteModal(props, removeId, table, updateData) {
-  // confirm({
-  //   title: "Do you Want to delete these items?",
-  //   icon: <ExclamationCircleOutlined />,
-  //   content: "Some descriptions",
-  //   onOk() {
-  //     if (table === "customerLead") {
-  //       const body = { id: removeId };
-  //       console.log("OK", body);
-  //       deleteCustomerLead(body);
-  //     }
-  //   },
-  //   onCancel() {
-  //     console.log("Cancel");
-  //   },
-  // });
   return (
     <>
       <Modal
@@ -47,10 +26,7 @@ export default function DeleteModal(props, removeId, table, updateData) {
             <Button
               type="link"
               onClick={(e) =>
-                props.handleDeleteOk(
-                  props.deleteId,
-                  props.deleteIdx
-                )
+                props.handleDeleteOk(props.deleteId, props.deleteIdx)
               }
             >
               Delete
@@ -58,7 +34,6 @@ export default function DeleteModal(props, removeId, table, updateData) {
           </Col>
         </Row>
       </Modal>
-      ;
     </>
   );
 }

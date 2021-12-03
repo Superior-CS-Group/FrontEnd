@@ -51,7 +51,8 @@ function ElementCard({
   async function getSubCatalog(id) {
     const catalogs = await getCatalogItem(id);
     console.log("catalogs: ", catalogs);
-    if (catalogs.remote === "success") {
+    if (catalogs.remote === "success" && catalogs.data.data[0]) {
+      console.log(catalogs.data.data[0], id);
       setTempName(catalogs.data.data[0].name);
     }
   }
@@ -212,14 +213,14 @@ function ElementCard({
           !element.automatic ? "ant-cover-success" : "ant-cover-gray"
         } px-2 py-4`}
       >
-        {!element.disabled && (
+        {/* {!element.disabled && (
           <span className="delect">
             <DeleteOutlined
               className="text-danger"
               onClick={() => handleRemoveElement(idx)}
             />
           </span>
-        )}
+        )} */}
         <div className="ant-automic">{element.auto}</div>
         {/* <span className="ant-edit-furmulla">
           <EditOutlined />
