@@ -170,6 +170,7 @@ export default function AddItem({
           handelUpdate(selectedSubCatalog);
           setSelectedSubCatalog("");
           setSelectedElement({});
+          // setItemDetails({})
         }, 1000);
       } else {
         setErrors(response.errors.errors);
@@ -244,7 +245,7 @@ export default function AddItem({
                  <Select
               size="large"
               name="unit"
-              defaultValue="Select Unit"
+              defaultValue={itemDetails.unit?itemDetails.unit:"Select Unit"}
               onChange={handleSelectChange}
               // suffixIcon={<img src={arrowDwon} alt="" />}
               // value={itemDetails.unit}
