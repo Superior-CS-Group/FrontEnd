@@ -67,7 +67,7 @@ function FormulaV2() {
           (item, pos) => catalogs.indexOf(item) === pos
         ),
       };
-      setTimeout(() => updateFormulaDetails(body), 1000);
+      setTimeout(() => updateFormulaDetails(body), 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdated]);
@@ -169,6 +169,15 @@ function FormulaV2() {
     setElementList([...newElementList]);
     setIsUpdated("Update");
   };
+  const handleRemoveMaterial = (index, toggleFun) => {
+    const newMaterialList = [...materials];
+    newMaterialList.splice(index, 1);
+    setMaterials([...newMaterialList]);
+    setIsUpdated("Update");
+    if (toggleFun) {
+      toggleFun(false);
+    }
+  };
 
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -197,7 +206,7 @@ function FormulaV2() {
                 />
               </Col>
             </Row>
-            <Row gutter={[24, 0]} className="align-items-center">
+            {/* <Row gutter={[24, 0]} className="align-items-center">
               <Col span={8}>
                 <label>Total Charge:</label>
               </Col>
@@ -207,7 +216,7 @@ function FormulaV2() {
                   className="ant-furmulla-input"
                 />
               </Col>
-            </Row>
+            </Row> */}
           </div>
           <span className="ant-cricle-add" onClick={handleNewElement}>
             {treeIcon}
@@ -246,6 +255,7 @@ function FormulaV2() {
                   index={index}
                   elementList={elementList}
                   onFocusOut={onFocusOut}
+                  handleRemoveMaterial={handleRemoveMaterial}
                 />
               ))}
             </tbody>

@@ -4,7 +4,6 @@ import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import FillterTabs from "../fillterTabs.components";
 import { Card, Table, Modal, Form, Input, Button, Row, Col } from "antd";
 import { Link, Navigate } from "react-router-dom";
-import { EyeOutlined } from "@ant-design/icons";
 import { ellps, Datel } from "../../../utils/svg.file";
 import {
   createFormula,
