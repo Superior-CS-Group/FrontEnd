@@ -84,12 +84,18 @@ export default function ChangePasswordUser(props) {
       >
         <Form layout="vertical">
           <Form.Item label="New Password">
-            <Input name="password" type="password" onChange={handleAllChange} />
+            <Input
+              name="password"
+              type="password"
+              value={state.password}
+              onChange={handleAllChange}
+            />
           </Form.Item>
           <Form.Item label="Confirm Password">
             <Input
               name="confirmPassword"
               type="password"
+              value={state.confirmPassword}
               onChange={handleAllChange}
             />
           </Form.Item>
