@@ -4,7 +4,7 @@ import { Table, Checkbox, Input, message, Switch } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
-import { getData } from "../../utils/fetchApi.js";
+import { getData, postData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
 import { SearchOutlined } from "@ant-design/icons";
 import FilterSorting from "./filter/filter.sorting.component";
@@ -19,14 +19,15 @@ export default function Datatable(props) {
   const [deleteEstimateId, setdeleteEstimateId] = useState();
   const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
   const [estimateResults, setdestimateResults] = useState([]);
+  // const [result, setResult] = useState({});
   const [state, setState] = useState({
-    estimateResults: [],
+    estimateResults: {},
     data: [],
     filteredData: [],
     columns: [
       {
         title: <Checkbox />,
-        dataIndex: "key",
+        dataIndex: "keys",
         width: 50,
       },
 
@@ -251,87 +252,92 @@ export default function Datatable(props) {
       setNewEstimateData([...newEstimateData2]);
     }
   }
-
-  useEffect(() => {
+  const fetchData = async () => {
     const data = [];
-    const fetchData = async () => {
-      const result = await getData(`estimation/upcoming-estimation`);
-      setdestimateResults({
-        estimateResults: result.data,
-      });
-      // console.log(estimateResults);
-
-      for (let i = 0; i < result.data.Data.length; i++) {
-        let estimateData = result.data.Data[i];
-        // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
-        let customerData = estimateData.customerLeadId;
-        let followRemind;
-        if (customerData[0].autoReminderEmail === true) {
-          followRemind = "Yes";
-        } else {
-          followRemind = "No";
-        }
-        data.push({
-          key: (
-            <Checkbox
-              onChange={(e) =>
-                handleAllChecked(
-                  e,
-                  customerData[0]._id,
-                  customerData[0].name,
-                  customerData[0].email
-                )
-              }
-            />
-          ),
-          action: (
-            <>
-              <span
-                className="me-2 cursor-btn"
-                onClick={(e) => {
-                  DeleteModalEstimate(customerData[0]._id, i);
-                }}
-              >
-                {Datel}
-              </span>
-            </>
-          ),
-          autoFollowUp: (
-            <>
-              <div className="green-switch">
-                <Switch defaultChecked onChange={onChange} />
-              </div>
-            </>
-          ),
-          scheduleDate: customerData[0].scheduleDate,
-          filterName: customerData[0].name,
-          name: (
-            <Link to={`/customer-lead/${customerData[0]._id}`}>
-              {customerData[0].name}
-            </Link>
-          ),
-          email: customerData[0].email,
-          contactNo: customerData[0].contactNo,
-          date: customerData[0].createdAt.split("T")[0],
-          address: customerData[0].address,
-          // autoFollowUp: followRemind,
-          estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
-          estimaitonStatus: customerData[0].estimaitonStatus,
-          estimaitonSentDate: estimateData.estimaitonSentDate,
-          daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
-          design: estimateData.design,
-          designPaid: estimateData.designPaid,
-          noOfPhoneFollowUp: estimateData.noOfPhoneFollowUp,
-          lastDatePhoneFollowUp: estimateData.lastDatePhoneFollowUp,
-          noOfEmailFollowUp: estimateData.noOfEmailFollowUp,
-          lastDateEmailFollowUp: estimateData.lastDateEmailFollowUp,
-          estimaitonCloseDate: estimateData.estimaitonCloseDate,
-          _id: customerData[0]._id,
-        });
+    const result = await getData(`estimation/upcoming-estimation`);
+    console.log('res=>',result)
+    setdestimateResults({
+      estimateResults: result.data,
+    });
+    // console.log(estimateResults);
+  //  await setResult(results)
+    for (let i = 0; i < result.data.Data.length; i++) {
+      let estimateData = result.data.Data[i];
+      // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
+      let customerData = estimateData.customerLeadId;
+      let followRemind;
+      if (customerData[0].autoReminderEmail === true) {
+        followRemind = "Yes";
+      } else {
+        followRemind = "No";
       }
-      // console.log("data: ", data);
-      setState({ ...state, data, filteredData: data });
-    };
+      console.log('f',customerData[0].autoReminderEmail)
+      data.push({
+        keys: (
+          <Checkbox
+            onChange={(e) =>
+              handleAllChecked(
+                e,
+                customerData[0]._id,
+                customerData[0].name,
+                customerData[0].email
+              )
+            }
+          />
+        ),
+        action: (
+          <>
+            <span
+              className="me-2 cursor-btn"
+              onClick={(e) => {
+                DeleteModalEstimate(customerData[0]._id, i);
+              }}
+            >
+              {Datel}
+            </span>
+          </>
+        ),
+        autoFollowUp: (
+          <>
+            <div className="green-switch">
+              <Switch checked={customerData[0].autoReminderEmail}  onChange={()=>{ console.log('check',estimateResults);onChange(customerData[0],i)}} />
+            </div>
+          </>
+        ),
+        scheduleDate:customerData[0].createdAt.split("T")[0],
+        //  customerData[0].scheduleDate,
+        filterName: customerData[0].name,
+        name: (
+          <Link to={`/customer-lead/${customerData[0]._id}`}>
+            {customerData[0].name}
+          </Link>
+        ),
+        email: customerData[0].email,
+        contactNo: customerData[0].contactNo,
+        date: customerData[0].createdAt.split("T")[0],
+        address: customerData[0].address,
+        // autoFollowUp: followRemind,
+        estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
+        estimaitonStatus: customerData[0].estimaitonStatus,
+        estimaitonSentDate: estimateData.estimaitonSentDate,
+        daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
+        design: estimateData.design,
+        designPaid: estimateData.designPaid,
+        noOfPhoneFollowUp: estimateData.noOfPhoneFollowUp,
+        lastDatePhoneFollowUp: estimateData.lastDatePhoneFollowUp,
+        noOfEmailFollowUp: estimateData.noOfEmailFollowUp,
+        lastDateEmailFollowUp: estimateData.lastDateEmailFollowUp,
+        estimaitonCloseDate: estimateData.estimaitonCloseDate,
+        _id: customerData[0]._id,
+       // key:estimateData._id
+      });
+    }
+    // console.log("data: ", data);
+    setState({ ...state, data, filteredData: data});
+  };
+  useEffect(async() => {
+    
+    
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
@@ -380,8 +386,29 @@ export default function Datatable(props) {
   const handleCancel = () => {
     setModalVisible(false);
   };
-  const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
+  const onChange = async(customer,i) => {
+    console.log(`switch to`,params);
+    
+    // even=!even.target.checked;
+    const result = await postData(`customer/update-info`, {id:customer._id,autoReminderEmail:!customer.autoReminderEmail});
+    console.log(result,estimateResults);
+    fetchData();
+    // if(estimateResults.estimateResults)
+    // estimateResults.estimateResults.Data.map((rr,idx)=>
+    // { if(idx=== i)
+    //   rr.customerLeadId.map(r=>{
+    //     r.autoReminderEmail=!customer.autoReminderEmail
+    //         });
+    // });
+    // console.log(estimateResults)
+  //   temp[i].autoFollowUp= <>
+  //   <div className="green-switch">
+  //     <Switch checked={!customer.autoReminderEmail} onChange={()=>onChange(customer,i)} />
+  //   </div>
+  // </>;
+    
+  // setState({estimateResults})
+
   };
   return (
     <>

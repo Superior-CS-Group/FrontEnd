@@ -15,6 +15,7 @@ import EstimationList from "../estimation/estimation.list.component.jsx";
 import userProfile from "../../../images/profile-top.png";
 import { time } from "../../../utils/svg.file";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages.jsx";
+import { getUserEstimation } from "../../../api/formula.js";
 export default function CustomerLeadInfo(props) {
   const params = useParams();
 
@@ -36,6 +37,8 @@ export default function CustomerLeadInfo(props) {
   const { search } = useLocation();
 
   const [isAddingNew, setIsAddingNew] = useState(false);
+  let [customerInfo, setCustomerInfo] = useState({});
+  let [GetUserEstimationData, setGetUserEstimationData] = useState({});
 
   const toggleAddNew = () => {
     setIsAddingNew(!isAddingNew);
@@ -47,13 +50,14 @@ export default function CustomerLeadInfo(props) {
     setEstimationId(query.get("estimationId"));
   }, [search]);
 
-  useEffect(() => {
+  useEffect(async() => {
     const id = params.id;
     if (id) {
       const body = { id };
       const fetchData = async () => {
         const result = await postData(`customer/get-info`, body);
         // console.log("result.data.Data",result.data.Data)
+        setCustomerInfo(result);
         let userstatus;
 
         if (result.data.Data.activeStatus === true) {
@@ -86,7 +90,8 @@ export default function CustomerLeadInfo(props) {
 
       fetchData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getUserEstimationD = await getUserEstimation(params.id);
+    setGetUserEstimationData(getUserEstimationD)
   }, []);
 
   const onChangeTab = (val) => {
@@ -261,6 +266,7 @@ export default function CustomerLeadInfo(props) {
                       <li
                         onClick={() => onChangeTab("Lead")}
                         className={!state.tabShow ? "active" : ""}
+                      
                       >
                         Lead
                       </li>
@@ -274,13 +280,18 @@ export default function CustomerLeadInfo(props) {
 
             {state.tabShow === false ? (
               <div className="card-show mt-3 pb-3">
-                <LeadInfo />
+                <LeadInfo  
+                 result={customerInfo}
+                 />
               </div>
             ) : (
               <div className="card-show mt-3">
                 {props.show}
                 {!estimaitonId && !isAddingNew ? (
-                  <EstimationList toggleAddNew={toggleAddNew} />
+                  <EstimationList 
+                  toggleAddNew={toggleAddNew}
+                  fetched={GetUserEstimationData}
+                  />
                 ) : (
                   <AddEstimates
                     custInfo={{

@@ -1,6 +1,7 @@
 import axios from "axios";
+import { SERVER_URL as backend_url } from "../config";
 // const SERVER_URL = "http://digimonk.net:1629/api";
-const SERVER_URL = "http://203.190.153.22:1629/api";
+const SERVER_URL = backend_url;
 
 export const getData = async (api, data) => {
   try {

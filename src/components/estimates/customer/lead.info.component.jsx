@@ -6,7 +6,7 @@ import { postData } from "../../../utils/fetchApi.js";
 import PhoneInput from "react-phone-number-input";
 import { useParams, Navigate } from "react-router-dom";
 
-export default function LeadInfo() {
+export default function LeadInfo(props) {
   const params = useParams();
 
   // let [responseData, setResponseData] = useState({ name: "", email: "" });
@@ -39,13 +39,13 @@ export default function LeadInfo() {
     message: "",
   });
   useEffect(() => {
-    // console.log("params: ", params.id);
+     console.log("props ", props);
     const id = params.id;
 
     if (id) {
       const body = { id };
       const fetchData = async () => {
-        const result = await postData(`customer/get-info`, body);
+        const result = props.result;
 
         // setResponseData(result.data);
         // console.log(responseData.Data.address);
@@ -236,9 +236,10 @@ export default function LeadInfo() {
 
   const updatehandleSubmit = async (event) => {
     // console.log(localStorage.getItem("token"));
+    event.preventDefault();
     let id = state.id;
 
-    event.preventDefault();
+   
     setState({ ...state, errors: {} });
     const { errors, isValid } = validateFields();
     if (!isValid) {
@@ -278,6 +279,50 @@ export default function LeadInfo() {
       distance,
       otherInformation,
       spouse,
+    };
+    console.log("body: ", body);
+
+    try {
+      const result = await postData(`customer/update-info`, body);
+      console.log("result: ", result);
+      setState({
+        ...state,
+        errors: [],
+        message: "New Data Updated!",
+        isRedirect: true,
+      });
+    } catch (err) {
+      console.log("error", err, err.response);
+
+      setState({
+        ...state,
+        errors: err.response.data.errors,
+        isLoading: false,
+      });
+    }
+  };
+
+  
+  const updatehandleSpouseSubmit = async (event) => {
+    // console.log(localStorage.getItem("token"));
+    event.preventDefault();
+    let id = state.id;
+
+   
+    setState({ ...state, errors: {} });
+  
+
+    const spouse = {
+      name: state.spouseName,
+      email: state.spouseEmail,
+      phone: state.spousePhone,
+      otherInfo: state.spouseOtherInfo,
+    };
+    setState({ ...state, isLoading: true });
+   
+    const body = {
+      id,
+      spouse
     };
     console.log("body: ", body);
 
@@ -608,7 +653,7 @@ export default function LeadInfo() {
                     <>
                       <Button
                         className="add-btn ant-btn-primary"
-                        onClick={updatehandleSubmit}
+                        onClick={updatehandleSpouseSubmit}
                       >
                         Update Changes
                       </Button>

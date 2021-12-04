@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { SearchOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { deleteUserEstimation, getUserEstimation } from "../../../api/formula";
 
-export default function EstimationList({ toggleAddNew }) {
+export default function EstimationList({ toggleAddNew,fetched:fetche }) {
   const params = useParams();
 
   const [columns, setColumns] = useState([
@@ -52,7 +52,7 @@ export default function EstimationList({ toggleAddNew }) {
   const [isDeleteing, setIsDeleteing] = useState(false);
 
   async function fetchUserFormula() {
-    const fetched = await getUserEstimation(params.id);
+    const fetched = fetche;
     if (fetched.remote === "success" && fetched.data.data.length) {
       const newData = fetched.data.data.map((item) => {
         return {
@@ -107,7 +107,7 @@ export default function EstimationList({ toggleAddNew }) {
   useEffect(() => {
     fetchUserFormula();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetche]);
 
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
