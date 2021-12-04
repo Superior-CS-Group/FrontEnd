@@ -1,15 +1,82 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { Route, Routes } from "react-router-dom";
-import Login from "./Login";
-import { Row, Col, Card, Button, Checkbox, Form, Divider } from "antd";
+import { Row, Col, Card, Button, Checkbox, Form, Divider, message } from "antd";
 import logo from "../../images/logo.svg";
-import SignUp from "./SignUp";
-import SetDashboard from "./SetDashboard";
-import { Link } from "react-router-dom";
+import { Link, useParams,Navigate } from "react-router-dom";
 import InputField from "../inputField/inputField.component";
 import lock from "../../images/lock.png";
-export default function ResetPassword() {
+import { updatePassword } from "../../api/user";
+export default function ResetPassword(props) {
+  const params = useParams();
+  const [redirect, setRedirect] = useState(null);
+  const [state, setState] = useState({
+    password: "",
+    confirmPassword: "",
+    message: "",
+    errors: {},
+    isModalForgot: false,
+  });
+
+  const validateFields = () => {
+    const errors = {};
+    if (!state.password) {
+      errors.password = "New Password is required";
+      message.error(errors.password, 5);
+    }
+    if (!state.confirmPassword) {
+      errors.confirmPassword = "Confirm Password is required";
+      message.error(errors.confirmPassword, 5);
+    }
+    return {
+      errors,
+      isValid: !Object.keys(errors).length,
+    };
+  };
+  const changePasswordHandle = async (event) => {
+    event.preventDefault();
+    setState({ ...state, errors: {} });
+    const { errors, isValid } = validateFields();
+    if (!isValid) {
+      setState({ ...state, errors });
+      // message.success(errors, 5);
+      return;
+    }
+    if (state.password !== state.confirmPassword) {
+      message.error("New Password or Confirm Password not match");
+    }
+    const { password, confirmPassword } = state;
+    const body = {
+      password,
+      confirmPassword,
+      token:params.id
+    };
+    try {
+      const responseData = await updatePassword(body);
+      if (responseData.remote === "success") {
+        setState({ password: "", confirmPassword: "" });
+        message.success("New Password Updated");
+        setRedirect("/auth");
+      }
+    } catch (error) {
+      console.log("error", error, error.response);
+
+      setState({
+        ...state,
+        message: error.response?.data?.errors,
+        isLoading: false,
+      });
+    }
+  };
+  const handleAllChange = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+      errors: [],
+    });
+  };
+  if (redirect) {
+    return <Navigate to={redirect}  />;
+  }
   return (
     <>
       {" "}
@@ -45,25 +112,29 @@ export default function ResetPassword() {
                 <Form layout="vertical">
                   <InputField
                     icon={<img src={lock} alt="" />}
-                    placeholder=""
+                    placeholder="New Password"
                     label="New Password"
-                    type="New Password"
-                    name="New password"
+                    name="password"
+                    type="password"
+                    value={state.password}
+                    onChange={handleAllChange}
                     dclass="ant-icon-space mb-3"
                   />
                   <InputField
                     icon={<img src={lock} alt="" />}
                     placeholder="Confirm Password"
                     label="Confirm Password"
+                    name="confirmPassword"
                     type="password"
-                    name="Confirm password"
+                    value={state.confirmPassword}
+                    onChange={handleAllChange}
                     dclass="ant-icon-space mb-0"
                   />{" "}
                   <Divider />
                   <Form.Item className="mb-3">
                     <Button
                       type="primary"
-                      type="submit"
+                      onClick={changePasswordHandle}
                       className="ant-btn-save"
                     >
                       Reset Password
