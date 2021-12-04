@@ -47,7 +47,7 @@ export default function ResetPassword() {
                     icon={<img src={lock} alt="" />}
                     placeholder=""
                     label="New Password"
-                    type="Password"
+                    type="New Password"
                     name="New password"
                     dclass="ant-icon-space mb-3"
                   />
