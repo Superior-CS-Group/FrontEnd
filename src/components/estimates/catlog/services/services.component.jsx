@@ -1,20 +1,15 @@
-import { Input, message } from "antd";
+import { Input } from "antd";
 import React, { useState } from "react";
 import { drag } from "../../../../utils/svg.file";
 import ReactDragListView from "react-drag-listview";
 import { Table, Button } from "antd";
-import {
-  createService,
-  getServices,
-  removeServices,
-} from "../../../../api/catalogue";
+import { getServices } from "../../../../api/catalogue";
 
 import {
   PlusCircleOutlined,
   SearchOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { validateCreateServiceInput } from "../../../../validators/catalog/catalog.validator";
 import EditService from "../EditServices";
 import DeleteModal from "../../../modal/deleteModal.component";
 
@@ -70,43 +65,26 @@ function Services() {
       width: 200,
     },
   ]);
-  const [deleteServiceId, setdeleteServiceId] = React.useState({});
-  const [errors, setErrors] = React.useState({});
-  const [isLoading, setIsLoading] = React.useState(false);
   const [pageNumber, setPageNumber] = React.useState(1);
   const [isUpdate, setIsUpdate] = React.useState(false);
   const [isAddService, setIsAddService] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [selectedService, setSelectedService] = React.useState(null);
-  const [serviceDetails, setServiceDetails] = React.useState({
-    name: "",
-    type: "service",
-    hours: "",
-    day: "",
-    productionRate: "",
-  });
-  const handleDeleteOk = async () => {
-    const body = {
-      id: deleteServiceId,
-    };
-    const response = await removeServices(body);
-    handleUpdate();
-    message.success("Services Deleted", 5);
-    setShowDeleteModal(false);
-    setIsModal(false);
-  };
-  const DeleteCatalogService = () => {
-    setShowDeleteModal(true);
-  };
-  const handleDeleteClose = () => {
-    setShowDeleteModal(false);
-  };
-  const handleUpdate = () => {
-    setIsUpdate(true);
-    setTimeout(() => setIsUpdate(false), 100);
-  };
 
   const [isModal, setIsModal] = React.useState(false);
+
+  const toggleUpdate = () => {
+    setIsUpdate(!isUpdate);
+  };
+
+  const handleEdit = (e, service) => {
+    if (e) {
+      e.preventDefault();
+    }
+    setIsModal(true);
+    setSelectedService(service);
+    setIsAddService(false);
+  };
   const fetchData = async () => {
     const response = await getServices(pageNumber);
     console.log("response", response);
@@ -122,10 +100,7 @@ function Services() {
             >
               <EditOutlined
                 className="text-primary"
-                onClick={() => {
-                  setSelectedService(item);
-                  togglePopup("edit");
-                }}
+                onClick={(e) => handleEdit(e, item)}
               />
             </Button>
           ),
@@ -147,47 +122,12 @@ function Services() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdate]);
 
-  const saveService = async () => {
-    const body = { ...selectedService };
-    setErrors({});
-    setIsLoading(true);
-    const { isValid, errors } = validateCreateServiceInput(body);
-    console.log("body: ", body, errors, isValid);
-    if (!isValid) {
-      setErrors(errors);
-      setIsLoading(false);
-      return;
-    }
-    let response = {};
-    if (!selectedService) {
-      response = await createService(body);
-    } else {
-      const body = { ...serviceDetails };
-      console.log("selectedService", body);
-      response = await createService(body);
-    }
-    console.log("response", response);
-
-    if (response.remote === "success") {
-      handleUpdate();
-      setTimeout(() => {
-        setIsLoading(false);
-        togglePopup();
-      }, 1000);
-    } else {
-      setIsLoading(false);
-    }
-  };
-
   const handleChange = (e) => {
-    e.preventDefault();
-
-    const newServiceDetails = { ...serviceDetails };
-    console.log(e.target.value);
-    newServiceDetails[e.target.name] = e.target.value;
-    setServiceDetails(newServiceDetails);
-    setSelectedService(newServiceDetails);
-    console.log(newServiceDetails, "eeeeeeeee");
+    if (e) {
+      e.preventDefault();
+    }
+    setIsModal(false);
+    setSelectedService(null);
   };
 
   const dragProps = {
@@ -201,27 +141,15 @@ function Services() {
     nodeSelector: "th",
   };
 
-  const deleteServiecs = (id) => {
-    console.log(id, "deleteId servd");
-    setdeleteServiceId(id);
-    setShowDeleteModal(true);
+  const handleAdd = () => {
+    setIsAddService(true);
+    setIsModal(true);
   };
-  const togglePopup = (actio) => {
-    setIsModal(!isModal);
-    if (actio === "add") {
-      setIsAddService(true);
-      setErrors({});
-    } else setIsAddService(false);
-  };
-
   return (
     <div>
       <div className="p-2">
         <div className="fillter d-lg-flex align-items-center">
-          <span
-            className="ant-blue-plus me-4"
-            onClick={() => togglePopup("add")}
-          >
+          <span className="ant-blue-plus me-4" onClick={handleAdd}>
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
             Add Services
           </span>
@@ -262,28 +190,21 @@ function Services() {
         </>
       )}
       <EditService
-        title="Edit Service"
-        handleInputChange={handleChange}
-        isEditservices={isModal}
-        handleOk={() => console.log("ok")}
-        handleCancel={togglePopup}
-        width={575}
-        loading={isLoading}
-        handleSave={saveService}
-        selectedService={selectedService}
-        deleteServiecs={deleteServiecs}
-        errors={errors}
         isAddService={isAddService}
+        isShowModal={isModal}
+        handleCancel={handleChange}
+        selectedService={selectedService}
+        toggleUpdate={toggleUpdate}
       />
 
-      <DeleteModal
+      {/* <DeleteModal
         deleteServiecs={deleteServiecs}
         ShowDeleteModal={ShowDeleteModal}
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
         // deleteId={deleteCatelogId}
         content={<>Do you really want to delete?</>}
-      />
+      /> */}
     </div>
   );
 }

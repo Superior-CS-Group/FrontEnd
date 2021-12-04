@@ -173,7 +173,7 @@ export default function UserTable(props) {
       setTimeout(
         () =>
           setState({ ...state, data, filtredData: data, smallLoader: false }),
-        1000
+        500
       );
     };
     fetchData();

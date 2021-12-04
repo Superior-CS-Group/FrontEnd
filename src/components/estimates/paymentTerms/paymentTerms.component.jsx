@@ -46,7 +46,15 @@ function PaymentTerms({ totalCharge, paymentTerms, setPaymentTerms }) {
   React.useEffect(
     () => {
       console.log("paymentTerms", { totalCharge, paymentTerms });
-      setPaymentDetails(paymentTerms);
+      const newPaymentDetails = [];
+      paymentTerms.forEach((item) => {
+        newPaymentDetails.push({
+          title: item.title,
+          value: item.value,
+          editable: false,
+        });
+      });
+      setPaymentDetails(newPaymentDetails);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [totalCharge]
@@ -60,43 +68,41 @@ function PaymentTerms({ totalCharge, paymentTerms, setPaymentTerms }) {
         dataSource={paymentDetails}
         size="small"
         renderItem={(item) => (
-          <List.Item className="border-0 font-d" extra={[item.cost]}>
-            {item.title}
+          <List.Item
+            className="border-0 font-d"
+            extra={[
+              <Input
+                style={{ width: "40px" }}
+                type="number"
+                maxLength="2"
+                placeholder=""
+                className="ant-width-small font-bold radius-4 gray-text"
+                value={item.value}
+              />,
+            ]}
+          >
+            {item.editable ? (
+              <Input placeholder="" style={{ width: "88%" }} />
+            ) : (
+              item.title
+            )}
           </List.Item>
         )}
-      >
-        {variation.map((variation, index) => {
-          return (
-            <React.Fragment key={index}>
-              <List.Item
-                className="border-0 font-d position-relative"
-                extra={[
-                  <>
-                    <Input
-                      style={{ width: "40px" }}
-                      type="number"
-                      maxLength="2"
-                      placeholder=""
-                      className="ant-width-small font-bold radius-4 gray-text"
-                      defaultValue=""
-                    />
-                    <span>%</span> <DeleteOutlined className="delete-icon" />
-                  </>,
-                ]}
-              >
-                <Input placeholder="" style={{ width: "88%" }} />
-              </List.Item>
-            </React.Fragment>
-          );
-        })}
-      </List>
+      />
       <div className="addbtn-ant ps-3 py-3">
         <a
           href="#"
           className="d-inline-flex align-items-center"
           onClick={(e) => {
             e.preventDefault();
-            setVariation([...variation, { title: "title", value: "" }]);
+            setPaymentDetails([
+              ...paymentDetails,
+              {
+                title: "title",
+                value: 0,
+                editable: true,
+              },
+            ]);
           }}
         >
           <PlusCircleOutlined className="me-2" />

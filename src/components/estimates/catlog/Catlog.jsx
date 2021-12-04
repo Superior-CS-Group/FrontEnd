@@ -46,6 +46,8 @@ export default function Catlog() {
   const [isOpen, setIsOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [currentImages, setCurrentImages] = useState([]);
+  const [deleteErrors, setDeleteErrors] = useState("");
+  const [deleteing, setDeleteing] = useState(false);
   // const images = ['https://onepercent.portal.superiorcsgroup.com:1629/media/users/61a0f99ef25060133ba3a61a/materials/61a0f99ef25060133ba3a61a-1638390458848.jpg','https://onepercent.portal.superiorcsgroup.com:1629/media/users/61a0f99ef25060133ba3a61a/materials/61a0f99ef25060133ba3a61a-1638390458847.jpg'];
   const [state, setState] = useState({
     smallLoader: true,
@@ -62,6 +64,8 @@ export default function Catlog() {
 
   const handleRemoveElement = async () => {
     let response = {};
+    setDeleteErrors("");
+    setDeleteing(true);
     if (
       selectedElement &&
       ["subCatalog", "catalog"].includes(selectedElement.type)
@@ -70,26 +74,30 @@ export default function Catlog() {
     } else {
       response = await removeVariation(selectedElement._id);
     }
-    console.log("response: ", response);
-    let newCatalogItem = [...catalogItem];
-    newCatalogItem = newCatalogItem.filter(
-      (item) => item._id !== selectedElement._id
-    );
-    let newFiltredCatalogItem = [...filtredCatalogItem];
-    newFiltredCatalogItem = newFiltredCatalogItem.filter(
-      (item) => item._id !== selectedElement._id
-    );
-    let newVariations = [...(variations[selectedElement._id] || [])];
-    newVariations = newVariations.filter(
-      (item) => item._id !== selectedElement._id
-    );
-    setCatalogItem(newCatalogItem);
-    setFilteredCatalogItem(newFiltredCatalogItem);
-    setVariations({
-      ...variations,
-      [selectedElement.catelogId]: newVariations,
-    });
-    setSelectedElement({});
+    if (response.remote === "success") {
+      let newCatalogItem = [...catalogItem];
+      newCatalogItem = newCatalogItem.filter(
+        (item) => item._id !== selectedElement._id
+      );
+      let newFiltredCatalogItem = [...filtredCatalogItem];
+      newFiltredCatalogItem = newFiltredCatalogItem.filter(
+        (item) => item._id !== selectedElement._id
+      );
+      let newVariations = [...(variations[selectedElement._id] || [])];
+      newVariations = newVariations.filter(
+        (item) => item._id !== selectedElement._id
+      );
+      setCatalogItem(newCatalogItem);
+      setFilteredCatalogItem(newFiltredCatalogItem);
+      setVariations({
+        ...variations,
+        [selectedElement.catelogId]: newVariations,
+      });
+      setSelectedElement({});
+    } else {
+      setDeleteErrors(response.errors.errors.msg);
+    }
+    setDeleteing(false);
   };
 
   React.useEffect(() => {
@@ -104,7 +112,6 @@ export default function Catlog() {
     } else if (selectedElement && selectedElement.action === "delete") {
     }
   }, [Object.keys(selectedElement).length]);
-  const [visible, setVisible] = useState(false);
   const handelUpdate = (variationId) => {
     if (variationId) {
       loadVariations(variationId);
@@ -192,7 +199,7 @@ export default function Catlog() {
     }
     setTimeout(() => {
       setIsLoadingVariation(null);
-    }, 1000);
+    }, 500);
   };
 
   React.useEffect(() => {
@@ -209,12 +216,14 @@ export default function Catlog() {
     setIsModal(false);
     setIsAddService(false);
     setSelectedElement({});
+    setSelectedSubCatalog(null);
   };
 
   const handleCancel = () => {
     setIsAddService(false);
     setIsModal("");
     setSelectedElement({});
+    setSelectedSubCatalog(null);
   };
 
   const getCatalog = async () => {
@@ -230,7 +239,7 @@ export default function Catlog() {
         setState({
           smallLoader: false,
         }),
-      1000
+      500
     );
   };
 
@@ -491,7 +500,7 @@ export default function Catlog() {
                                 }
                               >
                                 <h1 className="font-16 mb-0 cursor-btn py-3">
-                                  Add Item..
+                                  Add Item...
                                 </h1>
                               </div>
                             );
@@ -643,15 +652,27 @@ export default function Catlog() {
         closeIcon={<InfoCircleOutlined />}
       >
         <p>Are you sure you want to delete element ?</p>
+        <span className="text-danger">{deleteErrors}</span>
         <Row>
           <Col md={12} className="text-center">
-            <Button type="text" onClick={() => setSelectedElement({})}>
+            <Button
+              type="text"
+              onClick={() => {
+                setSelectedElement({});
+                setDeleteErrors("");
+              }}
+              disabled={deleteing}
+            >
               Cancel
             </Button>
           </Col>
           <Col md={12}>
-            <Button type="link" onClick={handleRemoveElement}>
-              Delete
+            <Button
+              type="link"
+              onClick={handleRemoveElement}
+              disabled={deleteing}
+            >
+              {deleteing ? "Deleting..." : "Delete"}
             </Button>
           </Col>
         </Row>

@@ -11,6 +11,7 @@ import FilterSorting from "./filter/filter.sorting.component";
 
 import MaterialTable from "./material.table.component";
 import { Nav } from "react-bootstrap";
+import ColumnModal from "../modal/columnModal.component";
 const { Option } = Select;
 
 function handleChange(value) {
@@ -25,6 +26,7 @@ export default class Catalog extends Component {
       visible: false,
       isMaterial: true,
       isProduct: true,
+      AddColumnShow: false,
     };
   }
 
@@ -33,11 +35,11 @@ export default class Catalog extends Component {
   };
 
   handleOk = () => {
-    this.setState({ ModalVisible: false });
+    this.setState({ ModalVisible: false, AddColumnShow: false });
   };
 
   handleCancel = () => {
-    this.setState({ ModalVisible: false });
+    this.setState({ ModalVisible: false, AddColumnShow: false });
   };
   showModalNew = () => {
     this.setState({
@@ -100,13 +102,13 @@ export default class Catalog extends Component {
                 <img src={fillter} className="me-3" alt="" /> Filter and Sort
               </span>
 
-              {/* <span className="ant-blue-plus">
+              <span className="ant-blue-plus">
                 <PlusCircleOutlined
                   style={{ fontSize: "18px" }}
                   className="me-2"
                 />{" "}
                 Add Column
-              </span> */}
+              </span>
               <div className="ms-auto col-lg-3">
                 <Input
                   placeholder="Search catalog by name"
