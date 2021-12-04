@@ -8,6 +8,7 @@ export default function ChangePasswordUser(props) {
     confirmPassword: "",
     message: "",
     errors: {},
+    isModalForgot:false
   });
 
   const validateFields = () => {
