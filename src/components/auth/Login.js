@@ -32,6 +32,7 @@ export default class Login extends Component {
   }
 
   componentDidMount = async () => {
+    console.log("this.props", this.props);
     const token = localStorage.getItem("token");
     if (token) {
       this.setState({ isToken: true });
