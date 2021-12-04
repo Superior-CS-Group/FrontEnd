@@ -47,7 +47,7 @@ export default function EmailSetting() {
                 isLoader: true,
                 smallLoader: false,
               }),
-            1000
+            500
           );
         }
       } else {

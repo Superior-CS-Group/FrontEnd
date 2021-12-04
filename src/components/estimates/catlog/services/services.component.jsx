@@ -103,7 +103,7 @@ function Services() {
   };
   const handleUpdate = () => {
     setIsUpdate(true);
-    setTimeout(() => setIsUpdate(false), 100);
+    setTimeout(() => setIsUpdate(false),);
   };
 
   const [isModal, setIsModal] = React.useState(false);
@@ -138,7 +138,7 @@ function Services() {
         setState({
           smallLoader: false,
         }),
-      1000
+    
     );
   };
 
@@ -173,7 +173,7 @@ function Services() {
       setTimeout(() => {
         setIsLoading(false);
         togglePopup();
-      }, 1000);
+      }, );
     } else {
       setIsLoading(false);
     }
