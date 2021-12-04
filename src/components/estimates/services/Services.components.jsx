@@ -51,7 +51,7 @@ export default function Services() {
         setState({
           smallLoader: false,
         }),
-      1000
+      500
     );
     console.log(result);
   }
@@ -142,7 +142,7 @@ export default function Services() {
     }
     setTimeout(() => {
       setIsDeleteing(false);
-    }, 1000);
+    }, 500);
   };
 
   if (redirect) {

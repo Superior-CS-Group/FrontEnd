@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Table, Badge, Tooltip, Input, message } from "antd";
+import { Table, Badge, Tooltip, Input, message, Switch } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag } from "../../utils/svg.file";
 import { useParams, Navigate } from "react-router-dom";
 import { postData } from "../../utils/fetchApi.js";
 import { getUserList } from "../../api/admin.js";
-import { updateCustomerStatus } from "../../api/user.js";
+import { updateCustomerStatus, updateIsAdminStatus } from "../../api/user.js";
 import { LockOutlined } from "@ant-design/icons";
 import { SearchOutlined } from "@ant-design/icons";
 import ChangePasswordUser from "../modal/changePassword.component";
@@ -24,7 +24,7 @@ export default function UserTable(props) {
       {
         title: (
           <>
-             Name <span className="float-end me-2">{drag}</span>
+            Name <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "Name",
@@ -53,7 +53,7 @@ export default function UserTable(props) {
         ),
         dataIndex: "contactNo",
       },
-       
+
       {
         title: (
           <>
@@ -65,6 +65,10 @@ export default function UserTable(props) {
       {
         title: "Status",
         dataIndex: "Status",
+      },
+      {
+        title: "Is Admin",
+        dataIndex: "userRole",
       },
     ],
     data: [],
@@ -85,15 +89,21 @@ export default function UserTable(props) {
     nodeSelector: "th",
   };
 
+  const onChange = (checked) => {
+    console.log(`switch to ${checked}`);
+  };
+
+  const isAdminHandleSubmit = async (id) => {
+    const body = { id: id };
+    console.log(body);
+    const result = await updateIsAdminStatus(body);
+    message.success("IsAdmin Updated", 5);
+  };
+
   const updateStatusHandle = async (id) => {
     const body = { id: id };
     const result = await updateCustomerStatus(body);
-    // console.log(result);
-    // setRedirect("/userlist");
     let data2 = state.data.filter((item) => item._id === id);
-    // console.log(state.data,"state.data")
-    // console.log(data2,"data222",id)
-    // setState({isRedirect:true,})
     message.success("Status Updated", 5);
   };
 
@@ -122,7 +132,7 @@ export default function UserTable(props) {
             <>
               <Badge
                 className="cursor-btn site-badge-count-109 me-2"
-                count="Activated"
+                count="Approved"
                 style={{ backgroundColor: "#52c41a" }}
                 onClick={(e) => updateStatusHandle(userData._id)}
               />
@@ -137,16 +147,25 @@ export default function UserTable(props) {
             <>
               <Badge
                 className="cursor-btn site-badge-count-109 me-2"
-                count="Deactive"
+                count="Pending"
                 onClick={(e) => updateStatusHandle(userData._id)}
               />
-              <Tooltip title="Reset Password">
-                <LockOutlined
-                  className="cursor-btn pass-key-btn"
-                  onClick={(e) => showModalPassword(userData._id)}
-                />
-              </Tooltip>
             </>
+          ),
+
+          userRole: userData.activeStatus ? (
+            <>
+              <div className="green-switch">
+                <Switch
+                  value={userData.isAdmin}
+                  onChange={(e) => isAdminHandleSubmit(userData._id)}
+                  className="me-2"
+                  defaultChecked={userData.isAdmin}
+                />
+              </div>
+            </>
+          ) : (
+            ""
           ),
         });
       }
@@ -154,7 +173,7 @@ export default function UserTable(props) {
       setTimeout(
         () =>
           setState({ ...state, data, filtredData: data, smallLoader: false }),
-        1000
+        500
       );
     };
     fetchData();
@@ -175,8 +194,7 @@ export default function UserTable(props) {
   };
 
   const changePasswordHandle = () => {
-
-    console.log(userId,state.newPassword);
+    console.log(userId, state.newPassword);
   };
 
   const handleFilterData = (e) => {
@@ -236,7 +254,7 @@ export default function UserTable(props) {
         showModalPassword={showModalPassword}
         handleCancel={handleCancel}
         handleOk={handleOk}
-        isModalShow={isModalShow} 
+        isModalShow={isModalShow}
         userId={userId}
       />
     </>

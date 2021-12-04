@@ -199,7 +199,7 @@ export default function Catlog() {
     }
     setTimeout(() => {
       setIsLoadingVariation(null);
-    }, 1000);
+    }, 500);
   };
 
   React.useEffect(() => {
@@ -239,7 +239,7 @@ export default function Catlog() {
         setState({
           smallLoader: false,
         }),
-      1000
+      500
     );
   };
 
