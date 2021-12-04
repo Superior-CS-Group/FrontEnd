@@ -16,11 +16,7 @@ import {
   Modal,
   message,
 } from "antd";
-import {
-  SaveOutlined,
-  CloseCircleFilled,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
+import { CloseCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 import { eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 import {
@@ -51,8 +47,10 @@ export default function AddEstimates(props) {
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectIndex, setSelectIndex] = React.useState(null);
   const [totalPorjectCharge, setTotalProjectCharge] = React.useState(0);
+  const [totalPorjectChargeAfterDiscount, setTotalProjectChargeAfterDiscount] =
+    React.useState(0);
   const [estimationSettings, setEstimationSettings] = React.useState({});
-  const [paymentTerms, setPaymentTerms] = React.useState({});
+  const [paymentTerms, setPaymentTerms] = React.useState([]);
   const [isUpdate, setIsUpdate] = React.useState(false);
   const columns = [
     {
@@ -268,8 +266,6 @@ export default function AddEstimates(props) {
         try {
           formula = formula.replace(regex, element.price);
         } catch (error) {
-          console.log("regex; ", regex);
-          console.log("formula; ", formula);
           console.log("error: ", error);
         }
       });
@@ -401,19 +397,16 @@ export default function AddEstimates(props) {
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
-          console.log("regex: ", element);
           newContract = newContract.replace(regex, element.price);
         } catch (error) {}
       });
     }
-    console.log("newContract: ", newContract);
     formula.processedClientContract = newContract;
     return newContract;
   };
 
   React.useEffect(() => {
     if (isUpdate) {
-      console.log("Saving.....");
       handleSaveEstimations();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -766,6 +759,9 @@ export default function AddEstimates(props) {
             <EstimationOverview
               selectedFormulas={selectedFormulas}
               setTotalProjectChargeChange={setTotalProjectCharge}
+              setTotalProjectChargeAfterDiscountMain={
+                setTotalProjectChargeAfterDiscount
+              }
               onBlur={onFocusOut}
               estimationSettings={estimationSettings}
             />
@@ -812,22 +808,22 @@ export default function AddEstimates(props) {
                 key="3"
                 className="border-0 ant-bootom-line-effect"
               >
-                {/* <PaymentTerms
-                  totalCharge={totalPorjectCharge}
+                <PaymentTerms
+                  totalCharge={totalPorjectChargeAfterDiscount}
                   paymentTerms={paymentTerms}
                   setPaymentTerms={setPaymentTerms}
                   onBlur={onFocusOut}
-                /> */}
+                />
               </Panel>
             </Collapse>
           </Col>
         </Row>
       </div>
-      <div className="ant-floating">
+      {/* <div className="ant-floating">
         <Button type="primary" onClick={handleSaveEstimations}>
           <SaveOutlined />
         </Button>
-      </div>
+      </div> */}
       <Modal
         className="modal-radius warning-modal"
         title="Warning!"

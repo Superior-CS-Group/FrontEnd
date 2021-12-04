@@ -43,6 +43,7 @@ export async function createService(data) {
 }
 
 export async function updateService(serviceId, data) {
+  console.log("updateService: ", serviceId, data);
   const response = await api.request({
     url: `/v2/catalog/update-service/${serviceId}`,
     method: "PUT",
