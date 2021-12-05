@@ -10,10 +10,10 @@ import {
 } from "@ant-design/icons";
 import { Button, Card, Select, Skeleton } from "antd";
 import { Nav } from "react-bootstrap";
-
+import {   Modal, Form, Input } from "antd";
 import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
-import { getData } from "../../utils/fetchApi.js";
+import { getData, postData } from "../../utils/fetchApi.js";
 import SmallLoader from "../loader/smallLoader";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 
@@ -26,29 +26,53 @@ export default class MainEstimates extends Component {
       Tabs: [],
       newTabs: {},
       smallLoader: true,
+      isModalVisible:false,
+      tabName:'',
+      currentTab:-1
     };
   }
-  addTabs = () => {
-    this.setState({ Tabs: [...this.state.Tabs, this.state.newTabs] });
+  addTabsModal = () => {
+    this.setState({ 
+      isModalVisible:true,
+    });
+  };
+  addTabs= async() => {
+    // const id = params.id;
+   
+    //   const body = { id };
+    
+    //     const result = await postData(`customer/get-info`, body);
+   const tab=await postData(`tab-filter/add`,{name:this.state.tabName});
+   console.log('tab===',tab)
+    this.setState({ 
+      isModalVisible:false,
+       Tabs: [...this.state.Tabs, {name:this.state.tabName}] ,
+       tabName:''
+    });
   };
 
-  RemoveTabs = (index) => {
-    this.state.newTabs = [...this.state.Tabs];
-    this.state.Tabs.splice(index, -1);
-    this.setState({ Tabs: this.state.newTabs });
-    console.log(this.state.Tabs, "check remove array");
+  RemoveTabs = async(index) => {
+    let tab=this.state.Tabs;
+    console.log(tab[index]);
+   const delte=await postData(`tab-filter/delete`,{id:tab[index]._id})
+   
+    tab.splice(index, 1);
+    this.setState({ Tabs: tab });
+    console.log(tab,index,delte, "check remove array");
   };
   componentDidMount = async () => {
     const result = await getData(`estimation/upcoming-estimation`);
-    setTimeout(() =>
+    const getTabs = await getData(`tab-filter/list`);
+    console.log('tabs=>',getTabs)
+  
       this.setState({
         estimateResults: result.data,
         estimateData: result.data.Data,
         loading: true,
+        Tabs:getTabs.data.Data,
 
         smallLoader: false,
-      }),500
-    );
+      })
     // console.log("estimateResults:", this.state.estimateData);
   };
 
@@ -64,7 +88,7 @@ export default class MainEstimates extends Component {
   };
 
   handleCancel = () => {
-    this.setState({ ModalVisible: false });
+    this.setState({ ModalVisible: false, isModalVisible: false });
   };
   render() {
     const { Option } = Select;
@@ -170,30 +194,30 @@ export default class MainEstimates extends Component {
             >
               <div>
                 <Nav className="catlog-tabs" as="ul">
-                  <Nav.Item as="li">
-                    <Nav.Link className="active">
+                  <Nav.Item as="li" key={-1}>
+                    <Nav.Link className={this.state.currentTab === -1?"active":""}>
                       <b class="left-curve"></b>
                       <b class="right-curve"></b>
-                      Upcoming Estimates
+                      <p onClick={()=>this.setState({currentTab:-1})}> Upcoming Estimates</p>
                     </Nav.Link>
                   </Nav.Item>
-                  {this.state.Tabs.map((tabs, index) => {
+                  {this.state.Tabs.map((tab, index) => {
                     return (
                       <Nav.Item as="li" key={index}>
-                        <Nav.Link>
+                        <Nav.Link className={this.state.currentTab === index?"active":""}>
                           <b class="left-curve"></b>
                           <b class="right-curve"></b>
-                          Tab {index}{" "}
+                         <p onClick={()=>this.setState({currentTab:index})}> {tab.name}</p>
                           <CloseOutlined
                             className="cursor-btn"
-                            onClick={this.RemoveTabs}
+                            onClick={()=>this.RemoveTabs(index)}
                           />
                         </Nav.Link>
                       </Nav.Item>
                     );
                   })}
                   <Nav.Item as="li">
-                    <Nav.Link onClick={this.addTabs}>
+                    <Nav.Link onClick={this.addTabsModal}>
                       <b class="left-curve"></b>
                       <b class="right-curve"></b>
                       <span>
@@ -247,6 +271,36 @@ export default class MainEstimates extends Component {
           handleCancel={this.handleCancel}
           handleOk={this.handleOk}
         />
+         <Modal
+        title="Create New Tab"
+        visible={this.state.isModalVisible}
+        onCancel={this.handleCancel}
+        footer={false}
+        centered
+        className="radius-20"
+      >
+        <Form layout="vertical">
+          <Form.Item label="Tab Name">
+            <Input
+              placeholder="Filter by 90 Days"
+              size="large"
+              className="ant-modal-input"
+              value={this.state.tabName}
+               onChange={(e) => this.setState({tabName:e.target.value})}
+            />
+          </Form.Item>
+          <Form.Item className="text-end mb-0">
+            <Button
+              type="primary"
+              size="large"
+              className="radius-30 ant-primary-btn font-15 px-5"
+              onClick={this.addTabs}
+            >
+              Save
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
       </>
     );
   }
