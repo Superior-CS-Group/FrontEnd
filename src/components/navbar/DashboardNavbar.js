@@ -27,7 +27,6 @@ export default class DashboardNavbar extends Component {
 
   componentDidMount = async () => {
     const token = localStorage.getItem("token");
-    console.log(token)
     if (token) {
       this.setState({ isToken: true });
     } else {

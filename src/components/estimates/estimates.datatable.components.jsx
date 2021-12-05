@@ -6,9 +6,10 @@ import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
-import { SearchOutlined } from "@ant-design/icons";
-import FilterSorting from "./filter/filter.sorting.component";
 
+import FilterSorting from "./filter/filter.sorting.component";
+import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import ColumnModal from "../modal/columnModal.component";
 import fillter from "../../images/fillter.png";
 import { deleteCustomerLead } from "../../api/delete";
 
@@ -20,6 +21,8 @@ export default function Datatable(props) {
   const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
   const [estimateResults, setdestimateResults] = useState([]);
   // const [result, setResult] = useState({});
+  const [AddColumnShow, setAddColumnShow] = useState(false);
+
   const [state, setState] = useState({
     estimateResults: {},
     data: [],
@@ -381,10 +384,12 @@ export default function Datatable(props) {
 
   const handleOk = () => {
     setModalVisible(false);
+    setAddColumnShow(false);
   };
 
   const handleCancel = () => {
     setModalVisible(false);
+    setAddColumnShow(false);
   };
   const onChange = async(customer,i) => {
     console.log(`switch to`,params);
@@ -410,6 +415,9 @@ export default function Datatable(props) {
   // setState({estimateResults})
 
   };
+  const handleColumnModal = () => {
+    setAddColumnShow(true);
+  };
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
@@ -420,7 +428,13 @@ export default function Datatable(props) {
           >
             <img src={fillter} className="me-3" alt="" /> Filter and Sort
           </span>
-
+          <span
+            className="ant-blue-plus column-add-btn"
+            onClick={handleColumnModal}
+          >
+            <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
+            Add Column
+          </span>
           <div className="ms-auto col-lg-3">
             <Input
               placeholder="Search customers by name"
@@ -457,6 +471,12 @@ export default function Datatable(props) {
         ModalVisible={ModalVisible}
         handleCancel={handleCancel}
         handleOk={handleOk}
+      />
+      <ColumnModal
+        handleColumnModal={handleColumnModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        AddColumnShow={AddColumnShow}
       />
     </>
   );

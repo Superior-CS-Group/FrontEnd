@@ -6,6 +6,7 @@ import { arrowdown, arrowup } from "../../../utils/svg.file";
 function EstimationOverview({
   selectedFormulas,
   setTotalProjectChargeChange,
+  setTotalProjectChargeAfterDiscountMain,
   estimationSettings,
 }) {
   const [totalProjectCharge, setTotalProjectCharge] = React.useState(0);
@@ -25,7 +26,12 @@ function EstimationOverview({
     React.useState(0);
   React.useEffect(() => {
     setTotalProjectChargeChange(totalProjectCharge);
-  }, [setTotalProjectChargeChange, totalProjectCharge]);
+    setTotalProjectChargeAfterDiscount(totalProjectChargeAfterDiscount);
+  }, [
+    setTotalProjectChargeChange,
+    totalProjectChargeAfterDiscount,
+    totalProjectCharge,
+  ]);
 
   React.useEffect(() => {
     setDiscount(estimationSettings?.fluffNumberDiscount || 0);
