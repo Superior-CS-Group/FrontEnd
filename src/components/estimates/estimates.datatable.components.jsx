@@ -255,16 +255,10 @@ export default function Datatable(props) {
       setNewEstimateData([...newEstimateData2]);
     }
   }
-  const fetchData = async () => {
+  const buildTable = async(result)=>{
     const data = [];
-    const result = await getData(`estimation/upcoming-estimation`);
-    console.log('res=>',result)
-    setdestimateResults({
-      estimateResults: result.data,
-    });
-    // console.log(estimateResults);
-  //  await setResult(results)
     for (let i = 0; i < result.data.Data.length; i++) {
+      if(result.data.Data[i].customerLeadId[0]){
       let estimateData = result.data.Data[i];
       // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
       let customerData = estimateData.customerLeadId;
@@ -335,8 +329,21 @@ export default function Datatable(props) {
        // key:estimateData._id
       });
     }
+    }
     // console.log("data: ", data);
     setState({ ...state, data, filteredData: data});
+
+  }
+  const fetchData = async () => {
+   
+    const result = await getData(`estimation/upcoming-estimation`);
+    console.log('res=>',result)
+    setdestimateResults({
+      estimateResults: result.data,
+    });
+    // console.log(estimateResults);
+  //  await setResult(results)
+  await buildTable(result);
   };
   useEffect(async() => {
     
@@ -379,15 +386,25 @@ export default function Datatable(props) {
     setShowDeleteModal(false);
   };
   const showModal = () => {
+    console.log('hey uncl2')
     setModalVisible(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async(leadSelected) => {
+    console.log('hey uncl',leadSelected);
+    const result2 = await postData(`estimation/filter-sort`,{ estimaitonStatus:leadSelected });
+    console.log('sort==',result2)
+    // [
+    //   "New Lead - Multiple Contact Attempts",
+    //   "Lead Added",
+    // ]
+    await buildTable(result2);
     setModalVisible(false);
     setAddColumnShow(false);
   };
 
   const handleCancel = () => {
+    console.log('hey uncl3')
     setModalVisible(false);
     setAddColumnShow(false);
   };
@@ -418,6 +435,9 @@ export default function Datatable(props) {
   const handleColumnModal = () => {
     setAddColumnShow(true);
   };
+  const applyFilter=()=>{
+    console.log('hii buddy')
+  }
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
@@ -471,6 +491,7 @@ export default function Datatable(props) {
         ModalVisible={ModalVisible}
         handleCancel={handleCancel}
         handleOk={handleOk}
+        ApplyFilter={applyFilter}
       />
       <ColumnModal
         handleColumnModal={handleColumnModal}

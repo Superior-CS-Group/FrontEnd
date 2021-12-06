@@ -28,7 +28,8 @@ export default class MainEstimates extends Component {
       smallLoader: true,
       isModalVisible:false,
       tabName:'',
-      currentTab:-1
+      currentTab:-1,
+      statusList:[]
     };
   }
   addTabsModal = () => {
@@ -46,7 +47,7 @@ export default class MainEstimates extends Component {
    console.log('tab===',tab)
     this.setState({ 
       isModalVisible:false,
-       Tabs: [...this.state.Tabs, {name:this.state.tabName}] ,
+       Tabs: [...this.state.Tabs, {name:this.state.tabName,_id:tab.data.Data._id}] ,
        tabName:''
     });
   };
@@ -60,16 +61,32 @@ export default class MainEstimates extends Component {
     this.setState({ Tabs: tab });
     console.log(tab,index,delte, "check remove array");
   };
-  componentDidMount = async () => {
+
+  fetchApisData=async()=>{
     const result = await getData(`estimation/upcoming-estimation`);
-    const getTabs = await getData(`tab-filter/list`);
-    console.log('tabs=>',getTabs)
+  //   const result2 = await postData(`estimation/filter-sort`,{ estimaitonStatus: [
+  //    "New Lead - Multiple Contact Attempts",
+  //    "Lead Added",
+  //  ]});
+   const getTabs = await getData(`tab-filter/list`);
+
+ 
+   return {
+    result,getTabs
+   }
+  }
+  componentDidMount = async () => {
+    const {
+      result,result2,getTabs
+     }=await this.fetchApisData();
+     console.log('filter=>',result2)
   
       this.setState({
         estimateResults: result.data,
         estimateData: result.data.Data,
         loading: true,
         Tabs:getTabs.data.Data,
+        // /statusList:statusLis.data.Data,
 
         smallLoader: false,
       })
@@ -270,6 +287,7 @@ export default class MainEstimates extends Component {
           ModalVisible={this.state.ModalVisible}
           handleCancel={this.handleCancel}
           handleOk={this.handleOk}
+          // leadStatus={this.state.statusList}
         />
          <Modal
         title="Create New Tab"
