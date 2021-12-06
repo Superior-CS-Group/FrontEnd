@@ -2,47 +2,14 @@
 import React from "react";
 import { Input, List } from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
-//855
-const payment = [
-  {
-    title: "Deposit payment at signing of contract",
-    cost: (
-      <>
-        <span className="per-input">
-          <Input
-            type="number"
-            maxLength="2"
-            placeholder="12"
-            className="ant-width-small font-bold radius-4 gray-text"
-            defaultValue=""
-          />
-          %
-        </span>
-      </>
-    ),
-  },
-  {
-    title: "Progress payment when project is started",
-    cost: (
-      <>
-        <span className="per-input">
-          <Input
-            type="number"
-            min={1}
-            max={2}
-            placeholder="88"
-            className="ant-width-small font-bold radius-4 gray-text"
-          />
-          %{" "}
-        </span>
-      </>
-    ),
-  },
-];
-function PaymentTerms({ totalCharge, paymentTerms, setPaymentTerms }) {
-  const [variation, setVariation] = React.useState([]);
+function PaymentTerms({
+  totalCharge,
+  paymentTerms,
+  setPaymentTerms,
+  isValid,
+  onBlur,
+}) {
   const [paymentDetails, setPaymentDetails] = React.useState([]);
-
   React.useEffect(
     () => {
       console.log("paymentTerms", { totalCharge, paymentTerms });
@@ -51,15 +18,33 @@ function PaymentTerms({ totalCharge, paymentTerms, setPaymentTerms }) {
         newPaymentDetails.push({
           title: item.title,
           value: item.value,
-          editable: false,
+          editable: item.editable,
         });
       });
       setPaymentDetails(newPaymentDetails);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [totalCharge]
+    [totalCharge, paymentTerms.length]
   );
 
+  const handleChange = (e, index) => {
+    const newPaymentDetails = [...paymentDetails];
+    newPaymentDetails[index][e.target.name] = e.target.value;
+    setPaymentTerms(newPaymentDetails);
+  };
+
+  // const onFocusOut = () => {
+  //   setPaymentTerms(paymentDetails);
+  // };
+
+  const handleRemoveTerm = (e, index) => {
+    if (e) {
+      e.preventDefault();
+    }
+    const newPaymentDetails = [...paymentDetails];
+    newPaymentDetails.splice(index, 1);
+    setPaymentTerms(newPaymentDetails);
+  };
   return (
     <>
       <List
@@ -67,22 +52,46 @@ function PaymentTerms({ totalCharge, paymentTerms, setPaymentTerms }) {
         bordered={false}
         dataSource={paymentDetails}
         size="small"
-        renderItem={(item) => (
+        renderItem={(item, index) => (
           <List.Item
             className="border-0 font-d"
             extra={[
-              <Input
-                style={{ width: "40px" }}
-                type="number"
-                maxLength="2"
-                placeholder=""
-                className="ant-width-small font-bold radius-4 gray-text"
-                value={item.value}
-              />,
+              <div className="d-flex align-items-center">
+                <Input
+                  type="number"
+                  name="value"
+                  maxLength="2"
+                  placeholder=""
+                  style={{
+                    width: "40px",
+                    border: isValid ? "1px solid #e8e8e8" : "1px solid red",
+                  }}
+                  className="ant-width-small font-bold radius-4 gray-text"
+                  value={item.value}
+                  onChange={(e) => handleChange(e, index)}
+                  min={0}
+                  onBlur={onBlur}
+                  max={100}
+                />
+                <span>%</span>{" "}
+                {item.editable && (
+                  <DeleteOutlined
+                    className="delete-icon"
+                    onClick={(e) => handleRemoveTerm(e, index)}
+                  />
+                )}
+              </div>,
             ]}
           >
             {item.editable ? (
-              <Input placeholder="" style={{ width: "88%" }} />
+              <Input
+                placeholder=""
+                style={{ width: "88%" }}
+                name="title"
+                value={item.title}
+                onChange={(e) => handleChange(e, index)}
+                onBlur={onBlur}
+              />
             ) : (
               item.title
             )}
@@ -98,11 +107,12 @@ function PaymentTerms({ totalCharge, paymentTerms, setPaymentTerms }) {
             setPaymentDetails([
               ...paymentDetails,
               {
-                title: "title",
-                value: 0,
+                title: "",
+                value: "",
                 editable: true,
               },
             ]);
+            onBlur();
           }}
         >
           <PlusCircleOutlined className="me-2" />
