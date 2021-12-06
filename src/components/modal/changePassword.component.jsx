@@ -8,7 +8,7 @@ export default function ChangePasswordUser(props) {
     confirmPassword: "",
     message: "",
     errors: {},
-    isModalForgot:false
+    isModalForgot: false,
   });
 
   const validateFields = () => {
@@ -21,6 +21,14 @@ export default function ChangePasswordUser(props) {
       errors.confirmPassword = "Confirm Password is required";
       message.error(errors.confirmPassword, 5);
     }
+    // if (state.password <= 6) {
+    //   errors.password = "Password length is minimum 6 character";
+    //   message.error(errors.password, 5);
+    // }
+    // if (state.confirmPassword <= 6) {
+    //   errors.confirmPassword = "Password length is minimum 6 character";
+    //   message.error(errors.confirmPassword, 5);
+    // }
     return {
       errors,
       isValid: !Object.keys(errors).length,
@@ -34,10 +42,7 @@ export default function ChangePasswordUser(props) {
       setState({ ...state, errors });
       // message.success(errors, 5);
       return;
-    }
-    // console.log(props.userId);
-    // console.log(state.password);
-    // console.log(state.confirmPassword);
+    } 
     if (state.password !== state.confirmPassword) {
       message.error("New Password or Confirm Password not match");
     }

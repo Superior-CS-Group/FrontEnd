@@ -2579,7 +2579,7 @@ tr.ant-table-measure-row {
   box-shadow: none !important;
 }
 .green-switch .ant-switch-checked {
-  background-color: #2ed47a !important;
+  background-color: #1a73e8  !important;
 }
 .tab-div li.active {
   /* background-color: #1890ff; */
@@ -2597,4 +2597,7 @@ tr.ant-table-measure-row {
 }
 .column-add-btn {
   position: relative;
+}
+.status-drop .ant-select-arrow {
+  color: #fff;
 }

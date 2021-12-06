@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Badge, Tooltip, Input, message, Switch } from "antd";
+import { Table, Badge, Tooltip, Input, message, Switch, Select } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag } from "../../utils/svg.file";
 import { useParams, Navigate } from "react-router-dom";
@@ -67,7 +67,7 @@ export default function UserTable(props) {
         dataIndex: "Status",
       },
       {
-        title: "Is Admin",
+        title: "Admin",
         dataIndex: "userRole",
       },
     ],
@@ -97,13 +97,14 @@ export default function UserTable(props) {
     const body = { id: id };
     console.log(body);
     const result = await updateIsAdminStatus(body);
-    message.success("IsAdmin Updated", 5);
+    message.success("Admin Status Updated", 5);
   };
 
-  const updateStatusHandle = async (id) => {
-    const body = { id: id };
+  const updateStatusHandle = async (e, id) => {
+    const body = { id: id, activeStatus: e };
+    console.log(e, id);
     const result = await updateCustomerStatus(body);
-    let data2 = state.data.filter((item) => item._id === id);
+    // let data2 = state.data.filter((item) => item._id === id);
     message.success("Status Updated", 5);
   };
 
@@ -111,14 +112,23 @@ export default function UserTable(props) {
     const data = [];
 
     const fetchData = async () => {
-      const body = { type: "service" };
-      await postData(`services/list-by-type`, body);
+      // const body = { type: "service" };
+      // await postData(`services/list-by-type`, body);
 
       const result2 = await getUserList();
-      console.log(result2.data, "result2   result2");
 
       for (let i = 0; i < result2.data.length; i++) {
         let userData = result2.data[i];
+        console.log(userData.activeStatus, "userData.activeStatus   result2");
+        let backgroundColor;
+        if (userData.activeStatus === "Approved") {
+          backgroundColor = "green";
+        } else if (userData.activeStatus === "Pending") {
+          backgroundColor = "red";
+        } else {
+          backgroundColor = "red";
+        }
+
         data.push({
           // key: <Checkbox />,
 
@@ -128,28 +138,43 @@ export default function UserTable(props) {
           email: userData.email,
           contactNo: userData.contactNo,
           cdate: userData.createdAt.split("T")[0],
-          Status: userData.activeStatus ? (
+          Status: (
             <>
-              <Badge
-                className="cursor-btn site-badge-count-109 me-2"
-                count="Approved"
-                style={{ backgroundColor: "#52c41a" }}
-                onClick={(e) => updateStatusHandle(userData._id)}
-              />
-              <Tooltip title="Reset Password">
-                <LockOutlined
-                  className="cursor-btn pass-key-btn"
-                  onClick={(e) => showModalPassword(userData._id)}
-                />
-              </Tooltip>
-            </>
-          ) : (
-            <>
-              <Badge
-                className="cursor-btn site-badge-count-109 me-2"
-                count="Pending"
-                onClick={(e) => updateStatusHandle(userData._id)}
-              />
+              <Select
+                size="medium"
+                className="me-4   status-drop"
+                bordered={false}
+                style={{
+                  fontSize: "14px",
+                  width: "120px",
+                  background: backgroundColor,
+                  color: "white",
+                  borderRadius: "20px",
+                }}
+                defaultValue={userData.activeStatus}
+                name="estimaitonStatus"
+                onChange={(e) => updateStatusHandle(e, userData._id)}
+              >
+                <option value="Approved" key={i}>
+                  Approved
+                </option>
+                <option value="Pending" key={i}>
+                  Pending
+                </option>
+                <option value="Rejected" key={i}>
+                  Rejected
+                </option>
+              </Select>
+              {userData.activeStatus === "Approved" ? (
+                <Tooltip title="Reset Password">
+                  <LockOutlined
+                    className="cursor-btn pass-key-btn"
+                    onClick={(e) => showModalPassword(userData._id)}
+                  />
+                </Tooltip>
+              ) : (
+                ""
+              )}
             </>
           ),
 
