@@ -23,14 +23,22 @@ import {
   SaveOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import { getData } from "../../../utils/fetchApi";
 
 export default class FilterSorting extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       ModalVisible: false,
+      leadList:[],
+      leadSelected:[]
     };
   }
+componentDidMount=async()=>{
+  const statusLis = await getData(`status/list`);
+  // this.props.ApplyFilter()
+ this.setState({leadList:statusLis.data.Data})
+}
 
   //   showModal = () => {
   //     this.setState({ ModalVisible: true });
@@ -43,14 +51,42 @@ export default class FilterSorting extends Component {
   //   handleCancel = () => {
   //     this.setState({ ModalVisible: false });
   //   };
+  onChange=(e)=> {
+    console.log(`checked =`,e);
+    // let final=this.state.leadSelected;
+    // final.push(e.name)
+    if(this.state.leadSelected.indexOf(e) === -1)
+    this.setState({leadSelected:this.state.leadSelected.concat(e)});
+    else{
+      let rm=this.state.leadSelected;
+      let i= rm.indexOf(e);
+      rm.splice(i,1);
+      this.setState({leadSelected:rm});
+    }
+  }
+  filterPass=()=>{
+     console.log("hey man" ,this.props);
+     this.props.handleOk(this.state.leadSelected);
+  }
   render() {
+    console.log('leadout==', this.state,this.props)
+   
     const { RangePicker } = DatePicker;
     const { Option } = Select;
     function handleChange(value) {
       console.log(`selected ${value}`);
     }
-    function onChange(e) {
-      console.log(`checked = ${e.target.checked}`);
+    
+let leadCheckbox;
+    if(this.state.leadList){
+   leadCheckbox=   this.state.leadList.map((r)=>{
+      // /  console.log(r)
+        return(<Col md={8}>
+          <Checkbox
+          //  checked={false}
+            onChange={()=>this.onChange(r.name)}>{r.name}</Checkbox>{" "}
+        </Col>)
+      })
     }
     return (
       <>
@@ -93,22 +129,7 @@ export default class FilterSorting extends Component {
                         </Select>
                       </Form.Item>
                     </Col>
-                    {/* <Col md={8}>
-                      <Form.Item name="Column" label="Sort">
-                        <Select
-                          defaultValue="lucy"
-                          style={{ width: 200 }}
-                          onChange={handleChange}
-                        >
-                          <Option value="jack">Jack</Option>
-                          <Option value="lucy">Lucy</Option>
-                          <Option value="disabled" disabled>
-                            Disabled
-                          </Option>
-                          <Option value="Yiminghe">yiminghe</Option>
-                        </Select>
-                      </Form.Item>
-                    </Col> */}
+                 
                   </Row>
                 </Form>
               </Col>
@@ -121,54 +142,13 @@ export default class FilterSorting extends Component {
               <Col md={24}>
                 <Form layout="vertical" autoComplete="off">
                   <Row>
-                    {/* <Col md={8}>
-                      <Form.Item name="Column" label="Column">
-                        <Select
-                          defaultValue="lucy"
-                          style={{ width: 200 }}
-                          onChange={handleChange}
-                        >
-                          <Option value="jack">Jack</Option>
-                          <Option value="lucy">Lucy</Option>
-
-                          <Option value="Yiminghe">yiminghe</Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col md={8}>
-                      <Form.Item name="Column" label="By Condition">
-                        <Select
-                          defaultValue="lucy"
-                          style={{ width: 200 }}
-                          onChange={handleChange}
-                        >
-                          <Option value="jack">none</Option>
-                          <Option value="lucy">Lucy</Option>
-
-                          <Option value="Yiminghe">yiminghe</Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col md={8}>
-                      <Form.Item name="Column" label="By value">
-                        <Input type="text" placeholder="text..." />
-                      </Form.Item>
-                    </Col>
-                    <Divider /> */}
+                
                     <Col md={6}>
                       <b>Lead Estatus</b>
                     </Col>
                     <Col md={18}>
                       <Row>
-                        <Col md={8}>
-                          <Checkbox onChange={onChange}>Follow Up</Checkbox>{" "}
-                        </Col>
-                        <Col md={8}>
-                          <Checkbox onChange={onChange}>Lead Added</Checkbox>{" "}
-                        </Col>
-                        <Col md={8}>
-                          <Checkbox onChange={onChange}>Lost</Checkbox>{" "}
-                        </Col>
+                      {leadCheckbox}
                       </Row>
                     </Col>
                     <Divider />
@@ -178,13 +158,13 @@ export default class FilterSorting extends Component {
                     <Col md={18}>
                       <Row>
                         <Col md={8}>
-                          <Checkbox onChange={onChange}>Last 7 days</Checkbox>{" "}
+                          <Checkbox onChange={this.onChange}>Last 7 days</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={onChange}>Last 28 days</Checkbox>{" "}
+                          <Checkbox onChange={this.onChanges}>Last 28 days</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={onChange}>Last 90 days</Checkbox>{" "}
+                          <Checkbox onChange={this.onChange}>Last 90 days</Checkbox>{" "}
                         </Col>
                         <Col md={24} className="mt-4 text-right">
                           {" "}
@@ -201,37 +181,17 @@ export default class FilterSorting extends Component {
                     <Col md={18}>
                       <Row>
                         <Col md={8}>
-                          <Checkbox onChange={onChange}>Facebook</Checkbox>{" "}
+                          <Checkbox onChange={this.onChange}>Facebook</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={onChange}>Web</Checkbox>{" "}
+                          <Checkbox onChange={this.onChange}>Web</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={onChange}>Referral</Checkbox>{" "}
+                          <Checkbox onChange={this.onChange}>Referral</Checkbox>{" "}
                         </Col>
                       </Row>
                     </Col>
-                    {/* <Divider />
-                    <Col md={6}>
-                      <b>Sales Person</b>
-                    </Col>
-                    <Col md={18}>
-                      <Row>
-                        <Col md={8}>
-
-                          <Select
-                            defaultValue="lucy"
-                            style={{ width: 200 }}
-                            onChange={handleChange}
-                          >
-                            <Option value="jack">Seles Person</Option>
-                            <Option value="lucy">Lucy</Option>
-
-                            <Option value="Yiminghe">yiminghe</Option>
-                          </Select>
-                        </Col>
-                      </Row>
-                    </Col> */}
+                  
                   </Row>
                 </Form>
               </Col>
@@ -243,7 +203,7 @@ export default class FilterSorting extends Component {
                     className="inline-block me-5 fillter-btn"
                     onClick={this.showModal}
                   >
-                    <Button type="primary" shape="round" size="large">
+                    <Button type="primary" shape="round" size="large" onClick={this.filterPass}>
                       Apply
                     </Button>
                   </span>
