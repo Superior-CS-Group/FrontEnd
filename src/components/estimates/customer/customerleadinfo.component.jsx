@@ -44,13 +44,20 @@ export default function CustomerLeadInfo(props) {
     setIsAddingNew(!isAddingNew);
   };
 
+  React.useEffect(() => {
+    if (!params.id) {
+      setState({ ...state, tabShow: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const query = new URLSearchParams(search);
     setEstimationId(query.get("estimationId"));
   }, [search]);
 
-  useEffect(async() => {
+  useEffect(async () => {
     const id = params.id;
     if (id) {
       const body = { id };
@@ -91,7 +98,7 @@ export default function CustomerLeadInfo(props) {
       fetchData();
     }
     const getUserEstimationD = await getUserEstimation(params.id);
-    setGetUserEstimationData(getUserEstimationD)
+    setGetUserEstimationData(getUserEstimationD);
   }, []);
 
   const onChangeTab = (val) => {
@@ -266,7 +273,6 @@ export default function CustomerLeadInfo(props) {
                       <li
                         onClick={() => onChangeTab("Lead")}
                         className={!state.tabShow ? "active" : ""}
-                      
                       >
                         Lead
                       </li>
@@ -280,17 +286,15 @@ export default function CustomerLeadInfo(props) {
 
             {state.tabShow === false ? (
               <div className="card-show mt-3 pb-3">
-                <LeadInfo  
-                 result={customerInfo}
-                 />
+                <LeadInfo result={customerInfo} />
               </div>
             ) : (
               <div className="card-show mt-3">
                 {props.show}
                 {!estimaitonId && !isAddingNew ? (
-                  <EstimationList 
-                  toggleAddNew={toggleAddNew}
-                  fetched={GetUserEstimationData}
+                  <EstimationList
+                    toggleAddNew={toggleAddNew}
+                    fetched={GetUserEstimationData}
                   />
                 ) : (
                   <AddEstimates
