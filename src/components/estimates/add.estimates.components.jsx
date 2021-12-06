@@ -51,6 +51,7 @@ export default function AddEstimates(props) {
     React.useState(0);
   const [estimationSettings, setEstimationSettings] = React.useState({});
   const [paymentTerms, setPaymentTerms] = React.useState([]);
+  const [isValidPaymentTerms, setIsValidPaymentTerms] = React.useState(false);
   const [isUpdate, setIsUpdate] = React.useState(false);
   const columns = [
     {
@@ -85,6 +86,15 @@ export default function AddEstimates(props) {
       message.success({ content: "Saved", key, duration: 2 });
     }
   };
+
+  React.useEffect(() => {
+    let percentage = 100;
+    paymentTerms.forEach((item) => {
+      percentage -= Number(item.value);
+    });
+    setIsValidPaymentTerms(percentage === 0);
+  }, [paymentTerms]);
+
   const onFocusOut = () => {
     setIsUpdate(!isUpdate);
   };
@@ -340,6 +350,7 @@ export default function AddEstimates(props) {
       services: selectedFormulas,
       userId: props.custInfo.id,
       estimateSettings: estimationSettings,
+      paymentTerms,
     };
     success("Saving...");
     if (estimationId) {
@@ -349,6 +360,8 @@ export default function AddEstimates(props) {
       const response = await createUserEstimation(body);
       if (response.remote === "success") {
         setEstimationId(response.data.userEstimation._id);
+        setPaymentTerms(response.data.userEstimation.paymentTerms);
+        console.log("payment: ", response.data.userEstimation.paymentTerms);
       }
     }
   }
@@ -535,6 +548,11 @@ export default function AddEstimates(props) {
                 type="primary"
                 className="radius-30 ant-primary-btn font-15 ps-4"
                 size="large"
+                disabled={!isValidPaymentTerms || !estimationId}
+                title={
+                  !isValidPaymentTerms &&
+                  "Invalid Payment Terms or estiamte is not saved"
+                }
               >
                 Contract Preview
               </Button>
@@ -813,6 +831,7 @@ export default function AddEstimates(props) {
                   paymentTerms={paymentTerms}
                   setPaymentTerms={setPaymentTerms}
                   onBlur={onFocusOut}
+                  isValid={isValidPaymentTerms}
                 />
               </Panel>
             </Collapse>
