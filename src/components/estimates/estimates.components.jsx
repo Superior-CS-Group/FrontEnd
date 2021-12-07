@@ -159,15 +159,16 @@ export default class MainEstimates extends Component {
                             className="shadow estimate-card m-3"
                             style={{ borderRadius: "10px" }}
                           >
-                            <div className="d-flex align-items-start justify-content-between mb-3">
-                              <div className="ant-estimate-text">
-                                <span>Estimate</span>
-                                <h2>#{value.leadInvoinceNo}</h2>
-                              </div>
+                            <div className="d-flex justify-content-end mb-3">
+                              
                               <Button className="ant-moving-button">
                                 {value.customerLeadId[0].estimaitonStatus}
                               </Button>
                             </div>
+                            <div className="ant-estimate-text">
+                                <span>Estimate</span>
+                                <h2>#{value.leadInvoinceNo}</h2>
+                              </div>
                             <div className="ant-estimate-text mb-3">
                               <span>Customer Name</span>
                               <h3>{value.customerLeadId[0].name}</h3>
