@@ -159,7 +159,6 @@ export default function Catlog() {
               </div>
             </>
           ),
-
           price: `$${variation.price} ${variation.unit}`,
           quantity: variation.quantity,
           unit: variation.unit,
@@ -205,7 +204,7 @@ export default function Catlog() {
   React.useEffect(() => {
     if (selectedSubCatalog) {
       setIsModal("additem");
-      setTitle("Add Item");
+      setTitle("Add variation");
     }
   }, [selectedSubCatalog]);
 
