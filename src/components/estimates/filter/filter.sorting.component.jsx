@@ -31,15 +31,21 @@ export default class FilterSorting extends Component {
     this.state = {
       ModalVisible: false,
       leadList:[],
-      leadSelected:[]
+      leadSelected:[],
+      saveFilterLoad:false,
+      curentTabDat:{}
     };
   }
 componentDidMount=async()=>{
   const statusLis = await getData(`status/list`);
   // this.props.ApplyFilter()
- this.setState({leadList:statusLis.data.Data})
+ this.setState({leadList:statusLis.data.Data,curentTabDat:this.props.currentTabData})
 }
 
+componentDidUpdate = async () => {
+  if(this.state.curentTabDat!==this.props.currentTabData)
+  this.setState({curentTabDat:this.props.currentTabData,leadSelected:[]})
+}
   //   showModal = () => {
   //     this.setState({ ModalVisible: true });
   //   };
@@ -51,10 +57,23 @@ componentDidMount=async()=>{
   //   handleCancel = () => {
   //     this.setState({ ModalVisible: false });
   //   };
+  handleSave=async()=>{
+    console.log('budd',this.props);
+    this.setState({saveFilterLoad:true})
+   let {curentTabDat,leadSelected} =this.state;
+   if(curentTabDat.filterObject)
+   curentTabDat.filterObject.estimaitonStatus.map(r=>{
+    leadSelected.push(r)
+   })
+   await this.props.saveFilterss({estimaitonStatus:leadSelected});
+    this.setState({saveFilterLoad:false})
+  }
   onChange=(e)=> {
     console.log(`checked =`,e);
     // let final=this.state.leadSelected;
     // final.push(e.name)
+    // /this.setState({curentTabDat:this.state.curentTabDat.filterObject.estimaitonStatus.concat(e)});
+   
     if(this.state.leadSelected.indexOf(e) === -1)
     this.setState({leadSelected:this.state.leadSelected.concat(e)});
     else{
@@ -68,6 +87,7 @@ componentDidMount=async()=>{
      console.log("hey man" ,this.props);
      this.props.handleOk(this.state.leadSelected);
   }
+ 
   render() {
     console.log('leadout==', this.state,this.props)
    
@@ -80,11 +100,22 @@ componentDidMount=async()=>{
 let leadCheckbox;
     if(this.state.leadList){
    leadCheckbox=   this.state.leadList.map((r)=>{
+     let currentTabDa=this.state.curentTabDat;
+     let boo=false;
+     if(currentTabDa){
+       if(currentTabDa.filterObject){
+         if(currentTabDa.filterObject.estimaitonStatus)
+        currentTabDa.filterObject.estimaitonStatus.map(c=>{
+          if(c=== r.name)
+          boo=true
+        })
+       }
+     }
       // /  console.log(r)
         return(<Col md={8}>
           <Checkbox
-          //  checked={false}
-            onChange={()=>this.onChange(r.name)}>{r.name}</Checkbox>{" "}
+           checked={boo}
+            onChange={(e)=>this.onChange(r.name)}>{r.name}</Checkbox>{" "}
         </Col>)
       })
     }
@@ -222,6 +253,8 @@ let leadCheckbox;
                       shape="round"
                       icon={<SaveOutlined />}
                       size="large"
+                      loading={this.state.saveFilterLoad}
+                      onClick={this.handleSave}
                     >
                       Save Filter
                     </Button>
