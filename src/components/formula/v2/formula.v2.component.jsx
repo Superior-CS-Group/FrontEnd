@@ -104,7 +104,6 @@ function FormulaV2() {
     setElementList([...newElementList]);
   };
   const handleNewElement = () => {
-    console.log("estimationList: ", elementList);
     const newElement = {
       name: "",
       type: "manual",
@@ -112,7 +111,6 @@ function FormulaV2() {
       value: "",
       view: "client",
     };
-    console.log("newElement: ", [newElement, ...elementList]);
     setElementList([newElement, ...elementList]);
     setIsUpdated("Update");
   };

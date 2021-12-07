@@ -39,6 +39,7 @@ const request = async (config) => {
       config.headers["Content-Type"] = "application/json";
     }
     config.headers["Authorization"] = `Bearer ${token}`;
+    config.headers["Client-Time"] = Date.now();
     const response = await instance.request({
       ...config,
       transformResponse: (res) => {

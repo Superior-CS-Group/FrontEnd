@@ -23,6 +23,8 @@ export default function Services() {
   const [state, setState] = useState({
     smallLoader: true,
   });
+  const [isCreating, setIsCreating] = useState(false);
+  const [errors, setErrors] = useState({});
   React.useEffect(() => {
     fetchFormula();
   }, []);
@@ -64,13 +66,19 @@ export default function Services() {
 
   async function handleCreateFormula(e) {
     e.preventDefault();
+    setErrors({});
+    setIsCreating(true);
     const body = {
       title,
     };
     const result = await createFormula(body);
     if (result.remote === "success") {
       setRedirect(`/v2/formula-tree?formulaId=${result.data.data._id}`);
+    } else {
+      console.log("result: ", result.errors.errors);
+      setErrors(result.errors.errors);
     }
+    setIsCreating(false);
   }
 
   const columns = [
@@ -230,6 +238,7 @@ export default function Services() {
               className="ant-modal-input"
               onChange={(e) => setTitle(e.target.value)}
             />
+            <span className="text-danger">{errors.title}</span>
           </Form.Item>
           <Form.Item className="text-end mb-0">
             <Button
@@ -237,8 +246,9 @@ export default function Services() {
               size="large"
               className="radius-30 ant-primary-btn font-15 px-5"
               onClick={handleCreateFormula}
+              disabled={isCreating}
             >
-              Next
+              {isCreating ? "Creating..." : "Next"}
             </Button>
           </Form.Item>
         </Form>

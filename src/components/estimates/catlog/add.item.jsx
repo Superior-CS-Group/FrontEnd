@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Form, Input, Button,Select  } from "antd";
+import { Row, Col, Form, Input, Button, Select } from "antd";
 import { upload } from "../../../utils/svg.file";
 import { CloseOutlined, DollarCircleOutlined } from "@ant-design/icons";
 
@@ -55,35 +55,10 @@ export default function AddItem({
         type: "catalog",
       });
     }
-  //   let unitLis=[
-  //     {
-  //         "_id": "61a8e76ece985778583c6174",
-  //         "name": "SQKm",
-  //         "activeStatus": true,
-  //         "createdAt": "2021-12-02T15:34:06.502Z",
-  //         "updatedAt": "2021-12-02T15:34:06.502Z",
-  //         "__v": 0
-  //     },
-  //     {
-  //         "_id": "61a8e767ce985778583c6171",
-  //         "name": "Meter",
-  //         "activeStatus": true,
-  //         "createdAt": "2021-12-02T15:33:59.003Z",
-  //         "updatedAt": "2021-12-02T15:33:59.003Z",
-  //         "__v": 0
-  //     },
-  //     {
-  //         "_id": "61a8e75ace985778583c616e",
-  //         "name": "KG",
-  //         "activeStatus": true,
-  //         "createdAt": "2021-12-02T15:33:46.088Z",
-  //         "updatedAt": "2021-12-02T15:33:46.088Z",
-  //         "__v": 0
-  //     } 
-  // ]
- let response=await GetAllUnits();
- console.log('ddd',response)
-  setUnitList(response.data.userData.reverse())
+
+    let response = await GetAllUnits();
+    console.log("ddd", response);
+    setUnitList(response.data.userData.reverse());
   }, [selectedElement]);
 
   const handleClose = () => {
@@ -122,12 +97,12 @@ export default function AddItem({
     });
   };
   const handleSelectChange = (value) => {
-    console.log('select',value);
+    console.log("select", value);
     setItemDetails({
       ...itemDetails,
-      unit: value
+      unit: value,
     });
-    console.log('select',itemDetails);
+    console.log("select", itemDetails);
   };
   const handleSave = async (e) => {
     e.preventDefault();
@@ -191,13 +166,12 @@ export default function AddItem({
       images,
     });
   };
-  console.log("listR",unitList);;
+  console.log("listR", unitList);
   let renderUnitList;
-  if(unitList)
-   renderUnitList=unitList.map(unit=>{
-     return( <Option value={unit.name}>{unit.name}</Option>)
-
-  })
+  if (unitList)
+    renderUnitList = unitList.map((unit) => {
+      return <Option value={unit.name}>{unit.name}</Option>;
+    });
   return (
     <>
       <div className="ant-upload-box">
@@ -242,17 +216,17 @@ export default function AddItem({
                   onChange={handleInputChange}
                   value={itemDetails.unit}
                 /> */}
-                 <Select
-              size="large"
-              name="unit"
-              value={itemDetails.unit?itemDetails.unit:"Select Unit"}
-              onChange={handleSelectChange}
-              // suffixIcon={<img src={arrowDwon} alt="" />}
-              // value={itemDetails.unit}
-              className="ant-select-box"
-            >
-             {renderUnitList}
-            </Select>
+                <Select
+                  size="large"
+                  name="unit"
+                  value={itemDetails.unit ? itemDetails.unit : "Select Unit"}
+                  onChange={handleSelectChange}
+                  // suffixIcon={<img src={arrowDwon} alt="" />}
+                  // value={itemDetails.unit}
+                  className="ant-select-box"
+                >
+                  {renderUnitList}
+                </Select>
                 <span className="text-danger small">{errors.unit}</span>
               </Form.Item>
             </Col>
