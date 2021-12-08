@@ -407,7 +407,7 @@ export default function Catlog() {
                             <>
                               <div className="ant-catalog-img">
                                 <Image
-                                  preview={{ visible: false }}
+                                  preview={false}
                                   src={record.images[0] || log}
                                   onClick={() => setVisible(true)}
                                   alt=""
