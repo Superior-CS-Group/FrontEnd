@@ -106,12 +106,14 @@ function FormulaV2() {
   const handleNewElement = () => {
     const newElement = {
       name: "",
-      type: "manual",
+      type: "prefilled",
       unit: "",
-      value: "",
-      view: "client",
+      value: 0,
+      view: ["client", "internal", "full"],
     };
-    setElementList([newElement, ...elementList]);
+    const newElementList = [...elementList];
+    newElementList.splice(-3, 0, newElement);
+    setElementList(newElementList);
     setIsUpdated("Update");
   };
 

@@ -1,11 +1,12 @@
-import { Col, Input, Row, Select } from "antd";
-// import { DeleteOutlined } from "@ant-design/icons";
+import { Col, Input, Modal, Row, Select, Button } from "antd";
+import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 import { getCatalogItem, searchCatalogByName } from "../../../../api/catalogue";
+
 const typeOfOptions = [
-  { type: "manual", title: "Manual Entry" },
-  { type: "prefilled", title: "Prefilled but Editable" },
+  // { type: "manual", title: "Manual Entry" },
+  { type: "prefilled", title: "Enter Prefilled Amount" },
   { type: "dropdown", title: "Dropdown" },
   { type: "boolean", title: "Conditional" },
   { type: "result_editable", title: "Result (Editable)" },
@@ -18,7 +19,7 @@ function ElementCard({
   idx,
   elementList,
   onFocusOut,
-  // handleRemoveElement,
+  handleRemoveElement,
 }) {
   const { Option } = Select;
   // const [unit, setUnit] = React.useState([]);
@@ -27,6 +28,7 @@ function ElementCard({
   const [typeOfElement, setTypeOfElement] = React.useState("");
   const [suggestedCatalogs, setSuggestedCatalogs] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState("");
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   React.useEffect(() => {
     // setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
@@ -50,7 +52,6 @@ function ElementCard({
 
   async function getSubCatalog(id) {
     const catalogs = await getCatalogItem(id);
-    console.log("catalogs: ", catalogs);
     if (catalogs.remote === "success" && catalogs.data.data[0]) {
       console.log(catalogs.data.data[0], id);
       setTempName(catalogs.data.data[0].name);
@@ -143,6 +144,7 @@ function ElementCard({
                   name="value"
                   onBlur={onFocusOut}
                   type="number"
+                  min={0}
                 />
               </Col>
             </Row>
@@ -207,124 +209,127 @@ function ElementCard({
     }
   };
   return (
-    <Col span={24} md={6} className="mb-4">
-      <div
-        className={`furmulla-tree-box  ant-cover-b ${
-          !element.automatic ? "ant-cover-success" : "ant-cover-gray"
-        } px-2 py-4`}
-      >
-        {/* {!element.disabled && (
-          <span className="delect">
-            <DeleteOutlined
-              className="text-danger"
-              onClick={() => handleRemoveElement(idx)}
-            />
-          </span>
-        )} */}
-        <div className="ant-automic">{element.auto}</div>
-        {/* <span className="ant-edit-furmulla">
+    <>
+      <Col span={24} md={6} className="mb-4">
+        <div
+          className={`furmulla-tree-box  ant-cover-b ${
+            !element.automatic ? "ant-cover-success" : "ant-cover-gray"
+          } px-2 py-4`}
+        >
+          {!element.disabled && (
+            <span className="delect">
+              <DeleteOutlined
+                className="text-danger"
+                onClick={() => setIsDeleting(true)}
+              />
+            </span>
+          )}
+          <div className="ant-automic">{element.auto}</div>
+          {/* <span className="ant-edit-furmulla">
           <EditOutlined />
         </span> */}
-        <Row gutter={[8, 0]} className="align-items-center mb-3 ">
-          <Col md={8}>
-            <label>Name Element:</label>
-          </Col>
-          <Col md={16}>
-            <Input
-              placeholder="Name of Element"
-              className="ant-furmulla-input"
-              onChange={(e) => handleChange(e.target.value, e.target.name, idx)}
-              value={element.name}
-              name="name"
-              onBlur={onFocusOut}
-              disabled={element.disabled}
-            />
-          </Col>
-        </Row>
-        <Row gutter={[8, 0]} className="align-items-center mb-3">
-          <Col md={8}>
-            <label>Type Of Element:</label>
-          </Col>
-          <Col md={16}>
-            <Select
-              className="select-w"
-              size="large"
-              value={element.type}
-              style={{ width: "100%" }}
-              onChange={(value) => {
-                handleChange(value, "type", idx);
-                handleChange("", "value", idx);
-                setTypeOfElement(value);
-              }}
-              onBlur={onFocusOut}
-            >
-              {typeOfOptions.map((item, idx) => {
-                return (
-                  <Option value={item.type} key={idx}>
-                    {item.title}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Col>
-        </Row>
+          <Row gutter={[8, 0]} className="align-items-center mb-3 ">
+            <Col md={8}>
+              <label>Name Element:</label>
+            </Col>
+            <Col md={16}>
+              <Input
+                placeholder="Name of Element"
+                className="ant-furmulla-input"
+                onChange={(e) =>
+                  handleChange(e.target.value, e.target.name, idx)
+                }
+                value={element.name}
+                name="name"
+                onBlur={onFocusOut}
+                disabled={element.disabled}
+              />
+            </Col>
+          </Row>
+          <Row gutter={[8, 0]} className="align-items-center mb-3">
+            <Col md={8}>
+              <label>Type Of Element:</label>
+            </Col>
+            <Col md={16}>
+              <Select
+                className="select-w"
+                size="large"
+                value={element.type}
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  handleChange(value, "type", idx);
+                  handleChange("", "value", idx);
+                  setTypeOfElement(value);
+                }}
+                onBlur={onFocusOut}
+              >
+                {typeOfOptions.map((item, idx) => {
+                  return (
+                    <Option value={item.type} key={idx}>
+                      {item.title}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Col>
+          </Row>
 
-        {renderSection()}
-
-        {/* <Row gutter={[8, 0]} className="align-items-center mb-3">
-          <Col md={8}>
-            <label>Unit Type:</label>
+          {renderSection()}
+          <Row gutter={[8, 0]} className="align-items-center">
+            <Col md={8}>
+              <label>View</label>
+            </Col>
+            <Col md={16}>
+              <Select
+                mode="multiple"
+                size="large"
+                allowClear
+                value={[...(element.view || [])]}
+                onChange={(e) => handleChange(e, "view", idx)}
+                className="select-w"
+                style={{ width: "100%" }}
+                onBlur={onFocusOut}
+              >
+                {view.map((item, index) => {
+                  return (
+                    <Option value={item.type} key={index}>
+                      {item.title}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Col>
+          </Row>
+        </div>
+      </Col>
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={isDeleting}
+        footer={null}
+        closeIcon={<InfoCircleOutlined />}
+      >
+        <p>Are you sure you want to delete item ?</p>
+        <Row>
+          <Col md={12} className="text-right">
+            <Button type="text" onClick={() => setIsDeleting(false)}>
+              Cancel
+            </Button>
           </Col>
-          <Col md={16}>
-            <Select
-              value={element.unit}
-              onChange={(value) => {
-                handleChange(value, "unit", idx);
+          <Col md={12}>
+            <Button
+              type="link"
+              onClick={() => {
+                handleRemoveElement(idx);
+                setIsDeleting(false);
               }}
-              className="select-w"
-              style={{ width: "100%" }}
-              onBlur={onFocusOut}
-              listHeight={150}
-              size="large"
             >
-              <Option>Unit</Option>
-              {unit.map((item, index) => {
-                return (
-                  <Option value={item} key={index}>
-                    {item}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Col>
-        </Row> */}
-        <Row gutter={[8, 0]} className="align-items-center">
-          <Col md={8}>
-            <label>View</label>
-          </Col>
-          <Col md={16}>
-            <Select
-              mode="multiple"
-              size="large"
-              allowClear
-              value={[...(element.view || [])]}
-              onChange={(e) => handleChange(e, "view", idx)}
-              className="select-w"
-              style={{ width: "100%" }}
-              onBlur={onFocusOut}
-            >
-              {view.map((item, index) => {
-                return (
-                  <Option value={item.type} key={index}>
-                    {item.title}
-                  </Option>
-                );
-              })}
-            </Select>
+              Delete
+            </Button>
           </Col>
         </Row>
-      </div>
-    </Col>
+      </Modal>
+    </>
   );
 }
 
