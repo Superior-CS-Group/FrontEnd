@@ -3,7 +3,6 @@ import { Table, Badge, Tooltip, Input, message, Switch, Select } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag } from "../../utils/svg.file";
 import { useParams, Navigate } from "react-router-dom";
-import { postData } from "../../utils/fetchApi.js";
 import { getUserList } from "../../api/admin.js";
 import { updateCustomerStatus, updateIsAdminStatus } from "../../api/user.js";
 import { LockOutlined } from "@ant-design/icons";
