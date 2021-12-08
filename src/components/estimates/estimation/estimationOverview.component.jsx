@@ -44,7 +44,7 @@ function EstimationOverview({
       totalProjectChargeAfterDiscount.toFixed(2)
     );
     const totalGrossProfitPercentageAfterDiscount =
-      (totalProjectChargeAfterDiscount / totalProjectCost) * 100 - 100;
+      (1 - totalProjectCost / totalProjectChargeAfterDiscount) * 100;
     setTotalGrossProfitPercentageAfterDiscount(
       totalGrossProfitPercentageAfterDiscount.toFixed(2)
     );

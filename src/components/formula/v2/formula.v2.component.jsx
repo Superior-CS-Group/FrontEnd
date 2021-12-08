@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row } from "antd";
+import { Card, Col, Input, Row, message } from "antd";
 import React from "react";
 import { treeIcon } from "../../../utils/svg.file";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
@@ -7,7 +7,7 @@ import MaterialCard from "./materialCard/materialCard.component";
 import ReactMentionInput from "../../../utils/mentionInput/mentionInput";
 import { useLocation, Navigate } from "react-router-dom";
 import { getFormulaById, updateFormula } from "../../../api/formula";
-
+import { fileToBase64 } from "../../../utils/fileBase64";
 /**
  * @author digimonk Technologies
  * @developer Saral Shrivastava
@@ -24,6 +24,7 @@ function FormulaV2() {
   const [clientContract, setClientContract] = React.useState("");
   const [redirect, setRedirect] = React.useState(null);
   const [catalogs, setCatalogs] = React.useState([]);
+  const [photo, setPhoto] = React.useState(null);
 
   const params = useLocation();
   React.useEffect(() => {
@@ -49,6 +50,7 @@ function FormulaV2() {
       const catalogs = formulaDetails.data.data?.catalogs || [];
       setCatalogs([...catalogs]);
       setClientContract(formulaDetails.data.data.clientContract);
+      setPhoto(formulaDetails.data.data.photo);
       setMarkupId(
         formulaDetails.data.data.elements.find(
           (element) => element.name === "Markup"
@@ -69,6 +71,7 @@ function FormulaV2() {
         catalogs: catalogs.filter((item, pos) => {
           return catalogs.indexOf(item) === pos;
         }),
+        photo,
       };
       console.log("body: ", body, catalogs);
       setTimeout(() => updateFormulaDetails(body), 100);
@@ -77,10 +80,13 @@ function FormulaV2() {
   }, [isUpdated]);
 
   async function updateFormulaDetails(data) {
+    const key = "updatable";
+    message.loading({ content: "Saving...", key });
     const updatedFormulaDetails = await updateFormula(formulaDetails._id, data);
     console.log(updatedFormulaDetails, "updated details");
     if (updatedFormulaDetails.remote === "success") {
       setFormulaDetails(updatedFormulaDetails.data.data);
+      message.success({ content: "Saved", key, duration: 1 });
     }
   }
 
@@ -106,12 +112,14 @@ function FormulaV2() {
   const handleNewElement = () => {
     const newElement = {
       name: "",
-      type: "manual",
+      type: "prefilled",
       unit: "",
-      value: "",
-      view: "client",
+      value: 0,
+      view: ["client", "internal", "full"],
     };
-    setElementList([newElement, ...elementList]);
+    const newElementList = [...elementList];
+    newElementList.splice(-3, 0, newElement);
+    setElementList(newElementList);
     setIsUpdated("Update");
   };
 
@@ -148,6 +156,11 @@ function FormulaV2() {
     }
     // }
     setMaterials([...newMaterials]);
+  };
+
+  const handleImageChange = async (e) => {
+    const base64 = await fileToBase64(e.target.files[0]);
+    setPhoto(base64);
   };
 
   const onFocusOut = () => {
@@ -298,6 +311,29 @@ function FormulaV2() {
                 </td>
               </tr>
             </tbody>
+          </table>
+        </div>
+        <div>
+          <table className="table ant-furmulla-table">
+            <thead>
+              <tr>
+                <th>Select Photo - Client Contract</th>
+              </tr>
+            </thead>
+            <tr>
+              <td className="p-0">
+                <div className="border p-3 radius-4 line-height-40 min-height">
+                  Choose Photo:{" "}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    onBlur={onFocusOut}
+                  />
+                  <img src={photo} alt="" />
+                </div>
+              </td>
+            </tr>
           </table>
         </div>
       </Card>
