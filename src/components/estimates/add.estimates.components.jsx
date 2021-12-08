@@ -329,9 +329,16 @@ export default function AddEstimates(props) {
     });
     formula.totalMaterialsCost = totalMaterialsCost;
     formula.totalProjectCharge = totalMaterialsCharge;
-    const profitPercent = (
-      Number((totalMaterialsCharge / totalMaterialsCost) * 100) - 100
+    let profitPercent = (
+      (1 - Number(totalMaterialsCost / totalMaterialsCharge)) *
+      100
     ).toFixed(2);
+    profitPercent = isNaN(profitPercent) ? 0 : profitPercent;
+    console.log("profitPercent: ", {
+      profitPercent,
+      totalMaterialsCost,
+      totalMaterialsCharge,
+    });
     formula.grossProfit = `${profitPercent}%`;
     return materials;
   }

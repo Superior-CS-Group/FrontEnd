@@ -176,6 +176,7 @@ export default function ContractPreview() {
         return exportPDF(group);
       })
       .then((dataUri) => {
+        console.log("dataUri: ", dataUri);
         modalShow(dataUri);
       });
   };
@@ -256,11 +257,11 @@ export default function ContractPreview() {
                       <div className="work-scope-div-main mt-2 mb-3">
                         <div className="work-scope-div">
                           <div className="work-scope-top-left">
-                            {/* <img
-                            src={PreviewBanner}
-                            className="work-scope-img"
-                            alt=""
-                          /> */}
+                            <img
+                              src={item.photo}
+                              className="work-scope-img"
+                              alt=""
+                            />
                           </div>
                           <div className="work-scope-top-right">
                             <h4>{item.title}</h4>

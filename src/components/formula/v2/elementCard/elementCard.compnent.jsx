@@ -226,6 +226,7 @@ function ElementCard({
                   value={element.value}
                   onBlur={onFocusOut}
                   // noMaterial
+                  disabled={element.disabled}
                 />
               </Col>
             </Row>
@@ -315,6 +316,7 @@ function ElementCard({
                   handleChange("", "value", idx);
                   setTypeOfElement(value);
                 }}
+                disabled={element.disabled}
                 onBlur={onFocusOut}
               >
                 {typeOfOptions.map((item, idx) => {
