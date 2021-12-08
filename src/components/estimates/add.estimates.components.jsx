@@ -674,7 +674,9 @@ export default function AddEstimates(props) {
                                           idx
                                         )
                                       }
-                                      value={element.selected?._id}
+                                      value={
+                                        element.selected?._id || element.value
+                                      }
                                       onBlur={onFocusOut}
                                     >
                                       {element.options?.map((option) => {

@@ -2,7 +2,11 @@ import { Col, Input, Modal, Row, Select, Button } from "antd";
 import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
-import { getCatalogItem, searchCatalogByName } from "../../../../api/catalogue";
+import {
+  getCatalogItem,
+  getVariationsByCatalogId,
+  searchCatalogByName,
+} from "../../../../api/catalogue";
 
 const typeOfOptions = [
   // { type: "manual", title: "Manual Entry" },
@@ -29,7 +33,7 @@ function ElementCard({
   const [suggestedCatalogs, setSuggestedCatalogs] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState("");
   const [isDeleting, setIsDeleting] = React.useState(false);
-
+  const [variation, setVariation] = React.useState([]);
   React.useEffect(() => {
     // setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
     setTypeOfElement(element.type || "manual");
@@ -39,6 +43,22 @@ function ElementCard({
       { type: "full", title: "Full View" },
     ]);
   }, [element]);
+
+  React.useEffect(() => {
+    async function fetchVariation() {
+      console.log("fetchVariaiton");
+      const response = await getVariationsByCatalogId(element.dropdown);
+      if (response.remote === "success") {
+        setVariation(response.data.data);
+      }
+    }
+    console.log("elelemtn", element.dropdown);
+    setVariation([
+      { _id: "1", name: "Variation 1" },
+      { _id: "2", name: "Variation 2" },
+    ]);
+    fetchVariation();
+  }, [element.dropdown]);
 
   async function searchCatalog() {
     const catalogs = await searchCatalogByName(searchValue, "subCatalog");
@@ -53,7 +73,6 @@ function ElementCard({
   async function getSubCatalog(id) {
     const catalogs = await getCatalogItem(id);
     if (catalogs.remote === "success" && catalogs.data.data[0]) {
-      console.log(catalogs.data.data[0], id);
       setTempName(catalogs.data.data[0].name);
     }
   }
@@ -69,38 +88,73 @@ function ElementCard({
           getSubCatalog(element.dropdown);
         }
         return (
-          <Row gutter={[24, 0]} className="mb-3">
-            <Col md={8} className="mb-3">
-              <label>Choose Dropdown Items:</label>
-            </Col>
-            <Col md={16}>
-              <Select
-                showSearch
-                style={{ width: "100%" }}
-                onSearch={setSearchValue}
-                onChange={(value) => {
-                  handleChange(value, "dropdown", idx);
-                }}
-                filterOption={(input, option) => {
-                  return option.name
-                    .toLowerCase()
-                    .includes(input.toLowerCase());
-                }}
-                value={tempName || element.dropdown}
-                onBlur={onFocusOut}
-              >
-                {suggestedCatalogs.map((catalog) => (
-                  <Option
-                    key={catalog._id}
-                    value={catalog._id}
-                    name={catalog.name}
-                  >
-                    {catalog.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-          </Row>
+          <>
+            <Row gutter={[24, 0]} className="mb-3">
+              <Col md={8} className="mb-3">
+                <label>Choose Dropdown Items:</label>
+              </Col>
+              <Col md={16}>
+                <Select
+                  showSearch
+                  style={{ width: "100%" }}
+                  onSearch={setSearchValue}
+                  onChange={(value) => {
+                    handleChange(value, "dropdown", idx);
+                  }}
+                  filterOption={(input, option) => {
+                    return option.name
+                      .toLowerCase()
+                      .includes(input.toLowerCase());
+                  }}
+                  value={tempName || element.dropdown}
+                  onBlur={onFocusOut}
+                >
+                  {suggestedCatalogs.map((catalog) => (
+                    <Option
+                      key={catalog._id}
+                      value={catalog._id}
+                      name={catalog.name}
+                    >
+                      {catalog.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+            </Row>
+            <Row gutter={[24, 0]} className="mb-3">
+              <Col md={8} className="mb-3">
+                <label>Choose Variation:</label>
+              </Col>
+              <Col md={16}>
+                <Select
+                  showSearch
+                  style={{ width: "100%" }}
+                  onSearch={setSearchValue}
+                  onChange={(value) => {
+                    handleChange(value, "value", idx);
+                  }}
+                  filterOption={(input, option) => {
+                    return option.name
+                      .toLowerCase()
+                      .includes(input.toLowerCase());
+                  }}
+                  value={element.value} // TODO:  show variation name not id
+                  onBlur={onFocusOut}
+                  placeholder="Select Default Variation"
+                >
+                  {variation.map((catalog) => (
+                    <Option
+                      key={catalog._id}
+                      value={catalog._id}
+                      name={catalog.name}
+                    >
+                      {catalog.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+            </Row>
+          </>
         );
       case "boolean":
         return (
