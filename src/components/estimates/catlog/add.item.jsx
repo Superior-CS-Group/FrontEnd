@@ -1,19 +1,29 @@
 import React from "react";
-import { Row, Col, Form, Input, Button } from "antd";
+import { Row, Col, Form, Input, Button, Select } from "antd";
 import { upload } from "../../../utils/svg.file";
 import { CloseOutlined, DollarCircleOutlined } from "@ant-design/icons";
 
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
-import { createCatalogItem, createVariation } from "../../../api/catalogue";
+import {
+  createCatalogItem,
+  createVariation,
+  updateCatalog,
+  updateVariation,
+} from "../../../api/catalogue";
 import { fileToBase64 } from "../../../utils/fileBase64";
-
+import { GetAllUnits } from "../../../api/unit";
+const { Option } = Select;
 export default function AddItem({
   handleCancel,
   selectedSubCatalog,
   setSelectedSubCatalog,
   handelUpdate,
+  selectedElement,
+  setSelectedElement,
 }) {
+  console.log("selectedElement: ", selectedElement, selectedSubCatalog);
   const [loading, setLoading] = React.useState(false);
+  const [unitList, setUnitList] = React.useState([]);
   const [itemDetails, setItemDetails] = React.useState({
     name: "",
     price: "",
@@ -30,6 +40,26 @@ export default function AddItem({
     unit: "",
     quantity: "",
   });
+
+  React.useEffect(async () => {
+    if (selectedElement && selectedElement._id) {
+      setItemDetails(selectedElement);
+    } else {
+      setItemDetails({
+        name: "",
+        price: "",
+        description: "",
+        unit: "",
+        quantity: "",
+        images: [],
+        type: "catalog",
+      });
+    }
+
+    let response = await GetAllUnits();
+    console.log("ddd", response);
+    setUnitList(response.data.userData.reverse());
+  }, [selectedElement]);
 
   const handleClose = () => {
     setItemDetails({
@@ -66,7 +96,14 @@ export default function AddItem({
       [e.target.name]: Number(e.target.value) || e.target.value,
     });
   };
-
+  const handleSelectChange = (value) => {
+    console.log("select", value);
+    setItemDetails({
+      ...itemDetails,
+      unit: value,
+    });
+    console.log("select", itemDetails);
+  };
   const handleSave = async (e) => {
     e.preventDefault();
     setErrors({
@@ -83,23 +120,32 @@ export default function AddItem({
       if (!isValid) {
         throw errors;
       }
-      console.log("itemDetails: ", itemDetails);
       let response = {};
       if (selectedSubCatalog) {
-        response = await createVariation({
-          ...itemDetails,
-          catelogId: selectedSubCatalog,
-        });
+        if (selectedElement && selectedElement._id) {
+          response = await updateVariation({
+            ...itemDetails,
+          });
+        } else {
+          response = await createVariation({
+            ...itemDetails,
+            catelogId: selectedSubCatalog,
+          });
+        }
+      } else if (selectedElement._id) {
+        response = await updateCatalog(itemDetails);
       } else {
         response = await createCatalogItem(itemDetails);
-        console.log("resposne: ", response);
       }
       if (response.remote === "success") {
+        console.log("responesUpdate: ", response);
         setTimeout(() => {
           setLoading(false);
           handleClose();
+          handelUpdate(selectedSubCatalog);
           setSelectedSubCatalog("");
-          handelUpdate();
+          setSelectedElement({});
+          // setItemDetails({})
         }, 1000);
       } else {
         setErrors(response.errors.errors);
@@ -120,6 +166,12 @@ export default function AddItem({
       images,
     });
   };
+  console.log("listR", unitList);
+  let renderUnitList;
+  if (unitList)
+    renderUnitList = unitList.map((unit) => {
+      return <Option value={unit.name}>{unit.name}</Option>;
+    });
   return (
     <>
       <div className="ant-upload-box">
@@ -156,14 +208,25 @@ export default function AddItem({
             </Col>
             <Col md={12}>
               <Form.Item label="Unit" className="ant-smily-select">
-                <Input
+                {/* <Input
                   className="ant-furmulla-input radius-30"
                   placeholder="Unit"
                   size="large"
                   name="unit"
                   onChange={handleInputChange}
                   value={itemDetails.unit}
-                />
+                /> */}
+                <Select
+                  size="large"
+                  name="unit"
+                  value={itemDetails.unit ? itemDetails.unit : "Select Unit"}
+                  onChange={handleSelectChange}
+                  // suffixIcon={<img src={arrowDwon} alt="" />}
+                  // value={itemDetails.unit}
+                  className="ant-select-box"
+                >
+                  {renderUnitList}
+                </Select>
                 <span className="text-danger small">{errors.unit}</span>
               </Form.Item>
             </Col>
@@ -252,7 +315,13 @@ export default function AddItem({
                 onClick={handleSave}
                 disabled={loading}
               >
-                {loading ? "Adding..." : "Add"}
+                {selectedElement && selectedElement._id && !loading
+                  ? "Update"
+                  : selectedElement && selectedElement._id && loading
+                  ? "Updating..."
+                  : loading
+                  ? "Adding..."
+                  : "Add"}
               </Button>
             </Col>
           </Row>

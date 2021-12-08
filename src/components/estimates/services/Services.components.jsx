@@ -2,47 +2,59 @@
 import React, { useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import FillterTabs from "../fillterTabs.components";
-import { Card, Table, Modal, Form, Input, Button } from "antd";
+import { Card, Table, Modal, Form, Input, Button, Row, Col } from "antd";
 import { Link, Navigate } from "react-router-dom";
-import { EyeOutlined } from "@ant-design/icons";
 import { ellps, Datel } from "../../../utils/svg.file";
-import { createFormula, getAllFormula } from "../../../api/formula";
-import DeleteModal from "../../modal/deleteModal.component";
-
+import {
+  createFormula,
+  deleteFormula,
+  getAllFormula,
+} from "../../../api/formula";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import SmallLoader from "../../loader/smallLoader";
 export default function Services() {
   const [ismadalvisable, setMadalvisable] = useState(false);
   const [data, setData] = useState([]);
   const [filtredData, setFiltredData] = useState([]);
   const [title, setTitle] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [showDeleteModal, setShowDeleteModal] = useState(null);
+  const [isDeleteing, setIsDeleteing] = useState(false);
+  const [state, setState] = useState({
+    smallLoader: true,
+  });
+  const [isCreating, setIsCreating] = useState(false);
+  const [errors, setErrors] = useState({});
   React.useEffect(() => {
     fetchFormula();
   }, []);
-  const handleDeleteData = () => {
-    setShowDeleteModal(true);
-  };
-  const handleDeleteOk = () => {
-    setShowDeleteModal(false);
-  };
-  const handleDeleteClose = () => {
-    setShowDeleteModal(false);
-  };
   async function fetchFormula() {
     const result = await getAllFormula();
     if (result.remote === "success") {
-      console.log(result.data.data);
       const data = result.data.data.map((item, idx) => {
         return {
           key: idx,
           ...item,
-          view: <EyeOutlined />,
+          title: (
+            <Link
+              to={`/v2/formula-tree?formulaId=${item._id}`}
+              style={{ color: "inherit" }}
+            >
+              {item.title}
+            </Link>
+          ),
         };
       });
       setData(data);
       setFiltredData(data);
     }
+    setTimeout(
+      () =>
+        setState({
+          smallLoader: false,
+        }),
+      500
+    );
     console.log(result);
   }
   const showModal = () => {
@@ -54,16 +66,19 @@ export default function Services() {
 
   async function handleCreateFormula(e) {
     e.preventDefault();
+    setErrors({});
+    setIsCreating(true);
     const body = {
       title,
     };
-    console.log(body);
     const result = await createFormula(body);
-    console.log(result);
     if (result.remote === "success") {
-      console.log("result", result);
       setRedirect(`/v2/formula-tree?formulaId=${result.data.data._id}`);
+    } else {
+      console.log("result: ", result.errors.errors);
+      setErrors(result.errors.errors);
     }
+    setIsCreating(false);
   }
 
   const columns = [
@@ -75,15 +90,6 @@ export default function Services() {
       ),
       dataIndex: "title",
       render: (text) => <a>{text} </a>,
-      width: 450,
-    },
-    {
-      title: (
-        <>
-          Formula <span className="float-end">{ellps}</span>
-        </>
-      ),
-      dataIndex: "formula",
       width: 450,
     },
     {
@@ -108,7 +114,7 @@ export default function Services() {
             &nbsp;
             <span
               className="me-2 cursor-btn del-btn-svg"
-              onClick={handleDeleteData}
+              onClick={() => setShowDeleteModal(tags._id)}
             >
               {Datel}
             </span>
@@ -118,16 +124,6 @@ export default function Services() {
     },
   ];
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-  };
-
   const handleFilterService = (e) => {
     const { value } = e.target;
     const filtredData = data.filter((item) => {
@@ -136,12 +132,39 @@ export default function Services() {
     setFiltredData(filtredData);
   };
 
+  const handleDelete = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    setIsDeleteing(true);
+    const newData = data.filter((item) => item._id !== showDeleteModal);
+    const newFiltredData = filtredData.filter(
+      (item) => item._id !== showDeleteModal
+    );
+    const result = await deleteFormula(showDeleteModal);
+    console.log("resul: ", result);
+    if (result.remote === "success") {
+      setData(newData);
+      setFiltredData(newFiltredData);
+      setShowDeleteModal(null);
+    }
+    setTimeout(() => {
+      setIsDeleteing(false);
+    }, 500);
+  };
+
   if (redirect) {
     return <Navigate to={redirect} />;
   }
   return (
     <>
-      <BreadcrumbBar name="SERVICES" breaclass="mb-3" />
+      <BreadcrumbBar
+        name="Dashboard"
+        subname="Services"
+        breaclass="mb-3"
+        Link="/"
+        
+      />
       <Card
         bordered={false}
         className="shadow estimate-card mb-4"
@@ -153,51 +176,58 @@ export default function Services() {
           placeholder="Search services by name"
           onChange={handleFilterService}
         />
-        <div className="p-2 ant-table-seprate">
-          <Table
-            columns={columns}
-            dataSource={filtredData}
-            className="ant-table-color ant-th-style scroll-style munscher vertical-align"
-            rowSelection={rowSelection}
-            pagination={false}
-            bordered={false}
-            scroll={{ y: 500 }}
-          />
-          {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
-            <div className="ms-auto pe-3 ant-select-box ">
-              <span className="me-3">Action:</span>
-              <Select
-                defaultValue="What do yo want to do?"
-                onChange={handleChange}
-                style={{ width: "300px" }}
-              >
-                <Option value="jack">
-                  <Link to="/view-email">Export to Email</Link>
-                </Option>
-                <Option value="lucy">
-                  <Link to="/view-email">Export to Text</Link>
-                </Option>
 
-                <Option value="Yiminghe">
-                  <Link to="/view-email">Export to Excell</Link>
-                </Option>
-              </Select>
-              <div className="text-end mt-3">
-                <Button type="primary" disabled className="ant-confirm-button">
-                  Confirm
-                </Button>
+        <div className="p-2 ant-table-seprate">
+          {state.smallLoader ? (
+            <>
+              <div className="text-center d-flex align-items-center justify-content-center ht-100">
+                <span className="">
+                  <SmallLoader />
+                  <p className="mt-2">Loading Please Wait....</p>
+                </span>
               </div>
-            </div>
-          </div> */}
+            </>
+          ) : (
+            <Table
+              columns={columns}
+              dataSource={filtredData}
+              className="components-table-demo-nested ant-thead-block scroll-style"
+              // rowSelection={rowSelection}
+              pagination={false}
+              bordered={false}
+              scroll={{ y: 500 }}
+            />
+          )}
         </div>
       </Card>
-      <DeleteModal
-        handleDeleteData={handleDeleteData}
-        ShowDeleteModal={ShowDeleteModal}
-        handleDeleteClose={handleDeleteClose}
-        handleDeleteOk={handleDeleteOk}
-        content={<>You are about to delete all the Service</>}
-      />
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={showDeleteModal !== null}
+        closeIcon={<InfoCircleOutlined />}
+        width={350}
+        footer={null}
+      >
+        <p>Are you sure you want to delete this service?</p>
+        <Row>
+          <Col md={12} className="text-center">
+            <Button
+              type="text"
+              onClick={() => {
+                setShowDeleteModal(null);
+              }}
+              disabled={isDeleteing}
+            >
+              Cancel
+            </Button>
+          </Col>
+          <Col md={12}>
+            <Button type="link" onClick={handleDelete} disabled={isDeleteing}>
+              {isDeleteing ? "Deleting..." : "Delete"}
+            </Button>
+          </Col>
+        </Row>
+      </Modal>
       <Modal
         title="Create new Service"
         visible={ismadalvisable}
@@ -214,6 +244,7 @@ export default function Services() {
               className="ant-modal-input"
               onChange={(e) => setTitle(e.target.value)}
             />
+            <span className="text-danger">{errors.title}</span>
           </Form.Item>
           <Form.Item className="text-end mb-0">
             <Button
@@ -221,8 +252,9 @@ export default function Services() {
               size="large"
               className="radius-30 ant-primary-btn font-15 px-5"
               onClick={handleCreateFormula}
+              disabled={isCreating}
             >
-              Next
+              {isCreating ? "Creating..." : "Next"}
             </Button>
           </Form.Item>
         </Form>

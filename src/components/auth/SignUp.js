@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InputField from "../inputField/inputField.component";
 import user from "../../images/user.png";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { Link, Navigate } from "react-router-dom";
 import arrow from "../../images/arrow.png";
 import company from "../../images/company.png";
@@ -15,6 +15,11 @@ function SignUp() {
     password: "",
     confirmPassword: "",
     companyName: "",
+    contactNo: "",
+    name: "",
+  });
+  const [state, setState] = useState({
+    message: "",
   });
   const [errors, setErrors] = useState({});
   const [redirect, setRedirect] = useState(null);
@@ -30,10 +35,31 @@ function SignUp() {
     if (!isValid) {
       console.log("errors: ", errors);
       setErrors(errors);
+      setState({
+        message:
+          "",
+      });
+      // message.error(errors,5)
     } else {
-      setRedirect("/dashboard");
+      
       const result = await signup(form);
       console.log("result: ", result);
+      if (result.errors) {
+        setErrors(result.errors.errors);
+      } else {
+        setForm({
+          ...form,
+          email: "",
+          password: "",
+          confirmPassword: "",
+          companyName: "",
+          name: "",
+          contactNo:""
+        });
+       
+        setRedirect("/auth");
+        message.success("Your account is created and send to admin to your account approval",5)
+      }
     }
   };
 
@@ -58,13 +84,13 @@ function SignUp() {
           placeholder="Full Name"
           label="Full Name"
           type="text"
-          name="Full Name"
+          name="name"
           dclass="ant-icon-space mb-3"
           onChange={handleAllChange}
         />
 
         <div role="alert" class="text-danger">
-          {errors.companyName}
+          {errors.name}
         </div>
         <InputField
           icon={<MailOutlined className="bg-color-icon" />}
@@ -99,13 +125,13 @@ function SignUp() {
           placeholder="Phone Number"
           label="Phone Number"
           type="text"
-          name="Phone Number"
+          name="contactNo"
           dclass="ant-icon-space mb-3"
           onChange={handleAllChange}
         />
 
         <div role="alert" class="text-danger">
-          {errors.companyName}
+          {errors.contactNo}
         </div>
         <Form.Item className="mb-3">
           <label className="ant-label-login">Password</label>
@@ -135,7 +161,9 @@ function SignUp() {
             {errors.confirmPassword}
           </div>
         </Form.Item>
-
+        <div role="alert" class="text-success">
+          {state.message}
+        </div>
         <Button type="submit" className="ant-btn-save" onClick={handleSubmit}>
           Sign Up
         </Button>

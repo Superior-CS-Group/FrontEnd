@@ -3,10 +3,10 @@ import { Collapse, Input, Form, Row, Col, Button, message } from "antd";
 import "react-phone-number-input/style.css";
 import { UserOutlined, CheckOutlined } from "@ant-design/icons";
 import { postData } from "../../../utils/fetchApi.js";
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput from "react-phone-number-input";
 import { useParams, Navigate } from "react-router-dom";
 
-export default function LeadInfo() {
+export default function LeadInfo(props) {
   const params = useParams();
 
   // let [responseData, setResponseData] = useState({ name: "", email: "" });
@@ -39,13 +39,13 @@ export default function LeadInfo() {
     message: "",
   });
   useEffect(() => {
-    // console.log("params: ", params.id);
+    console.log("props ", props);
     const id = params.id;
 
     if (id) {
       const body = { id };
       const fetchData = async () => {
-        const result = await postData(`customer/get-info`, body);
+        const result = props.result;
 
         // setResponseData(result.data);
         // console.log(responseData.Data.address);
@@ -95,43 +95,44 @@ export default function LeadInfo() {
         otherInformation: "",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   const validateFields = () => {
     const errors = {};
     if (!state.name) {
-      errors.name = "Customer Name is  blank";
+      errors.name = "Customer Name is required";
       message.error(errors.name, 5);
     }
     if (!state.email) {
-      errors.email = "Email Id is  blank";
+      errors.email = "Email Id is required";
       message.error(errors.email, 5);
     } else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(state.email)) {
-      errors.email = "Email is not valid";
+      errors.email = "Invalid Email";
       message.error(errors.email, 5);
     }
     if (!state.contactNo) {
-      errors.contactNo = "Contact No is  blank";
+      errors.contactNo = "Contact No is required";
       message.error(errors.contactNo, 5);
     }
     if (!state.country) {
-      errors.country = "Country is  blank";
+      errors.country = "Country is required";
       message.error(errors.country, 5);
     }
     if (!state.states) {
-      errors.states = "State is  blank";
+      errors.states = "State is required";
       message.error(errors.states, 5);
     }
     if (!state.city) {
-      errors.city = "City is not blank";
+      errors.city = "City is required";
       message.error(errors.city, 5);
     }
     if (!state.postalCode) {
-      errors.postalCode = "Postal Code is  blank";
+      errors.postalCode = "Postal Code is required";
       message.error(errors.postalCode, 5);
     }
     if (!state.address) {
-      errors.address = "Address is  blank";
+      errors.address = "Address is required";
       message.error(errors.address, 5);
     }
     // if (!this.state.otherInformation) {
@@ -203,7 +204,7 @@ export default function LeadInfo() {
     // console.log("body: ", body);
 
     try {
-      const result = await postData(`customer/add`, body);
+      await postData(`customer/add`, body);
       // console.log("result: ", result);
       setState({
         ...state,
@@ -235,9 +236,9 @@ export default function LeadInfo() {
 
   const updatehandleSubmit = async (event) => {
     // console.log(localStorage.getItem("token"));
+    event.preventDefault();
     let id = state.id;
 
-    event.preventDefault();
     setState({ ...state, errors: {} });
     const { errors, isValid } = validateFields();
     if (!isValid) {
@@ -276,6 +277,47 @@ export default function LeadInfo() {
       postalCode,
       distance,
       otherInformation,
+      spouse,
+    };
+    console.log("body: ", body);
+
+    try {
+      const result = await postData(`customer/update-info`, body);
+      console.log("result: ", result);
+      setState({
+        ...state,
+        errors: [],
+        message: "New Data Updated!",
+        isRedirect: true,
+      });
+    } catch (err) {
+      console.log("error", err, err.response);
+
+      setState({
+        ...state,
+        errors: err.response.data.errors,
+        isLoading: false,
+      });
+    }
+  };
+
+  const updatehandleSpouseSubmit = async (event) => {
+    // console.log(localStorage.getItem("token"));
+    event.preventDefault();
+    let id = state.id;
+
+    setState({ ...state, errors: {} });
+
+    const spouse = {
+      name: state.spouseName,
+      email: state.spouseEmail,
+      phone: state.spousePhone,
+      otherInfo: state.spouseOtherInfo,
+    };
+    setState({ ...state, isLoading: true });
+
+    const body = {
+      id,
       spouse,
     };
     console.log("body: ", body);
@@ -368,39 +410,45 @@ export default function LeadInfo() {
           <Form className="mt-5" layout="vertical">
             <Row gutter={[24, 0]}>
               <Col md={12}>
-                <Form.Item label="Full Name">
-                  <Input
-                    size="large"
-                    name="name"
-                    value={state.name}
-                    onChange={handleAllChange}
-                  />
-                  {/* <div role="alert" class="text-danger">
+                <Row gutter={[24, 0]}>
+                  <Col md={12}>
+                    <Form.Item label="Full Name">
+                      <Input
+                        className="radius-30"
+                        size="large"
+                        name="name"
+                        value={state.name}
+                        onChange={handleAllChange}
+                      />
+                      {/* <div role="alert" class="text-danger">
                     {state.errors.name}
                   </div> */}
-                </Form.Item>{" "}
-                <Form.Item label="Email">
-                  <Input
-                    size="large"
-                    name="email"
-                    value={state.email}
-                    onChange={handleAllChange}
-                  />
-                  {/* <div role="alert" class="text-danger">
+                    </Form.Item>{" "}
+                  </Col>
+                  <Col md={12}>
+                    <Form.Item label="Email">
+                      <Input
+                        className="radius-30"
+                        size="large"
+                        name="email"
+                        value={state.email}
+                        onChange={handleAllChange}
+                      />
+                      {/* <div role="alert" class="text-danger">
                     {state.errors.email}
                   </div> */}
-                  <div role="alert" class="text-danger">
-                    {state.message}
-                  </div>
-                </Form.Item>
-                <Row gutter={[24, 0]}>
+                      <div role="alert" class="text-danger">
+                        {state.message}
+                      </div>
+                    </Form.Item>
+                  </Col>
                   <Col md={12}>
                     <Form.Item label="Phone">
                       {/* <Input suffix={<CheckOutlined />} /> */}
                       <Input
                         // international
                         // defaultCountry="RU"
-
+                        className="radius-30"
                         size="large"
                         name="contactNo"
                         value={state.contactNo}
@@ -414,6 +462,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="Job Farness">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="distance"
                         placeholder="Minute"
@@ -426,27 +475,21 @@ export default function LeadInfo() {
               </Col>
 
               <Col md={12}>
-                <Form.Item label="Country">
+                {/* <Form.Item label="Country">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="country"
                     value={state.country}
                     onChange={handleAllChange}
                   />
-                  {/* <PhoneInput
-                    international
-                    defaultCountry="RU"
-                    value={value}
-                    onChange={setValue}
-                  /> */}
-                  {/* <div role="alert" class="text-danger">
-                    {state.errors.country}
-                  </div> */}
-                </Form.Item>
+                  
+                </Form.Item> */}
                 <Row gutter={[24, 0]}>
                   <Col md={12}>
                     <Form.Item label="City ">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="city"
                         value={state.city}
@@ -460,6 +503,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="State">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="states"
                         value={state.states}
@@ -475,6 +519,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="Address">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="address"
                         value={state.address}
@@ -488,6 +533,7 @@ export default function LeadInfo() {
                   <Col md={12}>
                     <Form.Item label="Zip code">
                       <Input
+                        className="radius-30"
                         size="large"
                         name="postalCode"
                         value={state.postalCode}
@@ -503,6 +549,7 @@ export default function LeadInfo() {
               <Col md={24}>
                 <Form.Item label="Other Information">
                   <TextArea
+                    className="radius-30"
                     size="large"
                     rows={4}
                     name="otherInformation"
@@ -549,6 +596,7 @@ export default function LeadInfo() {
               <Col md={12}>
                 <Form.Item label="Full Name">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="spouseName"
                     value={state.spouseName}
@@ -557,6 +605,7 @@ export default function LeadInfo() {
                 </Form.Item>{" "}
                 <Form.Item label="Email">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="spouseEmail"
                     value={state.spouseEmail}
@@ -568,6 +617,7 @@ export default function LeadInfo() {
                 </Form.Item>
                 <Form.Item label="Phone">
                   <Input
+                    className="radius-30"
                     size="large"
                     name="spousePhone"
                     value={state.spousePhone}
@@ -579,6 +629,7 @@ export default function LeadInfo() {
               <Col md={12}>
                 <Form.Item label="Other Information">
                   <TextArea
+                    className="radius-30"
                     size="large"
                     name="spouseOtherInfo"
                     value={state.spouseOtherInfo}
@@ -594,7 +645,7 @@ export default function LeadInfo() {
                     <>
                       <Button
                         className="add-btn ant-btn-primary"
-                        onClick={updatehandleSubmit}
+                        onClick={updatehandleSpouseSubmit}
                       >
                         Update Changes
                       </Button>

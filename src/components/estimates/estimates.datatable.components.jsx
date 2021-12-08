@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, message, Skeleton } from "antd";
+import { Table, Checkbox, Input, message, Switch, Popover, Button } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
-import { getData } from "../../utils/fetchApi.js";
+import { getData, postData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
-import { SearchOutlined } from "@ant-design/icons";
-import FilterSorting from "./filter/filter.sorting.component";
 
+import FilterSorting from "./filter/filter.sorting.component";
+import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import ColumnModal from "../modal/columnModal.component";
 import fillter from "../../images/fillter.png";
 import { deleteCustomerLead } from "../../api/delete";
 
@@ -19,27 +20,20 @@ export default function Datatable(props) {
   const [deleteEstimateId, setdeleteEstimateId] = useState();
   const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
   const [estimateResults, setdestimateResults] = useState([]);
+  // const [result, setResult] = useState({});
+  const [AddColumnShow, setAddColumnShow] = useState(false);
+
   const [state, setState] = useState({
-    estimateResults: [],
+    estimateResults: {},
     data: [],
     filteredData: [],
     columns: [
       {
         title: <Checkbox />,
-        dataIndex: "key",
+        dataIndex: "keys",
         width: 50,
+        sorter: true,
       },
-
-      {
-        title: (
-          <>
-            Lead Added <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "date",
-        width: 200,
-      },
-
       {
         title: (
           <>
@@ -48,60 +42,8 @@ export default function Datatable(props) {
         ),
         dataIndex: "name",
         width: 200,
-      },
-      {
-        title: (
-          <>
-            Email Id <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "email",
-        width: 300,
-      },
-      {
-        title: (
-          <>
-            Contact No <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "contactNo",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Address <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "address",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Softwere Follow Up <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "autoFollowUp",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimate Sent <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonSent",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimate No. <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimate No",
-        width: 200,
+        sorter: true,
+        
       },
       {
         title: (
@@ -111,83 +53,61 @@ export default function Datatable(props) {
         ),
         dataIndex: "estimaitonStatus",
         className: "text-green",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimaiton Sent Date <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonSentDate",
         width: 300,
+        sorter: true,
       },
+
       {
         title: (
           <>
-            Days Took To Send Estimate{" "}
-            <span className="float-end me-2">{drag}</span>
+            Estimate added (Date) <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "daysItTookToSendEstimate",
+        dataIndex: "date",
         width: 300,
+        sorter: true,
       },
       {
         title: (
           <>
-            Design <span className="float-end me-2">{drag}</span>
+            Email <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "design",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Design Paed <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "designPaid",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Phone Follow Up <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "noOfPhoneFollowUp",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Last Date Phone Follow Up{" "}
-            <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "lastDatePhoneFollowUp",
+        dataIndex: "email",
         width: 300,
+        sorter: true,
       },
       {
         title: (
           <>
-            Email Follow Up <span className="float-end me-2">{drag}</span>
+            Phone No. <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "noOfEmailFollowUp",
+        dataIndex: "contactNo",
         width: 200,
+        sorter: true,
       },
       {
         title: (
           <>
-            Last Date Email Follow Up{" "}
-            <span className="float-end me-2">{drag}</span>
+            Address <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "lastDateEmailFollowUp",
+        dataIndex: "address",
         width: 300,
+        sorter: true,
       },
+      {
+        title: (
+          <>
+            Estimate Sent <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "estimaitonSent",
+        width: 200,
+        sorter: true,
+      },
+
       {
         title: (
           <>
@@ -196,13 +116,133 @@ export default function Datatable(props) {
         ),
         dataIndex: "estimaitonCloseDate",
         width: 200,
+        sorter: true,
       },
+      {
+        title: (
+          <>
+            Days it took to close
+            <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "daysItTookToSendEstimate",
+        width: 300,
+        sorter: true,
+      },
+      // {
+      //   title: (
+      //     <>
+      //       Scheduled Date <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "scheduleDate",
+      //   width: 200,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Softwere Follow Up <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "autoFollowUp",
+      //   width: 200,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Estimate No. <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "estimate No",
+      //   width: 200,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Estimaiton Sent Date <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "estimaitonSentDate",
+      //   width: 300,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Design <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "design",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Design Paed <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "designPaid",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Phone Follow Up <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "noOfPhoneFollowUp",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Last Date Phone Follow Up{" "}
+      //       <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "lastDatePhoneFollowUp",
+      //   width: 300,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Email Follow Up <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "noOfEmailFollowUp",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Last Date Email Follow Up{" "}
+      //       <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "lastDateEmailFollowUp",
+      //   width: 300,
+      //   sorter: true,
+      // },
+
       {
         title: "Action",
         dataIndex: "action",
         width: 100,
         fixed: "right",
         className: "text-center",
+        sorter: true,
       },
     ],
     deleteEstimateId: "",
@@ -243,17 +283,10 @@ export default function Datatable(props) {
       setNewEstimateData([...newEstimateData2]);
     }
   }
-
-  useEffect(() => {
+  const buildTable = async (result) => {
     const data = [];
-    const fetchData = async () => {
-      const result = await getData(`estimation/upcoming-estimation`);
-      setdestimateResults({
-        estimateResults: result.data,
-      });
-      // console.log(estimateResults);
-
-      for (let i = 0; i < result.data.Data.length; i++) {
+    for (let i = 0; i < result.data.Data.length; i++) {
+      if (result.data.Data[i].customerLeadId[0]) {
         let estimateData = result.data.Data[i];
         // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
         let customerData = estimateData.customerLeadId;
@@ -263,8 +296,9 @@ export default function Datatable(props) {
         } else {
           followRemind = "No";
         }
+        console.log("f", customerData[0].autoReminderEmail);
         data.push({
-          key: (
+          keys: (
             <Checkbox
               onChange={(e) =>
                 handleAllChecked(
@@ -288,9 +322,24 @@ export default function Datatable(props) {
               </span>
             </>
           ),
+          autoFollowUp: (
+            <>
+              <div className="green-switch">
+                <Switch
+                  checked={customerData[0].autoReminderEmail}
+                  onChange={() => {
+                    console.log("check", estimateResults);
+                    onChange(customerData[0], i);
+                  }}
+                />
+              </div>
+            </>
+          ),
+          scheduleDate: customerData[0].createdAt.split("T")[0],
+          //  customerData[0].scheduleDate,
           filterName: customerData[0].name,
           name: (
-            <Link to={`/customer-lead/${customerData[0]._id}`}>
+            <Link to={`/customer-lead/${customerData[0]._id}`} className="text-capitalize font-bold font-16">
               {customerData[0].name}
             </Link>
           ),
@@ -298,9 +347,13 @@ export default function Datatable(props) {
           contactNo: customerData[0].contactNo,
           date: customerData[0].createdAt.split("T")[0],
           address: customerData[0].address,
-          autoFollowUp: followRemind,
+          // autoFollowUp: followRemind,
           estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
-          estimaitonStatus: customerData[0].estimaitonStatus,
+          estimaitonStatus: (
+            <span className="btn btn-outline-success d-inline-block">
+              {customerData[0].estimaitonStatus}
+            </span>
+          ),
           estimaitonSentDate: estimateData.estimaitonSentDate,
           daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
           design: estimateData.design,
@@ -311,11 +364,24 @@ export default function Datatable(props) {
           lastDateEmailFollowUp: estimateData.lastDateEmailFollowUp,
           estimaitonCloseDate: estimateData.estimaitonCloseDate,
           _id: customerData[0]._id,
+          // key:estimateData._id
         });
       }
-      // console.log("data: ", data);
-      setState({ ...state, data, filteredData: data });
-    };
+    }
+    // console.log("data: ", data);
+    setState({ ...state, data, filteredData: data });
+  };
+  const fetchData = async () => {
+    const result = await getData(`estimation/upcoming-estimation`);
+    console.log("res=>", result);
+    setdestimateResults({
+      estimateResults: result.data,
+    });
+    // console.log(estimateResults);
+    //  await setResult(results)
+    await buildTable(result);
+  };
+  useEffect(async () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
@@ -354,15 +420,61 @@ export default function Datatable(props) {
     setShowDeleteModal(false);
   };
   const showModal = () => {
+    console.log("hey uncl2");
     setModalVisible(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async (leadSelected) => {
+    console.log("hey uncl", leadSelected);
+    const result2 = await postData(`estimation/filter-sort`, {
+      estimaitonStatus: leadSelected,
+    });
+    console.log("sort==", result2);
+    // [
+    //   "New Lead - Multiple Contact Attempts",
+    //   "Lead Added",
+    // ]
+    await buildTable(result2);
     setModalVisible(false);
+    setAddColumnShow(false);
   };
 
   const handleCancel = () => {
+    console.log("hey uncl3");
     setModalVisible(false);
+    setAddColumnShow(false);
+  };
+  const onChange = async (customer, i) => {
+    console.log(`switch to`, params);
+
+    // even=!even.target.checked;
+    const result = await postData(`customer/update-info`, {
+      id: customer._id,
+      autoReminderEmail: !customer.autoReminderEmail,
+    });
+    console.log(result, estimateResults);
+    fetchData();
+    // if(estimateResults.estimateResults)
+    // estimateResults.estimateResults.Data.map((rr,idx)=>
+    // { if(idx=== i)
+    //   rr.customerLeadId.map(r=>{
+    //     r.autoReminderEmail=!customer.autoReminderEmail
+    //         });
+    // });
+    // console.log(estimateResults)
+    //   temp[i].autoFollowUp= <>
+    //   <div className="green-switch">
+    //     <Switch checked={!customer.autoReminderEmail} onChange={()=>onChange(customer,i)} />
+    //   </div>
+    // </>;
+
+    // setState({estimateResults})
+  };
+  const handleColumnModal = () => {
+    setAddColumnShow(true);
+  };
+  const applyFilter = () => {
+    console.log("hii buddy");
   };
   return (
     <>
@@ -374,7 +486,13 @@ export default function Datatable(props) {
           >
             <img src={fillter} className="me-3" alt="" /> Filter and Sort
           </span>
-
+          <span
+            className="ant-blue-plus column-add-btn"
+            onClick={handleColumnModal}
+          >
+            <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
+            Add Column
+          </span>
           <div className="ms-auto col-lg-3">
             <Input
               placeholder="Search customers by name"
@@ -401,8 +519,8 @@ export default function Datatable(props) {
         ShowDeleteModal={ShowDeleteModal}
         handleDeleteClose={handleDeleteClose}
         handleDeleteOk={handleDeleteOk}
-        deleteEstimateId={deleteEstimateId}
-        deleteEstimateIdx={deleteEstimateIdx}
+        deleteId={deleteEstimateId}
+        deleteIdx={deleteEstimateIdx}
         content={<>Are you sure delete this item?</>}
       />
 
@@ -411,6 +529,13 @@ export default function Datatable(props) {
         ModalVisible={ModalVisible}
         handleCancel={handleCancel}
         handleOk={handleOk}
+        ApplyFilter={applyFilter}
+      />
+      <ColumnModal
+        handleColumnModal={handleColumnModal}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        AddColumnShow={AddColumnShow}
       />
     </>
   );

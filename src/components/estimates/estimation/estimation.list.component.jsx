@@ -1,201 +1,124 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, Button } from "antd";
+import { Table, Input, Button, Modal, Row, Col } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../../utils/svg.file";
-import { useParams } from "react-router-dom";
-import { getData } from "../../../utils/fetchApi";
-import DeleteModal from "../../modal/deleteModal.component";
-import { SearchOutlined } from "@ant-design/icons";
+import { Link, useParams } from "react-router-dom";
+import { SearchOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { deleteUserEstimation, getUserEstimation } from "../../../api/formula";
 
-import fillter from "../../../images/fillter.png";
-import { Nav } from "react-bootstrap";
-
-export default function EstimationList(props) {
+export default function EstimationList({ toggleAddNew,fetched:fetche }) {
   const params = useParams();
-  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
-  const [ListShowPreview, setListShowPreview] = useState(false);
 
-  const [state, setState] = useState({
-    estimateResults: [],
-    data: [],
-    filteredData: [],
-    columns: [
-      {
-        title: (
-          <>
-            Date <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "date",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimation No <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "Estimation No",
-        width: 200,
-      },
-
-      {
-        title: (
-          <>
-            Status <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonStatus",
-        className: "text-green",
-        width: 200,
-      },
-
-      {
-        title: "Action",
-        dataIndex: "action",
-        width: 100,
-        fixed: "right",
-        className: "text-center",
-      },
-    ],
-  });
-
-  const [newEstimateData, setNewEstimateData] = useState([]);
-
-  // const that = state;
-  const dragProps = {
-    onDragEnd(fromIndex, toIndex) {
-      const columns = [...state.columns];
-      const item = columns.splice(fromIndex, 1)[0];
-      columns.splice(toIndex, 0, item);
-      setState({
-        ...state,
-        columns,
-      });
+  const [columns, setColumns] = useState([
+    {
+      title: (
+        <>
+          Estimation No <span className="float-end me-2">{drag}</span>
+        </>
+      ),
+      dataIndex: "estimationNumber",
+      width: 200,
     },
-    nodeSelector: "th",
-  };
+    {
+      title: (
+        <>
+          Date <span className="float-end me-2">{drag}</span>
+        </>
+      ),
+      dataIndex: "createdAt",
+      width: 200,
+    },
 
-  function handleAllChecked(e, id, name, email) {
-    let newEstimateData1;
-    console.log(e.target.checked, e.target);
-    if (e.target.checked) {
-      newEstimateData1 = {
-        leadId: id,
-        leadName: name,
-        leadEmail: email,
-      };
+    {
+      title: (
+        <>
+          Status <span className="float-end me-2">{drag}</span>
+        </>
+      ),
+      dataIndex: "status",
+      className: "text-green",
+      width: 200,
+    },
+    {
+      title: <>Action</>,
+      dataIndex: "action",
+      className: "",
+      width: 200,
+    },
+  ]);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [deleteModal, setDeleteModal] = useState(null);
+  const [isDeleteing, setIsDeleteing] = useState(false);
 
-      setNewEstimateData([...newEstimateData, newEstimateData1]);
-      console.log("newEstimateData", newEstimateData);
-    } else {
-      var newEstimateData2 = newEstimateData.filter(
-        (item) => item.leadId !== id
-      );
-      setNewEstimateData([...newEstimateData2]);
-    }
-  }
-  const handleShowEstimatePreview = () => {
-    setListShowPreview(true);
-  };
-  useEffect(() => {
-    const data = [];
-    const fetchData = async () => {
-      const result = await getData(`estimation/upcoming-estimation`);
-      setState({
-        estimateResults: result.data,
-      });
-      console.log(result.data.Data);
-
-      for (let i = 0; i < result.data.Data.length; i++) {
-        let estimateData = result.data.Data[i];
-        // console.log(estimateData.autoFollowUp, "estimateData.autoFollowUp");
-        let customerData = estimateData.customerLeadId;
-        let followRemind;
-        if (customerData[0].autoReminderEmail === true) {
-          followRemind = "Yes";
-        } else {
-          followRemind = "No";
-        }
-        data.push({
-          key: (
-            <Checkbox
-              onChange={(e) =>
-                handleAllChecked(
-                  e,
-                  customerData[0]._id,
-                  customerData[0].name,
-                  customerData[0].email
-                )
-              }
-            />
+  async function fetchUserFormula() {
+    const fetched = fetche;
+    if (fetched.remote === "success" && fetched.data.data.length) {
+      const newData = fetched.data.data.map((item) => {
+        return {
+          ...item,
+          key: item._id,
+          estimationNumber: (
+            <Link to={`?estimationId=${item._id}`}>
+              {item.estimationNumber}
+            </Link>
           ),
+          createdAt: item.createdAt.split("T")[0],
           action: (
             <>
               <span
-                className="me-2 cursor-btn"
-                onClick={(e) => {
-                  DeleteModalEstimate(customerData[0]._id, "customerLead");
-                }}
+                className="float-end me-2"
+                onClick={() => setDeleteModal(item._id)}
               >
                 {Datel}
               </span>
             </>
           ),
-          filterName: customerData[0].name,
-          name: (
-            <Link
-              to={`/customer-lead/${customerData[0]._id}`}
-              onClick={handleShowEstimatePreview}
-            >
-              {customerData[0].name}
-            </Link>
-          ),
-          email: customerData[0].email,
-          contactNo: customerData[0].contactNo,
-          date: customerData[0].createdAt.split("T")[0],
-          address: customerData[0].address,
-          autoFollowUp: followRemind,
-          estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
-          estimaitonStatus: customerData[0].estimaitonStatus,
-          estimaitonSentDate: estimateData.estimaitonSentDate,
-          daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
-          design: estimateData.design,
-          designPaid: estimateData.designPaid,
-          noOfPhoneFollowUp: estimateData.noOfPhoneFollowUp,
-          lastDatePhoneFollowUp: estimateData.lastDatePhoneFollowUp,
-          noOfEmailFollowUp: estimateData.noOfEmailFollowUp,
-          lastDateEmailFollowUp: estimateData.lastDateEmailFollowUp,
-          estimaitonCloseDate: estimateData.estimaitonCloseDate,
-          _id: customerData[0]._id,
-        });
-      }
-      // console.log("data: ", data);
-      setState({ ...state, data, filteredData: data });
-    };
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+        };
+      });
+      setData(newData);
+      setFilteredData(newData);
+    } else {
+      console.log("fetched: ", fetched);
+    }
+  }
 
-  const filterData = (e) => {
-    const { value } = e.target;
-    console.log("value: ", value);
-    const filteredData = state.data.filter((item) => {
-      return item.filterName.toLowerCase().includes(value.toLowerCase());
-    });
-    console.log("filterData: ", filteredData);
-    setState({ ...state, filteredData, filter: value });
+  const handleDelete = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    setIsDeleteing(true);
+    const newData = data.filter((item) => item._id !== deleteModal);
+    const newFiltredData = filteredData.filter(
+      (item) => item._id !== deleteModal
+    );
+    const result = await deleteUserEstimation(deleteModal);
+    console.log("resul: ", result);
+    if (result.remote === "success") {
+      setData(newData);
+      setFilteredData(newFiltredData);
+      setDeleteModal(null);
+    }
+    setTimeout(() => {
+      setIsDeleteing(false);
+    }, 1000);
   };
-  const DeleteModalEstimate = () => {
-    setShowDeleteModal(true);
+
+  useEffect(() => {
+    fetchUserFormula();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetche]);
+
+  const dragProps = {
+    onDragEnd(fromIndex, toIndex) {
+      const newColumns = [...columns];
+      const item = newColumns.splice(fromIndex, 1)[0];
+      newColumns.splice(toIndex, 0, item);
+      setColumns(newColumns);
+    },
+    nodeSelector: "th",
   };
-  const handleDeleteOk = () => {
-    setShowDeleteModal(false);
-  };
-  const handleDeleteClose = () => {
-    setShowDeleteModal(false);
-  };
+
   return (
     <>
       <div className="card-shadow p-2">
@@ -205,11 +128,15 @@ export default function EstimationList(props) {
               className="inline-block me-5 fillter-btn cursor-btn"
               // onClick={this.showModal}
             >
-              <Link to="#">
-                <Button className="radius-30" type="primary">
-                  Make New Estimation
-                </Button>
-              </Link>
+              {/* <Link to="#"> */}
+              {/* <Button
+                className="radius-30"
+                type="primary"
+                onClick={toggleAddNew}
+              >
+                Make New Estimation
+              </Button> */}
+              {/* </Link> */}
             </span>
 
             <div className="ms-auto col-lg-3">
@@ -218,28 +145,48 @@ export default function EstimationList(props) {
                 text="search"
                 className="ant-search-button"
                 suffix={<SearchOutlined style={{ fontSize: "18px" }} />}
-                onChange={filterData}
               />
             </div>
           </div>
         </div>
         <ReactDragListView.DragColumn {...dragProps}>
           <Table
-            columns={state.columns}
+            columns={columns}
             pagination={false}
-            dataSource={state.filteredData}
+            dataSource={filteredData}
             bordered={false}
             className="ant-table-estmating scroll-style"
             scroll={{ x: 400, y: 500 }}
           />
         </ReactDragListView.DragColumn>
-        <DeleteModal
-          DeleteModalEstimate={DeleteModalEstimate}
-          ShowDeleteModal={ShowDeleteModal}
-          handleDeleteClose={handleDeleteClose}
-          handleDeleteOk={handleDeleteOk}
-          content={<>You are about to delete all the Service</>}
-        />
+        <Modal
+          className="modal-radius warning-modal"
+          title="Warning!"
+          visible={deleteModal !== null}
+          closeIcon={<InfoCircleOutlined />}
+          width={350}
+          footer={null}
+        >
+          <p>Are you sure you want to delete this service?</p>
+          <Row>
+            <Col md={12} className="text-center">
+              <Button
+                type="text"
+                onClick={() => {
+                  setDeleteModal(null);
+                }}
+                disabled={isDeleteing}
+              >
+                Cancel
+              </Button>
+            </Col>
+            <Col md={12}>
+              <Button type="link" onClick={handleDelete} disabled={isDeleteing}>
+                {isDeleteing ? "Deleting..." : "Delete"}
+              </Button>
+            </Col>
+          </Row>
+        </Modal>
       </div>
     </>
   );

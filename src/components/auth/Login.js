@@ -2,12 +2,13 @@ import React, { Component } from "react";
 
 import InputField from "../inputField/inputField.component";
 import { Formik } from "formik";
-import { Form, Button, Checkbox } from "antd";
+import { Form, Button, Checkbox, message } from "antd";
 import GoogleLogin from "react-google-login";
 import { Link, Route, Navigate } from "react-router-dom";
 import { postData } from "../../utils/fetchApi.js";
 import user from "../../images/user.png";
 import lock from "../../images/lock.png";
+import ForgotPassword from "../modal/forgot-password.component";
 function onChange(e) {
   // console.log(`checked = ${e.target.checked}`);
 }
@@ -31,12 +32,28 @@ export default class Login extends Component {
   }
 
   componentDidMount = async () => {
+    console.log("this.props", this.props);
     const token = localStorage.getItem("token");
     if (token) {
       this.setState({ isToken: true });
     } else {
       this.setState({ isToken: false });
     }
+  };
+  onForgotModalShow = () => {
+    this.setState({
+      isModalForgot: true,
+    });
+  };
+  handleCancel = () => {
+    this.setState({
+      isModalForgot: false,
+    });
+  };
+  handleOk = () => {
+    this.setState({
+      isModalForgot: false,
+    });
   };
 
   validateEmail = (email) => {
@@ -146,9 +163,13 @@ export default class Login extends Component {
               <Checkbox onChange={onChange} className="mt-2">
                 Remember me next time
               </Checkbox>
-              <Link to="/forgot" className="forgot">
+              <Button
+                type="link"
+                onClick={this.onForgotModalShow}
+                className="forgot"
+              >
                 Forgot Password?
-              </Link>
+              </Button>
             </div>
           </Form.Item>
           <Form.Item className="mb-0">
@@ -191,6 +212,12 @@ export default class Login extends Component {
             </Button>
           </Link>
         </Form>
+        <ForgotPassword
+          onForgotModalShow={this.onForgotModalShow}
+          isModalForgot={this.state.isModalForgot}
+          handleCancel={this.handleCancel}
+          handleOk={this.handleOk}
+        />
       </>
     );
   }

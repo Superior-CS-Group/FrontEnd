@@ -23,6 +23,7 @@ function FormulaV2() {
   const [isUpdated, setIsUpdated] = React.useState(false);
   const [clientContract, setClientContract] = React.useState("");
   const [redirect, setRedirect] = React.useState(null);
+  const [catalogs, setCatalogs] = React.useState([]);
 
   const params = useLocation();
   React.useEffect(() => {
@@ -44,6 +45,9 @@ function FormulaV2() {
     if (formulaDetails.remote === "success") {
       setFormulaDetails(formulaDetails.data.data);
       setTitle(formulaDetails.data.data.title);
+      console.log("formulaDetails.data.data: ", formulaDetails.data.data);
+      const catalogs = formulaDetails.data.data?.catalogs || [];
+      setCatalogs([...catalogs]);
       setClientContract(formulaDetails.data.data.clientContract);
       setMarkupId(
         formulaDetails.data.data.elements.find(
@@ -62,8 +66,12 @@ function FormulaV2() {
         materials: materials,
         clientContract: clientContract,
         title: title,
+        catalogs: catalogs.filter((item, pos) => {
+          return catalogs.indexOf(item) === pos;
+        }),
       };
-      setTimeout(() => updateFormulaDetails(body), 1000);
+      console.log("body: ", body, catalogs);
+      setTimeout(() => updateFormulaDetails(body), 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdated]);
@@ -91,11 +99,11 @@ function FormulaV2() {
       newElementList[index].formula = [
         ...new Set([...(newElementList[index].formula || []), ...processed]),
       ];
+      setCatalogs([...(catalogs || []), ...processed]);
     }
     setElementList([...newElementList]);
   };
   const handleNewElement = () => {
-    console.log("estimationList: ", elementList);
     const newElement = {
       name: "",
       type: "manual",
@@ -103,7 +111,6 @@ function FormulaV2() {
       value: "",
       view: "client",
     };
-    console.log("newElement: ", [newElement, ...elementList]);
     setElementList([newElement, ...elementList]);
     setIsUpdated("Update");
   };
@@ -137,6 +144,7 @@ function FormulaV2() {
       newMaterials[index].formula = [
         ...new Set([...(newMaterials[index].formula || []), ...processed]),
       ];
+      setCatalogs([...(catalogs || []), ...processed]);
     }
     // }
     setMaterials([...newMaterials]);
@@ -162,6 +170,15 @@ function FormulaV2() {
     newElementList.splice(index, 1);
     setElementList([...newElementList]);
     setIsUpdated("Update");
+  };
+  const handleRemoveMaterial = (index, toggleFun) => {
+    const newMaterialList = [...materials];
+    newMaterialList.splice(index, 1);
+    setMaterials([...newMaterialList]);
+    setIsUpdated("Update");
+    if (toggleFun) {
+      toggleFun(false);
+    }
   };
 
   if (redirect) {
@@ -191,7 +208,7 @@ function FormulaV2() {
                 />
               </Col>
             </Row>
-            <Row gutter={[24, 0]} className="align-items-center">
+            {/* <Row gutter={[24, 0]} className="align-items-center">
               <Col span={8}>
                 <label>Total Charge:</label>
               </Col>
@@ -201,7 +218,7 @@ function FormulaV2() {
                   className="ant-furmulla-input"
                 />
               </Col>
-            </Row>
+            </Row> */}
           </div>
           <span className="ant-cricle-add" onClick={handleNewElement}>
             {treeIcon}
@@ -240,6 +257,7 @@ function FormulaV2() {
                   index={index}
                   elementList={elementList}
                   onFocusOut={onFocusOut}
+                  handleRemoveMaterial={handleRemoveMaterial}
                 />
               ))}
             </tbody>

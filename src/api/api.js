@@ -1,7 +1,9 @@
 import axios from "axios";
+import { SERVER_URL } from "../config";
 // http://digimonk.net:1629/api
 // http://localhost:5001/api
-const baseURL = "http://digimonk.net:1629/api";
+// "http://203.190.153.22:1629/api";
+const baseURL = SERVER_URL;
 
 const axiosInstance = async () => {
   const instance = axios.create({
@@ -37,6 +39,7 @@ const request = async (config) => {
       config.headers["Content-Type"] = "application/json";
     }
     config.headers["Authorization"] = `Bearer ${token}`;
+    config.headers["Client-Time"] = Date.now();
     const response = await instance.request({
       ...config,
       transformResponse: (res) => {

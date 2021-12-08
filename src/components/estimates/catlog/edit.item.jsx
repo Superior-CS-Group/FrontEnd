@@ -4,7 +4,11 @@ import { upload } from "../../../utils/svg.file";
 import { CloseOutlined, DollarCircleOutlined } from "@ant-design/icons";
 
 import { validateCreateItemInput } from "../../../validators/catalog/catalog.validator";
-import { createCatalogItem, createVariation } from "../../../api/catalogue";
+import {
+  createCatalogItem,
+  createVariation,
+  updateVariation,
+} from "../../../api/catalogue";
 import { fileToBase64 } from "../../../utils/fileBase64";
 
 export default function EditItem(
@@ -14,12 +18,16 @@ export default function EditItem(
   setSelectedSubCatalog,
   handelUpdate
 ) {
+  const [ShowDeleteModal, setShowDeleteModal] = React.useState(false);
+  const [ListShowPreview, setListShowPreview] = React.useState(false);
+  const [deleteCatelogId, setdeleteCatelogId] = React.useState();
+
   const [loading, setLoading] = React.useState(false);
   const [itemDetails, setItemDetails] = React.useState({
-    name: "",
-    price: "",
+    name: props.variationName,
+    price: props.variationPrice,
     description: "",
-    unit: "",
+    unit: props.variationUnit,
     quantity: "",
     images: [],
     type: "catalog",
@@ -67,7 +75,7 @@ export default function EditItem(
       [e.target.name]: Number(e.target.value) || e.target.value,
     });
   };
-
+  // console.log(props, "props ddddd");
   const handleSave = async (e) => {
     e.preventDefault();
     setErrors({
@@ -84,7 +92,7 @@ export default function EditItem(
       if (!isValid) {
         throw errors;
       }
-      console.log("itemDetails: ", itemDetails);
+      // console.log("itemDetails: ", itemDetails);
       let response = {};
       if (selectedSubCatalog) {
         response = await createVariation({
@@ -122,6 +130,45 @@ export default function EditItem(
       images,
     });
   };
+
+  const handleUpdate = async (e) => {
+    console.log(props.deleteId, "props.deleteId");
+
+    try {
+      const body = {
+        id: props.deleteId,
+        name: itemDetails.name,
+        price: itemDetails.price,
+        unit: itemDetails.unit,
+      };
+
+      console.log("resposne: ", body);
+
+      // const response = await updateVariation(body);
+      // console.log("resposne: ", response);
+
+      // if (response.remote === "success") {
+
+      //     setLoading(false);
+      //     handleClose();
+
+      // } else {
+      //   setErrors(response.errors.errors);
+      //   setLoading(false);
+      // }
+    } catch (error) {
+      console.log("error: ", error);
+      setLoading(false);
+      setErrors(error);
+    }
+  };
+  const removeCatalogData = async (id) => {
+    //setdeleteCatelogId(id);
+    // setShowDeleteModal(true);
+    console.log(id, "deleteCatelogId");
+    setShowDeleteModal(true);
+  };
+
   return (
     <>
       <Modal
@@ -129,6 +176,7 @@ export default function EditItem(
         title="Edit Item"
         visible={props.IsEditData}
         onCancel={props.handleCancel}
+        deleteId={props.deleteId}
         onOk={props.handleOk}
         footer={null}
       >
@@ -143,7 +191,7 @@ export default function EditItem(
                     className="ant-furmulla-input radius-30"
                     name="name"
                     onChange={handleInputChange}
-                    value={itemDetails.name}
+                    value={props.variationName}
                   />
                   <span className="text-danger small">{errors.name}</span>
                 </Form.Item>
@@ -159,7 +207,7 @@ export default function EditItem(
                     onChange={handleInputChange}
                     type="number"
                     min="1"
-                    value={itemDetails.price}
+                    value={props.variationPrice}
                   />
                   <span className="text-danger small">{errors.price}</span>
                 </Form.Item>
@@ -172,40 +220,11 @@ export default function EditItem(
                     size="large"
                     name="unit"
                     onChange={handleInputChange}
-                    value={itemDetails.unit}
+                    value={props.variationUnit}
                   />
                   <span className="text-danger small">{errors.unit}</span>
                 </Form.Item>
               </Col>
-              {/* <Col md={8}>
-              <Form.Item label="Quantity">
-                <Input
-                  className="ant-furmulla-input radius-30"
-                  placeholder="Quantity"
-                  size="large"
-                  name="quantity"
-                  onChange={handleInputChange}
-                  type="number"
-                  min="1"
-                  value={itemDetails.quantity}
-                />
-                <span className="text-danger small">{errors.quantity}</span>
-              </Form.Item>
-            </Col>
-            <Col md={24}>
-              <Form.Item label="Description">
-                <TextArea
-                  className="ant-furmulla-input radius-30 p-3"
-                  maxLength={300}
-                  onChange={handleInputChange}
-                  style={{ height: "120px", resize: "none" }}
-                  placeholder="Enter Description about materials"
-                  name="description"
-                  value={itemDetails.description}
-                />
-                <span className="text-danger small">{errors.description}</span>
-              </Form.Item>
-            </Col> */}
             </Row>
             <Row gutter={[24, 0]}>
               {itemDetails.images.map((image, index) => {
@@ -243,6 +262,7 @@ export default function EditItem(
                   onClick={handleClose}
                   disabled={loading}
                   size="large"
+                  onClick={(e) => removeCatalogData(props.deleteId)}
                 >
                   Delete Items
                 </Button>
@@ -255,15 +275,27 @@ export default function EditItem(
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="primary"
-                  size="large"
-                  className="radius-30 px-4 btn-width"
-                  onClick={handleSave}
-                  disabled={loading}
-                >
-                  {loading ? "Editing..." : "Edit"}
-                </Button>
+                {props.deleteId ? (
+                  <Button
+                    type="primary"
+                    size="large"
+                    className="radius-30 px-4 btn-width"
+                    onClick={handleUpdate}
+                    disabled={loading}
+                  >
+                    {loading ? "Updated..." : "Update"}
+                  </Button>
+                ) : (
+                  <Button
+                    type="primary"
+                    size="large"
+                    className="radius-30 px-4 btn-width"
+                    onClick={handleSave}
+                    disabled={loading}
+                  >
+                    {loading ? "Editing..." : "Edit"}
+                  </Button>
+                )}
               </Col>
             </Row>
           </Form>

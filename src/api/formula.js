@@ -57,6 +57,14 @@ export const updateFormula = async (formulaId, data) => {
   return response;
 };
 
+export const deleteFormula = async (formulaId) => {
+  const response = await api.request({
+    url: `/v2/formula/delete-formula-by-id/${formulaId}`,
+    method: "DELETE",
+  });
+  return response;
+};
+
 export const searchFormulaByName = async (searchString) => {
   const response = await api.request({
     url: `/v2/formula/search-formula-by-name/${searchString}`,
@@ -88,6 +96,22 @@ export const getUserEstimation = async (userId) => {
   const response = await api.request({
     url: `/v2/user-estimation/get-user-estimation/${userId}`,
     method: "GET",
+  });
+  return response;
+};
+
+export const getUserEstimationDetailsById = async (estimationId) => {
+  const response = await api.request({
+    url: `/v2/user-estimation/get-user-estimation-details-by-id/${estimationId}`,
+    method: "GET",
+  });
+  return response;
+};
+
+export const deleteUserEstimation = async (estimationId) => {
+  const response = await api.request({
+    url: `/v2/user-estimation/delete-user-estimation/${estimationId}`,
+    method: "DELETE",
   });
   return response;
 };

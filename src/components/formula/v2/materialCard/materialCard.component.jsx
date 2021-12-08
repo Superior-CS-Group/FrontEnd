@@ -1,18 +1,21 @@
-import { Checkbox, Col, Input, Row } from "antd";
+import { Checkbox, Col, Input, Modal, Row, Button } from "antd";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
-import DeleteModal from "../../../modal/deleteModal.component";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
 function MaterialCard({
   material,
   handleChange,
   index,
   elementList,
   onFocusOut,
+  handleRemoveMaterial,
 }) {
   const [manualCharge, setManualCharge] = React.useState(false);
+  const [showDeleteModal, setShowDeleteModal] = React.useState(null);
+  const [isDeleteing, setIsDeleteing] = React.useState(false);
   React.useEffect(() => {
     setManualCharge(material.manual);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <tr>
@@ -109,10 +112,46 @@ function MaterialCard({
             />
           </Col>
         </Row>
-        <span className="delect">
-          <DeleteOutlined className="text-danger" onClick={DeleteModal} />
+        <span
+          className="delect"
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowDeleteModal(true)}
+        >
+          <DeleteOutlined className="text-danger" />
         </span>
       </td>
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={showDeleteModal !== null}
+        closeIcon={<InfoCircleOutlined />}
+        width={350}
+        footer={null}
+      >
+        <p>Are you sure you want to delete this service?</p>
+        <Row>
+          <Col md={12} className="text-center">
+            <Button
+              type="text"
+              onClick={() => {
+                setShowDeleteModal(false);
+              }}
+              disabled={isDeleteing}
+            >
+              Cancel
+            </Button>
+          </Col>
+          <Col md={12}>
+            <Button
+              type="link"
+              onClick={() => handleRemoveMaterial(index, setIsDeleteing)}
+              disabled={isDeleteing}
+            >
+              {isDeleteing ? "Deleting..." : "Delete"}
+            </Button>
+          </Col>
+        </Row>
+      </Modal>
     </tr>
   );
 }

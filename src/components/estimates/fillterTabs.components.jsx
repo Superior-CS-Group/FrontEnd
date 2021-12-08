@@ -66,10 +66,10 @@ export default function FillterTabs(props) {
               <Option value="Yiminghe">yiminghe</Option>
             </Select>
           </span> */}
-          <span className="ant-blue-plus">
+          {/* <span className="ant-blue-plus">
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
             Add Column
-          </span>
+          </span> */}
 
           <div className="ms-auto col-lg-3">
             <Input

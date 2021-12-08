@@ -18,6 +18,22 @@ import {
 import { NavLink } from "react-router-dom";
 const { SubMenu } = Menu;
 export default class DashboardNavbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userRole: "",
+    };
+  }
+
+  componentDidMount = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      this.setState({ isToken: true });
+    } else {
+      this.setState({ isToken: false });
+    }
+  };
+
   render() {
     return (
       <>
@@ -36,7 +52,12 @@ export default class DashboardNavbar extends Component {
           {/* <Menu.Item key="3" icon={estimating}>
             <NavLink to="/estimating"> Estimating</NavLink>
           </Menu.Item> */}
-          <SubMenu key="sub1" icon={estimating} title=" Estimating">
+          <SubMenu
+            key="sub1"
+            icon={estimating}
+            title=" Estimating"
+            popupClassName="newdiv"
+          >
             <Menu.Item key="esn">
               {" "}
               <NavLink to="/catalog">Catalog</NavLink>
@@ -51,7 +72,7 @@ export default class DashboardNavbar extends Component {
               <NavLink to="/services"></NavLink>Service
             </Menu.Item>
             <Menu.Item key="es3">
-              <NavLink to="/estimating">Estimation</NavLink>
+              <NavLink to="/estimating">Estimate Dashboard</NavLink>
             </Menu.Item>
             <Menu.Item key="es4">
               <NavLink to="/userlist">User List</NavLink>

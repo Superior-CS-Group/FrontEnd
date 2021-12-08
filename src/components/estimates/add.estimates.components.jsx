@@ -1,7 +1,6 @@
 /* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
-// import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
+import React from "react";
 import {
   Row,
   Col,
@@ -14,25 +13,22 @@ import {
   Select,
   DatePicker,
   Form,
+  Modal,
+  message,
 } from "antd";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {
-  PlusCircleOutlined,
-  SaveOutlined,
-  CloseCircleFilled,
-  CloseCircleOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { CloseCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 import { eye } from "../../utils/svg.file";
 import { Link } from "react-router-dom";
 import {
   createUserEstimation,
   searchFormulaByName,
-  getUserEstimation,
   updateUserEstimation,
+  getUserEstimationDetailsById,
 } from "../../api/formula";
 import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
+import EstimateSettings from "./estimateSettings/estimateSettings.component";
+import PaymentTerms from "./paymentTerms/paymentTerms.component";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -44,13 +40,19 @@ function handleChange(value) {
   console.log(`selected ${value}`);
 }
 export default function AddEstimates(props) {
-  const [variation, setVariation] = useState([]);
   const [formulas, setFormulas] = React.useState([]);
   const [selectedFormulas, setSelectedFormulas] = React.useState([]);
   const [estimationId, setEstimationId] = React.useState(null);
-  const [isSearchingFormula, setIsSearchingFormula] = React.useState(false);
   const [view, setView] = React.useState("client");
-
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [selectIndex, setSelectIndex] = React.useState(null);
+  const [totalPorjectCharge, setTotalProjectCharge] = React.useState(0);
+  const [totalPorjectChargeAfterDiscount, setTotalProjectChargeAfterDiscount] =
+    React.useState(0);
+  const [estimationSettings, setEstimationSettings] = React.useState({});
+  const [paymentTerms, setPaymentTerms] = React.useState([]);
+  const [isValidPaymentTerms, setIsValidPaymentTerms] = React.useState(false);
+  const [isUpdate, setIsUpdate] = React.useState(false);
   const columns = [
     {
       title: "Materials needed:",
@@ -74,16 +76,29 @@ export default function AddEstimates(props) {
     },
   ];
 
-  const mdata = [
-    { title: "Bulit In Design Cost", cost: "$0", pricebtn: "danger-text" },
-    { title: "Fluff Number Discount?", cost: "0.00%", pricebtn: "gray-text" },
-    { title: "Discount Amount", cost: "$0.00", pricebtn: "danger-text" },
-    {
-      title: "Total Without Discount",
-      cost: "$24.551.14",
-      pricebtn: "warring-text",
-    },
-  ];
+  const [isSaved, setIsSaved] = React.useState(false);
+  const success = (content) => {
+    const key = "updatable";
+    message.loading({ content: content, key });
+    // Dismiss manually and asynchronously
+    if (isSaved) {
+      setIsSaved(false);
+      message.success({ content: "Saved", key, duration: 2 });
+    }
+  };
+
+  React.useEffect(() => {
+    let percentage = 100;
+    paymentTerms.forEach((item) => {
+      percentage -= Number(item.value);
+    });
+    setIsValidPaymentTerms(percentage === 0);
+  }, [paymentTerms]);
+
+  const onFocusOut = () => {
+    setIsUpdate(!isUpdate);
+  };
+
   const markup = [
     {
       title: "Can you fit ditch witch/skid",
@@ -149,58 +164,20 @@ export default function AddEstimates(props) {
     },
   ];
 
-  const payment = [
-    {
-      title: "Deposit payment at signing of contract",
-      cost: (
-        <>
-          <span className="per-input">
-            <Input
-              type="number"
-              maxLength="2"
-              placeholder="12"
-              className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue=""
-            />
-            %
-          </span>
-        </>
-      ),
-    },
-    {
-      title: "Progress payment when project is started",
-      cost: (
-        <>
-          <span className="per-input">
-            <Input
-              type="number"
-              min={1}
-              max={2}
-              placeholder="88"
-              className="ant-width-small font-bold radius-4 gray-text"
-              defaultValue=""
-            />
-            %{" "}
-          </span>
-        </>
-      ),
-    },
-  ];
-
   React.useEffect(() => {
     fetchPrevFormula();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchPrevFormula() {
-    const fetched = await getUserEstimation(props.custInfo.id);
-    console.log("fetched: ", fetched.data.data);
-    if (fetched.remote === "success" && fetched.data.data.length > 0) {
-      setSelectedFormulas(fetched.data.data[0].services);
-      setEstimationId(fetched.data.data[0]._id);
+    const fetched = await getUserEstimationDetailsById(props.estimationId);
+    if (fetched.remote === "success" && fetched.data.data) {
+      setSelectedFormulas(fetched.data.data.services);
+      setEstimationId(fetched.data.data._id);
+      setEstimationSettings(fetched.data.data.estimateSettings);
+      setPaymentTerms(fetched.data.data.paymentTerms);
     }
   }
-
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
@@ -218,27 +195,19 @@ export default function AddEstimates(props) {
 
     const formulaElements = formula.elements;
     const newElements = [];
-    console.log("|formulaElements|", formulaElements, formulaElements.length);
     for (let i = 0; i < formulaElements.length; i++) {
-      console.log("newElements");
       if (formulaElements[i].type === "dropdown") {
         const options = await processDropdown(formulaElements[i].dropdown);
-        console.log("options: ", options);
         newElements.push({
           ...formulaElements[i],
           options,
         });
-        console.log("dropdown", newElements);
       } else {
-        console.log("not dropdown", formulaElements[i]);
         newElements.push(formulaElements[i]);
       }
-      console.log("newElements2 ");
     }
-    console.log("formulaList2: ", formula);
 
     formula.elements = newElements;
-    console.log("formulaList: ", formula);
     setSelectedFormulas([formula, ...selectedFormulas]);
     setFormulas([]);
   }
@@ -251,6 +220,7 @@ export default function AddEstimates(props) {
 
   function handleEditDropdownField(e, index, subIndex) {
     const newSelectedFormula = [...selectedFormulas];
+
     const selectedOption = newSelectedFormula[index].elements[
       subIndex
     ].options.find((el) => el._id === e);
@@ -260,15 +230,12 @@ export default function AddEstimates(props) {
   }
 
   function handleOptionElement(value, index, subIndex, id) {
-    console.log({ value, index, subIndex });
     const newSelectedFormula = [...selectedFormulas];
     const optionalElement = newSelectedFormula[index].elements.find(
       (elem) => elem._id === id
     );
     optionalElement.multiplicationFactor = value;
-    console.log("optionalElement: ", { optionalElement });
     // newSelectedFormula[index].elements[subIndex] = optionalElement;
-    console.log(newSelectedFormula);
     setSelectedFormulas(newSelectedFormula);
   }
 
@@ -284,7 +251,7 @@ export default function AddEstimates(props) {
           price: item.price,
         };
       });
-      console.log("userMateriasl: ", usedMaterials);
+
       usedMaterials.forEach((material) => {
         const regex = new RegExp(escapeRegExp(material.title), "g");
         formula = formula.replace(regex, material.price);
@@ -293,7 +260,141 @@ export default function AddEstimates(props) {
 
     if (elements) {
       const usedElements = elements.map((element) => {
-        console.log("elemejt: ", element);
+        return {
+          title: `@{{element||${element._id}||${element.name}}}`,
+          price: `${element.value} * ${
+            element.multiplicationFactor === undefined ||
+            element.multiplicationFactor === null
+              ? 1
+              : element.multiplicationFactor
+          }`,
+          usedMaterials: element.formula,
+        };
+      });
+      usedElements.forEach((element) => {
+        const regex = new RegExp(escapeRegExp(element.title), "g");
+        try {
+          formula = formula.replace(regex, element.price);
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      });
+    }
+
+    try {
+      multiplicationFactor =
+        multiplicationFactor === undefined || multiplicationFactor === null
+          ? 1
+          : multiplicationFactor;
+
+      if (formula.match(/@\{\{[^\}]+\}\}/gi) && materials.length) {
+        formula = processFormula(formula, materials);
+      }
+
+      const result =
+        Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
+
+      return result;
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  function processMaterials(formula) {
+    const elements = [...formula.elements];
+    let totalMaterialsCost = 0;
+    let totalMaterialsCharge = 0;
+    const materials = [...formula.materials].map((material) => {
+      let quantity = processFormula(
+        material.quantity || "",
+        formula.catalogs || [],
+        elements,
+        undefined,
+        material.name
+      );
+
+      let cost =
+        quantity *
+        processFormula(material.cost || "", formula.catalogs || [], elements);
+      let charge = processFormula(
+        material.charge.replace("{Cost}", cost) || "",
+        formula.catalog || [],
+        elements
+      );
+
+      processClientContract(formula, material.formula, elements);
+      totalMaterialsCost += cost;
+      totalMaterialsCharge += charge;
+      return { ...material, cost, charge, quantity };
+    });
+    formula.totalMaterialsCost = totalMaterialsCost;
+    formula.totalProjectCharge = totalMaterialsCharge;
+    const profitPercent = (
+      Number((totalMaterialsCharge / totalMaterialsCost) * 100) - 100
+    ).toFixed(2);
+    formula.grossProfit = `${profitPercent}%`;
+    return materials;
+  }
+
+  async function processDropdown(id) {
+    const elements = await getVariationsByCatalogId(id);
+    if (elements.remote === "success") {
+      return elements.data.data;
+    } else {
+      return [];
+    }
+  }
+
+  async function handleSaveEstimations() {
+    const body = {
+      services: selectedFormulas,
+      userId: props.custInfo.id,
+      estimateSettings: estimationSettings,
+      paymentTerms,
+    };
+    success("Saving...");
+    if (estimationId) {
+      await updateUserEstimation(estimationId, body);
+      setIsSaved(true);
+    } else {
+      const response = await createUserEstimation(body);
+      if (response.remote === "success") {
+        setEstimationId(response.data.userEstimation._id);
+        setPaymentTerms(response.data.userEstimation.paymentTerms);
+        console.log("payment: ", response.data.userEstimation.paymentTerms);
+      }
+    }
+  }
+
+  const genExtra = () => (
+    <CloseCircleFilled onClick={() => setIsDeleting(true)} />
+  );
+
+  const handleRemoveService = () => {
+    const newSelectedFormulas = [...selectedFormulas];
+    newSelectedFormulas.splice(selectIndex, 1);
+    setSelectedFormulas(newSelectedFormulas);
+    setSelectIndex(null);
+    setIsDeleting(false);
+  };
+
+  const processClientContract = (formula, materials, elements) => {
+    let newContract = formula.clientContract;
+    if (materials) {
+      const usedMaterials = materials.map((item) => {
+        return {
+          title: `@{{catalog||${item._id}||${item.name}}}`,
+          price: item.price,
+        };
+      });
+      usedMaterials.forEach((material) => {
+        const regex = new RegExp(escapeRegExp(material.title), "g");
+        newContract = newContract.replace(regex, material.price);
+      });
+    }
+
+    if (elements) {
+      const usedElements = elements.map((element) => {
         return {
           title: `@{{element||${element._id}||${element.name}}}`,
           price: (
@@ -309,101 +410,21 @@ export default function AddEstimates(props) {
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
-          console.log("formulaBeofreReplace: ", formula, element.price);
-          formula = formula.replace(regex, element.price);
-          console.log("formulaAfterReplace: ", formula);
-        } catch (error) {
-          console.log("regex; ", regex);
-          console.log("formula; ", formula);
-          console.log("error: ", error);
-        }
+          newContract = newContract.replace(regex, element.price);
+        } catch (error) {}
       });
     }
-    try {
-      console.log("formuolaSt: ", formula, multiplicationFactor);
-      multiplicationFactor =
-        multiplicationFactor === undefined || multiplicationFactor === null
-          ? 1
-          : multiplicationFactor;
-      console.log({
-        formula,
-        materials,
-        elements,
-        multiplicationFactor,
-      });
-      const result =
-        Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
-      return result;
-    } catch (error) {
-      console.log("error: ", error);
-      return 0;
-    }
-  }
-
-  function processMaterials(formula) {
-    const elements = [...formula.elements];
-    let totalMaterialsCost = 0;
-    let totalMaterialsCharge = 0;
-    const materials = [...formula.materials].map((material) => {
-      let quantity = processFormula(
-        material.quantity || "",
-        material.formula,
-        elements
-      );
-      let cost =
-        quantity *
-        processFormula(material.cost || "", material.formula, elements);
-      console.log("charge: ", material.charge);
-      let charge = processFormula(
-        material.charge.replace("{Cost}", cost) || "",
-        material.formula,
-        elements
-      );
-
-      totalMaterialsCost += cost;
-      totalMaterialsCharge += charge;
-      return { ...material, cost, charge, quantity };
-    });
-    formula.totalMaterialsCost = totalMaterialsCost;
-    formula.totalProjectCharge = totalMaterialsCharge;
-    const profitPercent = Number(
-      (
-        (totalMaterialsCharge - totalMaterialsCost) /
-        totalMaterialsCost
-      ).toFixed(2)
-    );
-    formula.grossProfit = `${profitPercent}%`;
-    return materials;
-  }
-
-  async function processDropdown(id) {
-    console.log("id: ", id);
-    const elements = await getVariationsByCatalogId(id);
-    if (elements.remote === "success") {
-      return elements.data.data;
-    } else {
-      return [];
-    }
-  }
-
-  async function handleSaveEstimations() {
-    const body = { services: selectedFormulas, userId: props.custInfo.id };
-    console.log({ body, props });
-    if (estimationId) {
-      const updated = await updateUserEstimation(estimationId, body);
-      console.log(updated);
-    } else {
-      await createUserEstimation(body);
-    }
-  }
-
-  const genExtra = () => <CloseCircleFilled onClick={handleRemoveService} />;
-
-  const handleRemoveService = (index) => {
-    const newSelectedFormulas = [...selectedFormulas];
-    newSelectedFormulas.splice(index, 1);
-    setSelectedFormulas(newSelectedFormulas);
+    formula.processedClientContract = newContract;
+    return newContract;
   };
+
+  React.useEffect(() => {
+    if (isUpdate) {
+      handleSaveEstimations();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdate]);
+
   return (
     <>
       <div className="">
@@ -497,46 +518,27 @@ export default function AddEstimates(props) {
         {/* <BreadcrumbBar name="Estimates" subname="Add Estimate" /> */}
         <Row className="mt-4 mb-4">
           <Col span="4">
-            {isSearchingFormula ? (
-              <div>
-                <Input
-                  className="radius-30 me-2"
-                  onChange={(e) => handleFormulaSearch(e.target.value)}
-                  suffix={[
-                    <span
-                      onClick={() => setIsSearchingFormula(false)}
-                      style={{ marginTop: "-5px" }}
-                    >
-                      <CloseCircleOutlined />
-                    </span>,
-                  ]}
-                />
-                <div className="sagision radius-12 position-absolute w-100">
-                  <ul>
-                    {formulas.map((formula, idx) => (
-                      <li onClick={() => handleSelectFormula(formula, idx)}>
-                        {formula.title}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            <div>
+              <Input
+                className="radius-30 me-2"
+                onChange={(e) => handleFormulaSearch(e.target.value)}
+                placeholder="Serch Service"
+              />
+              <div className="sagision radius-12 position-absolute w-100">
+                <ul>
+                  {formulas.map((formula, idx) => (
+                    <li onClick={() => handleSelectFormula(formula, idx)}>
+                      {formula.title}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ) : (
-              <Button
-                type="primary"
-                className="radius-30 ant-primary-btn font-15 ps-2"
-                size="large"
-                onClick={() => setIsSearchingFormula(true)}
-              >
-                <PlusCircleOutlined style={{ fontSize: "24px" }} />
-                Add Service
-              </Button>
-            )}
+            </div>
           </Col>
           <Col span={8} className="text-end pe-5">
             <Link
               to={{
-                pathname: `/contract-preview/${props.custInfo.id}`,
+                pathname: `/contract-preview/${props.custInfo.id}?estimationId=${estimationId}`,
                 state: {
                   custInfo: props.custInfo.id,
                 },
@@ -546,6 +548,11 @@ export default function AddEstimates(props) {
                 type="primary"
                 className="radius-30 ant-primary-btn font-15 ps-4"
                 size="large"
+                disabled={!isValidPaymentTerms || !estimationId}
+                title={
+                  !isValidPaymentTerms &&
+                  "Invalid Payment Terms or estiamte is not saved"
+                }
               >
                 Contract Preview
               </Button>
@@ -606,7 +613,10 @@ export default function AddEstimates(props) {
                           ${formula.totalProjectCharge || 0}{" "}
                           <span
                             className="closeicon-panel"
-                            onClick={() => handleRemoveService(index)}
+                            onClick={() => {
+                              setSelectIndex(index);
+                              setIsDeleting(true);
+                            }}
                           >
                             {genExtra()}
                           </span>
@@ -614,120 +624,132 @@ export default function AddEstimates(props) {
                       ]}
                     >
                       <Row gutter={[24, 0]}>
-                        {formula.elements
-                          .filter((elem) => elem.view.includes(view))
-                          .map((element, idx) => {
-                            if (element.type === "dropdown") {
-                              processDropdown(element.dropdown, element);
-                            }
-                            return (
-                              <Col lg={6} span={24} key={idx}>
-                                <Card
-                                  bordered={false}
-                                  className={`radius-12 mb-3  count-card ${
-                                    element.automatic ? "blue-card" : ""
-                                  }`}
-                                  bodyStyle={{ padding: "16px" }}
-                                  key={idx}
-                                >
-                                  <div className="text-end drgicon"></div>
-                                  <span>{element.name}</span>
+                        {formula.elements.map((element, idx) => {
+                          return (
+                            <Col
+                              lg={6}
+                              span={24}
+                              key={idx}
+                              style={{
+                                display: element.view?.includes(view)
+                                  ? "block"
+                                  : "none",
+                              }}
+                            >
+                              <Card
+                                bordered={false}
+                                className={`radius-12 mb-3  count-card ${
+                                  element.automatic ? "blue-card" : ""
+                                }`}
+                                bodyStyle={{ padding: "16px" }}
+                                key={idx}
+                              >
+                                <div className="text-end drgicon"></div>
+                                <span>{element.name}</span>
 
-                                  <div className="d-flex align-items-center justify-content-between">
-                                    {element.type === "manual" ||
-                                    element.type === "prefilled" ? (
-                                      <Input
-                                        onChange={(e) => {
-                                          handleEditField(
-                                            e,
-                                            index,
-                                            "elements",
-                                            idx
-                                          );
-                                        }}
-                                        name="value"
-                                        value={element.value}
-                                        type="number"
-                                      />
-                                    ) : element.type === "dropdown" ? (
-                                      <Select
-                                        style={{ width: "100%" }}
-                                        onChange={(value) =>
-                                          handleEditDropdownField(
-                                            value,
-                                            index,
-                                            idx
-                                          )
-                                        }
-                                      >
-                                        {element.options?.map((option) => {
-                                          return (
-                                            <Option
-                                              value={option._id}
-                                              key={option._id}
-                                            >
-                                              {option.name}
-                                            </Option>
-                                          );
-                                        })}
-                                      </Select>
-                                    ) : element.type === "boolean" ? (
-                                      <Select
-                                        style={{ width: "100%" }}
-                                        onChange={(value) =>
-                                          handleOptionElement(
-                                            value,
-                                            index,
-                                            idx,
-                                            element.value
-                                          )
-                                        }
-                                      >
-                                        <Option value={1}>Yes</Option>
-                                        <Option value={0}>No</Option>
-                                      </Select>
-                                    ) : element.name === "Markup" ? (
-                                      <Input
-                                        onChange={(e) => {
-                                          handleEditField(
-                                            e,
-                                            index,
-                                            "elements",
-                                            idx
-                                          );
-                                        }}
-                                        name="value"
-                                        value={element.value}
-                                        type="number"
-                                      />
-                                    ) : element.name === "Total Cost" ? (
-                                      <Input
-                                        name="value"
-                                        value={formula.totalMaterialsCost}
-                                        disabled
-                                      />
-                                    ) : element.name === "Gross Profit" ? (
-                                      <Input
-                                        name="value"
-                                        value={formula.grossProfit}
-                                        disabled
-                                      />
-                                    ) : (
-                                      <h4>
-                                        {processFormula(
-                                          element.value,
-                                          element.formula || [],
-                                          formula.elements,
-                                          element.multiplicationFactor
-                                        )}
-                                      </h4>
-                                    )}
-                                    {/* <EditOutlined /> */}
-                                  </div>
-                                </Card>
-                              </Col>
-                            );
-                          })}
+                                <div className="d-flex align-items-center justify-content-between">
+                                  {element.type === "manual" ||
+                                  element.type === "prefilled" ? (
+                                    <Input
+                                      onChange={(e) => {
+                                        handleEditField(
+                                          e,
+                                          index,
+                                          "elements",
+                                          idx
+                                        );
+                                      }}
+                                      onBlur={onFocusOut}
+                                      name="value"
+                                      value={element.value}
+                                      type="number"
+                                    />
+                                  ) : element.type === "dropdown" ? (
+                                    <Select
+                                      style={{ width: "100%" }}
+                                      onChange={(value) =>
+                                        handleEditDropdownField(
+                                          value,
+                                          index,
+                                          idx
+                                        )
+                                      }
+                                      value={element.selected?._id}
+                                      onBlur={onFocusOut}
+                                    >
+                                      {element.options?.map((option) => {
+                                        return (
+                                          <Option
+                                            value={option._id}
+                                            key={option._id}
+                                          >
+                                            {option.name}
+                                          </Option>
+                                        );
+                                      })}
+                                    </Select>
+                                  ) : element.type === "boolean" ? (
+                                    <Select
+                                      style={{ width: "100%" }}
+                                      onChange={(value) =>
+                                        handleOptionElement(
+                                          value,
+                                          index,
+                                          idx,
+                                          element.value
+                                        )
+                                      }
+                                      onBlur={onFocusOut}
+                                    >
+                                      <Option value={1}>Yes</Option>
+                                      <Option value={0}>No</Option>
+                                    </Select>
+                                  ) : element.name === "Markup" ? (
+                                    <Input
+                                      onChange={(e) => {
+                                        handleEditField(
+                                          e,
+                                          index,
+                                          "elements",
+                                          idx
+                                        );
+                                      }}
+                                      onBlur={onFocusOut}
+                                      name="value"
+                                      value={element.value}
+                                      type="number"
+                                    />
+                                  ) : element.name === "Total Cost" ? (
+                                    <Input
+                                      name="value"
+                                      value={formula.totalMaterialsCost}
+                                      onBlur={onFocusOut}
+                                      disabled
+                                    />
+                                  ) : element.name === "Gross Profit" ? (
+                                    <Input
+                                      name="value"
+                                      value={formula.grossProfit}
+                                      onBlur={onFocusOut}
+                                      disabled
+                                    />
+                                  ) : (
+                                    <h4>
+                                      {processFormula(
+                                        element.value,
+                                        element.formula || [],
+                                        formula.elements,
+                                        element.multiplicationFactor,
+                                        element.name
+                                      )}
+                                    </h4>
+                                  )}
+                                  {/* <EditOutlined /> */}
+                                </div>
+                              </Card>
+                            </Col>
+                          );
+                        })}
                       </Row>
 
                       <Card className="radius-12 ant-estimate-table-card">
@@ -739,6 +761,12 @@ export default function AddEstimates(props) {
                           pagination={false}
                         />
                       </Card>
+                      <Card
+                        title="Client Contract"
+                        className="radius-12 ant-estimate-table-card mt-3"
+                      >
+                        <pre>{formula.processedClientContract}</pre>
+                      </Card>
                     </Panel>
                   );
                 })}
@@ -746,7 +774,15 @@ export default function AddEstimates(props) {
             </Card>
           </Col>
           <Col span={24} lg={8}>
-            <EstimationOverview selectedFormulas={selectedFormulas} />
+            <EstimationOverview
+              selectedFormulas={selectedFormulas}
+              setTotalProjectChargeChange={setTotalProjectCharge}
+              setTotalProjectChargeAfterDiscountMain={
+                setTotalProjectChargeAfterDiscount
+              }
+              onBlur={onFocusOut}
+              estimationSettings={estimationSettings}
+            />
 
             <Collapse
               defaultActiveKey={["1", "2", "3"]}
@@ -760,31 +796,12 @@ export default function AddEstimates(props) {
                 key="1"
                 className="border-0 ant-bootom-line-effect"
               >
-                <List
-                  bordered={false}
-                  dataSource={mdata}
-                  size="small"
-                  renderItem={(item) => (
-                    <List.Item
-                      className="border-0 font-d"
-                      extra={[
-                        <Input
-                          placeholder="Basic usage"
-                          className={`ant-width font-bold radius-4 ${item.pricebtn}`}
-                          defaultValue={item.cost}
-                        />,
-                      ]}
-                    >
-                      {item.title}
-                    </List.Item>
-                  )}
+                <EstimateSettings
+                  totalCharge={totalPorjectCharge}
+                  estimationSettings={estimationSettings}
+                  setEstimationSettings={setEstimationSettings}
+                  onBlur={onFocusOut}
                 />
-                <div className="addbtn-ant ps-3 py-3">
-                  <a href="#" className="d-inline-flex align-items-center">
-                    <PlusCircleOutlined className="me-2" />
-                    Add new field
-                  </a>
-                </div>
               </Panel>
               <Panel
                 header="Markup Settings"
@@ -809,73 +826,50 @@ export default function AddEstimates(props) {
                 key="3"
                 className="border-0 ant-bootom-line-effect"
               >
-                <List
-                  className="mb-3"
-                  bordered={false}
-                  dataSource={payment}
-                  size="small"
-                  renderItem={(item) => (
-                    <List.Item className="border-0 font-d" extra={[item.cost]}>
-                      {item.title}
-                    </List.Item>
-                  )}
-                >
-                  {variation.map((variation, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <List.Item
-                          className="border-0 font-d position-relative"
-                          extra={[
-                            <>
-                              <Input
-                                style={{ width: "40px" }}
-                                type="number"
-                                maxLength="2"
-                                placeholder=""
-                                className="ant-width-small font-bold radius-4 gray-text"
-                                defaultValue=""
-                              />
-                              <span>%</span>{" "}
-                              <DeleteOutlined className="delete-icon" />
-                            </>,
-                          ]}
-                        >
-                          <Input placeholder="" style={{ width: "88%" }} />
-                        </List.Item>
-                      </React.Fragment>
-                    );
-                  })}
-                </List>
-                <div className="addbtn-ant ps-3 py-3">
-                  <a
-                    href="#"
-                    className="d-inline-flex align-items-center"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setVariation([
-                        ...variation,
-                        { title: "title", value: "" },
-                      ]);
-                    }}
-                  >
-                    <PlusCircleOutlined className="me-2" />
-                    Add new field
-                  </a>
-                </div>
-                <span>
-                  <b>Note:</b>{" "}
-                  <i>Payment terms will change if change orders are made</i>
-                </span>
+                <PaymentTerms
+                  totalCharge={totalPorjectChargeAfterDiscount}
+                  paymentTerms={paymentTerms}
+                  setPaymentTerms={setPaymentTerms}
+                  onBlur={onFocusOut}
+                  isValid={isValidPaymentTerms}
+                />
               </Panel>
             </Collapse>
           </Col>
         </Row>
       </div>
-      <div className="ant-floating">
+      {/* <div className="ant-floating">
         <Button type="primary" onClick={handleSaveEstimations}>
           <SaveOutlined />
         </Button>
-      </div>
+      </div> */}
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={isDeleting}
+        footer={null}
+        closeIcon={<InfoCircleOutlined />}
+      >
+        <p>Are you sure you want to delete item ?</p>
+        <Row>
+          <Col md={12} className="text-center">
+            <Button
+              type="text"
+              onClick={() => {
+                setSelectIndex(null);
+                setIsDeleting(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </Col>
+          <Col md={12}>
+            <Button type="link" onClick={() => handleRemoveService()}>
+              Delete
+            </Button>
+          </Col>
+        </Row>
+      </Modal>
     </>
   );
 }
