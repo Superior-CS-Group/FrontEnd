@@ -75,9 +75,9 @@ const routes = [
     component: <FormullaTree />,
   },
   {
-    path: "/services",
+    path: "/estimate-templates",
     exact: true,
-    name: "services",
+    name: "estimate-templates",
     component: <Services />,
   },
   {

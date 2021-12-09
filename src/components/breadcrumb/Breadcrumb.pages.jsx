@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Breadcrumb } from "antd";
+import { LeftOutlined } from "@ant-design/icons";
 export default class BreadcrumbBar extends Component {
   render() {
     return (
@@ -16,8 +17,11 @@ export default class BreadcrumbBar extends Component {
             {this.props.subtitle}
           </Breadcrumb.Item>
         </Breadcrumb>
-        <a className="float-end btn btn-primary text-white back-btn" href={this.props.sublink}>
-          Back
+        <a
+          className="float-end btn btn-primary text-white back-btn p-1 px-2 ps-1"
+          href={this.props.sublink}
+        >
+          <LeftOutlined className="me-1" /> Back
         </a>
       </div>
     );
