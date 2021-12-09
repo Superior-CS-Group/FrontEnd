@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Card, Select } from "antd";
 import { Nav } from "react-bootstrap";
-import {   Modal, Form, Input } from "antd";
+import { Modal, Form, Input } from "antd";
 import Datatable from "./estimates.datatable.components";
 import FilterSorting from "./filter/filter.sorting.component";
 import { getData, postData } from "../../utils/fetchApi.js";
@@ -34,15 +34,15 @@ export default class MainEstimates extends Component {
      
   }
   addTabsModal = () => {
-    this.setState({ 
-      isModalVisible:true,
+    this.setState({
+      isModalVisible: true,
     });
   };
-  addTabs= async() => {
+  addTabs = async () => {
     // const id = params.id;
-   
+
     //   const body = { id };
-    
+
     //     const result = await postData(`customer/get-info`, body);
    const tab=await postData(`tab-filter/add`,{name:this.state.tabName});
    console.log('tab===',tab)
@@ -64,17 +64,17 @@ export default class MainEstimates extends Component {
     this.setState({ Tabs: tab });
   }
 
-  RemoveTabs = async(index) => {
-    let tab=this.state.Tabs;
+  RemoveTabs = async (index) => {
+    let tab = this.state.Tabs;
     console.log(tab[index]);
-   const delte=await postData(`tab-filter/delete`,{id:tab[index]._id})
-   
+    const delte = await postData(`tab-filter/delete`, { id: tab[index]._id });
+
     tab.splice(index, 1);
     this.setState({ Tabs: tab });
-    console.log(tab,index,delte, "check remove array");
+    console.log(tab, index, delte, "check remove array");
   };
 
-  fetchApisData=async()=>{
+  fetchApisData = async () => {
     const result = await getData(`estimation/upcoming-estimation`);
   //   const result2 = await postData(`estimation/filter-sort`,{ estimaitonStatus: [
   //    "New Lead - Multiple Contact Attempts",
@@ -131,7 +131,13 @@ export default class MainEstimates extends Component {
 
     return (
       <>
-        <BreadcrumbBar name="Dashboard " subname="Estimates" breaclass="mb-3" />
+        <BreadcrumbBar
+          name="Dashboard "
+          subname="Estimate Dashboard"
+          breaclass="mb-3"
+          link="/"
+          sublink="estimating"
+        />
         {this.state.smallLoader ? (
           <>
             <div className="text-center d-flex align-items-center justify-content-center ht-100">
@@ -175,15 +181,14 @@ export default class MainEstimates extends Component {
                             style={{ borderRadius: "10px" }}
                           >
                             <div className="d-flex justify-content-end mb-3">
-                              
                               <Button className="ant-moving-button">
                                 {value.customerLeadId[0].estimaitonStatus}
                               </Button>
                             </div>
                             <div className="ant-estimate-text">
-                                <span>Estimate</span>
-                                <h2>#{value.leadInvoinceNo}</h2>
-                              </div>
+                              <span>Estimate</span>
+                              <h2>#{value.leadInvoinceNo}</h2>
+                            </div>
                             <div className="ant-estimate-text mb-3">
                               <span>Customer Name</span>
                               <h3>{value.customerLeadId[0].name}</h3>
@@ -228,7 +233,9 @@ export default class MainEstimates extends Component {
               <div>
                 <Nav className="catlog-tabs" as="ul">
                   <Nav.Item as="li" key={-1}>
-                    <Nav.Link className={this.state.currentTab === -1?"active":""}>
+                    <Nav.Link
+                      className={this.state.currentTab === -1 ? "active" : ""}
+                    >
                       <b class="left-curve"></b>
                       <b class="right-curve"></b>
                       <p onClick={()=>{this.setState({currentTab:-1,currentTabData:{}});
@@ -238,13 +245,17 @@ export default class MainEstimates extends Component {
                   {this.state.Tabs.map((tab, index) => {
                     return (
                       <Nav.Item as="li" key={index}>
-                        <Nav.Link className={this.state.currentTab === index?"active":""}>
+                        <Nav.Link
+                          className={
+                            this.state.currentTab === index ? "active" : ""
+                          }
+                        >
                           <b class="left-curve"></b>
                           <b class="right-curve"></b>
                          <p onClick={()=>this.changeTab(index)}> {tab.name}</p>
                           <CloseOutlined
                             className="cursor-btn"
-                            onClick={()=>this.RemoveTabs(index)}
+                            onClick={() => this.RemoveTabs(index)}
                           />
                         </Nav.Link>
                       </Nav.Item>
@@ -259,6 +270,20 @@ export default class MainEstimates extends Component {
                       </span>
                     </Nav.Link>
                   </Nav.Item>
+                  <Nav.Item
+                    as="li"
+                    className="align-items-center d-flex ms-auto"
+                  >
+                    <Link to="/customer-lead">
+                      <Button
+                        ghost
+                        className="radius-12 me-3 font-large"
+                        style={{ fontSize: "16px" }}
+                      >
+                        Add Lead
+                      </Button>
+                    </Link>
+                  </Nav.Item>
                 </Nav>
               </div>
 
@@ -267,6 +292,9 @@ export default class MainEstimates extends Component {
 
                 <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
                   <div className="ms-auto pe-3 ant-select-box ">
+                    <Button className="radius-12 me-3" type="primary">
+                      Save
+                    </Button>
                     <span className="me-3">Action:</span>
                     <Select
                       defaultValue="What do yo want to do?"
@@ -306,36 +334,36 @@ export default class MainEstimates extends Component {
           handleOk={this.handleOk}
           // leadStatus={this.state.statusList}
         />
-         <Modal
-        title="Create New Tab"
-        visible={this.state.isModalVisible}
-        onCancel={this.handleCancel}
-        footer={false}
-        centered
-        className="radius-20"
-      >
-        <Form layout="vertical">
-          <Form.Item label="Tab Name">
-            <Input
-              placeholder="Filter by 90 Days"
-              size="large"
-              className="ant-modal-input"
-              value={this.state.tabName}
-               onChange={(e) => this.setState({tabName:e.target.value})}
-            />
-          </Form.Item>
-          <Form.Item className="text-end mb-0">
-            <Button
-              type="primary"
-              size="large"
-              className="radius-30 ant-primary-btn font-15 px-5"
-              onClick={this.addTabs}
-            >
-              Save
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+        <Modal
+          title="Create New Tab"
+          visible={this.state.isModalVisible}
+          onCancel={this.handleCancel}
+          footer={false}
+          centered
+          className="radius-20"
+        >
+          <Form layout="vertical">
+            <Form.Item label="Tab Name">
+              <Input
+                placeholder="Filter by 90 Days"
+                size="large"
+                className="ant-modal-input"
+                value={this.state.tabName}
+                onChange={(e) => this.setState({ tabName: e.target.value })}
+              />
+            </Form.Item>
+            <Form.Item className="text-end mb-0">
+              <Button
+                type="primary"
+                size="large"
+                className="radius-30 ant-primary-btn font-15 px-5"
+                onClick={this.addTabs}
+              >
+                Save
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
       </>
     );
   }

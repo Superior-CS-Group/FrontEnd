@@ -175,6 +175,8 @@ export default function CustomerLeadInfo(props) {
           subname="Estimates"
           subtitle="username"
           breaclass="mb-3"
+          link="/"
+          sublink="estimating"
         />
 
         <Row>

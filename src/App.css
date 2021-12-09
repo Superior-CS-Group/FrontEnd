@@ -8,7 +8,7 @@ body {
 .login-bg {
   background: url("../src/images/bg-login.png") no-repeat center top;
   background-size: cover;
-  /* height: 100vh; */
+  min-height: 100vh;
 }
 
 .radius-40 {
@@ -2579,7 +2579,7 @@ tr.ant-table-measure-row {
   box-shadow: none !important;
 }
 .green-switch .ant-switch-checked {
-  background-color: #1a73e8  !important;
+  background-color: #1a73e8 !important;
 }
 .tab-div li.active {
   /* background-color: #1890ff; */
@@ -2600,4 +2600,39 @@ tr.ant-table-measure-row {
 }
 .status-drop .ant-select-arrow {
   color: #fff;
+}
+
+.ant-table-estmating .ant-table-column-sorter {
+  color: #fff;
+}
+
+.ant-table-estmating .ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: #b5beca;
+}
+
+.ant-table-estmating
+  .ant-table-thead
+  th.ant-table-column-has-sorters:hover
+  .ant-table-column-sorter {
+  color: #fff;
+}
+
+.ant-btn.ant-btn-background-ghost:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.font-large span {
+  font-size: 16px !important;
+}
+
+.back-btn {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 1;
+}
+
+.breadcrumb-box-main {
+  position: relative;
 }

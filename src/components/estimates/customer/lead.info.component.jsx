@@ -39,7 +39,7 @@ export default function LeadInfo(props) {
     message: "",
   });
   useEffect(() => {
-     console.log("props ", props);
+    console.log("props ", props);
     const id = params.id;
 
     if (id) {
@@ -239,7 +239,6 @@ export default function LeadInfo(props) {
     event.preventDefault();
     let id = state.id;
 
-   
     setState({ ...state, errors: {} });
     const { errors, isValid } = validateFields();
     if (!isValid) {
@@ -302,15 +301,12 @@ export default function LeadInfo(props) {
     }
   };
 
-  
   const updatehandleSpouseSubmit = async (event) => {
     // console.log(localStorage.getItem("token"));
     event.preventDefault();
     let id = state.id;
 
-   
     setState({ ...state, errors: {} });
-  
 
     const spouse = {
       name: state.spouseName,
@@ -319,10 +315,10 @@ export default function LeadInfo(props) {
       otherInfo: state.spouseOtherInfo,
     };
     setState({ ...state, isLoading: true });
-   
+
     const body = {
       id,
-      spouse
+      spouse,
     };
     console.log("body: ", body);
 
@@ -414,34 +410,38 @@ export default function LeadInfo(props) {
           <Form className="mt-5" layout="vertical">
             <Row gutter={[24, 0]}>
               <Col md={12}>
-                <Form.Item label="Full Name">
-                  <Input
-                    className="radius-30"
-                    size="large"
-                    name="name"
-                    value={state.name}
-                    onChange={handleAllChange}
-                  />
-                  {/* <div role="alert" class="text-danger">
+                <Row gutter={[24, 0]}>
+                  <Col md={12}>
+                    <Form.Item label="Full Name">
+                      <Input
+                        className="radius-30"
+                        size="large"
+                        name="name"
+                        value={state.name}
+                        onChange={handleAllChange}
+                      />
+                      {/* <div role="alert" class="text-danger">
                     {state.errors.name}
                   </div> */}
-                </Form.Item>{" "}
-                <Form.Item label="Email">
-                  <Input
-                    className="radius-30"
-                    size="large"
-                    name="email"
-                    value={state.email}
-                    onChange={handleAllChange}
-                  />
-                  {/* <div role="alert" class="text-danger">
+                    </Form.Item>{" "}
+                  </Col>
+                  <Col md={12}>
+                    <Form.Item label="Email">
+                      <Input
+                        className="radius-30"
+                        size="large"
+                        name="email"
+                        value={state.email}
+                        onChange={handleAllChange}
+                      />
+                      {/* <div role="alert" class="text-danger">
                     {state.errors.email}
                   </div> */}
-                  <div role="alert" class="text-danger">
-                    {state.message}
-                  </div>
-                </Form.Item>
-                <Row gutter={[24, 0]}>
+                      <div role="alert" class="text-danger">
+                        {state.message}
+                      </div>
+                    </Form.Item>
+                  </Col>
                   <Col md={12}>
                     <Form.Item label="Phone">
                       {/* <Input suffix={<CheckOutlined />} /> */}
@@ -475,7 +475,7 @@ export default function LeadInfo(props) {
               </Col>
 
               <Col md={12}>
-                <Form.Item label="Country">
+                {/* <Form.Item label="Country">
                   <Input
                     className="radius-30"
                     size="large"
@@ -483,16 +483,8 @@ export default function LeadInfo(props) {
                     value={state.country}
                     onChange={handleAllChange}
                   />
-                  {/* <PhoneInput
-                    international
-                    defaultCountry="RU"
-                    value={value}
-                    onChange={setValue}
-                  /> */}
-                  {/* <div role="alert" class="text-danger">
-                    {state.errors.country}
-                  </div> */}
-                </Form.Item>
+                  
+                </Form.Item> */}
                 <Row gutter={[24, 0]}>
                   <Col md={12}>
                     <Form.Item label="City ">

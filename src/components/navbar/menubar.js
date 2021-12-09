@@ -68,12 +68,10 @@ export default class Menubar extends Component {
               </li>
               <li>
                 <Link to="/notification">
-                  <Badge count={4} className="ant-badge-blue">
-                    {notifation}
-                  </Badge>
+                  <Badge className="ant-badge-blue">{notifation}</Badge>
                 </Link>
               </li>
-              <li className="ms-lg-4">
+              <li>
                 <Dropdown
                   overlay={menu}
                   trigger={["click"]}

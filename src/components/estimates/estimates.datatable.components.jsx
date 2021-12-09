@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, message, Switch } from "antd";
+import { Table, Checkbox, Input, message, Switch, Popover, Button } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -32,25 +32,7 @@ export default function Datatable(props) {
         title: <Checkbox />,
         dataIndex: "keys",
         width: 50,
-      },
-
-      {
-        title: (
-          <>
-            Lead Added <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "date",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Scheduled Date <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "scheduleDate",
-        width: 200,
+        sorter: true,
       },
       {
         title: (
@@ -60,60 +42,8 @@ export default function Datatable(props) {
         ),
         dataIndex: "name",
         width: 200,
-      },
-      {
-        title: (
-          <>
-            Email Id <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "email",
-        width: 300,
-      },
-      {
-        title: (
-          <>
-            Contact No <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "contactNo",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Address <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "address",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Softwere Follow Up <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "autoFollowUp",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimate Sent <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonSent",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimate No. <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimate No",
-        width: 200,
+        sorter: true,
+        
       },
       {
         title: (
@@ -123,83 +53,61 @@ export default function Datatable(props) {
         ),
         dataIndex: "estimaitonStatus",
         className: "text-green",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Estimaiton Sent Date <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "estimaitonSentDate",
         width: 300,
+        sorter: true,
       },
+
       {
         title: (
           <>
-            Days Took To Send Estimate{" "}
-            <span className="float-end me-2">{drag}</span>
+            Estimate added (Date) <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "daysItTookToSendEstimate",
+        dataIndex: "date",
         width: 300,
+        sorter: true,
       },
       {
         title: (
           <>
-            Design <span className="float-end me-2">{drag}</span>
+            Email <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "design",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Design Paed <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "designPaid",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Phone Follow Up <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "noOfPhoneFollowUp",
-        width: 200,
-      },
-      {
-        title: (
-          <>
-            Last Date Phone Follow Up{" "}
-            <span className="float-end me-2">{drag}</span>
-          </>
-        ),
-        dataIndex: "lastDatePhoneFollowUp",
+        dataIndex: "email",
         width: 300,
+        sorter: true,
       },
       {
         title: (
           <>
-            Email Follow Up <span className="float-end me-2">{drag}</span>
+            Phone No. <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "noOfEmailFollowUp",
+        dataIndex: "contactNo",
         width: 200,
+        sorter: true,
       },
       {
         title: (
           <>
-            Last Date Email Follow Up{" "}
-            <span className="float-end me-2">{drag}</span>
+            Address <span className="float-end me-2">{drag}</span>
           </>
         ),
-        dataIndex: "lastDateEmailFollowUp",
+        dataIndex: "address",
         width: 300,
+        sorter: true,
       },
+      {
+        title: (
+          <>
+            Estimate Sent <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "estimaitonSent",
+        width: 200,
+        sorter: true,
+      },
+
       {
         title: (
           <>
@@ -208,13 +116,133 @@ export default function Datatable(props) {
         ),
         dataIndex: "estimaitonCloseDate",
         width: 200,
+        sorter: true,
       },
+      {
+        title: (
+          <>
+            Days it took to close
+            <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "daysItTookToSendEstimate",
+        width: 300,
+        sorter: true,
+      },
+      // {
+      //   title: (
+      //     <>
+      //       Scheduled Date <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "scheduleDate",
+      //   width: 200,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Softwere Follow Up <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "autoFollowUp",
+      //   width: 200,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Estimate No. <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "estimate No",
+      //   width: 200,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Estimaiton Sent Date <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "estimaitonSentDate",
+      //   width: 300,
+      //   sorter: true,
+      // },
+
+      // {
+      //   title: (
+      //     <>
+      //       Design <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "design",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Design Paed <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "designPaid",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Phone Follow Up <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "noOfPhoneFollowUp",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Last Date Phone Follow Up{" "}
+      //       <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "lastDatePhoneFollowUp",
+      //   width: 300,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Email Follow Up <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "noOfEmailFollowUp",
+      //   width: 200,
+      //   sorter: true,
+      // },
+      // {
+      //   title: (
+      //     <>
+      //       Last Date Email Follow Up{" "}
+      //       <span className="float-end me-2">{drag}</span>
+      //     </>
+      //   ),
+      //   dataIndex: "lastDateEmailFollowUp",
+      //   width: 300,
+      //   sorter: true,
+      // },
+
       {
         title: "Action",
         dataIndex: "action",
         width: 100,
         fixed: "right",
         className: "text-center",
+        sorter: true,
       },
     ],
     deleteEstimateId: "",
@@ -311,7 +339,7 @@ export default function Datatable(props) {
           //  customerData[0].scheduleDate,
           filterName: customerData[0].name,
           name: (
-            <Link to={`/customer-lead/${customerData[0]._id}`}>
+            <Link to={`/customer-lead/${customerData[0]._id}`} className="text-capitalize font-bold font-16">
               {customerData[0].name}
             </Link>
           ),
@@ -321,7 +349,11 @@ export default function Datatable(props) {
           address: customerData[0].address,
           // autoFollowUp: followRemind,
           estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
-          estimaitonStatus: customerData[0].estimaitonStatus,
+          estimaitonStatus: (
+            <span className="btn btn-outline-success d-inline-block">
+              {customerData[0].estimaitonStatus}
+            </span>
+          ),
           estimaitonSentDate: estimateData.estimaitonSentDate,
           daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
           design: estimateData.design,
