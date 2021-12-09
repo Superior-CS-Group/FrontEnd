@@ -1,4 +1,4 @@
-import { Checkbox, Col, Input, Modal, Row, Button } from "antd";
+import { Checkbox, Col, Input, Modal, Row, Button, Select } from "antd";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
@@ -13,10 +13,17 @@ function MaterialCard({
   const [manualCharge, setManualCharge] = React.useState(false);
   const [showDeleteModal, setShowDeleteModal] = React.useState(null);
   const [isDeleteing, setIsDeleteing] = React.useState(false);
+  const [materialTypeList, setMaterialTypeList] = React.useState([]);
   React.useEffect(() => {
     setManualCharge(material.manual);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    setMaterialTypeList([
+      { value: "material", label: "Material Cost" },
+      { value: "labor", label: "Labor Cost" },
+      { value: "subcontractor", label: "Subcontractor Cost" },
+    ]);
   }, []);
+
   return (
     <tr>
       <td>
@@ -81,6 +88,29 @@ function MaterialCard({
                 onBlur={onFocusOut}
               />
             </div>
+          </Col>
+        </Row>
+      </td>
+      <td>
+        <Row className="align-items-start">
+          <Col md={24}>
+            <label>Type: </label>
+          </Col>
+          <Col md={24}>
+            <Select
+              style={{ width: "100%" }}
+              onChange={(value) => {
+                handleChange({ target: { name: "type", value } }, index);
+              }}
+              value={material.type}
+              onBlur={onFocusOut}
+            >
+              {materialTypeList.map((type) => (
+                <Select.Option value={type.value} key={type.value}>
+                  {type.label}
+                </Select.Option>
+              ))}
+            </Select>
           </Col>
         </Row>
       </td>

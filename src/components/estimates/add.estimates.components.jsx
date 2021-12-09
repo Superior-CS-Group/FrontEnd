@@ -29,6 +29,7 @@ import EstimationOverview from "./estimation/estimationOverview.component";
 import { getVariationsByCatalogId } from "../../api/catalogue";
 import EstimateSettings from "./estimateSettings/estimateSettings.component";
 import PaymentTerms from "./paymentTerms/paymentTerms.component";
+import { currencyFormate } from "../../utils/currencyFormate";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -312,7 +313,6 @@ export default function AddEstimates(props) {
         undefined,
         material.name
       );
-
       let cost =
         quantity *
         processFormula(material.cost || "", formula.catalogs || [], elements);
@@ -321,6 +321,9 @@ export default function AddEstimates(props) {
         formula.catalog || [],
         elements
       );
+      material.quantityValue = quantity;
+      material.costValue = cost;
+      material.chargeValue = charge;
 
       processClientContract(formula, material.formula, elements);
       totalMaterialsCost += cost;
@@ -334,11 +337,6 @@ export default function AddEstimates(props) {
       100
     ).toFixed(2);
     profitPercent = isNaN(profitPercent) ? 0 : profitPercent;
-    console.log("profitPercent: ", {
-      profitPercent,
-      totalMaterialsCost,
-      totalMaterialsCharge,
-    });
     formula.grossProfit = `${profitPercent}%`;
     return materials;
   }
@@ -617,7 +615,8 @@ export default function AddEstimates(props) {
                       key={index}
                       extra={[
                         <>
-                          ${formula.totalProjectCharge || 0}{" "}
+                          {currencyFormate.format(formula.totalProjectCharge) ||
+                            currencyFormate.format(0)}{" "}
                           <span
                             className="closeicon-panel"
                             onClick={() => {

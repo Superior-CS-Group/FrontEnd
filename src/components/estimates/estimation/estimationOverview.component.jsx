@@ -1,18 +1,20 @@
 import { Card, List } from "antd";
 import Meta from "antd/lib/card/Meta";
 import React from "react";
+import { currencyFormate } from "../../../utils/currencyFormate";
 import { arrowdown, arrowup } from "../../../utils/svg.file";
 
 function EstimationOverview({
   selectedFormulas,
   setTotalProjectChargeChange,
-  setTotalProjectChargeAfterDiscountMain,
   estimationSettings,
 }) {
   const [totalProjectCharge, setTotalProjectCharge] = React.useState(0);
   const [totalProjectCost, setTotalProjectCost] = React.useState(0);
   const [totalMaterialsCharge, setTotalMaterialsCharge] = React.useState(0);
-  const [totalGrossProfit, setTotalGrossProfit] = React.useState(0);
+  const [totalLaborCharge, setTotalLaborCharge] = React.useState(0);
+  const [totalSubcontractorCharge, setTotalSubcontractorCharge] =
+    React.useState(0);
   const [discount, setDiscount] = React.useState(0);
   const [totalProjectChargeAfterDiscount, setTotalProjectChargeAfterDiscount] =
     React.useState(0);
@@ -22,8 +24,7 @@ function EstimationOverview({
   ] = React.useState(0);
   const [totalGrossProfitAfterDiscount, setTotalGrossProfitAfterDiscount] =
     React.useState(0);
-  const [totalGrossProfitPercentage, setTotalGrossProfitPercentage] =
-    React.useState(0);
+
   React.useEffect(() => {
     setTotalProjectChargeChange(totalProjectCharge);
     setTotalProjectChargeAfterDiscount(totalProjectChargeAfterDiscount);
@@ -56,14 +57,23 @@ function EstimationOverview({
   const listdata = [
     {
       title: "Materials Cost",
-      rate: `$${totalMaterialsCharge}`,
+      rate: `${currencyFormate.format(totalMaterialsCharge)}`,
+      pricebtn: "danger-text",
+    },
+    {
+      title: "Labor Cost",
+      rate: `${currencyFormate.format(totalLaborCharge)}`,
+      pricebtn: "danger-text",
+    },
+    {
+      title: "Subcontractor Cost",
+      rate: `${currencyFormate.format(totalSubcontractorCharge)}`,
       pricebtn: "danger-text",
     },
     { title: "Expected Overhead", rate: "$0.00", pricebtn: "danger-text" },
-    { title: "Subcontractor Cost", rate: "$0.00", pricebtn: "danger-text" },
     {
       title: "Gross Profit",
-      rate: `$${totalGrossProfitAfterDiscount}`,
+      rate: `${currencyFormate.format(totalGrossProfitAfterDiscount)}`,
       pricebtn: "warring-text",
     },
     {
@@ -73,7 +83,7 @@ function EstimationOverview({
     },
     {
       title: "Net Profit",
-      rate: `$${totalGrossProfitAfterDiscount}`,
+      rate: `${currencyFormate.format(totalGrossProfitAfterDiscount)}`,
       pricebtn: "warring-text",
     },
     { title: "Man Hours", rate: "172", pricebtn: "blue-text" },
@@ -83,26 +93,28 @@ function EstimationOverview({
     let projectCharge = 0;
     let projectCost = 0;
     let materialsCost = 0;
+    let laborCost = 0;
+    let subcontractorCost = 0;
     selectedFormulas.forEach((formula) => {
       projectCharge += formula.totalProjectCharge;
       projectCost += formula.totalMaterialsCost;
-      materialsCost += formula.totalMaterialsCost;
+      formula.materials.forEach((material) => {
+        if (material.type === "material") {
+          materialsCost += material.chargeValue;
+        } else if (material.type === "labor") {
+          laborCost += material.chargeValue;
+        } else if (material.type === "subcontractor") {
+          subcontractorCost += material.chargeValue;
+        }
+      });
     });
     setTotalProjectCharge(projectCharge.toFixed(2));
     setTotalProjectCost(projectCost.toFixed(2));
     setTotalMaterialsCharge(materialsCost.toFixed(2));
+    setTotalLaborCharge(laborCost.toFixed(2));
+    setTotalSubcontractorCharge(subcontractorCost.toFixed(2));
   }, [selectedFormulas]);
-  React.useEffect(() => {
-    if (totalProjectCharge && totalProjectCost) {
-      setTotalGrossProfit((totalProjectCharge - totalProjectCost).toFixed(2));
-      setTotalGrossProfitPercentage(
-        (
-          ((totalProjectCharge - totalProjectCost) / totalProjectCost) *
-          100
-        ).toFixed(2)
-      );
-    }
-  }, [totalProjectCharge, totalProjectCost, totalMaterialsCharge]);
+
   return (
     <Card bordered={false} className="radius-12 ant-bootom-line-effect mb-3">
       <Meta
