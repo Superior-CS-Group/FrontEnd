@@ -1,5 +1,6 @@
 import { Card, Col, Input, Row, message } from "antd";
 import React from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { treeIcon } from "../../../utils/svg.file";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import ElementCard from "./elementCard/elementCard.compnent";
@@ -40,6 +41,24 @@ function FormulaV2() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
+  const getListStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "lightblue" : "",
+    display: "flex",
+    padding: 4,
+    overflow: "auto",
+  });
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    padding: 4 * 2,
+    margin: `0 ${4}px 0 0`,
+
+    // change background colour if dragging
+    background: isDragging ? "lightgreen" : "",
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
   async function getFormulaDetails(formulaId) {
     const formulaDetails = await getFormulaById(formulaId);
     console.log("formulaDetails: ", formulaDetails);
@@ -192,6 +211,27 @@ function FormulaV2() {
       toggleFun(false);
     }
   };
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const handleDrag = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(
+      elementList,
+      result.source.index,
+      result.destination.index
+    );
+
+    setElementList(items);
+  };
 
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -236,23 +276,60 @@ function FormulaV2() {
             {treeIcon}
           </span>
         </div>
-        <Row gutter={[24, 0]} className="pt-4 tree-line-furmulla">
-          {elementList.length &&
-            elementList.map((element, index) => {
+        <DragDropContext onDragEnd={handleDrag}>
+          <Droppable droppableId="droppable" direction="horizontal">
+            {(provided, snapshot) => {
               return (
-                <ElementCard
-                  element={element}
-                  handleChange={handleChange}
-                  key={index}
-                  idx={index}
-                  elementList={elementList}
-                  onFocusOut={onFocusOut}
-                  handleRemoveElement={handleRemoveElement}
-                />
+                <Row
+                  ref={provided.innerRef}
+                  style={getListStyle(snapshot.isDraggingOver)}
+                  {...provided.droppableProps}
+                  gutter={[24, 0]}
+                  className="pt-4 tree-line-furmulla"
+                >
+                  {elementList.length &&
+                    elementList.map((element, index) => {
+                      return (
+                        <Draggable
+                          key={element._id}
+                          draggableId={element._id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => {
+                            return (
+                              <ElementCard
+                                element={element}
+                                handleChange={handleChange}
+                                key={index}
+                                idx={index}
+                                elementList={elementList}
+                                onFocusOut={onFocusOut}
+                                handleRemoveElement={handleRemoveElement}
+                                dragAndDropProps={{
+                                  innerRef: provided.innerRef,
+                                  dragHandleProps: {
+                                    ...provided.dragHandleProps,
+                                  },
+                                  draggableProps: {
+                                    ...provided.draggableProps,
+                                  },
+                                  style: getItemStyle(
+                                    snapshot.isDragging,
+                                    provided.draggableProps.style
+                                  ),
+                                }}
+                              />
+                            );
+                          }}
+                        </Draggable>
+                      );
+                    })}
+                  {provided.placeholder}
+                </Row>
               );
-            })}
-        </Row>
-
+            }}
+          </Droppable>
+        </DragDropContext>
         <div className="">
           <table className="table ant-furmulla-table table-hover">
             <thead>

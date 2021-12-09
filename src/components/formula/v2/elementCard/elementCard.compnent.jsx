@@ -25,6 +25,7 @@ function ElementCard({
   elementList,
   onFocusOut,
   handleRemoveElement,
+  dragAndDropProps: { innerRef, dragHandleProps, draggableProps, style },
 }) {
   const { Option } = Select;
   // const [unit, setUnit] = React.useState([]);
@@ -284,114 +285,119 @@ function ElementCard({
     }
   };
   return (
-    <>
-      <Col span={24} md={6} className="mb-4">
+    <Col
+      span={24}
+      md={6}
+      className="ant-col-md-5"
+      ref={innerRef}
+      {...dragHandleProps}
+      {...draggableProps}
+      style={style}
+    >
+      <div
+        className={`furmulla-tree-box  ant-cover-b ${
+          !element.automatic ? "ant-cover-success" : "ant-cover-gray"
+        } px-2 py-4`}
+      >
         <div
-          className={`furmulla-tree-box  ant-cover-b ${
-            !element.automatic ? "ant-cover-success" : "ant-cover-gray"
-          } px-2 py-4`}
-        >
-          <div
-            className="color-change"
-            style={{ background: selectedColor || element.color }}
-            onClick={handleColorPicker}
-          ></div>
-          <span className="ant-edit-furmulla" ref={colorRef}>
-            {isColorPicker && (
-              <SketchPicker
-                onChange={(e) => setSelectedColor(e.hex)}
-                color={selectedColor}
-                onChangeComplete={(e) => handleChange(e.hex, "color", idx)}
-              />
-            )}
-          </span>
-          {!element.disabled && (
-            <span className="delect">
-              <DeleteOutlined
-                className="text-danger"
-                onClick={() => setIsDeleting(true)}
-              />
-            </span>
+          className="color-change"
+          style={{ background: selectedColor || element.color }}
+          onClick={handleColorPicker}
+        ></div>
+        <span className="ant-edit-furmulla" ref={colorRef}>
+          {isColorPicker && (
+            <SketchPicker
+              onChange={(e) => setSelectedColor(e.hex)}
+              color={selectedColor}
+              onChangeComplete={(e) => handleChange(e.hex, "color", idx)}
+            />
           )}
-          <div className="ant-automic">{element.auto}</div>
-          {/* <span className="ant-edit-furmulla">
+        </span>
+        {!element.disabled && (
+          <span className="delect">
+            <DeleteOutlined
+              className="text-danger"
+              onClick={() => setIsDeleting(true)}
+            />
+          </span>
+        )}
+        <div className="ant-automic">{element.auto}</div>
+        {/* <span className="ant-edit-furmulla">
             <EditOutlined onClick={handleColorPicker} />
           </span> */}
-          <Row gutter={[8, 0]} className="align-items-center mb-3 ">
-            <Col md={8}>
-              <label>Name Element:</label>
-            </Col>
-            <Col md={16}>
-              <Input
-                placeholder="Name of Element"
-                className="ant-furmulla-input"
-                onChange={(e) =>
-                  handleChange(e.target.value, e.target.name, idx)
-                }
-                value={element.name}
-                name="name"
-                onBlur={onFocusOut}
-                disabled={element.disabled}
-              />
-            </Col>
-          </Row>
-          <Row gutter={[8, 0]} className="align-items-center mb-3">
-            <Col md={8}>
-              <label>Type Of Element:</label>
-            </Col>
-            <Col md={16}>
-              <Select
-                className="select-w"
-                size="large"
-                value={element.type}
-                style={{ width: "100%" }}
-                onChange={(value) => {
-                  handleChange(value, "type", idx);
-                  handleChange("", "value", idx);
-                  setTypeOfElement(value);
-                }}
-                disabled={element.disabled}
-                onBlur={onFocusOut}
-              >
-                {typeOfOptions.map((item, idx) => {
-                  return (
-                    <Option value={item.type} key={idx}>
-                      {item.title}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Col>
-          </Row>
+        <Row gutter={[8, 0]} className="align-items-center mb-3 ">
+          <Col md={8}>
+            <label>Name Element:</label>
+          </Col>
+          <Col md={16}>
+            <Input
+              placeholder="Name of Element"
+              className="ant-furmulla-input"
+              onChange={(e) => handleChange(e.target.value, e.target.name, idx)}
+              value={element.name}
+              name="name"
+              onBlur={onFocusOut}
+              disabled={element.disabled}
+            />
+          </Col>
+        </Row>
+        <Row gutter={[8, 0]} className="align-items-center mb-3">
+          <Col md={8}>
+            <label>Type Of Element:</label>
+          </Col>
+          <Col md={16}>
+            <Select
+              className="select-w"
+              size="large"
+              value={element.type}
+              style={{ width: "100%" }}
+              onChange={(value) => {
+                handleChange(value, "type", idx);
+                handleChange("", "value", idx);
+                setTypeOfElement(value);
+              }}
+              disabled={element.disabled}
+              onBlur={onFocusOut}
+            >
+              {typeOfOptions.map((item, idx) => {
+                return (
+                  <Option value={item.type} key={idx}>
+                    {item.title}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Col>
+        </Row>
 
-          {renderSection()}
-          <Row gutter={[8, 0]} className="align-items-center">
-            <Col md={8}>
-              <label>View</label>
-            </Col>
-            <Col md={16}>
-              <Select
-                mode="multiple"
-                size="large"
-                allowClear
-                value={[...(element.view || [])]}
-                onChange={(e) => handleChange(e, "view", idx)}
-                className="select-w"
-                style={{ width: "100%" }}
-                onBlur={onFocusOut}
-              >
-                {view.map((item, index) => {
-                  return (
-                    <Option value={item.type} key={index}>
-                      {item.title}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Col>
-          </Row>
-        </div>
-      </Col>
+        {renderSection()}
+        <Row gutter={[8, 0]} className="align-items-center">
+          <Col md={8}>
+            <label>View</label>
+          </Col>
+          <Col md={16}>
+            <Select
+              mode="multiple"
+              size="large"
+              allowClear
+              value={[...(element.view || [])]}
+              onChange={(e) => handleChange(e, "view", idx)}
+              className="select-w"
+              style={{ width: "100%" }}
+              onBlur={onFocusOut}
+            >
+              {view.map((item, index) => {
+                return (
+                  <Option value={item.type} key={index}>
+                    {item.title}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Col>
+        </Row>
+      </div>
+
       <Modal
         className="modal-radius warning-modal"
         title="Warning!"
@@ -419,7 +425,7 @@ function ElementCard({
           </Col>
         </Row>
       </Modal>
-    </>
+    </Col>
   );
 }
 
