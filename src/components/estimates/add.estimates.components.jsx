@@ -755,6 +755,10 @@ export default function AddEstimates(props) {
                                   )}
                                   {/* <EditOutlined /> */}
                                 </div>
+                                <div
+                                  className="card-color"
+                                  style={{ background: element.color }}
+                                />
                               </Card>
                             </Col>
                           );

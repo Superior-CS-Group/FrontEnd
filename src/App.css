@@ -1008,7 +1008,19 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
 
 .count-card:before {
   content: "";
+  display: none;
   background: #2ed47a;
+  box-shadow: inset 1px 1px 1px rgb(0 0 0 / 25%);
+  border-radius: 6px 6px 0px 0px;
+  position: absolute;
+  width: 30%;
+  height: 8px;
+  left: 50%;
+  bottom: 0;
+  transform: translatex(-50%);
+}
+.card-color {
+  /* background: #2ed47a; */
   box-shadow: inset 1px 1px 1px rgb(0 0 0 / 25%);
   border-radius: 6px 6px 0px 0px;
   position: absolute;
@@ -1635,6 +1647,7 @@ ul.work-scope-list li {
   width: 40%;
   height: 8px;
   transform: translatex(-50%);
+  display: none;
 }
 
 .ant-cover-primary:before {
@@ -1723,11 +1736,11 @@ ul.work-scope-list li {
 
 .ant-edit-furmulla {
   position: absolute;
-  right: 70px;
-  top: -3px;
-  color: #717171;
+  right: 27px;
+  top: 10px;
   font-size: 14px;
-  transform: translatex(-50%);
+  z-index: 99;
+  /* transform: translatex(-50%); */
 }
 .ant-automic {
   text-align: center;
@@ -2635,4 +2648,15 @@ tr.ant-table-measure-row {
 
 .breadcrumb-box-main {
   position: relative;
+}
+.color-change {
+  box-shadow: inset 4px -2px 2px rgb(0 0 0 / 25%);
+  border-radius: 0px 0px 100px 100px;
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: 40%;
+  height: 8px;
+  transform: translatex(-50%);
 }

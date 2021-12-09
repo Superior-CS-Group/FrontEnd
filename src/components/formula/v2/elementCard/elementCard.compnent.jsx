@@ -1,6 +1,7 @@
 import { Col, Input, Modal, Row, Select, Button } from "antd";
 import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import React from "react";
+import { SketchPicker } from "react-color";
+import React, { useRef } from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 import {
   getCatalogItem,
@@ -34,9 +35,31 @@ function ElementCard({
   const [searchValue, setSearchValue] = React.useState("");
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [variation, setVariation] = React.useState([]);
+  const [isColorPicker, setIsColorPicker] = React.useState(false);
+  const [selectedColor, setSelectedColor] = React.useState(element.color);
+
+  const colorRef = useRef(null);
+
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (colorRef.current && !colorRef.current.contains(event.target)) {
+        setIsColorPicker(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [colorRef]);
+
+  React.useEffect(() => {
+    onFocusOut();
+  }, [element.color]);
+
   React.useEffect(() => {
     // setUnit(["km", "m", "$", "ton", "kg", "sqft"]);
-    setTypeOfElement(element.type || "manual");
+    setTypeOfElement(element.type || "prefilled");
     setView([
       { type: "client", title: "Client view" },
       { type: "internal", title: "Internal View" },
@@ -44,25 +67,22 @@ function ElementCard({
     ]);
   }, [element]);
 
+  function handleColorPicker() {
+    setIsColorPicker(!isColorPicker);
+  }
+
   React.useEffect(() => {
     async function fetchVariation() {
-      console.log("fetchVariaiton");
       const response = await getVariationsByCatalogId(element.dropdown);
       if (response.remote === "success") {
         setVariation(response.data.data);
       }
     }
-    console.log("elelemtn", element.dropdown);
-    setVariation([
-      { _id: "1", name: "Variation 1" },
-      { _id: "2", name: "Variation 2" },
-    ]);
     fetchVariation();
   }, [element.dropdown]);
 
   async function searchCatalog() {
     const catalogs = await searchCatalogByName(searchValue, "subCatalog");
-    console.log("catalgos: ", catalogs);
     if (catalogs.remote === "success") {
       setSuggestedCatalogs(catalogs.data.data);
     } else {
@@ -271,6 +291,20 @@ function ElementCard({
             !element.automatic ? "ant-cover-success" : "ant-cover-gray"
           } px-2 py-4`}
         >
+          <div
+            className="color-change"
+            style={{ background: selectedColor || element.color }}
+            onClick={handleColorPicker}
+          ></div>
+          <span className="ant-edit-furmulla" ref={colorRef}>
+            {isColorPicker && (
+              <SketchPicker
+                onChange={(e) => setSelectedColor(e.hex)}
+                color={selectedColor}
+                onChangeComplete={(e) => handleChange(e.hex, "color", idx)}
+              />
+            )}
+          </span>
           {!element.disabled && (
             <span className="delect">
               <DeleteOutlined
@@ -281,8 +315,8 @@ function ElementCard({
           )}
           <div className="ant-automic">{element.auto}</div>
           {/* <span className="ant-edit-furmulla">
-          <EditOutlined />
-        </span> */}
+            <EditOutlined onClick={handleColorPicker} />
+          </span> */}
           <Row gutter={[8, 0]} className="align-items-center mb-3 ">
             <Col md={8}>
               <label>Name Element:</label>

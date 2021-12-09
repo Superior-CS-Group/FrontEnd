@@ -73,7 +73,6 @@ function FormulaV2() {
         }),
         photo,
       };
-      console.log("body: ", body, catalogs);
       setTimeout(() => updateFormulaDetails(body), 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
