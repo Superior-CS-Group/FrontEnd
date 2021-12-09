@@ -2643,7 +2643,9 @@ tr.ant-table-measure-row {
   position: absolute;
   top: 0px;
   right: 0px;
+  display: inline-flex;
   z-index: 1;
+  align-items: center;
 }
 
 .breadcrumb-box-main {
@@ -2659,4 +2661,21 @@ tr.ant-table-measure-row {
   width: 40%;
   height: 8px;
   transform: translatex(-50%);
+}
+
+.ant-layout-sider.menu-fixed {
+  width: 80px !important;
+  max-width: 80px !important;
+}
+
+.ant-layout-sider.menu-fixed .ant-menu-title-content {
+  display: none;
+}
+
+.ant-layout-sider.menu-fixed .ant-menu-submenu-arrow {
+  display: none;
+}
+
+.catlog-tabs li.nav-item a p {
+  margin: 0px;
 }

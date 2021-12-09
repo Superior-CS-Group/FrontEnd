@@ -9,14 +9,52 @@ const { Header, Sider, Content } = Layout;
 export default class Estimates extends Component {
   state = {
     collapsed: true,
+    isHovered: false,
+    sidebarProps: {},
   };
 
-  toggle = () => {
+  componentDidMount() {
     this.setState({
-      collapsed: !this.state.collapsed,
+      sidebarProps: {
+        ...this.state.sidebarProps,
+        collapsedWidth: 80,
+        collapsible: true,
+        collapsed: this.state.collapsed,
+        onCollapse: this.onCollapse,
+      },
+    });
+  }
+
+  handleHover = (collapsed) => {
+    this.setState({ collapsed: !this.state.collapsed }, () => {
+      console.log(this.state.collapsed, "test");
+      if (this.state.collapsed) {
+        this.setState({
+          sidebarProps: { width: 256, collapsed: this.state.collapsed },
+        });
+      } else {
+        this.setState({
+          sidebarProps: {
+            ...this.state.sidebarProps,
+            collapsedWidth: 80,
+            collapsible: true,
+            collapsed: this.state.collapsed,
+            onCollapse: this.onCollapse,
+          },
+        });
+      }
     });
   };
+  onCollapse = (collapsed) => {
+    console.log(collapsed);
+    this.setState({ collapsed });
+  };
 
+  // handleHover = () => {
+  //   this.setState({
+  //     isHovered: !this.state.isHovered,
+  //   });
+  // };
   render() {
     return (
       <>
@@ -25,18 +63,21 @@ export default class Estimates extends Component {
           style={{ background: "#fff", minheight: "100vh" }}
         >
           <Sider
-            collapsedWidth={80}
             trigger={null}
-            collapsible
-            collapsed={this.state.collapsed}
+            {...this.state.sidebarProps}
+            width="256"
             style={{
               overflow: "auto",
               height: "100vh",
               position: "fixed",
               left: 0,
               background: "#fff",
+              zIndex: "9999",
             }}
+            // className="slide-shadow menu-fixed {btnclass}"
             className="slide-shadow"
+            onMouseEnter={this.handleHover}
+            onMouseLeave={this.handleHover}
           >
             <DashboardNavbar />
           </Sider>

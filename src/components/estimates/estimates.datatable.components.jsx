@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Checkbox, Input, message, Switch, Popover, Button } from "antd";
+import {
+  Table,
+  Checkbox,
+  Input,
+  message,
+  Switch,
+  Popover,
+  Button,
+  Row,
+  Col,
+  Tooltip,
+} from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
@@ -22,7 +33,39 @@ export default function Datatable(props) {
   const [estimateResults, setdestimateResults] = useState([]);
   // const [result, setResult] = useState({});
   const [AddColumnShow, setAddColumnShow] = useState(false);
+  const statues = [
+    { title: "Need to write estimate", color: "#000" },
+    { title: "Need to send estimate", color: "red" },
+    {
+      title: "Estimate sent - 0-2 contacts",
+      color: "green",
+      // textcolor: "#000",
+    },
+    { title: "Estimate sent - 3-5 contacts", color: "orange" },
+    { title: "Estimate sent - 5-8 contacts", color: "#ff4d4f" },
+    { title: "Estimate sent - Over 8 contacts", color: "#6c757d" },
+    { title: "Estimate lost", color: "blue" },
 
+    { title: "Estimate internally declined", color: "purple" },
+    { title: "Estimate signed", color: "magenta" },
+  ];
+
+  const content = (
+    <div style={{ width: "520px" }}>
+      <Row gutter={[24, 0]}>
+        {statues.map((status, index) => (
+          <Col span={12} key={index}>
+            <Button
+              className="w-100 mb-2 font-bold border-0 text-white"
+              style={{ background: status.color, color: status.textcolor }}
+            >
+              {status.title}
+            </Button>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
   const [state, setState] = useState({
     estimateResults: {},
     data: [],
@@ -43,7 +86,6 @@ export default function Datatable(props) {
         dataIndex: "name",
         width: 200,
         sorter: true,
-        
       },
       {
         title: (
@@ -100,7 +142,8 @@ export default function Datatable(props) {
       {
         title: (
           <>
-            Estimate Sent <span className="float-end me-2">{drag}</span>
+            Estimate sent? (Yes/No){" "}
+            <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "estimaitonSent",
@@ -111,7 +154,7 @@ export default function Datatable(props) {
       {
         title: (
           <>
-            Close Date <span className="float-end me-2">{drag}</span>
+            Date Closed <span className="float-end me-2">{drag}</span>
           </>
         ),
         dataIndex: "estimaitonCloseDate",
@@ -339,7 +382,10 @@ export default function Datatable(props) {
           //  customerData[0].scheduleDate,
           filterName: customerData[0].name,
           name: (
-            <Link to={`/customer-lead/${customerData[0]._id}`} className="text-capitalize font-bold font-16">
+            <Link
+              to={`/customer-lead/${customerData[0]._id}`}
+              className="text-capitalize font-bold font-16"
+            >
               {customerData[0].name}
             </Link>
           ),
@@ -350,9 +396,11 @@ export default function Datatable(props) {
           // autoFollowUp: followRemind,
           estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
           estimaitonStatus: (
-            <span className="btn btn-outline-success d-inline-block">
-              {customerData[0].estimaitonStatus}
-            </span>
+            <Popover content={content} placement="bottom">
+              <span className="btn btn-success d-inline-block">
+                {customerData[0].estimaitonStatus}
+              </span>
+            </Popover>
           ),
           estimaitonSentDate: estimateData.estimaitonSentDate,
           daysItTookToSendEstimate: estimateData.daysItTookToSendEstimate,
@@ -385,13 +433,11 @@ export default function Datatable(props) {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-  useEffect(async() => {
-    if(props.currentTabData.filterObject)
-    handleOk(props.currentTabData.filterObject.estimaitonStatus);
-    else
-    fetchData();
-    
-   
+  useEffect(async () => {
+    if (props.currentTabData.filterObject)
+      handleOk(props.currentTabData.filterObject.estimaitonStatus);
+    else fetchData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentTabData]);
   const filterData = (e) => {
@@ -481,14 +527,13 @@ export default function Datatable(props) {
   const handleColumnModal = () => {
     setAddColumnShow(true);
   };
-  const saveFilterss=async (query) =>{
-    console.log('hii buddy',query,props.currentTabData._id);
-    let id=props.currentTabData._id;
-    const result2 = await postData(`tab-filter/update/${id}`,query);
-    console.log('sortupd==',result2)
-    props.updateTab(result2)
-
-  }
+  const saveFilterss = async (query) => {
+    console.log("hii buddy", query, props.currentTabData._id);
+    let id = props.currentTabData._id;
+    const result2 = await postData(`tab-filter/update/${id}`, query);
+    console.log("sortupd==", result2);
+    props.updateTab(result2);
+  };
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
@@ -500,12 +545,22 @@ export default function Datatable(props) {
             <img src={fillter} className="me-3" alt="" /> Filter and Sort
           </span>
           <span
-            className="ant-blue-plus column-add-btn"
+            className="ant-blue-plus column-add-btn me-4"
             onClick={handleColumnModal}
           >
             <PlusCircleOutlined style={{ fontSize: "18px" }} className="me-2" />{" "}
-            Add Column
+            Choose Column
           </span>
+          <Link to="/customer-lead">
+            <span className="ant-blue-plus column-add-btn me-2">
+              <PlusCircleOutlined
+                style={{ fontSize: "18px" }}
+                className="me-2"
+              />{" "}
+              Add Lead
+            </span>
+          </Link>
+
           <div className="ms-auto col-lg-3">
             <Input
               placeholder="Search customers by name"
@@ -517,16 +572,18 @@ export default function Datatable(props) {
           </div>
         </div>
       </div>
-      <ReactDragListView.DragColumn {...dragProps}>
-        <Table
-          columns={state.columns}
-          pagination={false}
-          dataSource={state.filteredData}
-          bordered={false}
-          className="ant-table-estmating scroll-style vertical-align"
-          scroll={{ x: 400, y: 500 }}
-        />
-      </ReactDragListView.DragColumn>
+      <div className="px-2">
+        <ReactDragListView.DragColumn {...dragProps}>
+          <Table
+            columns={state.columns}
+            pagination={false}
+            dataSource={state.filteredData}
+            bordered={false}
+            className="ant-table-estmating scroll-style vertical-align"
+            scroll={{ x: 400, y: 500 }}
+          />
+        </ReactDragListView.DragColumn>
+      </div>
       <DeleteModal
         DeleteModalEstimate={DeleteModalEstimate}
         ShowDeleteModal={ShowDeleteModal}
@@ -544,7 +601,6 @@ export default function Datatable(props) {
         handleOk={handleOk}
         saveFilterss={saveFilterss}
         currentTabData={props.currentTabData}
-        
       />
       <ColumnModal
         handleColumnModal={handleColumnModal}
