@@ -353,7 +353,15 @@ export default function Datatable(props) {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-
+  useEffect(async() => {
+    if(props.currentTabData.filterObject)
+    handleOk(props.currentTabData.filterObject.estimaitonStatus);
+    else
+    fetchData();
+    
+   
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.currentTabData]);
   const filterData = (e) => {
     const { value } = e.target;
     console.log("value: ", value);
@@ -441,9 +449,14 @@ export default function Datatable(props) {
   const handleColumnModal = () => {
     setAddColumnShow(true);
   };
-  const applyFilter = () => {
-    console.log("hii buddy");
-  };
+  const saveFilterss=async (query) =>{
+    console.log('hii buddy',query,props.currentTabData._id);
+    let id=props.currentTabData._id;
+    const result2 = await postData(`tab-filter/update/${id}`,query);
+    console.log('sortupd==',result2)
+    props.updateTab(result2)
+
+  }
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
@@ -497,7 +510,9 @@ export default function Datatable(props) {
         ModalVisible={ModalVisible}
         handleCancel={handleCancel}
         handleOk={handleOk}
-        ApplyFilter={applyFilter}
+        saveFilterss={saveFilterss}
+        currentTabData={props.currentTabData}
+        
       />
       <ColumnModal
         handleColumnModal={handleColumnModal}

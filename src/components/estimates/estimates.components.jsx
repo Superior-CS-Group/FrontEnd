@@ -28,8 +28,10 @@ export default class MainEstimates extends Component {
       isModalVisible:false,
       tabName:'',
       currentTab:-1,
-      statusList:[]
+      statusList:[],
+      currentTabData:{}
     };
+     
   }
   addTabsModal = () => {
     this.setState({ 
@@ -46,10 +48,21 @@ export default class MainEstimates extends Component {
    console.log('tab===',tab)
     this.setState({ 
       isModalVisible:false,
-       Tabs: [...this.state.Tabs, {name:this.state.tabName,_id:tab.data.Data._id}] ,
+       Tabs: [...this.state.Tabs, tab.data.Data] ,
        tabName:''
     });
-  };
+  }; 
+  updateTab=(data)=>{
+    let finalD=data.data.Data;
+    console.log('hey   hhhh',data);
+    let tab=this.state.Tabs;
+    tab.map(t=>{
+      if(t._id === finalD._id){
+        t.filterObject=finalD.filterObject
+      }
+    })
+    this.setState({ Tabs: tab });
+  }
 
   RemoveTabs = async(index) => {
     let tab=this.state.Tabs;
@@ -68,27 +81,29 @@ export default class MainEstimates extends Component {
   //    "Lead Added",
   //  ]});
    const getTabs = await getData(`tab-filter/list`);
+   this.setState({
+    estimateResults: result.data,
+    estimateData: result.data.Data,
+    loading: true,
+    Tabs:getTabs.data.Data,
+    // /statusList:statusLis.data.Data,
 
- 
+    smallLoader: false,
+  })
+  console.log('fetchApi=>',getTabs,result)
    return {
     result,getTabs
    }
   }
+  changeTab=(index)=>{
+    console.log('index',this.state.Tabs[index])
+    this.setState({currentTab:index,currentTabData:this.state.Tabs[index]});
+  }
   componentDidMount = async () => {
-    const {
-      result,result2,getTabs
-     }=await this.fetchApisData();
-     console.log('filter=>',result2)
+  await this.fetchApisData();
+    
   
-      this.setState({
-        estimateResults: result.data,
-        estimateData: result.data.Data,
-        loading: true,
-        Tabs:getTabs.data.Data,
-        // /statusList:statusLis.data.Data,
-
-        smallLoader: false,
-      })
+     
     // console.log("estimateResults:", this.state.estimateData);
   };
 
@@ -108,6 +123,7 @@ export default class MainEstimates extends Component {
   };
   render() {
     const { Option } = Select;
+    console.log(this.state)
 
     function handleChange(value) {
       console.log(`selected ${value}`);
@@ -215,7 +231,8 @@ export default class MainEstimates extends Component {
                     <Nav.Link className={this.state.currentTab === -1?"active":""}>
                       <b class="left-curve"></b>
                       <b class="right-curve"></b>
-                      <p onClick={()=>this.setState({currentTab:-1})}> Upcoming Estimates</p>
+                      <p onClick={()=>{this.setState({currentTab:-1,currentTabData:{}});
+                    }}> Upcoming Estimates</p>
                     </Nav.Link>
                   </Nav.Item>
                   {this.state.Tabs.map((tab, index) => {
@@ -224,7 +241,7 @@ export default class MainEstimates extends Component {
                         <Nav.Link className={this.state.currentTab === index?"active":""}>
                           <b class="left-curve"></b>
                           <b class="right-curve"></b>
-                         <p onClick={()=>this.setState({currentTab:index})}> {tab.name}</p>
+                         <p onClick={()=>this.changeTab(index)}> {tab.name}</p>
                           <CloseOutlined
                             className="cursor-btn"
                             onClick={()=>this.RemoveTabs(index)}
@@ -246,7 +263,7 @@ export default class MainEstimates extends Component {
               </div>
 
               <div className="ant-table-seprate main-data-table px-2">
-                <Datatable />
+                <Datatable currentTabData={this.state.currentTabData} updateTab={this.updateTab} />
 
                 <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
                   <div className="ms-auto pe-3 ant-select-box ">
