@@ -296,7 +296,7 @@ export default function Datatable(props) {
         } else {
           followRemind = "No";
         }
-        console.log("f", customerData[0].autoReminderEmail);
+        // console.log("f", customerData[0].autoReminderEmail);
         data.push({
           keys: (
             <Checkbox
@@ -407,21 +407,21 @@ export default function Datatable(props) {
     setdeleteEstimateId(id);
     setdeleteEstimateIdx(idx);
     setShowDeleteModal(true);
-    console.log("deleteIdx", idx);
+    // console.log("deleteIdx", idx);
   };
   const handleDeleteOk = (id, idx) => {
-    console.log("deleteId", id, idx);
+    // console.log("deleteIdxxx", id, idx);
     const body = { id: id };
     setShowDeleteModal(false);
-    // deleteCustomerLead(body)
+    deleteCustomerLead(body)
     message.success("Data Deleted", 5);
 
     let restultData = estimateResults.estimateResults.Data;
-    console.log(restultData);
+    // console.log(restultData);
     if (idx > -1) {
       restultData.splice(idx, 1);
     }
-    console.log(restultData);
+    // console.log(restultData);
     setdestimateResults({ estimateResults: restultData });
   };
   const handleDeleteClose = () => {

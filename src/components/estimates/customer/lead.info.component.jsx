@@ -32,6 +32,7 @@ export default function LeadInfo(props) {
     isValidEmail: false,
     isLoading: false,
     errors: {},
+    emailExists:"",
     expandIconPosition: "right",
     value: "",
     setValue: "",
@@ -115,10 +116,10 @@ export default function LeadInfo(props) {
       errors.contactNo = "Contact No is required";
       message.error(errors.contactNo, 5);
     }
-    if (!state.country) {
-      errors.country = "Country is required";
-      message.error(errors.country, 5);
-    }
+    // if (!state.country) {
+    //   errors.country = "Country is required";
+    //   message.error(errors.country, 5);
+    // }
     if (!state.states) {
       errors.states = "State is required";
       message.error(errors.states, 5);
@@ -153,7 +154,7 @@ export default function LeadInfo(props) {
     setState({
       ...state,
       [e.target.name]: e.target.value,
-      errors: [],
+      errors: {},
     });
   };
 
@@ -228,9 +229,10 @@ export default function LeadInfo(props) {
 
       setState({
         ...state,
-        message: err.response?.data?.errors,
+        emailExists: err.response?.data?.errors,
         isLoading: false,
       });
+      message.error(err.response?.data?.errors, 2);
     }
   };
 
@@ -438,7 +440,7 @@ export default function LeadInfo(props) {
                     {state.errors.email}
                   </div> */}
                       <div role="alert" class="text-danger">
-                        {state.message}
+                        {state.emailExists}
                       </div>
                     </Form.Item>
                   </Col>
