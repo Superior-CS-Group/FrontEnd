@@ -386,8 +386,15 @@ export default function Datatable(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   useEffect(async() => {
-    if(props.currentTabData.filterObject)
-    handleOk(props.currentTabData.filterObject.estimaitonStatus);
+    let obj=props.currentTabData.filterObject;
+    if(obj)
+    handleOk({
+      leadSelected:obj.estimaitonStatus,
+      estimaitonStatus: obj.leadSelected,
+      dateFilter:obj.dateFilter,
+      leadSource:obj.leadSource,
+      sortDropdown:obj.sortDropdown
+    });
     else
     fetchData();
     
@@ -432,10 +439,13 @@ export default function Datatable(props) {
     setModalVisible(true);
   };
 
-  const handleOk = async (leadSelected) => {
-    console.log("hey uncl", leadSelected);
+  const handleOk = async (state) => {
+    console.log("hey uncl", state.leadSelected);
     const result2 = await postData(`estimation/filter-sort`, {
-      estimaitonStatus: leadSelected,
+      estimaitonStatus: state.leadSelected,
+      dateFilter:state.dateFilter,
+      leadSource:state.leadSource,
+      sortDropdown:state.sortDropdown
     });
     console.log("sort==", result2);
     // [
