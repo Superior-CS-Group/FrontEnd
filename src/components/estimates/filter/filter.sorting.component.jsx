@@ -36,37 +36,105 @@ export default class FilterSorting extends Component {
       curentTabDat:{},
       dateFilter:'7',
       leadSource:[],
-      sortDropdown:'-1'
+      sortDropdown:'-1',
+      leadTypes:[
+        {name:'Facebook',check:false},
+        {name:'Website',check:false},
+        {name:'Referral',check:false}
+      ]
     };
   }
 componentDidMount=async()=>{
   const statusLis = await getData(`status/list`);
   // this.props.ApplyFilter()
- this.setState({leadList:statusLis.data.Data,curentTabDat:this.props.currentTabData,
+  if(statusLis.data.Data){
+    statusLis.data.Data.map(d=>{
+      d["check"]=false
+    })
+  }
+// await this.setState({leadList:statusLis.data.Data,});
+let currentTabDa=this.props.currentTabData;
+let leads=statusLis.data.Data;
+let boo=false,date='',dropdown='-1';;
+if(currentTabDa){
+  if(currentTabDa.filterObject){
+    if(currentTabDa.filterObject.estimaitonStatus){
+     date= currentTabDa.filterObject.dateFilter;
+     dropdown=currentTabDa.filterObject.sortDropdown;
+   currentTabDa.filterObject.estimaitonStatus.map(c=>{
+    leads.map(l=>{
+      if(c === l.name)
+      l["check"]=true;
+     })
+    
+   })
+  }
+  }
   
-})
+}
+console.log('leads===',leads)
+await this.setState({leadList:leads,dateFilter:date,sortDropdown:dropdown,curentTabDat:this.props.currentTabData})
 }
 
 componentDidUpdate = async () => {
   if(this.state.curentTabDat!==this.props.currentTabData){
-  this.setState({curentTabDat:this.props.currentTabData,leadSelected:[],
-    // dateFilter:this.props.currentTabData.filterObject.dateFilter,
-    // sortDropdown:this.props.currentTabData.filterObject.sortDropdown,
-    // leadSource:this.props.currentTabData.filterObject.leadSource
-  })
+  // this.setState({curentTabDat:this.props.currentTabData,leadSelected:[],
+  //   // dateFilter:this.props.currentTabData.filterObject.dateFilter,
+  //   // sortDropdown:this.props.currentTabData.filterObject.sortDropdown,
+  //   // leadSource:this.props.currentTabData.filterObject.leadSource
+  // });
+  let currentTabDa=this.props.currentTabData;
+let leads=this.state.leadList;
+let boo=false,date='',dropdown='-1';
+leads.map(l=>{
+  
+  l["check"]=false;
+ })
+let leadty=this.state.leadTypes
+
+leadty.map(l=>{
+  
+   l['check']=false
+   
+ })
+if(currentTabDa){
+  if(currentTabDa.filterObject){
+    if(currentTabDa.filterObject.estimaitonStatus){
+      date= currentTabDa.filterObject.dateFilter;
+      dropdown=currentTabDa.filterObject.sortDropdown;
+   currentTabDa.filterObject.estimaitonStatus.map(c=>{
+    leads.map(l=>{
+      if(c === l.name)
+      l["check"]=true;
+     })
+    
+   })
+  }
+
+  if(currentTabDa.filterObject.leadSource){
+    currentTabDa.filterObject.leadSource.map(c=>{
+      leadty.map(l=>{
+        if(c === l.name)
+        l["check"]=true;
+       })
+      
+     })
+  }
+  }
+  
+}
+console.log('leads===',leads)
+await this.setState({
+  leadList:leads,
+  curentTabDat:this.props.currentTabData,
+  leadSelected:[],
+  dateFilter:date,
+  sortDropdown:dropdown,
+  leadTypes:leadty,
+  leadSource:[]})
   }
 }
-  //   showModal = () => {
-  //     this.setState({ ModalVisible: true });
-  //   };
-
-  //   handleOk = () => {
-  //     this.setState({ ModalVisible: false });
-  //   };
-
-  //   handleCancel = () => {
-  //     this.setState({ ModalVisible: false });
-  //   };
+  
   handleSave=async()=>{
     console.log('budd',this.props);
     this.setState({saveFilterLoad:true})
@@ -85,13 +153,28 @@ componentDidUpdate = async () => {
   }
   onChangeLeadSource=(e)=>{
     console.log(e);
-    if(this.state.leadSource.indexOf(e) === -1)
-    this.setState({leadSource:this.state.leadSource.concat(e)});
+    if(this.state.leadSource.indexOf(e) === -1){
+      let leads=this.state.leadTypes;
+      leads.map(l=>{
+        if(l.name === e)
+        l['check']=true
+        
+      })
+    this.setState({leadSource:this.state.leadSource.concat(e),leadTypes:leads});
+
+    }
     else{
       let rm=this.state.leadSource;
       let i= rm.indexOf(e);
       rm.splice(i,1);
-      this.setState({leadSource:rm});
+
+      let leads=this.state.leadTypes;
+      leads.map(l=>{
+        if(l.name === e)
+        l['check']=false
+        
+      })
+      this.setState({leadSource:rm,leadTypes:leads});
     }
   }
   onChange=(e)=> {
@@ -100,13 +183,29 @@ componentDidUpdate = async () => {
     // final.push(e.name)
     // /this.setState({curentTabDat:this.state.curentTabDat.filterObject.estimaitonStatus.concat(e)});
    
-    if(this.state.leadSelected.indexOf(e) === -1)
-    this.setState({leadSelected:this.state.leadSelected.concat(e)});
+    if(this.state.leadSelected.indexOf(e) === -1){
+      let leads=this.state.leadList;
+      leads.map(l=>{
+        if(l.name === e)
+        l['check']=true
+        
+      })
+    this.setState({leadSelected:this.state.leadSelected.concat(e),leadList:leads});
+
+    }
     else{
       let rm=this.state.leadSelected;
       let i= rm.indexOf(e);
       rm.splice(i,1);
-      this.setState({leadSelected:rm});
+
+      let leads=this.state.leadList;
+      leads.map(l=>{
+        if(l.name === e)
+        l['check']=false
+        
+      })
+
+      this.setState({leadSelected:rm,leadList:leads});
     }
   }
   filterPass=()=>{
@@ -121,39 +220,48 @@ componentDidUpdate = async () => {
     console.log(`selected ${value}`);
     this.setState({sortDropdown:value})
   }
+  cleanFilters=()=>{
+   
+
+    let { leadList, leadTypes}=this.state;
+    console.log('hii',leadList, leadTypes);
+    leadList.map(l=>{
+      l['check']=false
+    })
+    leadTypes.map(l=>{
+      l['check']=false
+    })
+    this.setState({leadList, leadTypes})
+  }
   render() {
     console.log('leadout==', this.state,this.props)
    
     const { RangePicker } = DatePicker;
     const { Option } = Select;
-    let currentTab={ dateFilter:'7',
-       sortDropdown:'-1',
-       leadSource:[]}
-    if(this.props.currentTabData)
-    currentTab=this.props.currentTabData.filterObject;
+    // let currentTab={ dateFilter:'7',
+    //    sortDropdown:'-1',
+    //    leadSource:[]}
+    // if(this.props.currentTabData)
+    // currentTab=this.props.currentTabData.filterObject;
     
-let leadCheckbox;
+let leadCheckbox, leadSourceCheckBox;
     if(this.state.leadList){
    leadCheckbox=   this.state.leadList.map((r)=>{
-     let currentTabDa=this.state.curentTabDat;
-     let boo=false;
-     if(currentTabDa){
-       if(currentTabDa.filterObject){
-         if(currentTabDa.filterObject.estimaitonStatus)
-        currentTabDa.filterObject.estimaitonStatus.map(c=>{
-          if(c=== r.name)
-          boo=true
-        })
-       }
-     }
+    
       // /  console.log(r)
         return(<Col md={8}>
           <Checkbox
-           checked={boo}
+           checked={r.check}
             onChange={(e)=>this.onChange(r.name)}>{r.name}</Checkbox>{" "}
         </Col>)
       })
     }
+
+    leadSourceCheckBox=this.state.leadTypes.map(r=>{
+      return(<Col md={8}>
+        <Checkbox  checked={r.check} onChange={()=>this.onChangeLeadSource(r.name)}>{r.name}</Checkbox>{" "}
+      </Col>)
+    })
     return (
       <>
         <Modal
@@ -188,12 +296,12 @@ let leadCheckbox;
                       </Form.Item>
                     </Col> */}
                     <Col md={12}>
-                      <Form.Item name="Column" label="According to">
-                        <Select defaultValue={currentTab?currentTab.sortDropdown:'-1'}  onChange={this.handleChange}>
+                      {/* <Form.Item name="Column" label="According to"> */}
+                        <Select defaultValue={this.state.sortDropdown?this.state.sortDropdown:'-1'} value={this.state.sortDropdown?this.state.sortDropdown:'-1'} onChange={this.handleChange}>
                           <Option value="-1">Newest</Option>
                           <Option value="1">Oldest</Option>
                         </Select>
-                      </Form.Item>
+                      {/* </Form.Item> */}
                     </Col>
                  
                   </Row>
@@ -228,7 +336,7 @@ let leadCheckbox;
   { label: 'Last 28 days', value: '28' },
   { label: 'Last 90 days', value: '90' },
     ]} 
-onChange={this.onRadioChange} value={currentTab?currentTab.dateFilter:'7'} />
+onChange={this.onRadioChange} value={this.state.dateFilter?this.state.dateFilter:'7'} />
                         {/* <Col md={8}>
                           <Radio onChange={this.onChange}>Last 7 days</Radio>{" "}
                         </Col>
@@ -252,7 +360,8 @@ onChange={this.onRadioChange} value={currentTab?currentTab.dateFilter:'7'} />
                     </Col>
                     <Col md={18}>
                       <Row>
-                        <Col md={8}>
+                        {leadSourceCheckBox}
+                        {/* <Col md={8}>
                           <Checkbox onChange={()=>this.onChangeLeadSource('Facebook')}>Facebook</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
@@ -260,7 +369,7 @@ onChange={this.onRadioChange} value={currentTab?currentTab.dateFilter:'7'} />
                         </Col>
                         <Col md={8}>
                           <Checkbox onChange={()=>this.onChangeLeadSource('Referral')}>Referral</Checkbox>{" "}
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Col>
                   
@@ -280,7 +389,7 @@ onChange={this.onRadioChange} value={currentTab?currentTab.dateFilter:'7'} />
                     </Button>
                   </span>
 
-                  <span className="ant-blue-plus">
+                  <span className="ant-blue-plus" onClick={this.cleanFilters}>
                    
                     Clean Filters
                   </span>
