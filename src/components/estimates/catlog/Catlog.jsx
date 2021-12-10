@@ -396,7 +396,7 @@ export default function Catlog() {
               <Nav.Item as="li">
                 <Nav.Link eventKey="second">
                   <b class="left-curve"></b>
-                  <b class="right-curve"></b>Services
+                  <b class="right-curve"></b>Production Rates
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li">

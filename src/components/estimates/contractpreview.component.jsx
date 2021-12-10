@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PreviewBanner from "../../../src/images/estimate-banner.png";
 import MountSky from "../../../src/images/mount-sky.png";
-import { Divider, Input, Row, Col, Form } from "antd";
+import { Divider, Input, Row, Col, Form, Button } from "antd";
 import logo from "../../images/small-logo.png";
 import TeamPic from "../../images/team.jpg";
 import SimpleEMailSent from "../email/simple.emailsent.component";
@@ -16,6 +16,7 @@ import { getCurrentUser } from "../../api/user";
 import { PDFExport } from "@progress/kendo-react-pdf";
 import { drawDOM, exportPDF } from "@progress/kendo-drawing";
 import { currencyFormate } from "../../utils/currencyFormate";
+import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 
 export default function ContractPreview() {
   const params = useParams();
@@ -185,16 +186,13 @@ export default function ContractPreview() {
   //  REACT_PDF: https://www.telerik.com/kendo-react-ui/components/pdfprocessing/multi-page-content/
   return (
     <>
-      {/* <button className="k-button" onClick={handlePDF}>
-        Export PDF
-      </button>
-      <iframe
-        src={base64}
-        height="100%"
-        width="100%"
-        title="pdf"
-        style={{ height: "100vw" }}
-      ></iframe> */}
+      <BreadcrumbBar
+        name="Dashboard"
+        subname="Contract Preview"
+        breaclass="mb-3"
+        sublink="user-profile"
+        link="/"
+      />
       <PDFExport paperSize="A3" margin="2mm" ref={pdfExportComponent}>
         <div className="card-shadow" style={{ borderRadius: "25px" }}>
           <div id="divToPrint">
@@ -830,15 +828,17 @@ export default function ContractPreview() {
             </div>
           </div>
           <div className="text-right p-4">
-            <span
+            <Button
+              type="primary"
               className="add-btn"
+              size="large"
               onClick={() => {
                 handlePDF();
               }}
               disabled={isSendingEmail}
             >
               {isSendingEmail ? "Sending..." : "Send to Customer"}
-            </span>
+            </Button>
           </div>
         </div>
       </PDFExport>
