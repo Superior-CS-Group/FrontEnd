@@ -147,7 +147,7 @@ export default function Datatable(props) {
           </>
         ),
         dataIndex: "estimaitonSent",
-        width: 200,
+        width: 300,
         sorter: true,
       },
 

@@ -49,37 +49,12 @@ export default class DashboardNavbar extends Component {
           <Menu.Item key="2" icon={crm} className="sidebar-btn-disable">
             <NavLink to="#">CRM</NavLink>
           </Menu.Item>
-          {/* <Menu.Item key="3" icon={estimating}>
-            <NavLink to="/estimating"> Estimating</NavLink>
-          </Menu.Item> */}
-          <SubMenu
-            key="sub1"
-            icon={estimating}
-            title=" Estimating"
-            popupClassName="newdiv"
-          >
-            <Menu.Item key="esn">
-              {" "}
-              <NavLink to="/catalog">Catalog</NavLink>
-            </Menu.Item>
-            {/* <Menu.Item key="es1">
-              {" "}
-              <NavLink to="/catalog">Catalog</NavLink>
-            </Menu.Item> */}
+          <Menu.Item key="3" icon={estimating}>
+            <NavLink to="/estimating">Estimate Dashboard</NavLink>
+          </Menu.Item>
 
-            <Menu.Item key="es2">
-              {" "}
-              <NavLink to="/estimate-templates"></NavLink>Estimate Templates
-            </Menu.Item>
-            <Menu.Item key="es3">
-              <NavLink to="/estimating">Estimate Dashboard</NavLink>
-            </Menu.Item>
-            <Menu.Item key="es4">
-              <NavLink to="/userlist">User List</NavLink>
-            </Menu.Item>
-          </SubMenu>
           <Menu.Item key="4" icon={jobOr} className="sidebar-btn-disable">
-            <NavLink to="#">Job Organization & SchedulingS</NavLink>
+            <NavLink to="#">Job Organization & Scheduling</NavLink>
           </Menu.Item>
           <Menu.Item key="5" icon={time} className="sidebar-btn-disable">
             <NavLink to="#">Time Tracking</NavLink>
@@ -96,9 +71,24 @@ export default class DashboardNavbar extends Component {
           <Menu.Item key="9" icon={invoice} className="sidebar-btn-disable">
             <NavLink to="#">Change orders</NavLink>
           </Menu.Item>
-          <Menu.Item key="10" icon={setting}>
-            <NavLink to="/email-setting">Settings</NavLink>
-          </Menu.Item>
+
+          <SubMenu key="sub1" icon={setting} title="Settings" className="ps-0">
+            <Menu.Item key="email">
+              <NavLink to="/email-setting">Email Settings</NavLink>
+            </Menu.Item>
+            <Menu.Item key="esn">
+              <NavLink to="/catalog">Catalog</NavLink>
+            </Menu.Item>
+
+            <Menu.Item key="es2">
+              <NavLink to="/estimate-templates">Estimate Templates</NavLink>
+            </Menu.Item>
+
+            <Menu.Item key="es3">
+              <NavLink to="/userlist">User List</NavLink>
+            </Menu.Item>
+          </SubMenu>
+
           <Menu.Item key="11" icon={template} className="sidebar-btn-disable">
             <NavLink to="#">Template</NavLink>
           </Menu.Item>

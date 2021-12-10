@@ -30,7 +30,7 @@ export default class Estimates extends Component {
     this.setState({ collapsed: !this.state.collapsed }, () => {
       if (this.state.collapsed) {
         this.setState({
-          sidebarProps: { width: 256, collapsed: this.state.collapsed },
+          sidebarProps: { width: 300, collapsed: this.state.collapsed },
         });
       } else {
         this.setState({
@@ -65,7 +65,7 @@ export default class Estimates extends Component {
           <Sider
             trigger={null}
             {...this.state.sidebarProps}
-            width="256"
+            width="300"
             style={{
               overflow: "auto",
               height: "100vh",
