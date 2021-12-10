@@ -30,7 +30,7 @@ export default class Menubar extends Component {
     const menu = (
       <Menu>
         <Menu.Item key="0">
-          <a href="#">Profile</a>
+          <Link to="/user-profile">Profile</Link>
         </Menu.Item>
 
         <Menu.Divider />

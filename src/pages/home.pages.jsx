@@ -5,11 +5,12 @@ import { Layout } from "antd";
 import Menubar from "../components/navbar/menubar";
 import DashboardNavbar from "../components/navbar/DashboardNavbar";
 import Error from "../components/Error";
+import logo from "../images/mount-sky.png";
 const { Header, Sider, Content } = Layout;
 export default class Estimates extends Component {
   state = {
     collapsed: true,
-    isHovered: false,
+
     sidebarProps: {},
   };
 
@@ -27,7 +28,6 @@ export default class Estimates extends Component {
 
   handleHover = (collapsed) => {
     this.setState({ collapsed: !this.state.collapsed }, () => {
-      console.log(this.state.collapsed, "test");
       if (this.state.collapsed) {
         this.setState({
           sidebarProps: { width: 256, collapsed: this.state.collapsed },
@@ -79,6 +79,9 @@ export default class Estimates extends Component {
             onMouseEnter={this.handleHover}
             onMouseLeave={this.handleHover}
           >
+            <div className="logo-side">
+              <img src={logo} alt="" />
+            </div>
             <DashboardNavbar />
           </Sider>
           <Layout className="site-layout main-layout">

@@ -17,6 +17,7 @@ import FormulaV2 from "../components/formula/v2/formula.v2.component";
 import Catlog from "../components/estimates/catlog/Catlog";
 import EmailSetting from "../components/setting/emailsetting.component";
 import UserList from "../components/setting/userList.component";
+import UserProfile from "../components/user/userprofile/UserProfile";
 
 const routes = [
   // {
@@ -127,6 +128,12 @@ const routes = [
     exact: true,
     name: "userlist",
     component: <UserList />,
+  },
+  {
+    path: "/user-profile",
+    exact: true,
+    name: "userprofile",
+    component: <UserProfile />,
   },
 ];
 export default routes;
