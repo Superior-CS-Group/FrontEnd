@@ -43,9 +43,12 @@ export default class UserList extends Component {
   render() {
     return (
       <>
-        <div className="d-flex align-items-center justify-content-between mb-4">
-          <BreadcrumbBar name="Dashboard" subname="User List" />
-        </div>
+        <BreadcrumbBar
+          name="Dashboard"
+          subname="User List"
+          breaclass="mb-3"
+          link="/"
+        />
 
         <Card
           bordered={false}
