@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Collapse, Input, Form, Row, Col, Button, message } from "antd";
+import { Collapse, Input, Form, Row, Col, Button, message, Modal } from "antd";
 import "react-phone-number-input/style.css";
-import { UserOutlined, CheckOutlined } from "@ant-design/icons";
+import { UserOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { postData } from "../../../utils/fetchApi.js";
-import PhoneInput from "react-phone-number-input";
 import { useParams, Navigate } from "react-router-dom";
+import { isExistsLeadEmail } from "../../../api/customer.js";
 
 export default function LeadInfo(props) {
   const params = useParams();
@@ -38,6 +38,9 @@ export default function LeadInfo(props) {
     isRedirect: false,
     message: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingWarning, setIsLoadingWarning] = useState(false);
+  const [isWarning, setIsWarning] = useState(false);
   useEffect(() => {
     console.log("props ", props);
     const id = params.id;
@@ -115,10 +118,10 @@ export default function LeadInfo(props) {
       errors.contactNo = "Contact No is required";
       message.error(errors.contactNo, 5);
     }
-    if (!state.country) {
-      errors.country = "Country is required";
-      message.error(errors.country, 5);
-    }
+    // if (!state.country) {
+    //   errors.country = "Country is required";
+    //   message.error(errors.country, 5);
+    // }
     if (!state.states) {
       errors.states = "State is required";
       message.error(errors.states, 5);
@@ -157,9 +160,26 @@ export default function LeadInfo(props) {
     });
   };
 
-  const handleSubmit = async (event) => {
-    // console.log(localStorage.getItem("token"));
+  const isEmailExists = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    console.log("state>email: ", state.email);
+    const response = await isExistsLeadEmail(state.email);
+    console.log("response: ", response);
+    if (response.remote === "success") {
+      setIsWarning(true);
+    } else {
+      setIsWarning(false);
+    }
+  };
 
+  const handleSubmit = async (event, saveAnyWay) => {
+    // console.log(localStorage.getItem("token"));
+    setIsLoading(true);
+    if (saveAnyWay) {
+      setIsLoadingWarning(true);
+    }
     event.preventDefault();
     setState({ ...state, errors: {} });
     const { errors, isValid } = validateFields();
@@ -188,49 +208,59 @@ export default function LeadInfo(props) {
       distance,
       otherInformation,
     } = state;
-    const body = {
-      name,
-      email,
-      contactNo,
-      country,
-      state: states,
-      city,
-      address,
-      postalCode,
-      distance,
-      otherInformation,
-      spouse,
-    };
-    // console.log("body: ", body);
-
-    try {
-      await postData(`customer/add`, body);
-      // console.log("result: ", result);
-      setState({
-        ...state,
-        message: "New Customer Added!",
-        name: "",
-        email: "",
-        contactNo: "",
-        country: "",
-        states: "",
-        city: "",
-        postalCode: "",
-        address: "",
-        otherNote: "",
-        otherInformation: "",
-        isLoading: false,
-        isRedirect: true,
-      });
-      message.success("New Customer Added!", 2);
-    } catch (err) {
-      console.log("error", err, err.response);
-
-      setState({
-        ...state,
-        message: err.response?.data?.errors,
-        isLoading: false,
-      });
+    let isExists = false;
+    if (!isWarning && !saveAnyWay && !state.id) {
+      isExists = isEmailExists();
+    }
+    if (!isExists) {
+      const body = {
+        name,
+        email,
+        contactNo,
+        country,
+        state: states,
+        city,
+        address,
+        postalCode,
+        distance,
+        otherInformation,
+        spouse,
+      };
+      // console.log("body: ", body);
+      try {
+        await postData(`customer/add`, body);
+        // console.log("result: ", result);
+        setState({
+          ...state,
+          message: "New Customer Added!",
+          name: "",
+          email: "",
+          contactNo: "",
+          country: "",
+          states: "",
+          city: "",
+          postalCode: "",
+          address: "",
+          otherNote: "",
+          otherInformation: "",
+          isLoading: false,
+          isRedirect: true,
+        });
+        setIsWarning(false);
+        setIsLoadingWarning(false);
+        setIsLoading(false);
+        message.success("New Customer Added!", 2);
+      } catch (err) {
+        console.log("error", err, err.response);
+        setIsWarning(false);
+        setIsLoadingWarning(false);
+        setIsLoading(false);
+        setState({
+          ...state,
+          message: err.response?.data?.errors,
+          isLoading: false,
+        });
+      }
     }
   };
 
@@ -572,7 +602,7 @@ export default function LeadInfo(props) {
                         className="add-btn ant-btn-primary"
                         onClick={updatehandleSubmit}
                       >
-                        Update Changes
+                        {isLoading ? "Updateing..." : "Update Changes"}
                       </Button>
                     </>
                   ) : (
@@ -581,7 +611,7 @@ export default function LeadInfo(props) {
                         className="add-btn ant-btn-primary"
                         onClick={handleSubmit}
                       >
-                        Save Changes
+                        {isLoading ? "Saving..." : "Save Changes"}
                       </Button>
                     </>
                   )}
@@ -666,6 +696,38 @@ export default function LeadInfo(props) {
           </Form>
         </Panel>
       </Collapse>
+      <Modal
+        className="modal-radius warning-modal"
+        title="Warning!"
+        visible={isWarning}
+        footer={null}
+        closeIcon={<InfoCircleOutlined />}
+      >
+        <p>Email Already exists! Are you really wan't to add it again?</p>
+        <Row>
+          <Col md={12} className="text-center">
+            <Button
+              type="text"
+              onClick={() => {
+                setIsWarning(false);
+                setIsLoading(false);
+              }}
+              disabled={isLoadingWarning}
+            >
+              No
+            </Button>
+          </Col>
+          <Col md={12}>
+            <Button
+              type="link"
+              onClick={(e) => handleSubmit(e, true)}
+              disabled={isLoadingWarning}
+            >
+              {isLoadingWarning ? "Saving..." : "Save anyway"}
+            </Button>
+          </Col>
+        </Row>
+      </Modal>
     </>
   );
 }

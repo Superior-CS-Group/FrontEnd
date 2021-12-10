@@ -131,7 +131,7 @@ function EstimationOverview({
               </div>
 
               <span className="ant-blue-rate-font ant-blue-rate">
-                ${totalProjectChargeAfterDiscount}
+                {currencyFormate.format(totalProjectChargeAfterDiscount)}
               </span>
             </div>
             <div className="d-flex align-items-center justify-content-between mb-2">
@@ -141,7 +141,7 @@ function EstimationOverview({
               </div>
 
               <span className="ant-dager-rate ant-blue-rate-font">
-                ${totalProjectCost}
+                {currencyFormate.format(totalProjectCost)}
               </span>
             </div>
           </li>

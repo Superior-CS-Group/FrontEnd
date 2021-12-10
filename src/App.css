@@ -379,17 +379,6 @@ img {
   color: #fff;
 }
 
-ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant-menu-inline-collapsed
-  li {
-  line-height: 37px;
-  height: 37px;
-  /* padding: 0 17px; */
-}
-
-.slide-shadow {
-  padding-top: 65px;
-}
-
 .card-depultview {
   box-shadow: 0px 1.9693px 39.3859px rgba(0, 0, 0, 0.05);
   border-radius: 5.90789px;
@@ -1474,7 +1463,6 @@ input[type="tel"] {
 .ant-siderbar-menu li.sidebar-btn {
   border-radius: 20px !important;
   /* border: 1px solid #1a73e8; */
-  text-align: center;
 }
 /*----------------------Estimate preview css------------*/
 .estimateImg {
@@ -1488,6 +1476,7 @@ input[type="tel"] {
 }
 .estimate-preview-detail p {
   color: #242730;
+  font-size: 16px;
 }
 .estiamte-preview-head {
   display: flex;
@@ -2678,4 +2667,106 @@ tr.ant-table-measure-row {
 
 .catlog-tabs li.nav-item a p {
   margin: 0px;
+}
+
+.logo-side {
+  height: 65px;
+  text-align: center;
+}
+
+.slide-shadow :hover .logo-side img {
+  opacity: 1;
+}
+
+.logo-side img {
+  opacity: 0;
+  height: 65px;
+}
+
+.editphoto {
+  position: absolute;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+  bottom: 44px;
+}
+
+.editphoto input {
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  top: 0px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.editphoto:hover {
+  cursor: pointer;
+  background: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
+}
+
+.user-profile h6 {
+  font-size: 14px;
+}
+
+.slide-shadow .ant-menu.ant-menu-inline-collapsed > .ant-menu-item,
+.slide-shadow
+  .ant-menu.ant-menu-inline-collapsed
+  > .ant-menu-item-group
+  > .ant-menu-item-group-list
+  > .ant-menu-item,
+.slide-shadow
+  .ant-menu.ant-menu-inline-collapsed
+  > .ant-menu-item-group
+  > .ant-menu-item-group-list
+  > .ant-menu-submenu
+  > .ant-menu-submenu-title,
+.slide-shadow
+  .ant-menu.ant-menu-inline-collapsed
+  > .ant-menu-submenu
+  > .ant-menu-submenu-title {
+  padding: 0 23px;
+  line-height: 39px;
+}
+
+.text-right-estimate-header p {
+  font-size: 16px;
+}
+
+.text-right-estimate-header h4 {
+  font-size: 24px;
+}
+
+.term-for-project ul li {
+  font-size: 16px;
+  line-height: 32px;
+}
+
+.sub-total-div li {
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.sub-total-div li {
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.contract-preview-form label {
+  font-size: 16px;
+}
+
+.contract-preview-form input {
+  padding-left: 0px;
+  font-size: 15px;
+}
+
+.contract-preview-form input:focus {
+  border-color: transparent;
+  box-shadow: none;
 }
