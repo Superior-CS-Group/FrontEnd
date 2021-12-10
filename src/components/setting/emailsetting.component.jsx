@@ -152,9 +152,9 @@ export default function EmailSetting() {
 
   return (
     <>
-      <div className="d-flex align-items-center justify-content-between mb-4">
-        <BreadcrumbBar name="Setting" subname="Email-setting" />
-      </div>{" "}
+     
+        <BreadcrumbBar name="Dashboard" subname="Email setting"  breaclass="mb-3" />
+      
       {state.smallLoader ? (
         <>
           <div className="text-center d-flex align-items-center justify-content-center ht-100">

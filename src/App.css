@@ -386,10 +386,6 @@ ul.ant-menu.ant-menu-root.ant-menu-vertical.ant-menu-light.ant-siderbar-menu.ant
   /* padding: 0 17px; */
 }
 
-.slide-shadow {
-  padding-top: 65px;
-}
-
 .card-depultview {
   box-shadow: 0px 1.9693px 39.3859px rgba(0, 0, 0, 0.05);
   border-radius: 5.90789px;
@@ -1474,7 +1470,6 @@ input[type="tel"] {
 .ant-siderbar-menu li.sidebar-btn {
   border-radius: 20px !important;
   /* border: 1px solid #1a73e8; */
-  text-align: center;
 }
 /*----------------------Estimate preview css------------*/
 .estimateImg {
@@ -2678,4 +2673,18 @@ tr.ant-table-measure-row {
 
 .catlog-tabs li.nav-item a p {
   margin: 0px;
+}
+
+.logo-side {
+  height: 65px;
+  text-align: center;
+}
+
+.slide-shadow :hover .logo-side img {
+  opacity: 1;
+}
+
+.logo-side img {
+  opacity: 0;
+  height: 65px;
 }
