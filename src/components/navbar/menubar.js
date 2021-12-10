@@ -46,7 +46,7 @@ export default class Menubar extends Component {
             <img src={logo} alt="" />
           </div>
           <h1 className="mb-0 dash-titile">
-            Welcome, <span>{this.state.currentUser.name}!</span>
+            Welcome <span>{this.state.currentUser.name}!</span>
           </h1>
         </div>
         <div className="ms-auto d-lg-flex align-items-center">

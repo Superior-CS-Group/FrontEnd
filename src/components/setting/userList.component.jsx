@@ -44,7 +44,11 @@ export default class UserList extends Component {
     return (
       <>
         <div className="d-flex align-items-center justify-content-between mb-4">
-          <BreadcrumbBar name="Dashboard" subname="User List" />
+          <BreadcrumbBar
+            name="Dashboard"
+            subname="Settings"
+            subtitle="User List"
+          />
         </div>
 
         <Card

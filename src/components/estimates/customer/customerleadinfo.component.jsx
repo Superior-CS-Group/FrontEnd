@@ -171,12 +171,12 @@ export default function CustomerLeadInfo(props) {
     <>
       <div className="bg-estimates">
         <BreadcrumbBar
-          name="Dashboard "
-          subname="Estimates"
-          subtitle="username"
+          name="Dashboard"
+          subname="Estimates Dashboard"
+          subtitle={customerInfo?.data?.Data?.name}
           breaclass="mb-3"
           link="/"
-          sublink="estimating"
+          sublink="/estimating"
         />
 
         <Row>
