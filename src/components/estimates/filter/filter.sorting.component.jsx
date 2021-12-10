@@ -33,18 +33,28 @@ export default class FilterSorting extends Component {
       leadList:[],
       leadSelected:[],
       saveFilterLoad:false,
-      curentTabDat:{}
+      curentTabDat:{},
+      dateFilter:'7',
+      leadSource:[],
+      sortDropdown:'-1'
     };
   }
 componentDidMount=async()=>{
   const statusLis = await getData(`status/list`);
   // this.props.ApplyFilter()
- this.setState({leadList:statusLis.data.Data,curentTabDat:this.props.currentTabData})
+ this.setState({leadList:statusLis.data.Data,curentTabDat:this.props.currentTabData,
+  
+})
 }
 
 componentDidUpdate = async () => {
-  if(this.state.curentTabDat!==this.props.currentTabData)
-  this.setState({curentTabDat:this.props.currentTabData,leadSelected:[]})
+  if(this.state.curentTabDat!==this.props.currentTabData){
+  this.setState({curentTabDat:this.props.currentTabData,leadSelected:[],
+    // dateFilter:this.props.currentTabData.filterObject.dateFilter,
+    // sortDropdown:this.props.currentTabData.filterObject.sortDropdown,
+    // leadSource:this.props.currentTabData.filterObject.leadSource
+  })
+  }
 }
   //   showModal = () => {
   //     this.setState({ ModalVisible: true });
@@ -65,8 +75,24 @@ componentDidUpdate = async () => {
    curentTabDat.filterObject.estimaitonStatus.map(r=>{
     leadSelected.push(r)
    })
-   await this.props.saveFilterss({estimaitonStatus:leadSelected});
+   await this.props.saveFilterss({
+     estimaitonStatus:leadSelected,
+     dateFilter:this.state.dateFilter,
+     leadSource:this.state.leadSource,
+     sortDropdown:this.state.sortDropdown
+    });
     this.setState({saveFilterLoad:false})
+  }
+  onChangeLeadSource=(e)=>{
+    console.log(e);
+    if(this.state.leadSource.indexOf(e) === -1)
+    this.setState({leadSource:this.state.leadSource.concat(e)});
+    else{
+      let rm=this.state.leadSource;
+      let i= rm.indexOf(e);
+      rm.splice(i,1);
+      this.setState({leadSource:rm});
+    }
   }
   onChange=(e)=> {
     console.log(`checked =`,e);
@@ -85,17 +111,26 @@ componentDidUpdate = async () => {
   }
   filterPass=()=>{
      console.log("hey man" ,this.props);
-     this.props.handleOk(this.state.leadSelected);
+     this.props.handleOk(this.state);
   }
- 
+  onRadioChange=e=>{
+    console.log(e.target.value)
+    this.setState({dateFilter:e.target.value})
+  }
+   handleChange=(value)=> {
+    console.log(`selected ${value}`);
+    this.setState({sortDropdown:value})
+  }
   render() {
     console.log('leadout==', this.state,this.props)
    
     const { RangePicker } = DatePicker;
     const { Option } = Select;
-    function handleChange(value) {
-      console.log(`selected ${value}`);
-    }
+    let currentTab={ dateFilter:'7',
+       sortDropdown:'-1',
+       leadSource:[]}
+    if(this.props.currentTabData)
+    currentTab=this.props.currentTabData.filterObject;
     
 let leadCheckbox;
     if(this.state.leadList){
@@ -142,7 +177,7 @@ let leadCheckbox;
               <Col md={24}>
                 <Form layout="vertical" autoComplete="off">
                   <Row gutter={[24, 0]}>
-                    <Col md={12}>
+                    {/* <Col md={12}>
                       <Form.Item name="Column" label="Column">
                         <Select defaultValue="lucy" onChange={handleChange}>
                           <Option value="jack">Column 1</Option>
@@ -151,12 +186,12 @@ let leadCheckbox;
                           <Option value="Yiminghe">Column 3</Option>
                         </Select>
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col md={12}>
                       <Form.Item name="Column" label="According to">
-                        <Select defaultValue="Newest" onChange={handleChange}>
-                          <Option value="jack">Newest</Option>
-                          <Option value="lucy">Oldest</Option>
+                        <Select defaultValue={currentTab?currentTab.sortDropdown:'-1'}  onChange={this.handleChange}>
+                          <Option value="-1">Newest</Option>
+                          <Option value="1">Oldest</Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -175,7 +210,7 @@ let leadCheckbox;
                   <Row>
                 
                     <Col md={6}>
-                      <b>Lead Estatus</b>
+                      <b>Lead Status</b>
                     </Col>
                     <Col md={18}>
                       <Row>
@@ -188,21 +223,27 @@ let leadCheckbox;
                     </Col>
                     <Col md={18}>
                       <Row>
-                        <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Last 7 days</Checkbox>{" "}
+                      <Radio.Group options={ [
+  { label: 'Last 7 days', value: '7' },
+  { label: 'Last 28 days', value: '28' },
+  { label: 'Last 90 days', value: '90' },
+    ]} 
+onChange={this.onRadioChange} value={currentTab?currentTab.dateFilter:'7'} />
+                        {/* <Col md={8}>
+                          <Radio onChange={this.onChange}>Last 7 days</Radio>{" "}
                         </Col>
                         <Col md={8}>
                           <Checkbox onChange={this.onChanges}>Last 28 days</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
                           <Checkbox onChange={this.onChange}>Last 90 days</Checkbox>{" "}
-                        </Col>
-                        <Col md={24} className="mt-4 text-right">
+                        </Col> */}
+                        {/* <Col md={24} className="mt-4 text-right">
                           {" "}
                           <Space direction="vertical" size={12}>
                             <RangePicker />
                           </Space>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Col>
                     <Divider />
@@ -212,13 +253,13 @@ let leadCheckbox;
                     <Col md={18}>
                       <Row>
                         <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Facebook</Checkbox>{" "}
+                          <Checkbox onChange={()=>this.onChangeLeadSource('Facebook')}>Facebook</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Web</Checkbox>{" "}
+                          <Checkbox onChange={()=>this.onChangeLeadSource('Website')}>Web</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Referral</Checkbox>{" "}
+                          <Checkbox onChange={()=>this.onChangeLeadSource('Referral')}>Referral</Checkbox>{" "}
                         </Col>
                       </Row>
                     </Col>
@@ -240,10 +281,7 @@ let leadCheckbox;
                   </span>
 
                   <span className="ant-blue-plus">
-                    <PlusCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
+                   
                     Clean Filters
                   </span>
                   <div className="ms-auto col-lg-4">
