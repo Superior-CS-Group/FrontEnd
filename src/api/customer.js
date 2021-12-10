@@ -14,3 +14,23 @@ export async function updateCustomerDetails(data) {
   }
   return response;
 }
+
+export async function isExistsLeadEmail(email) {
+  console.log("email; ", email);
+  const response = await api.request({
+    url: `/customer/is-exist-lead-email?email=${email}`,
+    method: "GET",
+  });
+  console.log("response: ", response);
+
+  if (response.remote === "success") {
+    return {
+      remote: response.remote,
+      data: true,
+    };
+  }
+  return {
+    remote: response.remote,
+    data: false,
+  };
+}
