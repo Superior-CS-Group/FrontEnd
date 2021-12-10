@@ -162,8 +162,7 @@ export default function Services() {
         name="Dashboard"
         subname="Estimate Templates"
         breaclass="mb-3"
-        Link="/"
-        
+        link="/dashboard"
       />
       <Card
         bordered={false}

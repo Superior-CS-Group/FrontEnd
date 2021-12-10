@@ -55,6 +55,7 @@ function ElementCard({
 
   React.useEffect(() => {
     onFocusOut();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [element.color]);
 
   React.useEffect(() => {
@@ -247,6 +248,11 @@ function ElementCard({
                   onBlur={onFocusOut}
                   // noMaterial
                   disabled={element.disabled}
+                  isCustomInput
+                  customInput={element.customInput?.map((input) => ({
+                    display: input.name,
+                    id: input._id,
+                  }))}
                 />
               </Col>
             </Row>
@@ -335,6 +341,35 @@ function ElementCard({
               />
             </Col>
           </Row>
+          {element.customInput &&
+            element.customInput.map((custom, customIndex) => {
+              return (
+                <Row gutter={[8, 0]} className="align-items-center mb-3 ">
+                  <Col md={8}>
+                    <label>{custom.name}</label>
+                  </Col>
+                  <Col md={16}>
+                    <Input
+                      placeholder="Name of Element"
+                      className="ant-furmulla-input"
+                      onChange={(e) =>
+                        handleChange(
+                          e.target.value,
+                          e.target.name,
+                          idx,
+                          null,
+                          customIndex
+                        )
+                      }
+                      value={custom.value}
+                      onBlur={onFocusOut}
+                      type="number"
+                      min={0}
+                    />
+                  </Col>
+                </Row>
+              );
+            })}
           <Row gutter={[8, 0]} className="align-items-center mb-3">
             <Col md={8}>
               <label>Type Of Element:</label>

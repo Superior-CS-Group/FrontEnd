@@ -8,6 +8,7 @@ import ReactMentionInput from "../../../utils/mentionInput/mentionInput";
 import { useLocation, Navigate } from "react-router-dom";
 import { getFormulaById, updateFormula } from "../../../api/formula";
 import { fileToBase64 } from "../../../utils/fileBase64";
+import regex from "../../../utils/regex";
 /**
  * @author digimonk Technologies
  * @developer Saral Shrivastava
@@ -96,9 +97,26 @@ function FormulaV2() {
     }
   }, [formulaDetails]);
 
-  const handleChange = (value, name, index, newMaterial) => {
+  const handleChange = (value, name, index, newMaterial, customIndex) => {
     const newElementList = [...elementList];
     newElementList[index][name] = value;
+    if (name === "name") {
+      let customInput = value.match(regex.customInput);
+      if (customInput) {
+        newElementList[index].customInput = customInput.map((item) => {
+          item = item.replace("!", "");
+          return {
+            name: item,
+            value: 0,
+          };
+        });
+      } else {
+        newElementList[index].customInput = [];
+      }
+    }
+    if (customIndex !== null && customIndex !== undefined) {
+      newElementList[index].customInput[customIndex].value = value;
+    }
     if (newMaterial) {
       const processed = processMaterial(newMaterial);
       newElementList[index].formula = [
@@ -124,7 +142,7 @@ function FormulaV2() {
 
   const processMaterial = (text) => {
     // eslint-disable-next-line no-useless-escape
-    const tags = text.match(/@\{\{[^\}]+\}\}/gi) || [];
+    const tags = text.match(regex.materialInput) || [];
     const allMaterialsIds = tags.map((myTag) => {
       const tagData = myTag.slice(3, -2);
       const tagDataArray = tagData.split("||");
@@ -153,7 +171,6 @@ function FormulaV2() {
       ];
       setCatalogs([...(catalogs || []), ...processed]);
     }
-    // }
     setMaterials([...newMaterials]);
   };
 
@@ -199,7 +216,11 @@ function FormulaV2() {
 
   return (
     <>
-      <BreadcrumbBar name="Add Service" breaclass="mb-3" />
+      <BreadcrumbBar
+        breaclass="mb-3"
+        name="Dashboard"
+        subname="Create Template"
+      />
       <Card
         className="shadow estimate-card mb-4"
         style={{ borderRadius: "10px" }}

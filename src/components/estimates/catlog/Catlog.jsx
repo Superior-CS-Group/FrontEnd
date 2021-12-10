@@ -375,7 +375,7 @@ export default function Catlog() {
         subname="Estimates"
         subtitle="Catalog"
         breaclass="mb-3"
-        link="/"
+        link="/dashboard"
         sublink="estimating"
       />
       <div className="ant-catlog-main">
