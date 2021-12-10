@@ -3,12 +3,15 @@ import { searchCatalogByName } from "../../api/catalogue";
 
 function ReactMentionInput({
   elementList,
+  customInput,
   onChange,
   value,
   placeholder,
   className,
   onBlur,
   noMaterial,
+  noElement,
+  isCustomInput,
 }) {
   const handleCatalog = (query, callback) => {
     return searchCatalogByName(query, "catalogAndServices")
@@ -35,18 +38,28 @@ function ReactMentionInput({
         placeholder={placeholder}
         onBlur={onBlur}
       >
-        <Mention
-          trigger="@"
-          markup="@{{element||__id__||__display__}}"
-          data={elementList || []}
-          displayTransform={(id, title) => `{Element: "${title}"}`}
-        />
+        {!noElement && (
+          <Mention
+            trigger="@"
+            markup="@{{element||__id__||__display__}}"
+            data={elementList || []}
+            displayTransform={(id, title) => `{Element: "${title}"}`}
+          />
+        )}
         {!noMaterial && (
           <Mention
             markup="@{{catalog||__id__||__display__}}"
             trigger="#"
             data={handleCatalog}
             displayTransform={(id, title) => `{Catalog: "${title}"}`}
+          />
+        )}
+        {isCustomInput && (
+          <Mention
+            markup="@{{custom||__id__||__display__}}"
+            trigger="!"
+            data={customInput || []}
+            displayTransform={(id, title) => `{Custom: "${title}"}`}
           />
         )}
       </MentionsInput>
