@@ -35,7 +35,6 @@ function FormulaV2() {
     if (!formulaId) {
       setRedirect("/services");
     } else {
-      console.log("formulaId: ", formulaId);
       getFormulaDetails(formulaId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,11 +42,9 @@ function FormulaV2() {
 
   async function getFormulaDetails(formulaId) {
     const formulaDetails = await getFormulaById(formulaId);
-    console.log("formulaDetails: ", formulaDetails);
     if (formulaDetails.remote === "success") {
       setFormulaDetails(formulaDetails.data.data);
       setTitle(formulaDetails.data.data.title);
-      console.log("formulaDetails.data.data: ", formulaDetails.data.data);
       const catalogs = formulaDetails.data.data?.catalogs || [];
       setCatalogs([...catalogs]);
       setClientContract(formulaDetails.data.data.clientContract);
@@ -74,6 +71,7 @@ function FormulaV2() {
         }),
         photo,
       };
+      console.log("body: ", body);
       setTimeout(() => updateFormulaDetails(body), 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,14 +156,13 @@ function FormulaV2() {
     const newMaterials = [...materials];
 
     newMaterials[index][e.target.name] = e.target.value;
-    if (!e.target.manual) {
+    if (!e.target.manual && !newMaterials[index].manual) {
       newMaterials[index].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
     } else {
       newMaterials[index].manual = true;
     }
     if (material) {
       let processed = processMaterial(material);
-      console.log("rpoc: ", processed);
       newMaterials[index].formula = [
         ...new Set([...(newMaterials[index].formula || []), ...processed]),
       ];

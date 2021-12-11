@@ -311,7 +311,7 @@ export const calender = (
       stroke="currentColor"
       strokewidth="1.5"
       strokeLinecap="round"
-      stroke-Linejoin="round"
+      strokeLinecap="round"
     />
     <path
       d="M16.8594 1.85303V6.01969"
@@ -369,7 +369,7 @@ export const add = (
     <path
       d="M10.4151 11.5508V17.4436M7.46875 14.4973H13.3616"
       stroke="#1A73E8"
-      stroke-width="2"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
@@ -601,5 +601,22 @@ export const upload = (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
+  </svg>
+);
+
+export const dot = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14px"
+    height="14px"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinecap="round"
+    class="feather feather-circle"
+  >
+    <circle cx="12" cy="12" r="10"></circle>
   </svg>
 );

@@ -142,8 +142,9 @@ export default function Datatable(props) {
           </>
         ),
         dataIndex: "estimaitonSent",
-        width: 200,
-        sorter: (a, b) => a.estimaitonSent.toString().localeCompare(b.estimaitonSent),
+        width: 300,
+        sorter: (a, b) =>
+          a.estimaitonSent.toString().localeCompare(b.estimaitonSent),
       },
 
       {
@@ -154,7 +155,8 @@ export default function Datatable(props) {
         ),
         dataIndex: "estimaitonCloseDate",
         width: 200,
-        sorter: (a, b) => a.estimaitonCloseDate.toString().localeCompare(b.estimaitonCloseDate),
+        sorter: (a, b) =>
+          a.estimaitonCloseDate.toString().localeCompare(b.estimaitonCloseDate),
       },
       {
         title: (
@@ -165,7 +167,10 @@ export default function Datatable(props) {
         ),
         dataIndex: "daysItTookToSendEstimate",
         width: 300,
-        sorter: (a, b) => a.daysItTookToSendEstimate.toString().localeCompare(b.daysItTookToSendEstimate),
+        sorter: (a, b) =>
+          a.daysItTookToSendEstimate
+            .toString()
+            .localeCompare(b.daysItTookToSendEstimate),
       },
       // {
       //   title: (
@@ -285,9 +290,9 @@ export default function Datatable(props) {
     ],
     deleteEstimateId: "",
   });
- const  onChangeTable=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
-  }
+  const onChangeTable = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
   const [newEstimateData, setNewEstimateData] = useState([]);
 
   // const that = state;
@@ -401,7 +406,7 @@ export default function Datatable(props) {
           estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
           estimaitonStatus: (
             <Popover content={content} placement="bottom" onMouseEnter={()=>popId(customerData)}>
-              <span className="btn btn-success d-inline-block">
+              <span className="btn btn-success d-inline-block btn-coners">
                 {customerData[0].estimaitonStatus}
               </span>
             </Popover>
@@ -446,20 +451,18 @@ export default function Datatable(props) {
     fetchList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-  useEffect(async() => {
-    let obj=props.currentTabData.filterObject;
-    if(obj)
-    handleOk({
-      leadSelected:obj.estimaitonStatus,
-      estimaitonStatus: obj.leadSelected,
-      dateFilter:obj.dateFilter,
-      leadSource:obj.leadSource,
-      sortDropdown:obj.sortDropdown
-    });
-    else
-    fetchData();
-    
-   
+  useEffect(async () => {
+    let obj = props.currentTabData.filterObject;
+    if (obj)
+      handleOk({
+        leadSelected: obj.estimaitonStatus,
+        estimaitonStatus: obj.leadSelected,
+        dateFilter: obj.dateFilter,
+        leadSource: obj.leadSource,
+        sortDropdown: obj.sortDropdown,
+      });
+    else fetchData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentTabData]);
   const filterData = (e) => {
@@ -504,9 +507,9 @@ export default function Datatable(props) {
     console.log("hey uncl", state.leadSelected);
     const result2 = await postData(`estimation/filter-sort`, {
       estimaitonStatus: state.leadSelected,
-      dateFilter:state.dateFilter,
-      leadSource:state.leadSource,
-      sortDropdown:state.sortDropdown
+      dateFilter: state.dateFilter,
+      leadSource: state.leadSource,
+      sortDropdown: state.sortDropdown,
     });
     console.log("sort==", result2);
     // [

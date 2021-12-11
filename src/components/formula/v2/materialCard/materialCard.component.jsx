@@ -2,6 +2,7 @@ import { Checkbox, Col, Input, Modal, Row, Button, Select } from "antd";
 import React from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { GetAllUnits } from "../../../../api/unit";
 function MaterialCard({
   material,
   handleChange,
@@ -14,7 +15,9 @@ function MaterialCard({
   const [showDeleteModal, setShowDeleteModal] = React.useState(null);
   const [isDeleteing, setIsDeleteing] = React.useState(false);
   const [materialTypeList, setMaterialTypeList] = React.useState([]);
+  const [units, setUnits] = React.useState([]);
   React.useEffect(() => {
+    console.log("material: ", material.manual);
     setManualCharge(material.manual);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     setMaterialTypeList([
@@ -22,7 +25,16 @@ function MaterialCard({
       { value: "labor", label: "Labor Cost" },
       { value: "subcontractor", label: "Subcontractor Cost" },
     ]);
+    getUnitList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function getUnitList() {
+    const response = await GetAllUnits();
+    if (response.remote === "success") {
+      setUnits(response.data.userData);
+    }
+  }
 
   return (
     <tr>
@@ -66,10 +78,35 @@ function MaterialCard({
         </Row>
       </td>
       <td>
+        <Row className="align-items-center">
+          <Col md={24}>
+            <label>Unit</label>
+          </Col>
+          <Col md={24}>
+            <Select
+              style={{ width: "100%" }}
+              onChange={(value) => {
+                handleChange({ target: { name: "unit", value } }, index);
+              }}
+              value={material.unit}
+            >
+              <Select.Option value=""> Unit less</Select.Option>
+              {units.map((unit, index) => {
+                return (
+                  <Select.Option value={unit._id} key={index}>
+                    {unit.name}
+                  </Select.Option>
+                );
+              })}
+            </Select>
+          </Col>
+        </Row>
+      </td>
+      <td>
         <Row className="align-items-start">
           <Col md={24}>
             <label>Cost:</label>{" "}
-            <span className="me-2 text-spaceb"> {"{Quantity} * "}</span>
+            {/* <span className="me-2 text-spaceb"> {"{Quantity} * "}</span> */}
           </Col>
           <Col md={24}>
             <div className="d-flex">
@@ -86,6 +123,7 @@ function MaterialCard({
                 placeholder="Enter Charge use '@' and '#' for the dynamic values"
                 value={material.cost}
                 onBlur={onFocusOut}
+                isMaterialElement
               />
             </div>
           </Col>
@@ -118,7 +156,10 @@ function MaterialCard({
         <Row className="align-items-start">
           <Col md={24}>
             <label>Charge:</label>
-            <Checkbox onChange={(e) => setManualCharge(e.target.checked)}>
+            <Checkbox
+              onChange={(e) => setManualCharge(e.target.checked)}
+              checked={manualCharge}
+            >
               Manual
             </Checkbox>
           </Col>
