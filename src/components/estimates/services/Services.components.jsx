@@ -160,7 +160,8 @@ export default function Services() {
     <>
       <BreadcrumbBar
         name="Dashboard"
-        subname="Estimate Templates"
+        subname="Settings"
+        subtitle="Estimate Templates"
         breaclass="mb-3"
         link="/dashboard"
       />

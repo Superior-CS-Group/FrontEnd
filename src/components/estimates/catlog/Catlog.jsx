@@ -372,7 +372,7 @@ export default function Catlog() {
     <>
       <BreadcrumbBar
         name="Dashboard "
-        subname="Estimates"
+        subname="Setting"
         subtitle="Catalog"
         breaclass="mb-3"
         link="/dashboard"

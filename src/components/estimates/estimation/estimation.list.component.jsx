@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { SearchOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { deleteUserEstimation, getUserEstimation } from "../../../api/formula";
 
-export default function EstimationList({ toggleAddNew,fetched:fetche }) {
+export default function EstimationList({ toggleAddNew, fetched: fetche }) {
   const params = useParams();
 
   const [columns, setColumns] = useState([
