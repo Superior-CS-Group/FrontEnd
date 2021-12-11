@@ -156,7 +156,7 @@ function FormulaV2() {
     const newMaterials = [...materials];
 
     newMaterials[index][e.target.name] = e.target.value;
-    if (!e.target.manual) {
+    if (!e.target.manual && !newMaterials[index].manual) {
       newMaterials[index].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
     } else {
       newMaterials[index].manual = true;

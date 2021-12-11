@@ -17,6 +17,7 @@ function MaterialCard({
   const [materialTypeList, setMaterialTypeList] = React.useState([]);
   const [units, setUnits] = React.useState([]);
   React.useEffect(() => {
+    console.log("material: ", material.manual);
     setManualCharge(material.manual);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     setMaterialTypeList([
@@ -155,7 +156,10 @@ function MaterialCard({
         <Row className="align-items-start">
           <Col md={24}>
             <label>Charge:</label>
-            <Checkbox onChange={(e) => setManualCharge(e.target.checked)}>
+            <Checkbox
+              onChange={(e) => setManualCharge(e.target.checked)}
+              checked={manualCharge}
+            >
               Manual
             </Checkbox>
           </Col>
