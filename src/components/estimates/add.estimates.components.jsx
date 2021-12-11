@@ -350,7 +350,9 @@ export default function AddEstimates(props) {
         elements
       );
       let materialCharge = material.charge?.replace(/\{Quantity\}/g, quantity);
-      materialCharge = material.charge?.replace(/\{Cost\}/, cost);
+      console.log("materialCharge1: ", materialCharge);
+      materialCharge = materialCharge?.replace(/\{Cost\}/, cost);
+      console.log("materialCharge2: ", materialCharge);
       let charge = processFormula(
         materialCharge,
         [...(formula.catalog || []), ...material.formula],
