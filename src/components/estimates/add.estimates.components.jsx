@@ -340,7 +340,7 @@ export default function AddEstimates(props) {
     const materials = [...formula.materials].map((material) => {
       let quantity = processFormula(
         material.quantity || "",
-        formula.catalogs || [],
+        [...(formula.catalog || []), ...material.formula],
         elements
       );
       let cost =
@@ -348,14 +348,18 @@ export default function AddEstimates(props) {
         processFormula(material.cost || "", formula.catalogs || [], elements);
       let charge = processFormula(
         material.charge.replace("{Cost}", cost) || "",
-        formula.catalog || [],
+        [...(formula.catalog || []), ...material.formula],
         elements
       );
       material.quantityValue = quantity;
       material.costValue = cost;
       material.chargeValue = charge;
 
-      processClientContract(formula, material.formula, elements);
+      processClientContract(
+        formula,
+        [...(formula.catalog || []), ...material.formula],
+        elements
+      );
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
       return { ...material, cost, charge, quantity };

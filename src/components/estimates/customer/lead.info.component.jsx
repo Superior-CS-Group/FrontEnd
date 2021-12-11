@@ -208,10 +208,11 @@ export default function LeadInfo(props) {
       distance,
       otherInformation,
     } = state;
+    let isExists = false;
     if (!isWarning && !saveAnyWay && !state.id) {
-      isEmailExists();
-      return;
-    } else {
+      isExists = isEmailExists();
+    }
+    if (!isExists) {
       const body = {
         name,
         email,
