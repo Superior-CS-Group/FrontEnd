@@ -31,6 +31,8 @@ export default function Datatable(props) {
   const [deleteEstimateId, setdeleteEstimateId] = useState();
   const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
   const [estimateResults, setdestimateResults] = useState([]);
+  const [customerId, setCustomerId] = useState('');
+  
   // const [result, setResult] = useState({});
   const [AddColumnShow, setAddColumnShow] = useState(false);
   // const statues = [
@@ -57,7 +59,8 @@ export default function Datatable(props) {
     estimateResults: {},
     data: [],
     filteredData: [],
-    columns: [
+    columns:
+     [
       {
         title: <Checkbox />,
         dataIndex: "keys",
@@ -334,6 +337,7 @@ export default function Datatable(props) {
   }
   const popId=(customerData)=>{
     console.log('hi 22',customerData[0]._id)
+    setCustomerId(customerData[0]._id)
   }
   const buildTable = async (result) => {
     const data = [];
@@ -439,20 +443,43 @@ export default function Datatable(props) {
     await buildTable(result);
   };
 
+  let content;
  const fetchList=async()=>{
   const statusLis = await getData(`status/list`);
   console.log("status",statusLis)
   if(statusLis.data.Data){
     setLeadTypes(statusLis.data.Data)
   }
+  content = (
+    <div style={{ width: "520px" }}>
+      <Row gutter={[24, 0]}>
+        {statusLis.data.Data.map((status, index) => (
+          <Col span={12} key={index}>
+            <Button
+              className="w-100 mb-2 font-bold border-0 text-white"
+               style={{ background:  "orange", color: status.textcolor }}
+               onClick={() =>changeStatus(status)}
+            >
+              {status.name}
+            </Button>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
  }
+
   useEffect(async () => {
     fetchData();
-    fetchList()
+    fetchList();
+ 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   useEffect(async () => {
     let obj = props.currentTabData.filterObject;
+
+   
+   
     if (obj)
       handleOk({
         leadSelected: obj.estimaitonStatus,
@@ -463,6 +490,8 @@ export default function Datatable(props) {
       });
     else fetchData();
 
+
+  
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentTabData]);
   const filterData = (e) => {
@@ -526,6 +555,16 @@ export default function Datatable(props) {
     setModalVisible(false);
     setAddColumnShow(false);
   };
+
+  const changeStatus=async(status)=>{
+    console.log(status.name,customerId);
+    const result = await postData(`customer/update-info`, {
+      id:customerId,
+      estimaitonStatus: status.name,
+    });
+    console.log('updated',result);
+
+  }
   const onChange = async (customer, i) => {
     console.log(`switch to`, params);
 
@@ -562,8 +601,7 @@ export default function Datatable(props) {
     console.log("sortupd==", result2);
     props.updateTab(result2);
   };
-
-  const content = (
+  content = (
     <div style={{ width: "520px" }}>
       <Row gutter={[24, 0]}>
         {leadTypes.map((status, index) => (
@@ -571,6 +609,7 @@ export default function Datatable(props) {
             <Button
               className="w-100 mb-2 font-bold border-0 text-white"
                style={{ background:  "orange", color: status.textcolor }}
+               onClick={() =>changeStatus(status)}
             >
               {status.name}
             </Button>
@@ -579,7 +618,9 @@ export default function Datatable(props) {
       </Row>
     </div>
   );
+  console.log('state===',state)
   console.log('types===',leadTypes)
+  console.log('st col===',state.columns)
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
