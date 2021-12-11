@@ -85,7 +85,11 @@ export default function Datatable(props) {
         ),
         dataIndex: "name",
         width: 200,
-        sorter: true,
+        // sorter: true,
+        //  defaultSortOrder: 'ascend',
+         key: "name",
+         sorter: (a, b) => console.log(a),
+        //  sortDirections: ['descend','ascend'],
       },
       {
         title: (
@@ -93,10 +97,11 @@ export default function Datatable(props) {
             Status <span className="float-end me-2">{drag}</span>
           </>
         ),
+        key: "estimaitonStatus",
         dataIndex: "estimaitonStatus",
         className: "text-green",
         width: 300,
-        sorter: true,
+        sorter: (a, b) => a.estimaitonStatus.toString().localeCompare(b.estimaitonStatus),
       },
 
       {
@@ -105,9 +110,11 @@ export default function Datatable(props) {
             Estimate added (Date) <span className="float-end me-2">{drag}</span>
           </>
         ),
+        key: "date",
         dataIndex: "date",
         width: 300,
-        sorter: true,
+        sorter: (a, b) => a.date.toString().localeCompare(b.date),
+        // defaultSortOrder: 'descend',
       },
       {
         title: (
@@ -115,9 +122,10 @@ export default function Datatable(props) {
             Email <span className="float-end me-2">{drag}</span>
           </>
         ),
+        key: "email",
         dataIndex: "email",
         width: 300,
-        sorter: true,
+        sorter: (a, b) => a.email.toString().localeCompare(b.email),
       },
       {
         title: (
@@ -127,7 +135,7 @@ export default function Datatable(props) {
         ),
         dataIndex: "contactNo",
         width: 200,
-        sorter: true,
+        sorter: (a, b) => a.contactNo.toString().localeCompare(b.contactNo),
       },
       {
         title: (
@@ -137,7 +145,7 @@ export default function Datatable(props) {
         ),
         dataIndex: "address",
         width: 300,
-        sorter: true,
+        sorter: (a, b) => a.address.toString().localeCompare(b.address),
       },
       {
         title: (
@@ -147,8 +155,8 @@ export default function Datatable(props) {
           </>
         ),
         dataIndex: "estimaitonSent",
-        width: 300,
-        sorter: true,
+        width: 200,
+        sorter: (a, b) => a.estimaitonSent.toString().localeCompare(b.estimaitonSent),
       },
 
       {
@@ -159,7 +167,7 @@ export default function Datatable(props) {
         ),
         dataIndex: "estimaitonCloseDate",
         width: 200,
-        sorter: true,
+        sorter: (a, b) => a.estimaitonCloseDate.toString().localeCompare(b.estimaitonCloseDate),
       },
       {
         title: (
@@ -170,7 +178,7 @@ export default function Datatable(props) {
         ),
         dataIndex: "daysItTookToSendEstimate",
         width: 300,
-        sorter: true,
+        sorter: (a, b) => a.daysItTookToSendEstimate.toString().localeCompare(b.daysItTookToSendEstimate),
       },
       // {
       //   title: (
@@ -290,7 +298,9 @@ export default function Datatable(props) {
     ],
     deleteEstimateId: "",
   });
-
+ const  onChangeTable=(pagination, filters, sorter, extra)=> {
+    console.log('params', pagination, filters, sorter, extra);
+  }
   const [newEstimateData, setNewEstimateData] = useState([]);
 
   // const that = state;
@@ -593,6 +603,7 @@ export default function Datatable(props) {
             bordered={false}
             className="ant-table-estmating scroll-style vertical-align"
             scroll={{ x: 400, y: 500 }}
+            onChange={onChangeTable}
           />
         </ReactDragListView.DragColumn>
       </div>

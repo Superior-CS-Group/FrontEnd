@@ -42,16 +42,13 @@ export default function LeadInfo(props) {
   const [isLoadingWarning, setIsLoadingWarning] = useState(false);
   const [isWarning, setIsWarning] = useState(false);
   useEffect(() => {
-    console.log("props ", props);
     const id = params.id;
 
     if (id) {
-      const body = { id };
       const fetchData = async () => {
         const result = props.result;
 
         // setResponseData(result.data);
-        // console.log(responseData.Data.address);
         setState({
           ...state,
           id: id,
@@ -164,18 +161,17 @@ export default function LeadInfo(props) {
     if (e) {
       e.preventDefault();
     }
-    console.log("state>email: ", state.email);
     const response = await isExistsLeadEmail(state.email);
-    console.log("response: ", response);
     if (response.remote === "success") {
       setIsWarning(true);
+      return true;
     } else {
       setIsWarning(false);
+      return false;
     }
   };
 
   const handleSubmit = async (event, saveAnyWay) => {
-    // console.log(localStorage.getItem("token"));
     setIsLoading(true);
     if (saveAnyWay) {
       setIsLoadingWarning(true);
@@ -186,6 +182,10 @@ export default function LeadInfo(props) {
     if (!isValid) {
       setState({ ...state, errors });
       // message.success(errors, 5);
+      setIsLoading(false);
+      if (saveAnyWay) {
+        setIsLoadingWarning(false);
+      }
       return;
     }
     const spouse = {
@@ -210,7 +210,7 @@ export default function LeadInfo(props) {
     } = state;
     let isExists = false;
     if (!isWarning && !saveAnyWay && !state.id) {
-      isExists = isEmailExists();
+      isExists = await isEmailExists();
     }
     if (!isExists) {
       const body = {
@@ -226,10 +226,8 @@ export default function LeadInfo(props) {
         otherInformation,
         spouse,
       };
-      // console.log("body: ", body);
       try {
         await postData(`customer/add`, body);
-        // console.log("result: ", result);
         setState({
           ...state,
           message: "New Customer Added!",
@@ -251,7 +249,6 @@ export default function LeadInfo(props) {
         setIsLoading(false);
         message.success("New Customer Added!", 2);
       } catch (err) {
-        console.log("error", err, err.response);
         setIsWarning(false);
         setIsLoadingWarning(false);
         setIsLoading(false);
@@ -265,7 +262,6 @@ export default function LeadInfo(props) {
   };
 
   const updatehandleSubmit = async (event) => {
-    // console.log(localStorage.getItem("token"));
     event.preventDefault();
     let id = state.id;
 
@@ -309,11 +305,9 @@ export default function LeadInfo(props) {
       otherInformation,
       spouse,
     };
-    console.log("body: ", body);
 
     try {
-      const result = await postData(`customer/update-info`, body);
-      console.log("result: ", result);
+      await postData(`customer/update-info`, body);
       setState({
         ...state,
         errors: [],
@@ -321,8 +315,6 @@ export default function LeadInfo(props) {
         isRedirect: true,
       });
     } catch (err) {
-      console.log("error", err, err.response);
-
       setState({
         ...state,
         errors: err.response.data.errors,
@@ -332,7 +324,6 @@ export default function LeadInfo(props) {
   };
 
   const updatehandleSpouseSubmit = async (event) => {
-    // console.log(localStorage.getItem("token"));
     event.preventDefault();
     let id = state.id;
 
@@ -350,11 +341,9 @@ export default function LeadInfo(props) {
       id,
       spouse,
     };
-    console.log("body: ", body);
 
     try {
-      const result = await postData(`customer/update-info`, body);
-      console.log("result: ", result);
+      await postData(`customer/update-info`, body);
       setState({
         ...state,
         errors: [],
@@ -362,8 +351,6 @@ export default function LeadInfo(props) {
         isRedirect: true,
       });
     } catch (err) {
-      console.log("error", err, err.response);
-
       setState({
         ...state,
         errors: err.response.data.errors,
@@ -372,46 +359,6 @@ export default function LeadInfo(props) {
     }
   };
 
-  const updateActiveStatushandleSubmit = async (event) => {
-    // console.log(localStorage.getItem("token"));
-    let id = state.id;
-
-    event.preventDefault();
-    setState({ ...state, errors: {} });
-    const { errors, isValid } = validateFields();
-    if (!isValid) {
-      setState({ ...state, errors });
-      return;
-    }
-    setState({ ...state, isLoading: true });
-
-    const { activeStatus } = state;
-    const body = {
-      id,
-      activeStatus,
-    };
-    // console.log("body: ", body);
-
-    try {
-      const result = await postData(`customer/update-info`, body);
-      // console.log("result: ", result);
-      setState({
-        ...state,
-        errors: [],
-        message: "Data Updated!",
-      });
-    } catch (err) {
-      console.log("error", err, err.response);
-
-      setState({
-        ...state,
-        errors: err.response.data.errors,
-        isLoading: false,
-      });
-    }
-  };
-
-  const { value, setValue } = state;
   const { Panel } = Collapse;
   const { expandIconPosition } = state;
   const { TextArea } = Input;
