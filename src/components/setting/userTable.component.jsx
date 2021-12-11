@@ -261,6 +261,7 @@ export default function UserTable(props) {
               </div>
             </div>
           </div>
+          <div className="px-2">
           <ReactDragListView.DragColumn {...dragProps}>
             <Table
               // className="ant-table-color"
@@ -271,6 +272,7 @@ export default function UserTable(props) {
               bordered={false}
             />
           </ReactDragListView.DragColumn>
+          </div>
         </>
       )}
 

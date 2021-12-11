@@ -34,29 +34,31 @@ export default function Datatable(props) {
   // const [result, setResult] = useState({});
   const [AddColumnShow, setAddColumnShow] = useState(false);
   const statues = [
-    { title: "Need to write estimate", color: "#000" },
-    { title: "Need to send estimate", color: "red" },
+    { title: "Need to write estimate", color: "#43a047 " },
+    { title: "Need to send estimate", color: "#c0ca33" },
     {
       title: "Estimate sent - 0-2 contacts",
-      color: "green",
+      color: "#f9a825",
       // textcolor: "#000",
     },
-    { title: "Estimate sent - 3-5 contacts", color: "orange" },
-    { title: "Estimate sent - 5-8 contacts", color: "#ff4d4f" },
-    { title: "Estimate sent - Over 8 contacts", color: "#6c757d" },
-    { title: "Estimate lost", color: "blue" },
+    { title: "Estimate sent - 3-5 contacts", color: "#ef6c00" },
+    { title: "Estimate sent - 5-8 contacts", color: "#e64a19 " },
+    { title: "Estimate sent - Over 8 contacts", color: "#546e7a" },
+    { title: "Estimate lost", color: "#512da8" },
 
-    { title: "Estimate internally declined", color: "purple" },
-    { title: "Estimate signed", color: "magenta" },
+    { title: "Estimate internally declined", color: "#1e88e5" },
+    { title: "Estimate signed", color: "#ad1457" },
   ];
 
   const content = (
-    <div style={{ width: "520px" }}>
-      <Row gutter={[24, 0]}>
+    <div style={{ width: "450px" }}>
+      <Row gutter={[8, 0]}>
         {statues.map((status, index) => (
           <Col span={12} key={index}>
             <Button
-              className="w-100 mb-2 font-bold border-0 text-white"
+             
+              size="large"
+              className="w-100 mb-2  border-0 text-white radius-0 font-12"
               style={{ background: status.color, color: status.textcolor }}
             >
               {status.title}
@@ -87,8 +89,8 @@ export default function Datatable(props) {
         width: 200,
         // sorter: true,
         //  defaultSortOrder: 'ascend',
-         key: "name",
-         sorter: (a, b) => console.log(a),
+        key: "name",
+        sorter: (a, b) => console.log(a),
         //  sortDirections: ['descend','ascend'],
       },
       {
@@ -101,7 +103,8 @@ export default function Datatable(props) {
         dataIndex: "estimaitonStatus",
         className: "text-green",
         width: 300,
-        sorter: (a, b) => a.estimaitonStatus.toString().localeCompare(b.estimaitonStatus),
+        sorter: (a, b) =>
+          a.estimaitonStatus.toString().localeCompare(b.estimaitonStatus),
       },
 
       {
@@ -155,8 +158,9 @@ export default function Datatable(props) {
           </>
         ),
         dataIndex: "estimaitonSent",
-        width: 200,
-        sorter: (a, b) => a.estimaitonSent.toString().localeCompare(b.estimaitonSent),
+        width: 300,
+        sorter: (a, b) =>
+          a.estimaitonSent.toString().localeCompare(b.estimaitonSent),
       },
 
       {
@@ -167,7 +171,8 @@ export default function Datatable(props) {
         ),
         dataIndex: "estimaitonCloseDate",
         width: 200,
-        sorter: (a, b) => a.estimaitonCloseDate.toString().localeCompare(b.estimaitonCloseDate),
+        sorter: (a, b) =>
+          a.estimaitonCloseDate.toString().localeCompare(b.estimaitonCloseDate),
       },
       {
         title: (
@@ -178,7 +183,10 @@ export default function Datatable(props) {
         ),
         dataIndex: "daysItTookToSendEstimate",
         width: 300,
-        sorter: (a, b) => a.daysItTookToSendEstimate.toString().localeCompare(b.daysItTookToSendEstimate),
+        sorter: (a, b) =>
+          a.daysItTookToSendEstimate
+            .toString()
+            .localeCompare(b.daysItTookToSendEstimate),
       },
       // {
       //   title: (
@@ -298,9 +306,9 @@ export default function Datatable(props) {
     ],
     deleteEstimateId: "",
   });
- const  onChangeTable=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
-  }
+  const onChangeTable = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
   const [newEstimateData, setNewEstimateData] = useState([]);
 
   // const that = state;
@@ -407,7 +415,7 @@ export default function Datatable(props) {
           estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
           estimaitonStatus: (
             <Popover content={content} placement="bottom">
-              <span className="btn btn-success d-inline-block">
+              <span className="btn btn-success d-inline-block btn-coners">
                 {customerData[0].estimaitonStatus}
               </span>
             </Popover>
@@ -443,20 +451,18 @@ export default function Datatable(props) {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-  useEffect(async() => {
-    let obj=props.currentTabData.filterObject;
-    if(obj)
-    handleOk({
-      leadSelected:obj.estimaitonStatus,
-      estimaitonStatus: obj.leadSelected,
-      dateFilter:obj.dateFilter,
-      leadSource:obj.leadSource,
-      sortDropdown:obj.sortDropdown
-    });
-    else
-    fetchData();
-    
-   
+  useEffect(async () => {
+    let obj = props.currentTabData.filterObject;
+    if (obj)
+      handleOk({
+        leadSelected: obj.estimaitonStatus,
+        estimaitonStatus: obj.leadSelected,
+        dateFilter: obj.dateFilter,
+        leadSource: obj.leadSource,
+        sortDropdown: obj.sortDropdown,
+      });
+    else fetchData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentTabData]);
   const filterData = (e) => {
@@ -501,9 +507,9 @@ export default function Datatable(props) {
     console.log("hey uncl", state.leadSelected);
     const result2 = await postData(`estimation/filter-sort`, {
       estimaitonStatus: state.leadSelected,
-      dateFilter:state.dateFilter,
-      leadSource:state.leadSource,
-      sortDropdown:state.sortDropdown
+      dateFilter: state.dateFilter,
+      leadSource: state.leadSource,
+      sortDropdown: state.sortDropdown,
     });
     console.log("sort==", result2);
     // [

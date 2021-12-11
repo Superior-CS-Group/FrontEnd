@@ -319,7 +319,6 @@ img {
   color: #717171;
 }
 .sidebar-btn-disable:hover {
-  color: #ccc !important;
   cursor: not-allowed;
   background-color: transparent !important;
 }
@@ -2797,4 +2796,73 @@ tr.ant-table-measure-row {
   font-size: 15px;
   line-height: 28px;
   color: #717171;
+}
+
+.btn-coners {
+  border: none;
+  position: relative;
+
+  border-radius: 0px;
+  overflow: hidden;
+  transition: border-radius 0s;
+}
+
+.btn-coners:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 0px 0px 0;
+  border-style: solid;
+  border-color: #fff #fff #658e15 #658e15;
+
+  display: block;
+  width: 0;
+  -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 30%), -1px 1px 1px rgb(0 0 0 / 20%);
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), -1px 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 30%), -1px 1px 1px rgb(0 0 0 / 20%);
+}
+
+.btn-coners:hover:before {
+  border-width: 0 12px 12px 0;
+}
+.radius-0 {
+  border-radius: 0px;
+}
+.font-12 {
+  font-size: 12px;
+}
+
+.textarea-resize {
+  height: 100px !important;
+  resize: none;
+}
+.dot-align {
+  position: relative;
+  top: -1px;
+}
+
+.dot-align svg {
+  width: 11px;
+}
+.ant-siderbar-menu
+  .ant-menu-submenu.ant-menu-submenu-vertical.ant-menu-submenu-selected {
+  background: #1a73e8;
+  color: #fff;
+  padding-bottom: 0px;
+}
+
+.ant-siderbar-menu
+  .ant-menu-submenu.ant-menu-submenu-inline.ant-menu-submenu-open.ant-menu-submenu-selected
+  .ant-menu-submenu-title {
+  background: #1a73e8;
+  color: #fff;
+  border-radius: 0px 30px 30px 0px;
+}
+
+.ant-siderbar-menu
+  .ant-menu-submenu.ant-menu-submenu-inline.ant-menu-submenu-open.ant-menu-submenu-selected
+  .ant-menu-submenu-title
+  .ant-menu-submenu-arrow {
+  color: #fff;
 }
