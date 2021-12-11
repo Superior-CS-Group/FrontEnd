@@ -38,6 +38,15 @@ function ReactMentionInput({
         placeholder={placeholder}
         onBlur={onBlur}
       >
+        <Mention
+          markup="{__display__}"
+          trigger="{"
+          data={[
+            { display: "Quantity", id: "quantity" },
+            { display: "Cost", id: "cost" },
+          ]}
+          displayTransform={(id, title) => `{${title}}`}
+        />
         {!noElement && (
           <Mention
             trigger="@"
