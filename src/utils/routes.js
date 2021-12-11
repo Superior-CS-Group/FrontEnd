@@ -18,6 +18,9 @@ import Catlog from "../components/estimates/catlog/Catlog";
 import EmailSetting from "../components/setting/emailsetting.component";
 import UserList from "../components/setting/userList.component";
 import UserProfile from "../components/user/userprofile/UserProfile";
+import UploadImage from "../components/uploadimage/UploadImage";
+import PaymentTerm from "../components/paymentTerms/PaymentTerm";
+import TermsAndConditions from "../components/estimates/termsandconditions/TermsAndConditions";
 
 const routes = [
   // {
@@ -134,6 +137,25 @@ const routes = [
     exact: true,
     name: "userprofile",
     component: <UserProfile />,
+  },
+
+  {
+    path: "/upload-image",
+    exact: true,
+    name: "uploadimage",
+    component: <UploadImage />,
+  },
+  {
+    path: "/payment-terms",
+    exact: true,
+    name: "paymentterms",
+    component: <PaymentTerm />,
+  },
+  {
+    path: "/term-and-conditions",
+    exact: true,
+    name: "termsandconditions",
+    component: <TermsAndConditions />,
   },
 ];
 export default routes;

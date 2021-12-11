@@ -87,6 +87,14 @@ export default class DashboardNavbar extends Component {
             <Menu.Item key="es3">
               <NavLink to="/userlist">User List</NavLink>
             </Menu.Item>
+
+            <Menu.Item key="es4">
+              <NavLink to="/upload-image">upload Image</NavLink>
+            </Menu.Item>
+
+            <Menu.Item key="es5">
+              <NavLink to="/payment-terms">Payment Terms</NavLink>
+            </Menu.Item>
           </SubMenu>
 
           <Menu.Item key="11" icon={template} className="sidebar-btn-disable">
