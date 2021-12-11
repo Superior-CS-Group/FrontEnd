@@ -18,9 +18,10 @@ import Catlog from "../components/estimates/catlog/Catlog";
 import EmailSetting from "../components/setting/emailsetting.component";
 import UserList from "../components/setting/userList.component";
 import UserProfile from "../components/user/userprofile/UserProfile";
-import UploadImage from "../components/uploadimage/UploadImage";
+
 import PaymentTerm from "../components/paymentTerms/PaymentTerm";
 import TermsAndConditions from "../components/estimates/termsandconditions/TermsAndConditions";
+import CompanySettings from "../components/companysettings/CompanySettings";
 
 const routes = [
   // {
@@ -140,10 +141,10 @@ const routes = [
   },
 
   {
-    path: "/upload-image",
+    path: "/company-settings",
     exact: true,
-    name: "uploadimage",
-    component: <UploadImage />,
+    name: "companysettings",
+    component: <CompanySettings />,
   },
   {
     path: "/payment-terms",

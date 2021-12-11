@@ -174,7 +174,7 @@ export default function EmailSetting() {
               <Col md={12}>
                 <Form.Item label="Host Name">
                   {/* <span style={{display: "none"}}>{host}</span> */}
-                  <Input
+                  <Input size="large"
                     placeholder="Host"
                     name="host"
                     value={host}
@@ -182,7 +182,7 @@ export default function EmailSetting() {
                   />
                 </Form.Item>
                 <Form.Item label="User ">
-                  <Input
+                  <Input size="large"
                     placeholder="Username"
                     name="username"
                     value={username}
@@ -190,7 +190,7 @@ export default function EmailSetting() {
                   />
                 </Form.Item>
                 <Form.Item label="Password">
-                  <Input
+                  <Input size="large"
                     placeholder="Password"
                     name="password"
                     value={password}
@@ -198,7 +198,7 @@ export default function EmailSetting() {
                   />
                 </Form.Item>
                 <Form.Item label="Port">
-                  <Input
+                  <Input size="large"
                     placeholder="Port"
                     name="port"
                     value={port}
@@ -209,7 +209,7 @@ export default function EmailSetting() {
               <Col md={12}>
                 {" "}
                 <Form.Item label="From Email">
-                  <Input
+                  <Input size="large"
                     placeholder="From Email"
                     name="fromEmail"
                     value={fromEmail}
@@ -223,7 +223,7 @@ export default function EmailSetting() {
                   className="main-logo-label"
                   // extra="long"
                 >
-                  <input type="file" onChange={handleProfileImage} />
+                  <Input size="large" type="file" onChange={handleProfileImage} />
                   <img src={state.profileImage} className="preview-logo" />
                   {/* <Upload
                   listType="picture"
@@ -241,7 +241,7 @@ export default function EmailSetting() {
                 <Input.TextArea />
               </Form.Item> */}
                 <div className="text-right">
-                  <Button
+                  <Button size="large"
                     type="primary"
                     shape="round"
                     className=""
