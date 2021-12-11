@@ -66,7 +66,7 @@ export default function AddEstimates(props) {
     },
     {
       title: "Units",
-      dataIndex: "address",
+      dataIndex: "unitToShow",
     },
     {
       title: "Cost (total)",
@@ -343,18 +343,24 @@ export default function AddEstimates(props) {
         [...(formula.catalog || []), ...material.formula],
         elements
       );
-      let cost =
-        quantity *
-        processFormula(material.cost || "", formula.catalogs || [], elements);
+      const materialCost = material.cost?.replace(/\{Quantity\}/g, quantity);
+      let cost = processFormula(
+        materialCost || "",
+        formula.catalogs || [],
+        elements
+      );
+      let materialCharge = material.charge?.replace(/\{Quantity\}/g, quantity);
+      materialCharge = material.charge?.replace(/\{Cost\}/, cost);
       let charge = processFormula(
-        material.charge.replace("{Cost}", cost) || "",
+        materialCharge,
         [...(formula.catalog || []), ...material.formula],
         elements
       );
       material.quantityValue = quantity;
       material.costValue = cost;
       material.chargeValue = charge;
-
+      console.log("material: ", material);
+      material.unitToShow = material.unit?.name;
       processClientContract(
         formula,
         [...(formula.catalog || []), ...material.formula],
