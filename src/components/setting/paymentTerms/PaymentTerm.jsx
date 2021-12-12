@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
+import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import { Card, Row, Col, List, Input, Button } from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 export default function PaymentTerm() {

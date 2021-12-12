@@ -311,7 +311,6 @@ export const calender = (
       stroke="currentColor"
       strokewidth="1.5"
       strokeLinecap="round"
-      strokeLinecap="round"
     />
     <path
       d="M16.8594 1.85303V6.01969"
@@ -613,7 +612,6 @@ export const dot = (
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
-    strokeLinecap="round"
     strokeLinecap="round"
     class="feather feather-circle"
   >

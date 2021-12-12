@@ -55,6 +55,7 @@ export default class MainEstimates extends Component {
     let finalD = data.data.Data;
     console.log("hey   hhhh", data);
     let tab = this.state.Tabs;
+    // eslint-disable-next-line array-callback-return
     tab.map((t) => {
       if (t._id === finalD._id) {
         t.filterObject = finalD.filterObject;

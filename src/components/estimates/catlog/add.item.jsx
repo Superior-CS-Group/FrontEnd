@@ -41,6 +41,7 @@ export default function AddItem({
     quantity: "",
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(async () => {
     if (selectedElement && selectedElement._id) {
       setItemDetails(selectedElement);

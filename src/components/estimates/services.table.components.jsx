@@ -1,12 +1,11 @@
-import React, { useEffect, useState, Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Checkbox, Button, Modal, Radio } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { Datel, drag, edit } from "../../utils/svg.file";
 import Material from "./material.components";
 import Services from "./services.components";
 import { useParams } from "react-router-dom";
-import { getData, postData } from "../../utils/fetchApi.js";
-import { deleteCatalog } from "../../api/catalogue";
+import { postData } from "../../utils/fetchApi.js";
 
 export default function ServicesTable() {
   const params = useParams();
@@ -53,7 +52,7 @@ export default function ServicesTable() {
           </>
         ),
         dataIndex: "price",
-        width:250,
+        width: 250,
       },
       {
         title: "Action",
@@ -63,20 +62,6 @@ export default function ServicesTable() {
       },
     ],
   });
-
-  const that = state;
-  const dragProps = {
-    onDragEnd(fromIndex, toIndex) {
-      const columns = [...that.state.columns];
-      const item = columns.splice(fromIndex, 1)[0];
-      columns.splice(toIndex, 0, item);
-      that.setState({
-        ...state,
-        columns,
-      });
-    },
-    nodeSelector: "th",
-  };
 
   const deleteServiceHandleSubmit = async (id) => {
     console.log(id);
@@ -140,6 +125,7 @@ export default function ServicesTable() {
       setState({ ...state, data });
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   const showModal = () => {

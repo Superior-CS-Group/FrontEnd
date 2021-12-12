@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
-import PreviewBanner from "../../../src/images/estimate-banner.png";
-import MountSky from "../../../src/images/mount-sky.png";
-import { Divider, Button, Input, Row, Col, Form } from "antd";
-import ReactQuill from "react-quill";
-import SimpleEMailSent from "../email/simple.emailsent.component";
-import ModalMain from "../modal/modal.component";
+// import PreviewBanner from "../../../src/images/estimate-banner.png";
+// import MountSky from "../../../src/images/mount-sky.png";
 import { useParams } from "react-router-dom";
 import { postData } from "../../utils/fetchApi";
-import { sendEstimateContract } from "../../api/estimate-contract"; 
 // import dataPDF from "../../contract2.pdf";
 export default function ContractPdf(props) {
   const dataMainPDF = "http://www.africau.edu/images/default/sample.pdf";
@@ -23,26 +18,6 @@ export default function ContractPdf(props) {
     resultData: [],
   });
 
-  const [editPreviewDiv, setEditPreviewDiv] = useState(false);
-  const [editPreviewText, setEditPreviewText] = useState(false);
-  const [editorHtml, setEditorHtml] = useState("");
-  const [ModalVisible, setModalVisible] = useState(false);
-
-  let handleEdit = () => {
-    setEditPreviewDiv(true);
-    setEditPreviewText(false);
-  };
-  let updateData = () => {
-    setEditPreviewDiv(false);
-    setEditPreviewText(true);
-  };
-  let handleChange = (html) => {
-    setEditorHtml(html);
-  };
-  let handleCancel = () => {
-    setModalVisible(false);
-  };
-
   useEffect(() => {
     const id = params.id;
 
@@ -52,7 +27,6 @@ export default function ContractPdf(props) {
         const result = await postData(`customer/get-info`, body);
         // console.log("result.data.Data",result.data.Data)
         let userstatus;
-        let autoReminder;
 
         if (result.data.Data.activeStatus === true) {
           userstatus = "Active";
@@ -81,20 +55,8 @@ export default function ContractPdf(props) {
 
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-
-  let modalShow = async () => {
-    const custId = params.id;
-    let custLeadId = [];
-    custLeadId.push(custId);
-    const body = { customerLeadId: custLeadId };
-    console.log(body);
-    const result = await sendEstimateContract(body);
-    if (result.remote === "success") {
-      console.log(result.data.data);
-    }
-    setModalVisible(true);
-  };
 
   return (
     <>
@@ -102,6 +64,7 @@ export default function ContractPdf(props) {
         <iframe
           src={dataMainPDF}
           style={{ height: "100vh", width: "100%" }}
+          title="pdf"
         ></iframe>
       </div>
     </>

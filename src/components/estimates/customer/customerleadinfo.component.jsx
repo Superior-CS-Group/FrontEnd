@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Select, Button, Card, Switch, message, Avatar } from "antd";
+import { Row, Col, Select, Button, Card, message, Avatar } from "antd";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { getData, postData } from "../../../utils/fetchApi.js";
-import {
-  UserOutlined,
-  PhoneOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { PhoneOutlined, UserAddOutlined } from "@ant-design/icons";
 // import Button from "@restart/ui/esm/Button";
 import LeadInfo from "./lead.info.component";
 import AddEstimates from "../add.estimates.components";
@@ -57,6 +53,7 @@ export default function CustomerLeadInfo(props) {
     setEstimationId(query.get("estimationId"));
   }, [search]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     const id = params.id;
     if (id) {
@@ -99,6 +96,7 @@ export default function CustomerLeadInfo(props) {
     }
     const getUserEstimationD = await getUserEstimation(params.id);
     setGetUserEstimationData(getUserEstimationD);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onChangeTab = (val) => {
@@ -119,29 +117,6 @@ export default function CustomerLeadInfo(props) {
   };
 
   const { size } = state;
-
-  const autoReminderEmailHandleSubmit = async (e) => {
-    let id = params.id;
-    const body = {
-      id: id,
-      autoReminderEmail: e,
-    };
-    const updateCustomer = await updateCustomerDetails(body);
-    if (updateCustomer.remote === "success") {
-      setState({
-        ...state,
-        errors: [],
-        autoReminderEmail: e,
-      });
-      message.success("Data Updated!", 5);
-    } else {
-      setState({
-        ...state,
-        errors: updateCustomer.remote.data.errors,
-        isLoading: false,
-      });
-    }
-  };
 
   const updateStatusHandleSubmit = async (e) => {
     let id = params.id;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PreviewBanner from "../../../src/images/estimate-banner.png";
+// import PreviewBanner from "../../../src/images/estimate-banner.png";
 import MountSky from "../../../src/images/mount-sky.png";
 import { Divider, Input, Row, Col, Form, Button } from "antd";
 import logo from "../../images/small-logo.png";
@@ -41,7 +41,6 @@ export default function ContractPreview() {
   const [discount, setDiscount] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
   const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const [base64, setBase64] = useState("");
 
   const pdfExportComponent = React.useRef(null);
   useEffect(() => {
@@ -77,12 +76,8 @@ export default function ContractPreview() {
         response.data.data?.estimateSettings?.fluffNumberDiscount || 0;
       console.log("estimationDetails: ", response.data.data, formulas);
       let projectCharge = 0;
-      let projectCost = 0;
-      let materialsCost = 0;
       formulas.forEach((formula) => {
         projectCharge += formula.totalProjectCharge;
-        projectCost += formula.totalMaterialsCost;
-        materialsCost += formula.totalMaterialsCost;
       });
       discount = (projectCharge * discount) / 100;
       const projectChargeAfterDiscount = projectCharge - discount;

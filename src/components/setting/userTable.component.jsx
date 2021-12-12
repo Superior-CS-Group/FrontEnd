@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Table, Badge, Tooltip, Input, message, Switch, Select } from "antd";
+import { Table, Tooltip, Input, message, Switch, Select } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag } from "../../utils/svg.file";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getUserList } from "../../api/admin.js";
 import { updateCustomerStatus, updateIsAdminStatus } from "../../api/user.js";
 import { LockOutlined } from "@ant-design/icons";
@@ -88,21 +88,17 @@ export default function UserTable(props) {
     nodeSelector: "th",
   };
 
-  const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
-  };
-
   const isAdminHandleSubmit = async (id) => {
     const body = { id: id };
     console.log(body);
-    const result = await updateIsAdminStatus(body);
+    await updateIsAdminStatus(body);
     message.success("Admin Status Updated", 5);
   };
 
   const updateStatusHandle = async (e, id) => {
     const body = { id: id, activeStatus: e };
     console.log(e, id);
-    const result = await updateCustomerStatus(body);
+    await updateCustomerStatus(body);
     // let data2 = state.data.filter((item) => item._id === id);
     message.success("Status Updated", 5);
   };
@@ -217,10 +213,6 @@ export default function UserTable(props) {
     setIsModalShow(false);
   };
 
-  const changePasswordHandle = () => {
-    console.log(userId, state.newPassword);
-  };
-
   const handleFilterData = (e) => {
     const { value } = e.target;
     const filtredData = state.data.filter((item) => {
@@ -262,16 +254,16 @@ export default function UserTable(props) {
             </div>
           </div>
           <div className="px-2">
-          <ReactDragListView.DragColumn {...dragProps}>
-            <Table
-              // className="ant-table-color"
-              className="components-table-demo-nested ant-thead-block scroll-style"
-              columns={state.columns}
-              pagination={false}
-              dataSource={state.filtredData}
-              bordered={false}
-            />
-          </ReactDragListView.DragColumn>
+            <ReactDragListView.DragColumn {...dragProps}>
+              <Table
+                // className="ant-table-color"
+                className="components-table-demo-nested ant-thead-block scroll-style"
+                columns={state.columns}
+                pagination={false}
+                dataSource={state.filtredData}
+                bordered={false}
+              />
+            </ReactDragListView.DragColumn>
           </div>
         </>
       )}

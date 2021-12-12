@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Card, Input } from "antd";
-import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { Card } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
 
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import { Nav } from "react-bootstrap";
@@ -77,9 +77,7 @@ export default class UserList extends Component {
             </Nav>
           </div>
 
-        
-            <UserTable />
-       
+          <UserTable />
         </Card>
       </>
     );

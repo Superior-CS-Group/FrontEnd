@@ -547,6 +547,7 @@ export default function Catlog() {
                                     preview={{ visible: false }}
                                     src={record.images[0] || log}
                                     onClick={(rr = record.images) => {
+                                      // eslint-disable-next-line array-callback-return
                                       catalogItem.map((r) => {
                                         if (r._id === record.key) {
                                           setCurrentImages(r.images);

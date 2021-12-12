@@ -1,7 +1,6 @@
 import View from "../components/estimates/view.components";
 import MainEstimates from "../components/estimates/estimates.components";
 import CustomerLeadInfo from "../components/estimates/customer/customerleadinfo.component";
-import Catalog from "../components/estimates/catalog.component";
 import AddEstimates from "../components/estimates/add.estimates.components";
 import EmailSend from "../components/email/email.component";
 
@@ -19,9 +18,9 @@ import EmailSetting from "../components/setting/emailsetting.component";
 import UserList from "../components/setting/userList.component";
 import UserProfile from "../components/user/userprofile/UserProfile";
 
-import PaymentTerm from "../components/paymentTerms/PaymentTerm";
-import TermsAndConditions from "../components/estimates/termsandconditions/TermsAndConditions";
-import CompanySettings from "../components/companysettings/CompanySettings";
+import PaymentTerm from "../components/setting/paymentTerms/PaymentTerm";
+import TermsAndConditions from "../components/setting/termsandconditions/TermsAndConditions";
+import CompanySettings from "../components/setting/companysettings/CompanySettings";
 
 const routes = [
   // {

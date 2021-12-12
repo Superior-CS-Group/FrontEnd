@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
-import { Form, Input, Col, Row, Button, message, Upload } from "antd";
+import { Form, Input, Col, Row, Button, message } from "antd";
 
 import { fileToBase64 } from "../../utils/fileBase64.js";
 import { getEmailSetting, updateEmailSetting } from "../../api/admin";
@@ -126,13 +126,6 @@ export default function EmailSetting() {
     }
   };
 
-  const handleAllChange = (e) => {
-    setState({
-      ...state,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const normFile = (e) => {
     // console.log("Upload event:", e.target);
 
@@ -152,9 +145,12 @@ export default function EmailSetting() {
 
   return (
     <>
-     
-        <BreadcrumbBar name="Dashboard" subname="Email setting"  breaclass="mb-3" />
-      
+      <BreadcrumbBar
+        name="Dashboard"
+        subname="Email setting"
+        breaclass="mb-3"
+      />
+
       {state.smallLoader ? (
         <>
           <div className="text-center d-flex align-items-center justify-content-center ht-100">
@@ -174,7 +170,8 @@ export default function EmailSetting() {
               <Col md={12}>
                 <Form.Item label="Host Name">
                   {/* <span style={{display: "none"}}>{host}</span> */}
-                  <Input size="large"
+                  <Input
+                    size="large"
                     placeholder="Host"
                     name="host"
                     value={host}
@@ -182,7 +179,8 @@ export default function EmailSetting() {
                   />
                 </Form.Item>
                 <Form.Item label="User ">
-                  <Input size="large"
+                  <Input
+                    size="large"
                     placeholder="Username"
                     name="username"
                     value={username}
@@ -190,7 +188,8 @@ export default function EmailSetting() {
                   />
                 </Form.Item>
                 <Form.Item label="Password">
-                  <Input size="large"
+                  <Input
+                    size="large"
                     placeholder="Password"
                     name="password"
                     value={password}
@@ -198,7 +197,8 @@ export default function EmailSetting() {
                   />
                 </Form.Item>
                 <Form.Item label="Port">
-                  <Input size="large"
+                  <Input
+                    size="large"
                     placeholder="Port"
                     name="port"
                     value={port}
@@ -209,7 +209,8 @@ export default function EmailSetting() {
               <Col md={12}>
                 {" "}
                 <Form.Item label="From Email">
-                  <Input size="large"
+                  <Input
+                    size="large"
                     placeholder="From Email"
                     name="fromEmail"
                     value={fromEmail}
@@ -223,8 +224,16 @@ export default function EmailSetting() {
                   className="main-logo-label"
                   // extra="long"
                 >
-                  <Input size="large" type="file" onChange={handleProfileImage} />
-                  <img src={state.profileImage} className="preview-logo" />
+                  <Input
+                    size="large"
+                    type="file"
+                    onChange={handleProfileImage}
+                  />
+                  <img
+                    src={state.profileImage}
+                    className="preview-logo"
+                    alt=""
+                  />
                   {/* <Upload
                   listType="picture"
                   className="check-input-logo" 
@@ -241,7 +250,8 @@ export default function EmailSetting() {
                 <Input.TextArea />
               </Form.Item> */}
                 <div className="text-right">
-                  <Button size="large"
+                  <Button
+                    size="large"
                     type="primary"
                     shape="round"
                     className=""
