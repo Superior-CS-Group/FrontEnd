@@ -1,26 +1,92 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useEffect } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
-import { Card, Row, Col, List, Input, Button } from "antd";
+import { Card, Row, Col, List, Input, Button, message } from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  getOrganizationDetails,
+  updateOrganizationPaymentTerms,
+} from "../../../api/organization";
 export default function PaymentTerm() {
-  const data = [
-    { title: "Milestons Name", present: <Button>10</Button> },
-    { title: "Milestons Name", present: <Button>10</Button> },
-    { title: "Milestons Name", present: <Button>10</Button> },
-    { title: "Milestons Name", present: <Button>10</Button> },
-    {
-      title: <Input type="text" defaultValue={55} style={{ width: "98%" }} />,
-      present: (
-        <Input type="text" style={{ width: "45px" }} defaultValue={10} />
-      ),
-      delete: (
-        <span className="ms-1 delete-icon">
-          <DeleteOutlined />
-        </span>
-      ),
-    },
-  ];
+  const [paymentTerms, setPaymentTerms] = React.useState([]);
+  const [isValid, setIsValid] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const fetchOrganizationDetails = async () => {
+    const response = await getOrganizationDetails();
+    if (response.remote === "success") {
+      setPaymentTerms(response.data.paymentTerms);
+    }
+  };
+  useEffect(() => {
+    fetchOrganizationDetails();
+  }, []);
+
+  const validatePaymentTerm = (newPaymentTerms) => {
+    const totalPercentage = newPaymentTerms.reduce((acc, cur) => {
+      return { value: Number(acc.value) + Number(cur.value) };
+    });
+    let valueValid = false;
+    if (totalPercentage.value !== 100) {
+      valueValid = true;
+    }
+    let nameValid = true;
+    for (let i = 0; i < newPaymentTerms.length; i++) {
+      if (!newPaymentTerms[i].title) {
+        nameValid = false;
+      }
+    }
+    setIsValid(!valueValid && nameValid);
+  };
+
+  const handleChange = (e, index) => {
+    const newPaymentTerms = [...paymentTerms];
+    newPaymentTerms[index][e.target.name] = e.target.value;
+    setPaymentTerms(newPaymentTerms);
+    validatePaymentTerm(newPaymentTerms);
+  };
+
+  const handleAdd = () => {
+    const newPaymentTerms = [...paymentTerms];
+    newPaymentTerms.push({
+      name: "",
+      value: "1",
+    });
+    setPaymentTerms(newPaymentTerms);
+    validatePaymentTerm(newPaymentTerms);
+  };
+
+  const handleDelete = (index) => {
+    const newPaymentTerms = [...paymentTerms];
+    newPaymentTerms.splice(index, 1);
+    setPaymentTerms(newPaymentTerms);
+    validatePaymentTerm(newPaymentTerms);
+  };
+
+  const handleUpdate = async () => {
+    const key = "updatable";
+    message.loading({ content: "Saving...", key });
+    const body = {
+      paymentTerms,
+    };
+    setIsLoading(true);
+    const result = await updateOrganizationPaymentTerms(body);
+    if (result.remote === "success") {
+      message.success({
+        content: "Payment Terms updated successfully",
+        key,
+        duration: 2,
+      });
+    } else {
+      message.error({
+        content: "Something went wrong",
+        key,
+        duration: 2,
+      });
+    }
+    setIsLoading(false);
+  };
+
   return (
     <>
       <BreadcrumbBar
@@ -40,29 +106,61 @@ export default function PaymentTerm() {
           >
             <List
               bordered={false}
-              dataSource={data}
+              dataSource={paymentTerms}
               size="small"
-              renderItem={(item) => (
+              renderItem={(item, index) => (
                 <List.Item
                   extra={[
-                    <>
-                      {item.present} <span>%</span>
-                      {item.delete}
-                    </>,
+                    <div className="d-flex align-items-center">
+                      <Input
+                        type="number"
+                        name="value"
+                        maxLength="2"
+                        placeholder=""
+                        style={{
+                          border: isValid
+                            ? "1px solid #e8e8e8"
+                            : "1px solid red",
+                        }}
+                        className="ant-width-small font-bold radius-4 gray-text"
+                        value={item.value}
+                        min={1}
+                        max={100}
+                        onChange={(e) => handleChange(e, index)}
+                      />
+                      <span>%</span>{" "}
+                      <DeleteOutlined
+                        className="delete-icon"
+                        onClick={() => handleDelete(index)}
+                        disabled={paymentTerms.length === 1 || isLoading}
+                      />
+                    </div>,
                   ]}
                   className="border-0 font-d"
                 >
-                  <List.Item.Meta description={item.title} />
+                  <Input
+                    placeholder="Milestons Name"
+                    name="title"
+                    value={item.title}
+                    onChange={(e) => handleChange(e, index)}
+                  />
                 </List.Item>
               )}
             />
             <div className="addbtn-ant ps-3 py-3">
-              <a href="#" className="d-inline-flex align-items-center">
+              <a
+                href="#"
+                className="d-inline-flex align-items-center"
+                onClick={handleAdd}
+              >
                 <PlusCircleOutlined className="me-2" />
                 Add new field
               </a>
             </div>
           </Card>
+          <Button onClick={handleUpdate} disabled={!isValid || isLoading}>
+            Update
+          </Button>
         </Col>
       </Row>
     </>

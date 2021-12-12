@@ -23,3 +23,12 @@ export async function updateOrganizationDetails(data) {
   });
   return response;
 }
+
+export async function updateOrganizationPaymentTerms(data) {
+  const response = await api.request({
+    method: "PUT",
+    url: `/v1/organization/update-organization-payment-terms`,
+    data,
+  });
+  return response;
+}

@@ -42,7 +42,7 @@ export default function CompanySettings() {
     setErrors({});
     setIsLoading(true);
     const key = "updatable";
-    message.loading({ content: "Loading...", key });
+    message.loading({ content: "Saving...", key });
     const body = {
       name: companyDetails.name,
       address: companyDetails.address,
@@ -77,7 +77,7 @@ export default function CompanySettings() {
     {
       id: "logo",
       title: "Logo Upload",
-      size: "1024 x 1024",
+      size: "109 x 234",
       image: companyDetails.logo,
     },
     {

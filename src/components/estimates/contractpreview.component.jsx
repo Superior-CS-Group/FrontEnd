@@ -17,6 +17,7 @@ import { PDFExport } from "@progress/kendo-react-pdf";
 import { drawDOM, exportPDF } from "@progress/kendo-drawing";
 import { currencyFormate } from "../../utils/currencyFormate";
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
+import { getOrganizationDetails } from "../../api/organization";
 
 export default function ContractPreview() {
   const params = useParams();
@@ -36,11 +37,10 @@ export default function ContractPreview() {
   const [ModalVisible, setModalVisible] = useState(false);
   const [estimationDetails, setEstimationDetails] = useState({});
   const [totalCharge, setTotalCharge] = useState(0);
-  // const [totalCost, setTotalCost] = useState(0);
-  // const [totalMaterialsCost, setTotalMaterialsCost] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [organizationDetails, setOrganizationDetails] = useState({});
 
   const pdfExportComponent = React.useRef(null);
   useEffect(() => {
@@ -53,7 +53,15 @@ export default function ContractPreview() {
 
   useEffect(() => {
     getCurrentUserDetails();
+    fetchOrganizationDetails();
   }, []);
+
+  const fetchOrganizationDetails = async () => {
+    const response = await getOrganizationDetails();
+    if (response.remote === "success") {
+      setOrganizationDetails(response.data);
+    }
+  };
 
   const getCurrentUserDetails = async () => {
     const details = await getCurrentUser();
@@ -140,6 +148,7 @@ export default function ContractPreview() {
 
   let modalShow = async (base64) => {
     const custId = params.id;
+    console.log("base64: ", base64);
     let custLeadId = [];
     custLeadId.push(custId);
     const body = {
@@ -162,19 +171,17 @@ export default function ContractPreview() {
     return <Navigate to={`/customer-lead/${params.id}`} />;
   }
 
-  const handlePDF = () => {
-    setIsSendingEmail(true);
+  const handlePDF = async () => {
+    // setIsSendingEmail(true);
     let gridElement = document.getElementById("divToPrint");
-    drawDOM(gridElement, {
-      paperSize: "A3",
-    })
-      .then((group) => {
-        return exportPDF(group);
-      })
-      .then((dataUri) => {
-        console.log("dataUri: ", dataUri);
-        modalShow(dataUri);
-      });
+    console.log(gridElement);
+    try {
+      const group = await drawDOM(gridElement);
+      const base64 = await exportPDF(group);
+      modalShow(base64);
+    } catch (error) {
+      console.log("error: ", error);
+    }
   };
 
   /////////////////////////////////////////
@@ -191,10 +198,19 @@ export default function ContractPreview() {
       <PDFExport paperSize="A3" margin="2mm" ref={pdfExportComponent}>
         <div className="card-shadow" style={{ borderRadius: "25px" }}>
           <div id="divToPrint">
-            {/* <img src={PreviewBanner} className="estimateImg" alt="" /> */}
+            <img
+              src={organizationDetails.coverPhoto}
+              className="estimateImg"
+              alt=""
+            />
             <div className="estimate-preview-detail">
               <div className="estiamte-preview-head">
-                <img src={MountSky} alt="" />
+                <img
+                  src={organizationDetails.logo}
+                  alt=""
+                  height={109}
+                  width={234}
+                />
                 <div className="text-right-estimate-header text-right ">
                   <h5>Mountain Sky Proposal</h5>
                   <span>Sales: Admin </span>
@@ -316,7 +332,11 @@ export default function ContractPreview() {
                   </Row>
 
                   <h4 className="mt-4">Meet Our Team!</h4>
-                  <img src={TeamPic} className="team-pic" alt="" />
+                  <img
+                    src={organizationDetails.teamPhoto}
+                    className="team-pic"
+                    alt=""
+                  />
                 </div>
                 <div className="term-for-project mt-5">
                   <h5>Terms For Project</h5>
