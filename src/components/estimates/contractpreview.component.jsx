@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 // import PreviewBanner from "../../../src/images/estimate-banner.png";
-import MountSky from "../../../src/images/mount-sky.png";
+// import MountSky from "../../../src/images/mount-sky.png";
 import { Divider, Input, Row, Col, Form, Button } from "antd";
 import logo from "../../images/small-logo.png";
-import TeamPic from "../../images/team.jpg";
+// import TeamPic from "../../images/team.jpg";
 import SimpleEMailSent from "../email/simple.emailsent.component";
 import ModalMain from "../modal/modal.component";
 import { useParams, useLocation, Navigate } from "react-router-dom";

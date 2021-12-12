@@ -404,6 +404,7 @@ export default class FilterSorting extends Component {
                       icon={<SaveOutlined />}
                       size="large"
                       loading={this.state.saveFilterLoad}
+                      disabled={(Object.keys(this.props.currentTabData ||{}).length === 0)?true:false}
                       onClick={this.handleSave}
                     >
                       Save Filter
