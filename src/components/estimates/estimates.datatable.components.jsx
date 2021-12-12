@@ -31,53 +31,41 @@ export default function Datatable(props) {
   const [deleteEstimateId, setdeleteEstimateId] = useState();
   const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
   const [estimateResults, setdestimateResults] = useState([]);
+  const [customerId, setCustomerId] = useState('');
+  
   // const [result, setResult] = useState({});
   const [AddColumnShow, setAddColumnShow] = useState(false);
-  const statues = [
-    { title: "Need to write estimate", color: "#43a047 " },
-    { title: "Need to send estimate", color: "#c0ca33" },
-    {
-      title: "Estimate sent - 0-2 contacts",
-      color: "#f9a825",
-      // textcolor: "#000",
-    },
-    { title: "Estimate sent - 3-5 contacts", color: "#ef6c00" },
-    { title: "Estimate sent - 5-8 contacts", color: "#e64a19 " },
-    { title: "Estimate sent - Over 8 contacts", color: "#546e7a" },
-    { title: "Estimate lost", color: "#512da8" },
+  // const statues = [
+  //   { title: "Need to write estimate", color: "#000" },
+  //   { title: "Need to send estimate", color: "red" },
+  //   {
+  //     title: "Estimate sent - 0-2 contacts",
+  //     color: "green",
+  //     // textcolor: "#000",
+  //   },
+  //   { title: "Estimate sent - 3-5 contacts", color: "orange" },
+  //   { title: "Estimate sent - 5-8 contacts", color: "#ff4d4f" },
+  //   { title: "Estimate sent - Over 8 contacts", color: "#6c757d" },
+  //   { title: "Estimate lost", color: "blue" },
 
-    { title: "Estimate internally declined", color: "#1e88e5" },
-    { title: "Estimate signed", color: "#ad1457" },
-  ];
+  //   { title: "Estimate internally declined", color: "purple" },
+  //   { title: "Estimate signed", color: "magenta" },
+  // ];
 
-  const content = (
-    <div style={{ width: "450px" }}>
-      <Row gutter={[8, 0]}>
-        {statues.map((status, index) => (
-          <Col span={12} key={index}>
-            <Button
-             
-              size="large"
-              className="w-100 mb-2  border-0 text-white radius-0 font-12"
-              style={{ background: status.color, color: status.textcolor }}
-            >
-              {status.title}
-            </Button>
-          </Col>
-        ))}
-      </Row>
-    </div>
-  );
+  let [leadTypes,setLeadTypes]=useState([]);
+
+ 
   const [state, setState] = useState({
     estimateResults: {},
     data: [],
     filteredData: [],
-    columns: [
+    columns:
+     [
       {
         title: <Checkbox />,
         dataIndex: "keys",
         width: 50,
-        sorter: true,
+        // sorter: true,
       },
       {
         title: (
@@ -89,8 +77,8 @@ export default function Datatable(props) {
         width: 200,
         // sorter: true,
         //  defaultSortOrder: 'ascend',
-        key: "name",
-        sorter: (a, b) => console.log(a),
+         key: "name",
+         sorter: (a, b) => a.name.props.children.toString().localeCompare(b.name.props.children),
         //  sortDirections: ['descend','ascend'],
       },
       {
@@ -103,8 +91,7 @@ export default function Datatable(props) {
         dataIndex: "estimaitonStatus",
         className: "text-green",
         width: 300,
-        sorter: (a, b) =>
-          a.estimaitonStatus.toString().localeCompare(b.estimaitonStatus),
+        sorter: (a, b) =>a.estimaitonStatus.props.children.props.children.toString().localeCompare(b.estimaitonStatus.props.children.props.children),
       },
 
       {
@@ -314,6 +301,7 @@ export default function Datatable(props) {
   // const that = state;
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
+      console.log('drag',fromIndex, toIndex)
       const columns = [...state.columns];
       const item = columns.splice(fromIndex, 1)[0];
       columns.splice(toIndex, 0, item);
@@ -325,7 +313,10 @@ export default function Datatable(props) {
     nodeSelector: "th",
   };
 
-  function handleAllChecked(e, id, name, email) {
+  const handleAllChecked=(e, id, name, email) =>{
+    // dragProps.onDragEnd(1,3);
+    // dragProps.onDragEnd(1,2);
+    console.log('drag')
     let newEstimateData1;
     console.log(e.target.checked, e.target);
     if (e.target.checked) {
@@ -343,6 +334,10 @@ export default function Datatable(props) {
       );
       setNewEstimateData([...newEstimateData2]);
     }
+  }
+  const popId=(customerData)=>{
+    console.log('hi 22',customerData[0]._id)
+    setCustomerId(customerData[0]._id)
   }
   const buildTable = async (result) => {
     const data = [];
@@ -414,7 +409,7 @@ export default function Datatable(props) {
           // autoFollowUp: followRemind,
           estimaitonSent: estimateData.estimaitonSent ? "Yes " : "No",
           estimaitonStatus: (
-            <Popover content={content} placement="bottom">
+            <Popover content={content} placement="bottom" onMouseEnter={()=>popId(customerData)}>
               <span className="btn btn-success d-inline-block btn-coners">
                 {customerData[0].estimaitonStatus}
               </span>
@@ -447,12 +442,44 @@ export default function Datatable(props) {
     //  await setResult(results)
     await buildTable(result);
   };
+
+  let content;
+ const fetchList=async()=>{
+  const statusLis = await getData(`status/list`);
+  console.log("status",statusLis)
+  if(statusLis.data.Data){
+    setLeadTypes(statusLis.data.Data)
+  }
+  content = (
+    <div style={{ width: "520px" }}>
+      <Row gutter={[24, 0]}>
+        {statusLis.data.Data.map((status, index) => (
+          <Col span={12} key={index}>
+            <Button
+              className="w-100 mb-2 font-bold border-0 text-white"
+               style={{ background:  "orange", color: status.textcolor }}
+               onClick={() =>changeStatus(status)}
+            >
+              {status.name}
+            </Button>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
+ }
+
   useEffect(async () => {
     fetchData();
+    fetchList();
+ 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   useEffect(async () => {
     let obj = props.currentTabData.filterObject;
+
+   
+   
     if (obj)
       handleOk({
         leadSelected: obj.estimaitonStatus,
@@ -463,6 +490,8 @@ export default function Datatable(props) {
       });
     else fetchData();
 
+
+  
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentTabData]);
   const filterData = (e) => {
@@ -526,6 +555,16 @@ export default function Datatable(props) {
     setModalVisible(false);
     setAddColumnShow(false);
   };
+
+  const changeStatus=async(status)=>{
+    console.log(status.name,customerId);
+    const result = await postData(`customer/update-info`, {
+      id:customerId,
+      estimaitonStatus: status.name,
+    });
+    console.log('updated',result);
+
+  }
   const onChange = async (customer, i) => {
     console.log(`switch to`, params);
 
@@ -562,6 +601,26 @@ export default function Datatable(props) {
     console.log("sortupd==", result2);
     props.updateTab(result2);
   };
+  content = (
+    <div style={{ width: "520px" }}>
+      <Row gutter={[24, 0]}>
+        {leadTypes.map((status, index) => (
+          <Col span={12} key={index}>
+            <Button
+              className="w-100 mb-2 font-bold border-0 text-white"
+               style={{ background:  "orange", color: status.textcolor }}
+               onClick={() =>changeStatus(status)}
+            >
+              {status.name}
+            </Button>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
+  console.log('state===',state)
+  console.log('types===',leadTypes)
+  console.log('st col===',state.columns)
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
