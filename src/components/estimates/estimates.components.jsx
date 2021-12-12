@@ -58,6 +58,7 @@ export default class MainEstimates extends Component {
     tab.map((t) => {
       if (t._id === finalD._id) {
         t.filterObject = finalD.filterObject;
+        t.columnOrder= finalD.columnOrder;
       }
     });
     this.setState({ Tabs: tab });
@@ -289,7 +290,7 @@ export default class MainEstimates extends Component {
                   updateTab={this.updateTab}
                 />
 
-                <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
+                {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
                   <div className="ms-auto pe-3 ant-select-box ">
                     <Button className="radius-12 me-3" type="primary">
                       Save
@@ -320,8 +321,8 @@ export default class MainEstimates extends Component {
                     Confirm
                   </Button>
                 </div> */}
-                  </div>
-                </div>
+                  {/* </div> */}
+                {/* </div> */} 
               </div>
             </Card>
           </>

@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Tooltip,
+  Select
 } from "antd";
 import ReactDragListView from "react-drag-listview";
 import { drag, Datel } from "../../utils/svg.file";
@@ -53,7 +54,7 @@ export default function Datatable(props) {
   // ];
 
   let [leadTypes,setLeadTypes]=useState([]);
-
+  const { Option } = Select;
  
   const [state, setState] = useState({
     estimateResults: {},
@@ -291,17 +292,145 @@ export default function Datatable(props) {
         sorter: true,
       },
     ],
+    colOrderRetain:[
+      {
+        title: <Checkbox />,
+        dataIndex: "keys",
+        width: 50,
+        // sorter: true,
+      },
+      {
+        title: (
+          <>
+            Customer Name <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "name",
+        width: 200,
+        // sorter: true,
+        //  defaultSortOrder: 'ascend',
+         key: "name",
+         sorter: (a, b) => a.name.props.children.toString().localeCompare(b.name.props.children),
+        //  sortDirections: ['descend','ascend'],
+      },
+      {
+        title: (
+          <>
+            Status <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        key: "estimaitonStatus",
+        dataIndex: "estimaitonStatus",
+        className: "text-green",
+        width: 300,
+        sorter: (a, b) =>a.estimaitonStatus.props.children.props.children.toString().localeCompare(b.estimaitonStatus.props.children.props.children),
+      },
+
+      {
+        title: (
+          <>
+            Estimate added (Date) <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        key: "date",
+        dataIndex: "date",
+        width: 300,
+        sorter: (a, b) => a.date.toString().localeCompare(b.date),
+        // defaultSortOrder: 'descend',
+      },
+      {
+        title: (
+          <>
+            Email <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        key: "email",
+        dataIndex: "email",
+        width: 300,
+        sorter: (a, b) => a.email.toString().localeCompare(b.email),
+      },
+      {
+        title: (
+          <>
+            Phone No. <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "contactNo",
+        width: 200,
+        sorter: (a, b) => a.contactNo.toString().localeCompare(b.contactNo),
+      },
+      {
+        title: (
+          <>
+            Address <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "address",
+        width: 300,
+        sorter: (a, b) => a.address.toString().localeCompare(b.address),
+      },
+      {
+        title: (
+          <>
+            Estimate sent? (Yes/No){" "}
+            <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "estimaitonSent",
+        width: 300,
+        sorter: (a, b) =>
+          a.estimaitonSent.toString().localeCompare(b.estimaitonSent),
+      },
+
+      {
+        title: (
+          <>
+            Date Closed <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "estimaitonCloseDate",
+        width: 200,
+        sorter: (a, b) =>
+          a.estimaitonCloseDate.toString().localeCompare(b.estimaitonCloseDate),
+      },
+      {
+        title: (
+          <>
+            Days it took to close
+            <span className="float-end me-2">{drag}</span>
+          </>
+        ),
+        dataIndex: "daysItTookToSendEstimate",
+        width: 300,
+        sorter: (a, b) =>
+          a.daysItTookToSendEstimate
+            .toString()
+            .localeCompare(b.daysItTookToSendEstimate),
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        width: 100,
+        fixed: "right",
+        className: "text-center",
+        sorter: true,
+      },
+    ],
     deleteEstimateId: "",
   });
   const onChangeTable = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   const [newEstimateData, setNewEstimateData] = useState([]);
-
+  const [colSaveBtn, setColSaveBtn] = useState(true);
+  const [colSaveBtnLoad, setColSaveBtnLoad] = useState(false);
+  
+  
   // const that = state;
   const dragProps = {
     onDragEnd(fromIndex, toIndex) {
       console.log('drag',fromIndex, toIndex)
+      setColSaveBtn(false)
       const columns = [...state.columns];
       const item = columns.splice(fromIndex, 1)[0];
       columns.splice(toIndex, 0, item);
@@ -340,6 +469,24 @@ export default function Datatable(props) {
     setCustomerId(customerData[0]._id)
   }
   const buildTable = async (result) => {
+    let colOrder=props.currentTabData.columnOrder ||[];
+    let colRetian=state.colOrderRetain;
+    let finalCol=[];
+    if(colOrder.length>0){
+      colOrder.map(c=>{
+        colRetian.map(r=>{
+        
+          if(r.dataIndex === c){
+            finalCol.push(r)
+          }
+        })
+      })
+    }
+    else{
+      finalCol=colRetian;
+    }
+console.log('finalCol===',finalCol)
+   
     const data = [];
     for (let i = 0; i < result.data.Data.length; i++) {
       if (result.data.Data[i].customerLeadId[0]) {
@@ -430,7 +577,9 @@ export default function Datatable(props) {
       }
     }
     // console.log("data: ", data);
-    setState({ ...state, data, filteredData: data });
+     setState({ ...state, data, filteredData: data,
+        columns:finalCol
+       });
   };
   const fetchData = async () => {
     const result = await getData(`estimation/upcoming-estimation`);
@@ -440,7 +589,10 @@ export default function Datatable(props) {
     });
     // console.log(estimateResults);
     //  await setResult(results)
+  
     await buildTable(result);
+  
+
   };
 
   let content;
@@ -472,6 +624,9 @@ export default function Datatable(props) {
   useEffect(async () => {
     fetchData();
     fetchList();
+
+   
+   
  
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
@@ -487,10 +642,14 @@ export default function Datatable(props) {
         dateFilter: obj.dateFilter,
         leadSource: obj.leadSource,
         sortDropdown: obj.sortDropdown,
+       
+      
       });
     else fetchData();
 
-
+ 
+    
+  
   
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentTabData]);
@@ -532,20 +691,22 @@ export default function Datatable(props) {
     setModalVisible(true);
   };
 
-  const handleOk = async (state) => {
-    console.log("hey uncl", state.leadSelected);
+  const handleOk = async (states) => {
+    console.log("hey uncl", states.leadSelected);
     const result2 = await postData(`estimation/filter-sort`, {
-      estimaitonStatus: state.leadSelected,
-      dateFilter: state.dateFilter,
-      leadSource: state.leadSource,
-      sortDropdown: state.sortDropdown,
+      estimaitonStatus: states.leadSelected,
+      dateFilter: states.dateFilter,
+      leadSource: states.leadSource,
+      sortDropdown: states.sortDropdown,
     });
     console.log("sort==", result2);
+ 
     // [
     //   "New Lead - Multiple Contact Attempts",
     //   "Lead Added",
     // ]
     await buildTable(result2);
+    // setState({...state,columns:states.columns})
     setModalVisible(false);
     setAddColumnShow(false);
   };
@@ -591,6 +752,24 @@ export default function Datatable(props) {
 
     // setState({estimateResults})
   };
+
+  const saveColOrder=async()=>{
+    setColSaveBtnLoad(true)
+    console.log("hey mm");
+    let col= state.columns;
+    let saveCol=[]
+    if(col){
+      col.map(c=>{
+        saveCol.push(c.dataIndex)
+      })
+    }
+    console.log("hey mm",saveCol);
+    const response=await postData(`tab-filter/update-col/${props.currentTabData._id}`,saveCol);
+    console.log(response);
+    setColSaveBtn(true)
+    props.updateTab(response);
+    setColSaveBtnLoad(false)
+  }
   const handleColumnModal = () => {
     setAddColumnShow(true);
   };
@@ -696,6 +875,39 @@ export default function Datatable(props) {
         handleCancel={handleCancel}
         AddColumnShow={AddColumnShow}
       />
+         <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
+                  <div className="ms-auto pe-3 ant-select-box ">
+                    <Button className="radius-12 me-3" type="primary" disabled={colSaveBtn} loading={colSaveBtnLoad} onClick={saveColOrder}>
+                      Save
+                    </Button>
+                    <span className="me-3">Action:</span>
+                    <Select
+                      defaultValue="What do yo want to do?"
+                      // onChange={handleChange}
+                      style={{ width: "300px" }}
+                    >
+                      <Option value="jack">
+                        <Link to="/view-email">Export to Email</Link>
+                      </Option>
+                      <Option value="lucy" disabled>
+                        Export to Text
+                      </Option>
+
+                      <Option value="Yiminghe" disabled>
+                        Export to Excel
+                      </Option>
+                    </Select>
+                    {/* <div className="text-end mt-3">
+                  <Button
+                    type="primary"
+                    disabled
+                    className="ant-confirm-button"
+                  >
+                    Confirm
+                  </Button>
+                </div> */}
+                  </div>
+                </div>
     </>
   );
 }

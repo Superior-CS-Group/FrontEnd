@@ -401,6 +401,7 @@ onChange={this.onRadioChange} value={this.state.dateFilter?this.state.dateFilter
                       icon={<SaveOutlined />}
                       size="large"
                       loading={this.state.saveFilterLoad}
+                      disabled={(Object.keys(this.props.currentTabData ||{}).length === 0)?true:false}
                       onClick={this.handleSave}
                     >
                       Save Filter
