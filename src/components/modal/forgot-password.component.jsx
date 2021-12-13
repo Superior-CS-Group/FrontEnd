@@ -4,7 +4,6 @@ import { resetPassword } from "../../api/user";
 
 export default function ForgotPassword(props) {
   // console.log(props);
-  const [errors, setErrors] = useState({});
   const [state, setState] = useState({
     email: "",
     message: "",
@@ -42,17 +41,19 @@ export default function ForgotPassword(props) {
       const responseData = await resetPassword(body);
 
       if (responseData.errors) {
-        message.error("Email does not exists",5);
+        message.error("Email does not exists", 5);
       } else {
         setState({
           ...state,
           email: "",
         });
       }
-      console.log(responseData.errors,"responseData.errors")
+      console.log(responseData.errors, "responseData.errors");
       if (responseData.remote === "success") {
         setState({ email: "" });
-        message.success("Reset Password link sent  to your registered email id");
+        message.success(
+          "Reset Password link sent  to your registered email id"
+        );
         props.handleCancel();
       }
     } catch (error) {

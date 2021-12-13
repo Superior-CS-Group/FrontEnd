@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import { Select, Input } from "antd";
+import { Input } from "antd";
 import fillter from "../../images/fillter.png";
 import FilterSorting from "./filter/filter.sorting.component";
 import { Nav } from "react-bootstrap";
 export default function FillterTabs(props) {
-  const { Option } = Select;
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {

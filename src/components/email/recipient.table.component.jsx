@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { drag } from "../../utils/svg.file";
 import { Table, Checkbox, Button } from "antd";
-import DeleteOutlined from "@ant-design/icons";
-import { Datel, edit } from "../../utils/svg.file";
+import { Datel } from "../../utils/svg.file";
 
 export default class RecipentTable extends Component {
   constructor(props) {
@@ -47,7 +45,7 @@ export default class RecipentTable extends Component {
             <>
               <Button className="me-3 remove-btn">
                 <span className="me-2 " style={{ color: "red" }}>
-                  {Datel} 
+                  {Datel}
                 </span>
               </Button>
             </>

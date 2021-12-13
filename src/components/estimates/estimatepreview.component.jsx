@@ -8,10 +8,10 @@ export default function EstimatePreview() {
   return (
     <>
       <div className="card-shadow p-3" style={{ borderRadius: "25px" }}>
-        <img src={PreviewBanner} className="estimateImg" />
+        <img src={PreviewBanner} className="estimateImg" alt="" />
         <div className="estimate-preview-detail">
           <div className="estiamte-preview-head">
-            <img src={MountSky} />
+            <img src={MountSky} alt="" />
             <div className="text-right-estimate-header">
               <h5>Mountain Sky Proposal</h5>
               <span>Sales: Siloh Churchill </span>
@@ -48,7 +48,7 @@ export default function EstimatePreview() {
             <div className="work-scope-div-main mt-2 mb-3">
               <div className="work-scope-div">
                 <div className="work-scope-top-left">
-                  <img src={PreviewBanner} className="work-scope-img" />
+                  <img src={PreviewBanner} className="work-scope-img" alt="" />
                 </div>
                 <div className="work-scope-top-right">
                   <h4>Demolition & Prep</h4>
@@ -67,7 +67,7 @@ export default function EstimatePreview() {
             <div className="work-scope-div-main mt-2 mb-3">
               <div className="work-scope-div">
                 <div className="work-scope-top-left">
-                  <img src={PreviewBanner} className="work-scope-img" />
+                  <img src={PreviewBanner} className="work-scope-img" alt="" />
                 </div>
                 <div className="work-scope-top-right">
                   <h4>Demolition & Prep</h4>

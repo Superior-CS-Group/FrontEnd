@@ -1,29 +1,27 @@
-import React, { Component } from "react";
+import React from "react";
 import { Breadcrumb } from "antd";
-import { LeftOutlined } from "@ant-design/icons";
-export default class BreadcrumbBar extends Component {
-  render() {
-    return (
-      <div className="breadcrumb-box-main">
-        <Breadcrumb className={`ant-breadcrumb-text ${this.props.breaclass}`}>
-          <Breadcrumb.Item>
-            <a href={this.props.link}>{this.props.name}</a>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <a href={this.props.sublink}>{this.props.subname}</a>
-          </Breadcrumb.Item>
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Link, useNavigate } from "react-router-dom";
+export default function BreadcrumbBar(props) {
+  const navigator = useNavigate();
+  return (
+    <div className="breadcrumb-box-main">
+      <span
+        className="btn btn-primary text-white float-end d-inline-flex align-items-center mt-1"
+        onClick={() => navigator(-1)}
+      >
+        <ArrowLeftOutlined style={{ fontSize: "20px" }} />
+      </span>
+      <Breadcrumb className={`ant-breadcrumb-text ${props.breaclass}`}>
+        <Breadcrumb.Item>
+          <Link to={props.link || "/dashboard"}>{props.name}</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to={props.sublink || "/"}>{props.subname}</Link>
+        </Breadcrumb.Item>
 
-          <Breadcrumb.Item className="be-none">
-            {this.props.subtitle}
-          </Breadcrumb.Item>
-        </Breadcrumb>
-        <a
-          className="float-end btn btn-primary text-white back-btn p-1 px-2 ps-1"
-          href={this.props.sublink}
-        >
-          <LeftOutlined className="me-1" /> Back
-        </a>
-      </div>
-    );
-  }
+        <Breadcrumb.Item className="be-none">{props.subtitle}</Breadcrumb.Item>
+      </Breadcrumb>
+    </div>
+  );
 }

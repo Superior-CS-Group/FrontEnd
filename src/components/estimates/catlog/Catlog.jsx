@@ -372,10 +372,10 @@ export default function Catlog() {
     <>
       <BreadcrumbBar
         name="Dashboard "
-        subname="Estimates"
+        subname="Setting"
         subtitle="Catalog"
         breaclass="mb-3"
-        link="/"
+        link="/dashboard"
         sublink="estimating"
       />
       <div className="ant-catlog-main">
@@ -396,7 +396,7 @@ export default function Catlog() {
               <Nav.Item as="li">
                 <Nav.Link eventKey="second">
                   <b class="left-curve"></b>
-                  <b class="right-curve"></b>Services
+                  <b class="right-curve"></b>Production Rates
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li">
@@ -547,6 +547,7 @@ export default function Catlog() {
                                     preview={{ visible: false }}
                                     src={record.images[0] || log}
                                     onClick={(rr = record.images) => {
+                                      // eslint-disable-next-line array-callback-return
                                       catalogItem.map((r) => {
                                         if (r._id === record.key) {
                                           setCurrentImages(r.images);

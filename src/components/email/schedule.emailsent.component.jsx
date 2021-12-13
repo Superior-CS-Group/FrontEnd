@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import sticky from "../../images/sticky.png";
-import { DatePicker, Space, Row, Col, Button, Divider } from "antd";
-import ScheduleTimeDate from "./schedule.timedate.component";
+import { Row, Col, Button, Divider } from "antd";
 export default function ScheduleEmailSent(props) {
-  const [scheduleTimeDateState, setScheduleTimeDateState] = useState(false);
   var ScheduleTimeDate = () => {
-    setScheduleTimeDateState(true);
-    console.log("props send: ", props);
     props.updateModel();
 
     var axios = require("axios");
@@ -48,7 +44,7 @@ export default function ScheduleEmailSent(props) {
           <Col md={24}>
             <div className="text-center mt-2">
               <h3>All Set!</h3>
-              <img src={sticky} />
+              <img src={sticky} alt="" />
 
               <p className="mail-msg">
                 Your mail will be sent on: <br />

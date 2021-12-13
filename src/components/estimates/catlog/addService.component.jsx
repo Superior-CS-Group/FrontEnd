@@ -22,6 +22,7 @@ export default function AddService(
     image: [],
     type: "catalog",
   });
+  // eslint-disable-next-line no-unused-vars
   const [errors, setErrors] = React.useState({
     name: "",
     price: "",
@@ -50,7 +51,8 @@ export default function AddService(
     handleCancel();
   };
 
-  const handleInputChange = (e) => {console.log('rah',itemDetails)
+  const handleInputChange = (e) => {
+    console.log("rah", itemDetails);
     setItemDetails({
       ...itemDetails,
       [e.target.name]: Number(e.target.value) || e.target.value,

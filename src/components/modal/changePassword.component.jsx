@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Form, Input, Button, message } from "antd";
 import { updatePassword } from "../../api/user";
 export default function ChangePasswordUser(props) {
@@ -42,7 +42,7 @@ export default function ChangePasswordUser(props) {
       setState({ ...state, errors });
       // message.success(errors, 5);
       return;
-    } 
+    }
     if (state.password !== state.confirmPassword) {
       message.error("New Password or Confirm Password not match");
     }

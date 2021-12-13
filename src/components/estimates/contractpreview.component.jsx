@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import PreviewBanner from "../../../src/images/estimate-banner.png";
-import MountSky from "../../../src/images/mount-sky.png";
-import { Divider, Input, Row, Col, Form } from "antd";
+// import PreviewBanner from "../../../src/images/estimate-banner.png";
+// import MountSky from "../../../src/images/mount-sky.png";
+import { Divider, Input, Row, Col, Form, Button } from "antd";
 import logo from "../../images/small-logo.png";
-import TeamPic from "../../images/team.jpg";
+// import TeamPic from "../../images/team.jpg";
 import SimpleEMailSent from "../email/simple.emailsent.component";
 import ModalMain from "../modal/modal.component";
 import { useParams, useLocation, Navigate } from "react-router-dom";
@@ -16,6 +16,8 @@ import { getCurrentUser } from "../../api/user";
 import { PDFExport } from "@progress/kendo-react-pdf";
 import { drawDOM, exportPDF } from "@progress/kendo-drawing";
 import { currencyFormate } from "../../utils/currencyFormate";
+import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
+import { getOrganizationDetails } from "../../api/organization";
 
 export default function ContractPreview() {
   const params = useParams();
@@ -35,12 +37,10 @@ export default function ContractPreview() {
   const [ModalVisible, setModalVisible] = useState(false);
   const [estimationDetails, setEstimationDetails] = useState({});
   const [totalCharge, setTotalCharge] = useState(0);
-  // const [totalCost, setTotalCost] = useState(0);
-  // const [totalMaterialsCost, setTotalMaterialsCost] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
   const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const [base64, setBase64] = useState("");
+  const [organizationDetails, setOrganizationDetails] = useState({});
 
   const pdfExportComponent = React.useRef(null);
   useEffect(() => {
@@ -53,7 +53,15 @@ export default function ContractPreview() {
 
   useEffect(() => {
     getCurrentUserDetails();
+    fetchOrganizationDetails();
   }, []);
+
+  const fetchOrganizationDetails = async () => {
+    const response = await getOrganizationDetails();
+    if (response.remote === "success") {
+      setOrganizationDetails(response.data);
+    }
+  };
 
   const getCurrentUserDetails = async () => {
     const details = await getCurrentUser();
@@ -76,12 +84,8 @@ export default function ContractPreview() {
         response.data.data?.estimateSettings?.fluffNumberDiscount || 0;
       console.log("estimationDetails: ", response.data.data, formulas);
       let projectCharge = 0;
-      let projectCost = 0;
-      let materialsCost = 0;
       formulas.forEach((formula) => {
         projectCharge += formula.totalProjectCharge;
-        projectCost += formula.totalMaterialsCost;
-        materialsCost += formula.totalMaterialsCost;
       });
       discount = (projectCharge * discount) / 100;
       const projectChargeAfterDiscount = projectCharge - discount;
@@ -144,6 +148,7 @@ export default function ContractPreview() {
 
   let modalShow = async (base64) => {
     const custId = params.id;
+    console.log("base64: ", base64);
     let custLeadId = [];
     custLeadId.push(custId);
     const body = {
@@ -166,42 +171,46 @@ export default function ContractPreview() {
     return <Navigate to={`/customer-lead/${params.id}`} />;
   }
 
-  const handlePDF = () => {
-    setIsSendingEmail(true);
+  const handlePDF = async () => {
+    // setIsSendingEmail(true);
     let gridElement = document.getElementById("divToPrint");
-    drawDOM(gridElement, {
-      paperSize: "A3",
-    })
-      .then((group) => {
-        return exportPDF(group);
-      })
-      .then((dataUri) => {
-        console.log("dataUri: ", dataUri);
-        modalShow(dataUri);
-      });
+    console.log(gridElement);
+    try {
+      const group = await drawDOM(gridElement);
+      const base64 = await exportPDF(group);
+      modalShow(base64);
+    } catch (error) {
+      console.log("error: ", error);
+    }
   };
 
   /////////////////////////////////////////
   //  REACT_PDF: https://www.telerik.com/kendo-react-ui/components/pdfprocessing/multi-page-content/
   return (
     <>
-      {/* <button className="k-button" onClick={handlePDF}>
-        Export PDF
-      </button>
-      <iframe
-        src={base64}
-        height="100%"
-        width="100%"
-        title="pdf"
-        style={{ height: "100vw" }}
-      ></iframe> */}
+      <BreadcrumbBar
+        name="Dashboard"
+        subname="Contract Preview"
+        breaclass="mb-3"
+        sublink="user-profile"
+        link="/"
+      />
       <PDFExport paperSize="A3" margin="2mm" ref={pdfExportComponent}>
         <div className="card-shadow" style={{ borderRadius: "25px" }}>
           <div id="divToPrint">
-            {/* <img src={PreviewBanner} className="estimateImg" alt="" /> */}
+            <img
+              src={organizationDetails.coverPhoto}
+              className="estimateImg"
+              alt=""
+            />
             <div className="estimate-preview-detail">
               <div className="estiamte-preview-head">
-                <img src={MountSky} alt="" />
+                <img
+                  src={organizationDetails.logo}
+                  alt=""
+                  height={109}
+                  width={234}
+                />
                 <div className="text-right-estimate-header text-right ">
                   <h5>Mountain Sky Proposal</h5>
                   <span>Sales: Admin </span>
@@ -323,7 +332,11 @@ export default function ContractPreview() {
                   </Row>
 
                   <h4 className="mt-4">Meet Our Team!</h4>
-                  <img src={TeamPic} className="team-pic" alt="" />
+                  <img
+                    src={organizationDetails.teamPhoto}
+                    className="team-pic"
+                    alt=""
+                  />
                 </div>
                 <div className="term-for-project mt-5">
                   <h5>Terms For Project</h5>
@@ -830,15 +843,17 @@ export default function ContractPreview() {
             </div>
           </div>
           <div className="text-right p-4">
-            <span
+            <Button
+              type="primary"
               className="add-btn"
+              size="large"
               onClick={() => {
                 handlePDF();
               }}
               disabled={isSendingEmail}
             >
               {isSendingEmail ? "Sending..." : "Send to Customer"}
-            </span>
+            </Button>
           </div>
         </div>
       </PDFExport>

@@ -1,7 +1,6 @@
 import View from "../components/estimates/view.components";
 import MainEstimates from "../components/estimates/estimates.components";
 import CustomerLeadInfo from "../components/estimates/customer/customerleadinfo.component";
-import Catalog from "../components/estimates/catalog.component";
 import AddEstimates from "../components/estimates/add.estimates.components";
 import EmailSend from "../components/email/email.component";
 
@@ -17,6 +16,11 @@ import FormulaV2 from "../components/formula/v2/formula.v2.component";
 import Catlog from "../components/estimates/catlog/Catlog";
 import EmailSetting from "../components/setting/emailsetting.component";
 import UserList from "../components/setting/userList.component";
+import UserProfile from "../components/user/userprofile/UserProfile";
+
+import PaymentTerm from "../components/setting/paymentTerms/PaymentTerm";
+import TermsAndConditions from "../components/setting/termsandconditions/TermsAndConditions";
+import CompanySettings from "../components/setting/companysettings/CompanySettings";
 
 const routes = [
   // {
@@ -127,6 +131,31 @@ const routes = [
     exact: true,
     name: "userlist",
     component: <UserList />,
+  },
+  {
+    path: "/user-profile",
+    exact: true,
+    name: "userprofile",
+    component: <UserProfile />,
+  },
+
+  {
+    path: "/company-settings",
+    exact: true,
+    name: "companysettings",
+    component: <CompanySettings />,
+  },
+  {
+    path: "/payment-terms",
+    exact: true,
+    name: "paymentterms",
+    component: <PaymentTerm />,
+  },
+  {
+    path: "/term-and-conditions",
+    exact: true,
+    name: "termsandconditions",
+    component: <TermsAndConditions />,
   },
 ];
 export default routes;

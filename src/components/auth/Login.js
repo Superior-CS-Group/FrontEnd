@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 
 import InputField from "../inputField/inputField.component";
-import { Formik } from "formik";
-import { Form, Button, Checkbox, message } from "antd";
-import GoogleLogin from "react-google-login";
-import { Link, Route, Navigate } from "react-router-dom";
+import { Form, Button, Checkbox } from "antd";
+import { Link, Navigate } from "react-router-dom";
 import { postData } from "../../utils/fetchApi.js";
 import user from "../../images/user.png";
 import lock from "../../images/lock.png";
@@ -12,9 +10,7 @@ import ForgotPassword from "../modal/forgot-password.component";
 function onChange(e) {
   // console.log(`checked = ${e.target.checked}`);
 }
-const responseGoogle = (response) => {
-  // console.log(response);
-};
+
 export default class Login extends Component {
   constructor(props) {
     super(props);
@@ -182,7 +178,6 @@ export default class Login extends Component {
           </div>
           <Form.Item className="mb-3">
             <Button
-              type="primary"
               type="submit"
               className="ant-btn-save"
               onClick={this.handleSubmit}
@@ -207,7 +202,7 @@ export default class Login extends Component {
             <button className="facebook-icon mb-4">Facebook</button>
           </div> */}
           <Link to="/auth/sign-up">
-            <Button type="primary" type="submit" className="ant-btn-save">
+            <Button type="submit" className="ant-btn-save">
               Sign Up
             </Button>
           </Link>

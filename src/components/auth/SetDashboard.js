@@ -9,7 +9,6 @@ import dollor from "../../images/dollor.png";
 import timezone from "../../images/timezone.png";
 
 import { signup } from "../../api/auth";
-import { fileToBase64 } from "../../utils/fileBase64";
 
 const props = {
   name: "file",
@@ -48,12 +47,6 @@ function SetDashboard() {
     e.preventDefault();
     const result = await signup({});
     console.log("result: ", result);
-  };
-
-  const handleFileUpload = async (file) => {
-    const result = await fileToBase64(file);
-    console.log("result: ", result);
-    return result;
   };
 
   if (redirect) {

@@ -1,32 +1,9 @@
-import React, { Component, useState } from "react";
-import {
-  Button,
-  Card,
-  Select,
-  Input,
-  Modal,
-  message,
-  Radio,
-  Row,
-  Col,
-  Form,
-  Divider,
-  Checkbox,
-  DatePicker,
-  Space,
-} from "antd";
-import {
-  PlusCircleOutlined,
-  SaveOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import React from "react";
+import { Button, Row, Col } from "antd";
+
 import RecipentTable from "./recipient.table.component";
-import ScheduleTimeDate from "./schedule.timedate.component";
-import ModalMain from "../modal/modal.component";
 export default function RecipientList(props) {
-  const [scheduleTimeDateState, setScheduleTimeDateState] = useState(false);
   var ScheduleTimeDate = () => {
-    setScheduleTimeDateState(true);
     console.log("props send: ", props);
     props.updateModel();
     /*--------------------API data-------------------*/
@@ -59,12 +36,6 @@ export default function RecipientList(props) {
       .catch(function (error) {
         console.log(error, "main error");
       });
-  };
-  var handleCancel = () => {
-    setScheduleTimeDateState(false);
-  };
-  var handleOk = () => {
-    setScheduleTimeDateState(false);
   };
 
   return (

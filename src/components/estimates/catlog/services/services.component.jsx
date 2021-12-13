@@ -11,13 +11,10 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import EditService from "../EditServices";
-import DeleteModal from "../../../modal/deleteModal.component";
 
 import SmallLoader from "../../../loader/smallLoader";
 
 function Services() {
-  const [ShowDeleteModal, setShowDeleteModal] = useState(false);
-
   const [state, setState] = useState({
     smallLoader: true,
   });
@@ -87,6 +84,7 @@ function Services() {
   };
   const fetchData = async () => {
     const response = await getServices(pageNumber);
+    setPageNumber(pageNumber + 1);
     console.log("response", response);
     if (response.remote === "success") {
       const processedData = response.data.data.map((item) => {

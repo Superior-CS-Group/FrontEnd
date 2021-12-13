@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container } from "react-bootstrap";
-import { Row, Col, Card, Button, Checkbox, Form, Divider, message } from "antd";
+import { Row, Col, Card, Button, Form, Divider, message } from "antd";
 import logo from "../../images/logo.svg";
-import { Link, useParams,Navigate } from "react-router-dom";
+import { Link, useParams, Navigate } from "react-router-dom";
 import InputField from "../inputField/inputField.component";
 import lock from "../../images/lock.png";
 import { updatePassword } from "../../api/user";
@@ -48,7 +48,7 @@ export default function ResetPassword(props) {
     const body = {
       password,
       confirmPassword,
-      token:params.id
+      token: params.id,
     };
     try {
       const responseData = await updatePassword(body);
@@ -75,7 +75,7 @@ export default function ResetPassword(props) {
     });
   };
   if (redirect) {
-    return <Navigate to={redirect}  />;
+    return <Navigate to={redirect} />;
   }
   return (
     <>

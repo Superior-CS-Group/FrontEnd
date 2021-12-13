@@ -8,6 +8,7 @@ import ReactMentionInput from "../../../utils/mentionInput/mentionInput";
 import { useLocation, Navigate } from "react-router-dom";
 import { getFormulaById, updateFormula } from "../../../api/formula";
 import { fileToBase64 } from "../../../utils/fileBase64";
+import regex from "../../../utils/regex";
 /**
  * @author digimonk Technologies
  * @developer Saral Shrivastava
@@ -34,7 +35,6 @@ function FormulaV2() {
     if (!formulaId) {
       setRedirect("/services");
     } else {
-      console.log("formulaId: ", formulaId);
       getFormulaDetails(formulaId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,11 +42,9 @@ function FormulaV2() {
 
   async function getFormulaDetails(formulaId) {
     const formulaDetails = await getFormulaById(formulaId);
-    console.log("formulaDetails: ", formulaDetails);
     if (formulaDetails.remote === "success") {
       setFormulaDetails(formulaDetails.data.data);
       setTitle(formulaDetails.data.data.title);
-      console.log("formulaDetails.data.data: ", formulaDetails.data.data);
       const catalogs = formulaDetails.data.data?.catalogs || [];
       setCatalogs([...catalogs]);
       setClientContract(formulaDetails.data.data.clientContract);
@@ -73,6 +71,7 @@ function FormulaV2() {
         }),
         photo,
       };
+      console.log("body: ", body);
       setTimeout(() => updateFormulaDetails(body), 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,9 +95,26 @@ function FormulaV2() {
     }
   }, [formulaDetails]);
 
-  const handleChange = (value, name, index, newMaterial) => {
+  const handleChange = (value, name, index, newMaterial, customIndex) => {
     const newElementList = [...elementList];
     newElementList[index][name] = value;
+    if (name === "name") {
+      let customInput = value.match(regex.customInput);
+      if (customInput) {
+        newElementList[index].customInput = customInput.map((item) => {
+          item = item.replace("!", "");
+          return {
+            name: item,
+            value: 0,
+          };
+        });
+      } else {
+        newElementList[index].customInput = [];
+      }
+    }
+    if (customIndex !== null && customIndex !== undefined) {
+      newElementList[index].customInput[customIndex].value = value;
+    }
     if (newMaterial) {
       const processed = processMaterial(newMaterial);
       newElementList[index].formula = [
@@ -124,7 +140,7 @@ function FormulaV2() {
 
   const processMaterial = (text) => {
     // eslint-disable-next-line no-useless-escape
-    const tags = text.match(/@\{\{[^\}]+\}\}/gi) || [];
+    const tags = text.match(regex.materialInput) || [];
     const allMaterialsIds = tags.map((myTag) => {
       const tagData = myTag.slice(3, -2);
       const tagDataArray = tagData.split("||");
@@ -140,20 +156,18 @@ function FormulaV2() {
     const newMaterials = [...materials];
 
     newMaterials[index][e.target.name] = e.target.value;
-    if (!e.target.manual) {
+    if (!e.target.manual && !newMaterials[index].manual) {
       newMaterials[index].charge = `{Cost} * @{{element||${markupId}||Markup}}`;
     } else {
       newMaterials[index].manual = true;
     }
     if (material) {
       let processed = processMaterial(material);
-      console.log("rpoc: ", processed);
       newMaterials[index].formula = [
         ...new Set([...(newMaterials[index].formula || []), ...processed]),
       ];
       setCatalogs([...(catalogs || []), ...processed]);
     }
-    // }
     setMaterials([...newMaterials]);
   };
 
@@ -199,7 +213,11 @@ function FormulaV2() {
 
   return (
     <>
-      <BreadcrumbBar name="Add Service" breaclass="mb-3" />
+      <BreadcrumbBar
+        breaclass="mb-3"
+        name="Dashboard"
+        subname="Create Template"
+      />
       <Card
         className="shadow estimate-card mb-4"
         style={{ borderRadius: "10px" }}

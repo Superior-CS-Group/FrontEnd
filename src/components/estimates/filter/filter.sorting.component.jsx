@@ -1,28 +1,20 @@
+/* eslint-disable array-callback-return */
 import React, { Component } from "react";
 import {
   Button,
-  Card,
   Select,
-  Input,
   Modal,
-  message,
   Radio,
   Row,
   Col,
   Form,
   Divider,
   Checkbox,
-  DatePicker,
-  Space,
 } from "antd";
 import fillter from "../../../images/fillter.png";
 
 // import FilterSorting from "./filter/filter.sorting.component";
-import {
-  PlusCircleOutlined,
-  SaveOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SaveOutlined } from "@ant-design/icons";
 import { getData } from "../../../utils/fetchApi";
 
 export default class FilterSorting extends Component {
@@ -30,95 +22,233 @@ export default class FilterSorting extends Component {
     super(props);
     this.state = {
       ModalVisible: false,
-      leadList:[],
-      leadSelected:[],
-      saveFilterLoad:false,
-      curentTabDat:{}
+      leadList: [],
+      leadSelected: [],
+      saveFilterLoad: false,
+      curentTabDat: {},
+      dateFilter: "7",
+      leadSource: [],
+      sortDropdown: "-1",
+      leadTypes: [
+        { name: "Facebook", check: false },
+        { name: "Website", check: false },
+        { name: "Referral", check: false },
+      ],
     };
   }
-componentDidMount=async()=>{
-  const statusLis = await getData(`status/list`);
-  // this.props.ApplyFilter()
- this.setState({leadList:statusLis.data.Data,curentTabDat:this.props.currentTabData})
-}
+  componentDidMount = async () => {
+    const statusLis = await getData(`status/list`);
+    // this.props.ApplyFilter()
+    if (statusLis.data.Data) {
+      statusLis.data.Data.map((d) => {
+        d["check"] = false;
+      });
+    }
+    // await this.setState({leadList:statusLis.data.Data,});
+    let currentTabDa = this.props.currentTabData;
+    let leads = statusLis.data.Data;
+    let date = "",
+      dropdown = "-1";
+    if (currentTabDa) {
+      if (currentTabDa.filterObject) {
+        if (currentTabDa.filterObject.estimaitonStatus) {
+          date = currentTabDa.filterObject.dateFilter;
+          dropdown = currentTabDa.filterObject.sortDropdown;
+          currentTabDa.filterObject.estimaitonStatus.map((c) => {
+            leads.map((l) => {
+              if (c === l.name) l["check"] = true;
+            });
+          });
+        }
+      }
+    }
+    await this.setState({
+      leadList: leads,
+      dateFilter: date,
+      sortDropdown: dropdown,
+      curentTabDat: this.props.currentTabData,
+    });
+  };
 
-componentDidUpdate = async () => {
-  if(this.state.curentTabDat!==this.props.currentTabData)
-  this.setState({curentTabDat:this.props.currentTabData,leadSelected:[]})
-}
-  //   showModal = () => {
-  //     this.setState({ ModalVisible: true });
-  //   };
+  componentDidUpdate = async () => {
+    if (this.state.curentTabDat !== this.props.currentTabData) {
+      // this.setState({curentTabDat:this.props.currentTabData,leadSelected:[],
+      //   // dateFilter:this.props.currentTabData.filterObject.dateFilter,
+      //   // sortDropdown:this.props.currentTabData.filterObject.sortDropdown,
+      //   // leadSource:this.props.currentTabData.filterObject.leadSource
+      // });
+      let currentTabDa = this.props.currentTabData;
+      let leads = this.state.leadList;
+      let date = "",
+        dropdown = "-1";
+      leads.map((l) => {
+        l["check"] = false;
+      });
+      let leadty = this.state.leadTypes;
 
-  //   handleOk = () => {
-  //     this.setState({ ModalVisible: false });
-  //   };
+      leadty.map((l) => {
+        l["check"] = false;
+      });
+      if (currentTabDa) {
+        if (currentTabDa.filterObject) {
+          if (currentTabDa.filterObject.estimaitonStatus) {
+            date = currentTabDa.filterObject.dateFilter;
+            dropdown = currentTabDa.filterObject.sortDropdown;
+            currentTabDa.filterObject.estimaitonStatus.map((c) => {
+              leads.map((l) => {
+                if (c === l.name) l["check"] = true;
+              });
+            });
+          }
 
-  //   handleCancel = () => {
-  //     this.setState({ ModalVisible: false });
-  //   };
-  handleSave=async()=>{
-    console.log('budd',this.props);
-    this.setState({saveFilterLoad:true})
-   let {curentTabDat,leadSelected} =this.state;
-   if(curentTabDat.filterObject)
-   curentTabDat.filterObject.estimaitonStatus.map(r=>{
-    leadSelected.push(r)
-   })
-   await this.props.saveFilterss({estimaitonStatus:leadSelected});
-    this.setState({saveFilterLoad:false})
-  }
-  onChange=(e)=> {
-    console.log(`checked =`,e);
+          if (currentTabDa.filterObject.leadSource) {
+            currentTabDa.filterObject.leadSource.map((c) => {
+              leadty.map((l) => {
+                if (c === l.name) l["check"] = true;
+              });
+            });
+          }
+        }
+      }
+      console.log("leads===", leads);
+      await this.setState({
+        leadList: leads,
+        curentTabDat: this.props.currentTabData,
+        leadSelected: [],
+        dateFilter: date,
+        sortDropdown: dropdown,
+        leadTypes: leadty,
+        leadSource: [],
+      });
+    }
+  };
+
+  handleSave = async () => {
+    console.log("budd", this.props);
+    this.setState({ saveFilterLoad: true });
+    let { curentTabDat, leadSelected } = this.state;
+    if (curentTabDat.filterObject)
+      curentTabDat.filterObject.estimaitonStatus.map((r) => {
+        leadSelected.push(r);
+      });
+    await this.props.saveFilterss({
+      estimaitonStatus: leadSelected,
+      dateFilter: this.state.dateFilter,
+      leadSource: this.state.leadSource,
+      sortDropdown: this.state.sortDropdown,
+    });
+    this.setState({ saveFilterLoad: false });
+  };
+  onChangeLeadSource = (e) => {
+    console.log(e);
+    if (this.state.leadSource.indexOf(e) === -1) {
+      let leads = this.state.leadTypes;
+      leads.map((l) => {
+        if (l.name === e) l["check"] = true;
+      });
+      this.setState({
+        leadSource: this.state.leadSource.concat(e),
+        leadTypes: leads,
+      });
+    } else {
+      let rm = this.state.leadSource;
+      let i = rm.indexOf(e);
+      rm.splice(i, 1);
+
+      let leads = this.state.leadTypes;
+      leads.map((l) => {
+        if (l.name === e) l["check"] = false;
+      });
+      this.setState({ leadSource: rm, leadTypes: leads });
+    }
+  };
+  onChange = (e) => {
+    console.log(`checked =`, e);
     // let final=this.state.leadSelected;
     // final.push(e.name)
     // /this.setState({curentTabDat:this.state.curentTabDat.filterObject.estimaitonStatus.concat(e)});
-   
-    if(this.state.leadSelected.indexOf(e) === -1)
-    this.setState({leadSelected:this.state.leadSelected.concat(e)});
-    else{
-      let rm=this.state.leadSelected;
-      let i= rm.indexOf(e);
-      rm.splice(i,1);
-      this.setState({leadSelected:rm});
+
+    if (this.state.leadSelected.indexOf(e) === -1) {
+      let leads = this.state.leadList;
+      leads.map((l) => {
+        if (l.name === e) l["check"] = true;
+      });
+      this.setState({
+        leadSelected: this.state.leadSelected.concat(e),
+        leadList: leads,
+      });
+    } else {
+      let rm = this.state.leadSelected;
+      let i = rm.indexOf(e);
+      rm.splice(i, 1);
+
+      let leads = this.state.leadList;
+      leads.map((l) => {
+        if (l.name === e) l["check"] = false;
+      });
+
+      this.setState({ leadSelected: rm, leadList: leads });
     }
-  }
-  filterPass=()=>{
-     console.log("hey man" ,this.props);
-     this.props.handleOk(this.state.leadSelected);
-  }
- 
+  };
+  filterPass = () => {
+    console.log("hey man", this.props);
+    this.props.handleOk(this.state);
+  };
+  onRadioChange = (e) => {
+    console.log(e.target.value);
+    this.setState({ dateFilter: e.target.value });
+  };
+  handleChange = (value) => {
+    console.log(`selected ${value}`);
+    this.setState({ sortDropdown: value });
+  };
+  cleanFilters = () => {
+    let { leadList, leadTypes } = this.state;
+    console.log("hii", leadList, leadTypes);
+    leadList.map((l) => {
+      l["check"] = false;
+    });
+    leadTypes.map((l) => {
+      l["check"] = false;
+    });
+    this.setState({ leadList, leadTypes });
+  };
   render() {
-    console.log('leadout==', this.state,this.props)
-   
-    const { RangePicker } = DatePicker;
+    console.log("leadout==", this.state, this.props);
+
     const { Option } = Select;
-    function handleChange(value) {
-      console.log(`selected ${value}`);
+    // let currentTab={ dateFilter:'7',
+    //    sortDropdown:'-1',
+    //    leadSource:[]}
+    // if(this.props.currentTabData)
+    // currentTab=this.props.currentTabData.filterObject;
+
+    let leadCheckbox, leadSourceCheckBox;
+    if (this.state.leadList) {
+      leadCheckbox = this.state.leadList.map((r) => {
+        // /  console.log(r)
+        return (
+          <Col md={8}>
+            <Checkbox checked={r.check} onChange={(e) => this.onChange(r.name)}>
+              {r.name}
+            </Checkbox>{" "}
+          </Col>
+        );
+      });
     }
-    
-let leadCheckbox;
-    if(this.state.leadList){
-   leadCheckbox=   this.state.leadList.map((r)=>{
-     let currentTabDa=this.state.curentTabDat;
-     let boo=false;
-     if(currentTabDa){
-       if(currentTabDa.filterObject){
-         if(currentTabDa.filterObject.estimaitonStatus)
-        currentTabDa.filterObject.estimaitonStatus.map(c=>{
-          if(c=== r.name)
-          boo=true
-        })
-       }
-     }
-      // /  console.log(r)
-        return(<Col md={8}>
+
+    leadSourceCheckBox = this.state.leadTypes.map((r) => {
+      return (
+        <Col md={8}>
           <Checkbox
-           checked={boo}
-            onChange={(e)=>this.onChange(r.name)}>{r.name}</Checkbox>{" "}
-        </Col>)
-      })
-    }
+            checked={r.check}
+            onChange={() => this.onChangeLeadSource(r.name)}
+          >
+            {r.name}
+          </Checkbox>{" "}
+        </Col>
+      );
+    });
     return (
       <>
         <Modal
@@ -142,7 +272,7 @@ let leadCheckbox;
               <Col md={24}>
                 <Form layout="vertical" autoComplete="off">
                   <Row gutter={[24, 0]}>
-                    <Col md={12}>
+                    {/* <Col md={12}>
                       <Form.Item name="Column" label="Column">
                         <Select defaultValue="lucy" onChange={handleChange}>
                           <Option value="jack">Column 1</Option>
@@ -151,16 +281,27 @@ let leadCheckbox;
                           <Option value="Yiminghe">Column 3</Option>
                         </Select>
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col md={12}>
-                      <Form.Item name="Column" label="According to">
-                        <Select defaultValue="Newest" onChange={handleChange}>
-                          <Option value="jack">Newest</Option>
-                          <Option value="lucy">Oldest</Option>
-                        </Select>
-                      </Form.Item>
+                      {/* <Form.Item name="Column" label="According to"> */}
+                      <Select
+                        defaultValue={
+                          this.state.sortDropdown
+                            ? this.state.sortDropdown
+                            : "-1"
+                        }
+                        value={
+                          this.state.sortDropdown
+                            ? this.state.sortDropdown
+                            : "-1"
+                        }
+                        onChange={this.handleChange}
+                      >
+                        <Option value="-1">Newest</Option>
+                        <Option value="1">Oldest</Option>
+                      </Select>
+                      {/* </Form.Item> */}
                     </Col>
-                 
                   </Row>
                 </Form>
               </Col>
@@ -173,14 +314,11 @@ let leadCheckbox;
               <Col md={24}>
                 <Form layout="vertical" autoComplete="off">
                   <Row>
-                
                     <Col md={6}>
-                      <b>Lead Estatus</b>
+                      <b>Lead Status</b>
                     </Col>
                     <Col md={18}>
-                      <Row>
-                      {leadCheckbox}
-                      </Row>
+                      <Row>{leadCheckbox}</Row>
                     </Col>
                     <Divider />
                     <Col md={6}>
@@ -188,21 +326,32 @@ let leadCheckbox;
                     </Col>
                     <Col md={18}>
                       <Row>
-                        <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Last 7 days</Checkbox>{" "}
+                        <Radio.Group
+                          options={[
+                            { label: "Last 7 days", value: "7" },
+                            { label: "Last 28 days", value: "28" },
+                            { label: "Last 90 days", value: "90" },
+                          ]}
+                          onChange={this.onRadioChange}
+                          value={
+                            this.state.dateFilter ? this.state.dateFilter : "7"
+                          }
+                        />
+                        {/* <Col md={8}>
+                          <Radio onChange={this.onChange}>Last 7 days</Radio>{" "}
                         </Col>
                         <Col md={8}>
                           <Checkbox onChange={this.onChanges}>Last 28 days</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
                           <Checkbox onChange={this.onChange}>Last 90 days</Checkbox>{" "}
-                        </Col>
-                        <Col md={24} className="mt-4 text-right">
+                        </Col> */}
+                        {/* <Col md={24} className="mt-4 text-right">
                           {" "}
                           <Space direction="vertical" size={12}>
                             <RangePicker />
                           </Space>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Col>
                     <Divider />
@@ -211,18 +360,18 @@ let leadCheckbox;
                     </Col>
                     <Col md={18}>
                       <Row>
-                        <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Facebook</Checkbox>{" "}
+                        {leadSourceCheckBox}
+                        {/* <Col md={8}>
+                          <Checkbox onChange={()=>this.onChangeLeadSource('Facebook')}>Facebook</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Web</Checkbox>{" "}
+                          <Checkbox onChange={()=>this.onChangeLeadSource('Website')}>Web</Checkbox>{" "}
                         </Col>
                         <Col md={8}>
-                          <Checkbox onChange={this.onChange}>Referral</Checkbox>{" "}
-                        </Col>
+                          <Checkbox onChange={()=>this.onChangeLeadSource('Referral')}>Referral</Checkbox>{" "}
+                        </Col> */}
                       </Row>
                     </Col>
-                  
                   </Row>
                 </Form>
               </Col>
@@ -234,16 +383,17 @@ let leadCheckbox;
                     className="inline-block me-5 fillter-btn"
                     onClick={this.showModal}
                   >
-                    <Button type="primary" shape="round" size="large" onClick={this.filterPass}>
+                    <Button
+                      type="primary"
+                      shape="round"
+                      size="large"
+                      onClick={this.filterPass}
+                    >
                       Apply
                     </Button>
                   </span>
 
-                  <span className="ant-blue-plus">
-                    <PlusCircleOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-2"
-                    />{" "}
+                  <span className="ant-blue-plus" onClick={this.cleanFilters}>
                     Clean Filters
                   </span>
                   <div className="ms-auto col-lg-4">
@@ -254,6 +404,7 @@ let leadCheckbox;
                       icon={<SaveOutlined />}
                       size="large"
                       loading={this.state.saveFilterLoad}
+                      disabled={(Object.keys(this.props.currentTabData ||{}).length === 0)?true:false}
                       onClick={this.handleSave}
                     >
                       Save Filter

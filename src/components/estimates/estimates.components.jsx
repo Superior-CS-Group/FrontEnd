@@ -7,7 +7,7 @@ import {
   PlusCircleOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Select } from "antd";
+import { Button, Card } from "antd";
 import { Nav } from "react-bootstrap";
 import { Modal, Form, Input } from "antd";
 import Datatable from "./estimates.datatable.components";
@@ -55,9 +55,11 @@ export default class MainEstimates extends Component {
     let finalD = data.data.Data;
     console.log("hey   hhhh", data);
     let tab = this.state.Tabs;
+    // eslint-disable-next-line array-callback-return
     tab.map((t) => {
       if (t._id === finalD._id) {
         t.filterObject = finalD.filterObject;
+        t.columnOrder = finalD.columnOrder;
       }
     });
     this.setState({ Tabs: tab });
@@ -123,12 +125,7 @@ export default class MainEstimates extends Component {
     this.setState({ ModalVisible: false, isModalVisible: false });
   };
   render() {
-    const { Option } = Select;
     console.log(this.state);
-
-    function handleChange(value) {
-      console.log(`selected ${value}`);
-    }
 
     return (
       <>
@@ -289,7 +286,7 @@ export default class MainEstimates extends Component {
                   updateTab={this.updateTab}
                 />
 
-                <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
+                {/* <div className="ant-action-box d-flex align-items-center mt-2 pb-3">
                   <div className="ms-auto pe-3 ant-select-box ">
                     <Button className="radius-12 me-3" type="primary">
                       Save
@@ -320,8 +317,8 @@ export default class MainEstimates extends Component {
                     Confirm
                   </Button>
                 </div> */}
-                  </div>
-                </div>
+                {/* </div> */}
+                {/* </div> */}
               </div>
             </Card>
           </>

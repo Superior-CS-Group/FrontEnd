@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Card, Input } from "antd";
-import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { Card } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
 
 import BreadcrumbBar from "../breadcrumb/Breadcrumb.pages";
 import { Nav } from "react-bootstrap";
@@ -43,9 +43,13 @@ export default class UserList extends Component {
   render() {
     return (
       <>
-        <div className="d-flex align-items-center justify-content-between mb-4">
-          <BreadcrumbBar name="User" subname="UserList" />
-        </div>
+        <BreadcrumbBar
+          name="Dashboard"
+          subname="Settings"
+          subtitle="User List"
+          breaclass="mb-3"
+          link="/"
+        />
 
         <Card
           bordered={false}
@@ -73,9 +77,7 @@ export default class UserList extends Component {
             </Nav>
           </div>
 
-          <div className="px-2">
-            <UserTable />
-          </div>
+          <UserTable />
         </Card>
       </>
     );

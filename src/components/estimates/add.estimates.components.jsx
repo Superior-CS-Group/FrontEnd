@@ -30,6 +30,7 @@ import { getVariationsByCatalogId } from "../../api/catalogue";
 import EstimateSettings from "./estimateSettings/estimateSettings.component";
 import PaymentTerms from "./paymentTerms/paymentTerms.component";
 import { currencyFormate } from "../../utils/currencyFormate";
+import regex from "../../utils/regex";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -65,7 +66,7 @@ export default function AddEstimates(props) {
     },
     {
       title: "Units",
-      dataIndex: "address",
+      dataIndex: "unitToShow",
     },
     {
       title: "Cost (total)",
@@ -241,10 +242,16 @@ export default function AddEstimates(props) {
   }
 
   function escapeRegExp(string) {
-    return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+    return string.replace(regex.escapeRegex, "\\$&"); // $& means the whole matched string
   }
 
-  function processFormula(formula, materials, elements, multiplicationFactor) {
+  function processFormula(
+    formula,
+    materials,
+    elements,
+    multiplicationFactor,
+    currentElement
+  ) {
     if (materials) {
       const usedMaterials = materials.map((item) => {
         return {
@@ -263,19 +270,41 @@ export default function AddEstimates(props) {
       const usedElements = elements.map((element) => {
         return {
           title: `@{{element||${element._id}||${element.name}}}`,
-          price: `${element.value} * ${
-            element.multiplicationFactor === undefined ||
-            element.multiplicationFactor === null
-              ? 1
-              : element.multiplicationFactor
-          }`,
+          price:
+            element.finalCalculatedValue !== undefined
+              ? (
+                  element.finalCalculatedValue *
+                  (element.multiplicationFactor === undefined ||
+                  element.multiplicationFactor === null
+                    ? 1
+                    : Number(element.multiplicationFactor))
+                ).toString()
+              : `${element.value} * ${
+                  element.multiplicationFactor === undefined ||
+                  element.multiplicationFactor === null
+                    ? 1
+                    : element.multiplicationFactor
+                }`,
           usedMaterials: element.formula,
+          customInput:
+            element.customInput?.map((customInput) => {
+              return {
+                title: `@{{custom||${customInput._id}||${customInput.name}}}`,
+                value: customInput.value,
+              };
+            }) || [],
         };
       });
       usedElements.forEach((element) => {
         const regex = new RegExp(escapeRegExp(element.title), "g");
         try {
           formula = formula.replace(regex, element.price);
+          if (element.customInput) {
+            element.customInput.forEach((customInput) => {
+              const regex = new RegExp(escapeRegExp(customInput.title), "g");
+              formula = formula.replace(regex, customInput.value);
+            });
+          }
         } catch (error) {
           console.log("error: ", error);
         }
@@ -288,13 +317,16 @@ export default function AddEstimates(props) {
           ? 1
           : multiplicationFactor;
 
-      if (formula.match(/@\{\{[^\}]+\}\}/gi) && materials.length) {
+      if (formula.match(regex.materialInput) && materials.length) {
         formula = processFormula(formula, materials);
       }
 
       const result =
         Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
-
+      // console.log("currentELelemt: ", currentElement);
+      if (currentElement) {
+        currentElement.finalCalculatedValue = result;
+      }
       return result;
     } catch (error) {
       return 0;
@@ -308,24 +340,34 @@ export default function AddEstimates(props) {
     const materials = [...formula.materials].map((material) => {
       let quantity = processFormula(
         material.quantity || "",
-        formula.catalogs || [],
-        elements,
-        undefined,
-        material.name
+        [...(formula.catalog || []), ...material.formula],
+        elements
       );
-      let cost =
-        quantity *
-        processFormula(material.cost || "", formula.catalogs || [], elements);
+      const materialCost = material.cost?.replace(/\{Quantity\}/g, quantity);
+      let cost = processFormula(
+        materialCost || "",
+        formula.catalogs || [],
+        elements
+      );
+      let materialCharge = material.charge?.replace(/\{Quantity\}/g, quantity);
+      console.log("materialCharge1: ", materialCharge);
+      materialCharge = materialCharge?.replace(/\{Cost\}/, cost);
+      console.log("materialCharge2: ", materialCharge);
       let charge = processFormula(
-        material.charge.replace("{Cost}", cost) || "",
-        formula.catalog || [],
+        materialCharge,
+        [...(formula.catalog || []), ...material.formula],
         elements
       );
       material.quantityValue = quantity;
       material.costValue = cost;
       material.chargeValue = charge;
-
-      processClientContract(formula, material.formula, elements);
+      console.log("material: ", material);
+      material.unitToShow = material.unit?.name;
+      processClientContract(
+        formula,
+        [...(formula.catalog || []), ...material.formula],
+        elements
+      );
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
       return { ...material, cost, charge, quantity };
@@ -402,13 +444,22 @@ export default function AddEstimates(props) {
       const usedElements = elements.map((element) => {
         return {
           title: `@{{element||${element._id}||${element.name}}}`,
-          price: (
-            Number(element.value) *
-            (element.multiplicationFactor === undefined ||
-            element.multiplicationFactor === null
-              ? 1
-              : Number(element.multiplicationFactor))
-          ).toString(),
+          price:
+            element.finalCalculatedValue !== undefined
+              ? (
+                  element.finalCalculatedValue *
+                  (element.multiplicationFactor === undefined ||
+                  element.multiplicationFactor === null
+                    ? 1
+                    : Number(element.multiplicationFactor))
+                ).toString()
+              : (
+                  Number(element.value) *
+                  (element.multiplicationFactor === undefined ||
+                  element.multiplicationFactor === null
+                    ? 1
+                    : Number(element.multiplicationFactor))
+                ).toString(),
         };
       });
 
@@ -429,6 +480,46 @@ export default function AddEstimates(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdate]);
+
+  const processNameOfElement = (element, elementIndex, formulaIndex) => {
+    const name = element.name;
+    const splitedName = name.split(" ");
+    const newName = splitedName.map((item, index) => {
+      if (item.match(regex.customInput)) {
+        return (
+          <input
+            key={index}
+            onChange={(e) =>
+              handleCustomInputChange(e, element, elementIndex, formulaIndex)
+            }
+            style={{ width: "25%" }}
+            type="number"
+            min={0}
+            name={item.replace("!", "")}
+            value={
+              element.customInput.find(
+                (inp) => inp.name === item.replace("!", "")
+              ).value
+            }
+            onBlur={onFocusOut}
+          />
+        );
+      } else {
+        return ` ${item} `;
+      }
+    });
+    return newName;
+  };
+
+  function handleCustomInputChange(e, element, elementIndex, formulaIndex) {
+    const customInput = element.customInput.find(
+      (item) => item.name === e.target.name
+    );
+    customInput.value = e.target.value;
+    const newSelectedFormula = [...selectedFormulas];
+    newSelectedFormula[formulaIndex].elements[elementIndex] = element;
+    setSelectedFormulas(newSelectedFormula);
+  }
 
   return (
     <>
@@ -651,7 +742,9 @@ export default function AddEstimates(props) {
                                 key={idx}
                               >
                                 <div className="text-end drgicon"></div>
-                                <span>{element.name}</span>
+                                <span>
+                                  {processNameOfElement(element, idx, index)}
+                                </span>
 
                                 <div className="d-flex align-items-center justify-content-between">
                                   {element.type === "manual" ||
@@ -748,7 +841,7 @@ export default function AddEstimates(props) {
                                         element.formula || [],
                                         formula.elements,
                                         element.multiplicationFactor,
-                                        element.name
+                                        element
                                       )}
                                     </h4>
                                   )}

@@ -1,38 +1,15 @@
-import React, { useState } from "react";
-import moment from "moment";
-import {
-  DatePicker,
-  Input,
-  Row,
-  Col,
-  Button,
-  Divider,
-  Calendar,
-  Form,
-} from "antd";
-const { RangePicker } = DatePicker;
+import React from "react";
+import { Input, Row, Col, Button, Divider, Calendar, Form } from "antd";
 
 function onPanelChange(value, mode) {
   console.log(value, mode);
 }
 export default function ScheduleTimeDate(props) {
-  const [ScheduleEmailSentState, setScheduleEmailSentState] = useState(false);
-  const [state, setState] = useState({
-    time: "",
-    date: "",
-  });
   var ScheduleEmailSent = () => {
-    setScheduleEmailSentState(true);
     console.log("props: ", props);
     props.updateModel();
   };
 
-  const handleAllChange = (e) => {
-    setState({
-      ...state,
-      [e.target.name]: e.target.value,
-    });
-  };
   return (
     <>
       <h3>Schedule Email</h3>

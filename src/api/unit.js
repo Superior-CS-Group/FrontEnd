@@ -4,7 +4,6 @@ export async function GetAllUnits() {
   const response = await api.request({
     url: "/unit/list",
     method: "GET",
-    
   });
   if (response.remote === "success") {
     return {

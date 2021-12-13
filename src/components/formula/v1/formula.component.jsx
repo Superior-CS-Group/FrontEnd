@@ -13,6 +13,7 @@ function Formula() {
     children: [],
   });
   const [selectedNode, setSelectedNode] = React.useState({});
+  // eslint-disable-next-line no-unused-vars
   const [isTreeUpdate, setIsTreeUpdate] = React.useState(false);
 
   const handleUpdateTree = (parent) => {

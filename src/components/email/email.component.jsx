@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import {
   MoreOutlined,
@@ -5,7 +6,7 @@ import {
   SendOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Form, Input, Row, Col, Select, Menu, Dropdown, Button } from "antd";
+import { Form, Input, Row, Col, Menu, Dropdown, Button } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import RecipientList from "./recipientlist.component";
@@ -14,7 +15,7 @@ import SimpleEMailSent from "./simple.emailsent.component";
 import ScheduleTimeDate from "./schedule.timedate.component";
 import ScheduleEmailSent from "./schedule.emailsent.component";
 import { getData } from "../../utils/fetchApi";
-import { Card, Table } from "antd";
+import { Card } from "antd";
 import { Nav, Tab } from "react-bootstrap";
 import SmallLoader from "../loader/smallLoader";
 export default class EmailSend extends Component {
@@ -41,6 +42,7 @@ export default class EmailSend extends Component {
   //   this.setState({ [event.target.name]: event.target.value });
   //   console.log(event.target.value, "value");
   // };
+  // eslint-disable-next-line no-dupe-class-members
   handleChange(html) {
     this.setState({ editorHtml: html });
     console.log(this.state.editorHtml, "thierhitheith");
@@ -140,7 +142,6 @@ export default class EmailSend extends Component {
     }
   };
   render() {
-    const { Option } = Select;
     const menu = (
       <Menu className="dropdown-div-mail">
         <Menu.Item
