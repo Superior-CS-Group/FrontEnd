@@ -27,6 +27,7 @@ export default function EmailSetting() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [fromEmail, setfromEmail] = useState("");
+  const [googleKey, setGoogleKey] = useState("");
   const [port, setPort] = useState("");
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function EmailSetting() {
           setPassword(response.data.password);
           setPort(response.data.port);
           setfromEmail(response.data.fromEmail);
+          setGoogleKey(response.data.googleKey);
           setTimeout(
             () =>
               setState({
@@ -114,6 +116,7 @@ export default function EmailSetting() {
       fromEmail: fromEmail,
       profileImage: base64,
       oldLogo: state.profileImage,
+      googleKey: googleKey,
     };
     // console.log(body);
     const response = await updateEmailSetting(body);
@@ -217,38 +220,39 @@ export default function EmailSetting() {
                     onChange={(e) => setfromEmail(e.target.value)}
                   />
                 </Form.Item>
-                <Form.Item
-                  label="CRM Logo"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
-                  className="main-logo-label"
-                  // extra="long"
-                >
-                  <Input
-                    size="large"
-                    type="file"
-                    onChange={handleProfileImage}
-                  />
+                <Col md={12}>
+                  <Form.Item
+                    label="CRM Logo"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    className="main-logo-label"
+                    // extra="long"
+                  >
+                    <Input
+                      size="large"
+                      type="file"
+                      onChange={handleProfileImage}
+                    />{" "}
+                  </Form.Item>
+                  {" "}
                   <img
                     src={state.profileImage}
                     className="preview-logo"
                     alt=""
                   />
-                  {/* <Upload
-                  listType="picture"
-                  className="check-input-logo" 
-                >
-                  <Button icon={<UploadOutlined />} className="logo-btn">
-                    Drag or Click to Upload Logo
-                  </Button>
-                </Upload> */}
+                </Col>
+                
+                <Form.Item label="Google Key">
+                  <Input
+                    size="large"
+                    placeholder="Google Key"
+                    name="googleKey"
+                    value={googleKey}
+                    onChange={(e) => setGoogleKey(e.target.value)}
+                  />
                 </Form.Item>
               </Col>
               <Col md={24}>
-                {" "}
-                {/* <Form.Item name="description" label="Description">
-                <Input.TextArea />
-              </Form.Item> */}
                 <div className="text-right">
                   <Button
                     size="large"

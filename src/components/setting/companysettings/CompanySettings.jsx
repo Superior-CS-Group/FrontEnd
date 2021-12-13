@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import BreadcrumbBar from "../../breadcrumb/Breadcrumb.pages";
 import { Card, Row, Col, Form, Input, Button, message } from "antd";
 import UploadFile from "./card/uploadFile.component";
+import GooglePlacesAutocomplete, {
+  geocodeByPlaceId,
+} from "react-google-places-autocomplete";
+
 import {
   getOrganizationDetails,
   updateOrganizationDetails,
@@ -17,6 +21,79 @@ export default function CompanySettings() {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const [address, setAddress] = useState();
+  const [addressObj, setAddressObj] = useState();
+
+  const getAddressObject = (address_components) => {
+    console.log(address_components);
+    const ShouldBeComponent = {
+      street_number: ["street_number"],
+      postal_code: ["postal_code"],
+      street: ["street_address", "route"],
+      province: [
+        "administrative_area_level_1",
+        "administrative_area_level_2",
+        "administrative_area_level_3",
+        "administrative_area_level_4",
+        "administrative_area_level_5",
+      ],
+      city: [
+        "locality",
+        "sublocality",
+        "sublocality_level_1",
+        "sublocality_level_2",
+        "sublocality_level_3",
+        "sublocality_level_4",
+      ],
+      country: ["country"],
+    };
+
+    let address = {
+      street_number: "",
+      postal_code: "",
+      street: "",
+      province: "",
+      city: "",
+      country: "",
+    };
+
+    address_components.forEach((component) => {
+      for (var shouldBe in ShouldBeComponent) {
+        if (ShouldBeComponent[shouldBe].indexOf(component.types[0]) !== -1) {
+          if (shouldBe === "country") {
+            address[shouldBe] = component.short_name;
+          } else {
+            address[shouldBe] = component.long_name;
+          }
+        }
+      }
+    });
+
+    // Fix the shape to match our schema
+    address.address = address.street_number + " " + address.street;
+    delete address.street_number;
+    delete address.street;
+    if (address.country === "US") {
+      address.state = address.province;
+      delete address.province;
+    }
+    return address;
+  };
+
+  useEffect(() => {
+    const func = async () => {
+      const geocodeObj =
+        address &&
+        address.value &&
+        (await geocodeByPlaceId(address.value.place_id));
+      const addressObject =
+        geocodeObj && getAddressObject(geocodeObj[0].address_components);
+      console.log("addressObject", addressObject);
+      setAddressObj(addressObject);
+    };
+    func();
+  }, [address]);
 
   const getUserOrganization = async () => {
     const details = await getOrganizationDetails();
@@ -41,17 +118,19 @@ export default function CompanySettings() {
     if (e) e.preventDefault();
     setErrors({});
     setIsLoading(true);
+    // console.log(address.label, "addressxxxxxxx");
+
     const key = "updatable";
     message.loading({ content: "Saving...", key });
     const body = {
       name: companyDetails.name,
-      address: companyDetails.address,
+      address: address.label,
       phoneNumber: companyDetails.phoneNumber,
       logo: companyDetails.logo,
       teamPhoto: companyDetails.teamPhoto,
       estimationCoverPhoto: companyDetails.coverPhoto,
     };
-    console.log("body: ", body);
+    // console.log("body: ", body);
     if (!body.name) {
       setErrors({ ...errors, name: "Name is required" });
       return;
@@ -125,15 +204,25 @@ export default function CompanySettings() {
                 </Col>
                 <Col lg={24}>
                   <Form.Item label="Address">
-                    <Input.TextArea
-                      className="textarea-resize"
+                    <GooglePlacesAutocomplete
+                      apiKey="AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU"
+                      selectProps={{
+                        isClearable: true,
+                        value: address,
+                        onChange: (val) => {
+                          setAddress(val);
+                        },
+                      }}
+                    />
+                    <Input
+                      type="text"
                       size="large"
                       placeholder="Enter Company Address"
                       name="address"
                       value={companyDetails.address}
-                      onChange={(e) =>
-                        handleChange(e.target.value, e.target.name)
-                      }
+                      // onChange={(e) =>
+                      //   handleChange(e.target.value, e.target.name)
+                      // }
                     />
                   </Form.Item>
                 </Col>
@@ -161,6 +250,21 @@ export default function CompanySettings() {
           </Button>
         </Col>
       </Row>
+
+      {/* <h1>Address</h1>
+      <GooglePlacesAutocomplete
+        apiKey="AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU"
+        selectProps={{
+          isClearable: true,
+          value: address,
+          onChange: (val) => {
+            setAddress(val);
+          },
+        }}
+      />
+      <pre style={{ textAlign: "left", background: "#f0f0f0", padding: 20 }}>
+        {JSON.stringify(addressObj, 0, 2)}
+      </pre> */}
     </>
   );
 }

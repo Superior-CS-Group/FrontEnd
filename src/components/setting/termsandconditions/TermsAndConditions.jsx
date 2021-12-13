@@ -1,10 +1,20 @@
 import React from "react";
 import { Card } from "antd";
+import ReactMentionInput from "../../../utils/mentionInput/mentionInput";
 export default function TermsAndConditions() {
+  const [input, setInput] = React.useState("");
   return (
     <>
       <Card bordered={false} className="termsconditions radius-12">
         <h5>Terms & conditions</h5>
+        <ReactMentionInput
+          noMaterial
+          noElement
+          isCustomInput
+          // isMaterialInput
+          onChange={(e) => setInput(e.target.value)}
+          value={input}
+        />
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at velit
           sed sapien ullamcorper auctor. Pellentesque congue eleifend libero non

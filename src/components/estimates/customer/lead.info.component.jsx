@@ -4,12 +4,116 @@ import "react-phone-number-input/style.css";
 import { UserOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { postData } from "../../../utils/fetchApi.js";
 import { useParams, Navigate } from "react-router-dom";
-import { isExistsLeadEmail } from "../../../api/customer.js";
+import { getDistance, isExistsLeadEmail } from "../../../api/customer.js";
+import GooglePlacesAutocomplete, {
+  geocodeByPlaceId,
+} from "react-google-places-autocomplete";
+import { getEmailSetting } from "../../../api/admin.js";
+import { getOrganizationDetails } from "../../../api/organization.js";
 
 export default function LeadInfo(props) {
   const params = useParams();
+  const [address, setAddress] = useState();
+  const [addressObj, setAddressObj] = useState();
+  const [googleKey, setGoogleKey] = useState("");
+  const [companyDetails, setCompanyDetails] = useState({
+    name: "",
+    address: "",
+    coverPhoto: "",
+    logo: "",
+    teamPhoto: "",
+  });
+  const getAddressObject = (address_components) => {
+    // console.log(address_components);
+    const ShouldBeComponent = {
+      street_number: ["street_number"],
+      postal_code: ["postal_code"],
+      street: ["street_address", "route"],
+      province: [
+        "administrative_area_level_1",
+        "administrative_area_level_2",
+        "administrative_area_level_3",
+        "administrative_area_level_4",
+        "administrative_area_level_5",
+      ],
+      city: [
+        "locality",
+        "sublocality",
+        "sublocality_level_1",
+        "sublocality_level_2",
+        "sublocality_level_3",
+        "sublocality_level_4",
+      ],
+      country: ["country"],
+    };
 
-  // let [responseData, setResponseData] = useState({ name: "", email: "" });
+    let address = {
+      street_number: "",
+      postal_code: "",
+      street: "",
+      province: "",
+      city: "",
+      country: "",
+    };
+
+    address_components.forEach((component) => {
+      for (var shouldBe in ShouldBeComponent) {
+        if (ShouldBeComponent[shouldBe].indexOf(component.types[0]) !== -1) {
+          if (shouldBe === "country") {
+            address[shouldBe] = component.short_name;
+          } else {
+            address[shouldBe] = component.long_name;
+          }
+        }
+      }
+    });
+
+    // Fix the shape to match our schema
+    address.address = address.street_number + " " + address.street;
+    delete address.street_number;
+    delete address.street;
+    if (address.country === "US") {
+      address.state = address.province;
+      delete address.province;
+    }
+    return address;
+  };
+
+  useEffect(() => {
+    const func = async () => {
+      const geocodeObj =
+        address &&
+        address.value &&
+        (await geocodeByPlaceId(address.value.place_id));
+      const addressObject =
+        geocodeObj && getAddressObject(geocodeObj[0].address_components);
+      setAddressObj(addressObject);
+    };
+    func();
+
+    // console.log("addressObjectCustomer", address);
+    // console.log(companyDetails.address, "Organization address");
+    if (companyDetails.address != "" && address != "") {
+      const body = {
+        origins: companyDetails.address,
+        destinations: address.label,
+      };
+      // console.log(body);
+      const func2 = async () => {
+        const getFarness = await getDistance(body);
+        // console.log(getFarness, "getFarnessgetFarnessgetFarness");
+        if (getFarness.remote === "success") {
+          // console.log(getFarness.data.Address, "getFarness.data.address");
+          setState({
+            ...state,
+            distance: getFarness.data.Address,
+          });
+        }
+      };
+      func2();
+    }
+  }, [address]);
+
   const [state, setState] = useState({
     id: "",
     name: "",
@@ -32,18 +136,42 @@ export default function LeadInfo(props) {
     isValidEmail: false,
     isLoading: false,
     errors: {},
+    emailExists: "",
     expandIconPosition: "right",
     value: "",
     setValue: "",
     isRedirect: false,
     message: "",
   });
+  React.useEffect(() => {
+    setState({ ...state, distance: "" });
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingWarning, setIsLoadingWarning] = useState(false);
   const [isWarning, setIsWarning] = useState(false);
-  useEffect(() => {
-    const id = params.id;
 
+  const fetchEmailSettingData = async () => {
+    const response = await getEmailSetting();
+    if (response) {
+      if (response.remote === "success") {
+        setGoogleKey(response.data.googleKey);
+      }
+    }
+    // console.log(googleKey, "googleKeygoogleKey");
+  };
+
+  const getUserOrganization = async () => {
+    const details = await getOrganizationDetails();
+    if (details.remote === "success") {
+      setCompanyDetails(details.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmailSettingData();
+    getUserOrganization();
+
+    const id = params.id;
     if (id) {
       const fetchData = async () => {
         const result = props.result;
@@ -131,10 +259,10 @@ export default function LeadInfo(props) {
       errors.postalCode = "Postal Code is required";
       message.error(errors.postalCode, 5);
     }
-    if (!state.address) {
-      errors.address = "Address is required";
-      message.error(errors.address, 5);
-    }
+    // if (!state.address) {
+    //   errors.address = "Address is required";
+    //   message.error(errors.address, 5);
+    // }
     // if (!this.state.otherInformation) {
     //   errors.otherInformation = "Address is not blank";
     // }
@@ -153,7 +281,7 @@ export default function LeadInfo(props) {
     setState({
       ...state,
       [e.target.name]: e.target.value,
-      errors: [],
+      errors: {},
     });
   };
 
@@ -220,7 +348,7 @@ export default function LeadInfo(props) {
         country,
         state: states,
         city,
-        address,
+        address: address.label,
         postalCode,
         distance,
         otherInformation,
@@ -286,7 +414,6 @@ export default function LeadInfo(props) {
       country,
       states,
       city,
-      address,
       postalCode,
       distance,
       otherInformation,
@@ -299,12 +426,13 @@ export default function LeadInfo(props) {
       country,
       state: states,
       city,
-      address,
+      address: address.label,
       postalCode,
       distance,
       otherInformation,
       spouse,
     };
+    // console.log("addres: ", body);
 
     try {
       await postData(`customer/update-info`, body);
@@ -363,7 +491,7 @@ export default function LeadInfo(props) {
   const { expandIconPosition } = state;
   const { TextArea } = Input;
   function callback(key) {
-    console.log(key);
+    // console.log(key);
   }
 
   if (state.isRedirect) {
@@ -415,7 +543,7 @@ export default function LeadInfo(props) {
                     {state.errors.email}
                   </div> */}
                       <div role="alert" class="text-danger">
-                        {state.message}
+                        {state.emailExists}
                       </div>
                     </Form.Item>
                   </Col>
@@ -494,14 +622,27 @@ export default function LeadInfo(props) {
                 </Row>
                 <Row gutter={[24, 0]}>
                   <Col md={12}>
-                    <Form.Item label="Address">
-                      <Input
+                    <Form.Item label="Address" className="googleapi">
+                      <GooglePlacesAutocomplete
+                        apiKey="AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU"
+                        selectProps={{
+                          isClearable: true,
+                          value: address,
+                          onChange: (val) => {
+                            // console.log("val: ", val);
+                            setAddress(val);
+                          },
+                        }}
+                      />
+                      {state.address}
+                      {/* <Input
                         className="radius-30"
                         size="large"
                         name="address"
                         value={state.address}
                         onChange={handleAllChange}
-                      />
+                      /> */}
+
                       {/* <div role="alert" class="text-danger">
                         {state.errors.address}
                       </div> */}

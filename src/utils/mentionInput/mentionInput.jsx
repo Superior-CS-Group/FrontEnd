@@ -12,6 +12,7 @@ function ReactMentionInput({
   noMaterial,
   noElement,
   isCustomInput,
+  isMaterialInput,
 }) {
   const handleCatalog = (query, callback) => {
     return searchCatalogByName(query, "catalogAndServices")
@@ -38,15 +39,17 @@ function ReactMentionInput({
         placeholder={placeholder}
         onBlur={onBlur}
       >
-        <Mention
-          markup="{__display__}"
-          trigger="{"
-          data={[
-            { display: "Quantity", id: "quantity" },
-            { display: "Cost", id: "cost" },
-          ]}
-          displayTransform={(id, title) => `{${title}}`}
-        />
+        {isMaterialInput && (
+          <Mention
+            markup="{__display__}"
+            trigger="{"
+            data={[
+              { display: "Quantity", id: "quantity" },
+              { display: "Cost", id: "cost" },
+            ]}
+            displayTransform={(id, title) => `{${title}}`}
+          />
+        )}
         {!noElement && (
           <Mention
             trigger="@"

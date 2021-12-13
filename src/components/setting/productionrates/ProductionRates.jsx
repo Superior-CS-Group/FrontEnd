@@ -48,13 +48,14 @@ export default function ProductionRates() {
                   extra={[
                     <div className="d-flex align-items-center">
                       <Input
+                        style={{ width: "55px" }}
                         size="large"
                         type="number"
                         name="value"
                         maxLength="2"
-                        placeholder=""
-                        className="ant-width-small font-bold radius-4 gray-text"
-                        value={item.rate}
+                        placeholder={item.price}
+                        className="font-bold radius-4 gray-text ms-4"
+                        defaultValue={item.price}
                         min={1}
                         max={100}
                       />
