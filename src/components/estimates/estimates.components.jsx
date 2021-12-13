@@ -175,6 +175,7 @@ export default class MainEstimates extends Component {
                         >
                           <Card
                             bordered={false}
+                            bodyStyle={{ padding: "15px" }}
                             className="shadow estimate-card mx-2 h-100"
                             style={{ borderRadius: "10px" }}
                           >

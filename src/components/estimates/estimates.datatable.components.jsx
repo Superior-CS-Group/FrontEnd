@@ -550,7 +550,8 @@ export default function Datatable(props) {
             >
               <span
                 className="btn btn-success d-inline-block w-100 radius-30"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", }}
+                
               >
                 {customerData[0].estimaitonStatus}
               </span>
@@ -588,7 +589,7 @@ export default function Datatable(props) {
   let content;
   const fetchList = async () => {
     const statusLis = await getData(`status/list`);
-    console.log("status", statusLis);
+    console.log("hiiii", statusLis);
     if (statusLis.data.Data) {
       setLeadTypes(statusLis.data.Data);
     }
@@ -599,7 +600,7 @@ export default function Datatable(props) {
             <Col span={12} key={index}>
               <span
                 className="w-100 mb-2 border-0 btn text-white  font-12 radius-30"
-                style={{ background: "orange" }}
+                style={{ background: status.color }}
                 onClick={() => changeStatus(status)}
               >
                 {status.name}

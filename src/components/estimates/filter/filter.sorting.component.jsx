@@ -253,7 +253,7 @@ export default class FilterSorting extends Component {
       <>
         <Modal
           style={{ top: 15 }}
-          // width={1000}
+          width={800}
           className="modal-filter modal-radius"
           visible={this.props.ModalVisible}
           onOk={this.props.handleOk}
@@ -282,9 +282,10 @@ export default class FilterSorting extends Component {
                         </Select>
                       </Form.Item>
                     </Col> */}
-                    <Col md={12}>
+                    <Col md={24}>
                       {/* <Form.Item name="Column" label="According to"> */}
-                      <Select
+                      <Select size="large"
+                        style={{ width: "100%" }}
                         defaultValue={
                           this.state.sortDropdown
                             ? this.state.sortDropdown
@@ -309,22 +310,20 @@ export default class FilterSorting extends Component {
             <Divider />
 
             <Row>
-              {" "}
-              <h5>Filter</h5>
               <Col md={24}>
                 <Form layout="vertical" autoComplete="off">
                   <Row>
-                    <Col md={6}>
+                    <Col md={24}>
                       <b>Lead Status</b>
                     </Col>
-                    <Col md={18}>
+                    <Col md={24}>
                       <Row>{leadCheckbox}</Row>
                     </Col>
                     <Divider />
-                    <Col md={6}>
+                    <Col md={24}>
                       <b>Dates</b>
                     </Col>
-                    <Col md={18}>
+                    <Col md={24}>
                       <Row>
                         <Radio.Group
                           options={[
@@ -355,10 +354,10 @@ export default class FilterSorting extends Component {
                       </Row>
                     </Col>
                     <Divider />
-                    <Col md={6}>
+                    <Col md={24}>
                       <b>Lead Source</b>
                     </Col>
-                    <Col md={18}>
+                    <Col md={24}>
                       <Row>
                         {leadSourceCheckBox}
                         {/* <Col md={8}>
@@ -398,13 +397,19 @@ export default class FilterSorting extends Component {
                   </span>
                   <div className="ms-auto col-lg-4">
                     <Button
+                      className="d-inline-flex align-items-center"
                       ghost
                       type="primary"
                       shape="round"
                       icon={<SaveOutlined />}
                       size="large"
                       loading={this.state.saveFilterLoad}
-                      disabled={(Object.keys(this.props.currentTabData ||{}).length === 0)?true:false}
+                      disabled={
+                        Object.keys(this.props.currentTabData || {}).length ===
+                        0
+                          ? true
+                          : false
+                      }
                       onClick={this.handleSave}
                     >
                       Save Filter
