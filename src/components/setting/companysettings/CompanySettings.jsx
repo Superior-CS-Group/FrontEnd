@@ -155,9 +155,11 @@ export default function CompanySettings() {
             </Col>
           );
         })}
-        <Button onClick={handleSubmit} disabled={isLoading}>
-          {isLoading ? "Updating..." : "Update"}
-        </Button>
+        <Col span={24} className="text-end">
+          <Button type="primary" size="large"  onClick={handleSubmit} disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update"}
+          </Button>
+        </Col>
       </Row>
     </>
   );

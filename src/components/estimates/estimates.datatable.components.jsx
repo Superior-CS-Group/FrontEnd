@@ -548,7 +548,10 @@ export default function Datatable(props) {
               placement="bottom"
               onMouseEnter={() => popId(customerData)}
             >
-              <span className="btn btn-success d-inline-block btn-coners">
+              <span
+                className="btn btn-success d-inline-block w-100 radius-30"
+                style={{ fontSize: "14px" }}
+              >
                 {customerData[0].estimaitonStatus}
               </span>
             </Popover>
@@ -594,13 +597,13 @@ export default function Datatable(props) {
         <Row gutter={[24, 0]}>
           {statusLis.data.Data.map((status, index) => (
             <Col span={12} key={index}>
-              <Button
-                className="w-100 mb-2 font-bold border-0 text-white"
-                style={{ background: "orange", color: status.textcolor }}
+              <span
+                className="w-100 mb-2 border-0 btn text-white  font-12 radius-30"
+                style={{ background: "orange" }}
                 onClick={() => changeStatus(status)}
               >
                 {status.name}
-              </Button>
+              </span>
             </Col>
           ))}
         </Row>
@@ -764,13 +767,13 @@ export default function Datatable(props) {
       <Row gutter={[24, 0]}>
         {leadTypes.map((status, index) => (
           <Col span={12} key={index}>
-            <Button
-              className="w-100 mb-2 font-bold border-0 text-white"
+            <span
+              className="w-100 mb-2 border-0 text-white font-12 radius-30"
               style={{ background: "orange", color: status.textcolor }}
               onClick={() => changeStatus(status)}
             >
               {status.name}
-            </Button>
+            </span>
           </Col>
         ))}
       </Row>

@@ -21,6 +21,7 @@ import UserProfile from "../components/user/userprofile/UserProfile";
 import PaymentTerm from "../components/setting/paymentTerms/PaymentTerm";
 import TermsAndConditions from "../components/setting/termsandconditions/TermsAndConditions";
 import CompanySettings from "../components/setting/companysettings/CompanySettings";
+import ProductionRates from "../components/setting/productionrates/ProductionRates";
 
 const routes = [
   // {
@@ -156,6 +157,12 @@ const routes = [
     exact: true,
     name: "termsandconditions",
     component: <TermsAndConditions />,
+  },
+  {
+    path: "production-rates",
+    exact: true,
+    name: "productionrates",
+    component: <ProductionRates />,
   },
 ];
 export default routes;
