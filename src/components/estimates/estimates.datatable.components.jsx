@@ -18,6 +18,7 @@ import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
+import {deleteCustomerLead} from "../../../src/api/delete.js"
 
 import FilterSorting from "./filter/filter.sorting.component";
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
@@ -486,7 +487,7 @@ export default function Datatable(props) {
           // eslint-disable-next-line no-unused-vars
           followRemind = "No";
         }
-        console.log("f", customerData[0].autoReminderEmail);
+        // console.log("f", customerData[0].autoReminderEmail);
         data.push({
           keys: (
             <Checkbox
@@ -548,7 +549,11 @@ export default function Datatable(props) {
               placement="bottom"
               onMouseEnter={() => popId(customerData)}
             >
-              <span className="btn btn-success d-inline-block btn-coners">
+              <span
+                className="btn btn-success d-inline-block w-100 radius-30"
+                style={{ fontSize: "14px", }}
+                
+              >
                 {customerData[0].estimaitonStatus}
               </span>
             </Popover>
@@ -585,7 +590,7 @@ export default function Datatable(props) {
   let content;
   const fetchList = async () => {
     const statusLis = await getData(`status/list`);
-    console.log("status", statusLis);
+    console.log("hiiii", statusLis);
     if (statusLis.data.Data) {
       setLeadTypes(statusLis.data.Data);
     }
@@ -594,13 +599,13 @@ export default function Datatable(props) {
         <Row gutter={[24, 0]}>
           {statusLis.data.Data.map((status, index) => (
             <Col span={12} key={index}>
-              <Button
-                className="w-100 mb-2 font-bold border-0 text-white"
-                style={{ background: "orange", color: status.textcolor }}
+              <span
+                className="w-100 mb-2 border-0 btn text-white  font-12 radius-30"
+                style={{ background: status.color }}
                 onClick={() => changeStatus(status)}
               >
                 {status.name}
-              </Button>
+              </span>
             </Col>
           ))}
         </Row>
@@ -644,20 +649,21 @@ export default function Datatable(props) {
     setdeleteEstimateId(id);
     setdeleteEstimateIdx(idx);
     setShowDeleteModal(true);
-    console.log("deleteIdx", idx);
+    // console.log("deleteIdx", idx);
   };
   const handleDeleteOk = (id, idx) => {
-    console.log("deleteId", id, idx);
+    // console.log("deleteIdxxx", id, idx);
+    const body = { id: id };
     setShowDeleteModal(false);
-    // deleteCustomerLead(body)
+    deleteCustomerLead(body)
     message.success("Data Deleted", 5);
 
     let restultData = estimateResults.estimateResults.Data;
-    console.log(restultData);
+    // console.log(restultData);
     if (idx > -1) {
       restultData.splice(idx, 1);
     }
-    console.log(restultData);
+    // console.log(restultData);
     setdestimateResults({ estimateResults: restultData });
   };
   const handleDeleteClose = () => {
@@ -764,13 +770,13 @@ export default function Datatable(props) {
       <Row gutter={[24, 0]}>
         {leadTypes.map((status, index) => (
           <Col span={12} key={index}>
-            <Button
-              className="w-100 mb-2 font-bold border-0 text-white"
+            <span
+              className="w-100 mb-2 border-0 text-white font-12 radius-30"
               style={{ background: "orange", color: status.textcolor }}
               onClick={() => changeStatus(status)}
             >
               {status.name}
-            </Button>
+            </span>
           </Col>
         ))}
       </Row>

@@ -7,12 +7,13 @@ import { EditFilled } from "@ant-design/icons";
 export default function UserProfile() {
   const profileData = [
     {
-      title: "Full Name",
+      title: "Name",
       subtitle: "gabriel",
       editInput: <Input type="text" size="large" defaultValue="gabriel" />,
 
       line: <hr className="bg-gray" />,
     },
+
     {
       title: "Email",
       subtitle: "gabrielc@superiorcsgroup.com",
