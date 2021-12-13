@@ -24,7 +24,7 @@ export default function LeadInfo(props) {
     teamPhoto: "",
   });
   const getAddressObject = (address_components) => {
-    console.log(address_components);
+    // console.log(address_components);
     const ShouldBeComponent = {
       street_number: ["street_number"],
       postal_code: ["postal_code"],
@@ -101,6 +101,7 @@ export default function LeadInfo(props) {
       // console.log(body);
       const func2 = async () => {
         const getFarness = await getDistance(body);
+        // console.log(getFarness, "getFarnessgetFarnessgetFarness");
         if (getFarness.remote === "success") {
           // console.log(getFarness.data.Address, "getFarness.data.address");
           setState({
@@ -344,7 +345,7 @@ export default function LeadInfo(props) {
         country,
         state: states,
         city,
-        address,
+        address:address.label,
         postalCode,
         distance,
         otherInformation,
@@ -410,7 +411,6 @@ export default function LeadInfo(props) {
       country,
       states,
       city,
-      address,
       postalCode,
       distance,
       otherInformation,
@@ -423,12 +423,13 @@ export default function LeadInfo(props) {
       country,
       state: states,
       city,
-      address,
+      address: address.label,
       postalCode,
       distance,
       otherInformation,
       spouse,
     };
+    // console.log("addres: ", body);
 
     try {
       await postData(`customer/update-info`, body);
@@ -487,7 +488,7 @@ export default function LeadInfo(props) {
   const { expandIconPosition } = state;
   const { TextArea } = Input;
   function callback(key) {
-    console.log(key);
+    // console.log(key);
   }
 
   if (state.isRedirect) {
@@ -618,18 +619,19 @@ export default function LeadInfo(props) {
                 </Row>
                 <Row gutter={[24, 0]}>
                   <Col md={12}>
-                    <Form.Item label="Address">
+                    <Form.Item label="Address" className="googleapi">
                       <GooglePlacesAutocomplete
-                      className="radius-30"
                         apiKey="AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU"
                         selectProps={{
                           isClearable: true,
                           value: address,
                           onChange: (val) => {
+                            // console.log("val: ", val);
                             setAddress(val);
                           },
                         }}
                       />
+                      {state.address}
                       {/* <Input
                         className="radius-30"
                         size="large"
