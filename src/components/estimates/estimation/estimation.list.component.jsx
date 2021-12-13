@@ -107,8 +107,8 @@ export default function EstimationList({ toggleAddNew, fetched: fetche }) {
   };
 
   useEffect(() => {
-   setTimeout(()=>fetchUserFormula(),
-   2000) 
+  fetchUserFormula()
+  
   
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetche]);

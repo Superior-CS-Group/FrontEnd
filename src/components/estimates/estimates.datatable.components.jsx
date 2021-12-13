@@ -593,9 +593,7 @@ export default function Datatable(props) {
   const fetchList = async () => {
     const statusLis = await getData(`status/list`);
     console.log("hiiii", statusLis);
-    if (statusLis.data.Data) {
-      setLeadTypes(statusLis.data.Data);
-    }
+    
     content = (
       <div style={{ width: "520px" }}>
         <Row gutter={[24, 0]}>
@@ -613,6 +611,10 @@ export default function Datatable(props) {
         </Row>
       </div>
     );
+    if (statusLis.data.Data) {
+      setLeadTypes(statusLis.data.Data);
+    }
+    console.log('conn==',content)
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -657,7 +659,7 @@ export default function Datatable(props) {
   const handleDeleteOk =async (id, idx) => {
     console.log("deleteId", id, idx);
     setShowDeleteModal(false);
-    deleteCustomerLead(body)
+    // deleteCustomerLead(body)
     message.success("Data Deleted", 5);
     const result= await postData(`customer/delete-lead`,{id})
     console.log("deleteIdx",state.filteredData, idx,result);
@@ -714,7 +716,22 @@ export default function Datatable(props) {
       id: customerId,
       estimaitonStatus: status.name,
     });
-    console.log("updated", result);
+    console.log("updated", result,customerId);
+
+    let restultData = estimateResults.estimateResults.Data;
+    restultData.map(r=>{
+     if( r.customerLeadId[0]._id ===customerId){
+      r.customerLeadId[0].estimaitonStatus=status.name
+     }
+    })
+    // console.log(restultData);
+    // if (idx > -1) {
+    //   restultData.splice(idx, 1);
+    // }
+    let resultss={data:{Data:[]}}
+    resultss.data.Data=restultData;
+    console.log(restultData);
+    buildTable(resultss)
   };
   const onChange = async (customer, i) => {
     console.log(`switch to`, params);
@@ -791,8 +808,9 @@ export default function Datatable(props) {
     </div>
   );
   console.log("state===", state);
-  console.log("types===", leadTypes);
-  console.log("st col===", state.columns);
+  console.log("colId===", customerId);
+  // console.log("types===", leadTypes);
+  // console.log("st col===", state.columns);
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
