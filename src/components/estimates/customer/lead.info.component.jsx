@@ -143,6 +143,9 @@ export default function LeadInfo(props) {
     isRedirect: false,
     message: "",
   });
+  React.useEffect(() => {
+    setState({ ...state, distance: "" });
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingWarning, setIsLoadingWarning] = useState(false);
   const [isWarning, setIsWarning] = useState(false);
@@ -345,7 +348,7 @@ export default function LeadInfo(props) {
         country,
         state: states,
         city,
-        address:address.label,
+        address: address.label,
         postalCode,
         distance,
         otherInformation,
