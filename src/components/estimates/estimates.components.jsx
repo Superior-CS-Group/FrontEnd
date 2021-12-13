@@ -151,7 +151,7 @@ export default class MainEstimates extends Component {
               {this.state.estimateData.length ? (
                 <Carousel
                   className="mb-3"
-                  show={4}
+                  show={5}
                   slide={2}
                   infinite={true}
                   swiping={true}
@@ -175,7 +175,8 @@ export default class MainEstimates extends Component {
                         >
                           <Card
                             bordered={false}
-                            className="shadow estimate-card m-3"
+                            bodyStyle={{ padding: "15px" }}
+                            className="shadow estimate-card mx-2 h-100"
                             style={{ borderRadius: "10px" }}
                           >
                             <div className="d-flex justify-content-end mb-3">
@@ -183,32 +184,32 @@ export default class MainEstimates extends Component {
                                 {value.customerLeadId[0].estimaitonStatus}
                               </Button>
                             </div>
-                            <div className="ant-estimate-text">
+                            {/* <div className="ant-estimate-text">
                               <span>Estimate</span>
                               <h2>#{value.leadInvoinceNo}</h2>
-                            </div>
-                            <div className="ant-estimate-text mb-3">
+                            </div> */}
+                            <div className="ant-estimate-text mb-3 line-height">
                               <span>Customer Name</span>
                               <h3>{value.customerLeadId[0].name}</h3>
                             </div>
                             <div className="d-flex align-items-start justify-content-between">
-                              <div className="ant-estimate-text text-ellpis">
+                              <div className="ant-estimate-text line-height pe-lg-2">
                                 <span>Address</span>
-                                <h3>{value.customerLeadId[0].address}</h3>
+                                <h4>{value.customerLeadId[0].address}</h4>
                               </div>
                               <div className="ant-estimate-text">
-                                <span>Job Farness</span>
-                                <h3>
+                                <span className="text-nowrap">Job Farness</span>
+                                <h4>
                                   {value.customerLeadId[0].distance}
-                                  <small
+                                  {/* <small
                                     style={{
                                       marginLeft: "2px",
                                       fontSize: "12px",
                                     }}
                                   >
-                                    Km
-                                  </small>
-                                </h3>
+                                    Min
+                                  </small> */}
+                                </h4>
                               </div>
                             </div>
                           </Card>

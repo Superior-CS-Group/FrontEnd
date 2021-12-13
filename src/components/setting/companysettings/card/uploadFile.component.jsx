@@ -44,12 +44,12 @@ function UploadFile({ title, size, image, id, handleChange, handleRemove }) {
       </ImgCrop>
 
       {image && (
-        <>
+        <div className="border image-width">
           <img src={image} alt="" height="104" width="104" />
-          <span onClick={() => handleRemove("", id)}>
+          <span onClick={() => handleRemove("", id)} className="ant-close-btn">
             <DeleteOutlined />
           </span>
-        </>
+        </div>
       )}
     </Card>
   );

@@ -130,15 +130,16 @@ export default function PaymentTerm() {
                       />
                       <span>%</span>{" "}
                       <DeleteOutlined
-                        className="delete-icon"
+                        className="text-danger"
                         onClick={() => handleDelete(index)}
                         disabled={paymentTerms.length === 1 || isLoading}
                       />
                     </div>,
                   ]}
-                  className="border-0 font-d"
+                  className="border-0 font-d px-0"
                 >
                   <Input
+                    className="radius-4 "
                     placeholder="Milestons Name"
                     name="title"
                     value={item.title}
@@ -147,7 +148,7 @@ export default function PaymentTerm() {
                 </List.Item>
               )}
             />
-            <div className="addbtn-ant ps-3 py-3">
+            <div className="addbtn-ant py-3">
               <a
                 href="#"
                 className="d-inline-flex align-items-center"
@@ -157,10 +158,17 @@ export default function PaymentTerm() {
                 Add new field
               </a>
             </div>
+            <div className="mt-3">
+              <Button
+                type="primary"
+                size="large"
+                onClick={handleUpdate}
+                disabled={!isValid || isLoading}
+              >
+                Update
+              </Button>
+            </div>
           </Card>
-          <Button onClick={handleUpdate} disabled={!isValid || isLoading}>
-            Update
-          </Button>
         </Col>
       </Row>
     </>
