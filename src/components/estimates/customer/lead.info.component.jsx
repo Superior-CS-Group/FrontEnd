@@ -630,13 +630,13 @@ export default function LeadInfo(props) {
                           },
                         }}
                       />
-                      <Input
+                      {/* <Input
                         className="radius-30"
                         size="large"
                         name="address"
                         value={state.address}
                         onChange={handleAllChange}
-                      />
+                      /> */}
 
                       {/* <div role="alert" class="text-danger">
                         {state.errors.address}
