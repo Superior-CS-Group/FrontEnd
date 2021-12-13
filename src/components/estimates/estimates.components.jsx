@@ -201,14 +201,14 @@ export default class MainEstimates extends Component {
                                 <span className="text-nowrap">Job Farness</span>
                                 <h4>
                                   {value.customerLeadId[0].distance}
-                                  <small
+                                  {/* <small
                                     style={{
                                       marginLeft: "2px",
                                       fontSize: "12px",
                                     }}
                                   >
                                     Min
-                                  </small>
+                                  </small> */}
                                 </h4>
                               </div>
                             </div>
