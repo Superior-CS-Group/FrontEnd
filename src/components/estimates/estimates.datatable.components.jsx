@@ -34,6 +34,7 @@ export default function Datatable(props) {
   const [customerId, setCustomerId] = useState("");
 
   const [AddColumnShow, setAddColumnShow] = useState(false);
+  const [tableLoad, setTableLoad] = useState(true);
 
   let [leadTypes, setLeadTypes] = useState([]);
   const { Option } = Select;
@@ -457,6 +458,7 @@ export default function Datatable(props) {
     setCustomerId(customerData[0]._id);
   };
   const buildTable = async (result) => {
+    console.log('======buildTable',result)
     let colOrder = props.currentTabData.columnOrder || [];
     let colRetian = state.colOrderRetain;
     let finalCol = [];
@@ -581,7 +583,7 @@ export default function Datatable(props) {
     });
     // console.log(estimateResults);
     //  await setResult(results)
-
+    setTableLoad(false)
     await buildTable(result);
   };
 
@@ -613,15 +615,16 @@ export default function Datatable(props) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
-    fetchData();
-    fetchList();
+   await fetchData();
+   await fetchList();
+   
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     let obj = props.currentTabData.filterObject;
-
+    setTableLoad(true)
     if (obj)
       handleOk({
         leadSelected: obj.estimaitonStatus,
@@ -643,24 +646,29 @@ export default function Datatable(props) {
     console.log("filterData: ", filteredData);
     setState({ ...state, filteredData, filter: value });
   };
-  const DeleteModalEstimate = (id, idx) => {
+  const DeleteModalEstimate = async(id, idx) => {
     setdeleteEstimateId(id);
     setdeleteEstimateIdx(idx);
     setShowDeleteModal(true);
-    console.log("deleteIdx", idx);
+  
   };
-  const handleDeleteOk = (id, idx) => {
+  const handleDeleteOk =async (id, idx) => {
     console.log("deleteId", id, idx);
     setShowDeleteModal(false);
     // deleteCustomerLead(body)
     message.success("Data Deleted", 5);
+    const result= await postData(`customer/delete-lead`,{id})
+    console.log("deleteIdx",state.filteredData, idx,result);
 
     let restultData = estimateResults.estimateResults.Data;
     console.log(restultData);
     if (idx > -1) {
       restultData.splice(idx, 1);
     }
+    let resultss={data:{Data:[]}}
+    resultss.data.Data=restultData;
     console.log(restultData);
+    buildTable(resultss)
     setdestimateResults({ estimateResults: restultData });
   };
   const handleDeleteClose = () => {
@@ -686,6 +694,7 @@ export default function Datatable(props) {
     //   "Lead Added",
     // ]
     await buildTable(result2);
+    setTableLoad(false)
     // setState({...state,columns:states.columns})
     setModalVisible(false);
     setAddColumnShow(false);
@@ -769,7 +778,7 @@ export default function Datatable(props) {
           <Col span={12} key={index}>
             <span
               className="w-100 mb-2 border-0 text-white font-12 radius-30"
-              style={{ background: "orange", color: status.textcolor }}
+              style={{ background: status.color, color: status.textcolor }}
               onClick={() => changeStatus(status)}
             >
               {status.name}
@@ -827,6 +836,7 @@ export default function Datatable(props) {
             pagination={false}
             dataSource={state.filteredData}
             bordered={false}
+            loading={tableLoad}
             className="ant-table-estmating scroll-style vertical-align"
             scroll={{ x: 400, y: 500 }}
             onChange={onChangeTable}
