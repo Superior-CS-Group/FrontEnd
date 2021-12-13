@@ -9,6 +9,7 @@ import { useLocation, Navigate } from "react-router-dom";
 import { getFormulaById, updateFormula } from "../../../api/formula";
 import { fileToBase64 } from "../../../utils/fileBase64";
 import regex from "../../../utils/regex";
+import HiddenValueCard from "./hiddenValueCard/hiddenValueCard.component";
 /**
  * @author digimonk Technologies
  * @developer Saral Shrivastava
@@ -18,9 +19,10 @@ function FormulaV2() {
   const [formulaDetails, setFormulaDetails] = React.useState({});
   const [title, setTitle] = React.useState("");
   const [elementList, setElementList] = React.useState([]);
+  const [materials, setMaterials] = React.useState([]);
+  const [hiddenValues, setHiddenValues] = React.useState([]);
 
   const [markupId, setMarkupId] = React.useState(null);
-  const [materials, setMaterials] = React.useState([]);
   const [isUpdated, setIsUpdated] = React.useState(false);
   const [clientContract, setClientContract] = React.useState("");
   const [redirect, setRedirect] = React.useState(null);
@@ -90,9 +92,26 @@ function FormulaV2() {
 
   React.useEffect(() => {
     if (Object.keys(formulaDetails).length) {
-      setElementList([...formulaDetails.elements]);
-      setMaterials([...formulaDetails.materials]);
+      const newElements = formulaDetails.elements.map((element, index) => {
+        const newElement = { ...(elementList[index] || {}) };
+        return {
+          ...element,
+          ...newElement,
+        };
+      });
+      const newMaterials = formulaDetails.materials.map((material, index) => {
+        const newMaterial = { ...(materials[index] || {}) };
+        return {
+          ...material,
+          ...newMaterial,
+        };
+      });
+      setMaterials([...newMaterials]);
+      setElementList([...newElements]);
+      // setElementList([...formulaDetails.elements]);
+      // setMaterials([...formulaDetails.materials]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formulaDetails]);
 
   const handleChange = (value, name, index, newMaterial, customIndex) => {
@@ -171,6 +190,12 @@ function FormulaV2() {
     setMaterials([...newMaterials]);
   };
 
+  const handleHiddenValueChange = (e, index) => {
+    const newHiddenValues = [...hiddenValues];
+    newHiddenValues[index][e.target.name] = e.target.value;
+    setHiddenValues([...newHiddenValues]);
+  };
+
   const handleImageChange = async (e) => {
     const base64 = await fileToBase64(e.target.files[0]);
     setPhoto(base64);
@@ -189,6 +214,16 @@ function FormulaV2() {
       formula: [],
     };
     setMaterials([...materials, newMaterial]);
+  };
+
+  const handleAddHiddenValue = () => {
+    const newHiddenValue = {
+      name: "",
+      value: "",
+      isCondition: true,
+      expression: { condition: "", fullfill: "", fail: "" },
+    };
+    setHiddenValues([...hiddenValues, newHiddenValue]);
   };
 
   const handleRemoveElement = (index) => {
@@ -299,7 +334,28 @@ function FormulaV2() {
         >
           Add New Material: {treeIcon}
         </span>
-
+        <div className="">
+          <table className="table ant-furmulla-table table-hover">
+            <thead>
+              <tr>
+                <th colSpan="4">Hidden Values</th>
+              </tr>
+            </thead>
+            <tbody>
+              {hiddenValues.map((hiddenValue, index) => {
+                return (
+                  <HiddenValueCard hiddenValue={hiddenValue} index={index} />
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <span
+          className="ant-add-material mb-3 d-inline-block"
+          onClick={handleAddHiddenValue}
+        >
+          Add New Hidden Value: {treeIcon}
+        </span>
         <div className="">
           <table className="table ant-furmulla-table">
             <thead>

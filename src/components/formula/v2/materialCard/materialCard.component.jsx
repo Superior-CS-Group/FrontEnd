@@ -123,7 +123,7 @@ function MaterialCard({
                 placeholder="Enter Charge use '@' and '#' for the dynamic values"
                 value={material.cost}
                 onBlur={onFocusOut}
-                isMaterialElement
+                isMaterialInput
               />
             </div>
           </Col>
@@ -180,6 +180,7 @@ function MaterialCard({
               value={material.charge}
               onBlur={onFocusOut}
               disabled={!manualCharge}
+              isMaterialInput
             />
           </Col>
         </Row>
