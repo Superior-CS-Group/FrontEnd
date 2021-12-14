@@ -210,6 +210,7 @@ export default function CompanySettings() {
                       selectProps={{
                         isClearable: true,
                         value: address,
+                        placeholder:companyDetails.address,
                         onChange: (val) => {
                           setAddress(val);
                         },
