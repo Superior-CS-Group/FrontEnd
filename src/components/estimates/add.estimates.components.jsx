@@ -369,6 +369,8 @@ export default function AddEstimates(props) {
       );
       totalMaterialsCost += cost;
       totalMaterialsCharge += charge;
+      cost = currencyFormate.format(cost);
+      charge = currencyFormate.format(charge);
       return { ...material, cost, charge, quantity };
     });
     formula.totalMaterialsCost = totalMaterialsCost;
@@ -821,7 +823,9 @@ export default function AddEstimates(props) {
                                   ) : element.name === "Total Cost" ? (
                                     <Input
                                       name="value"
-                                      value={formula.totalMaterialsCost}
+                                      value={currencyFormate.format(
+                                        formula.totalMaterialsCost || 0
+                                      )}
                                       onBlur={onFocusOut}
                                       disabled
                                     />
