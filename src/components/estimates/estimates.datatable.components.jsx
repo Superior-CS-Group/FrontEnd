@@ -161,6 +161,7 @@ export default function Datatable(props) {
             .toString()
             .localeCompare(b.daysItTookToSendEstimate),
       },
+
       // {
       //   title: (
       //     <>
@@ -550,8 +551,7 @@ export default function Datatable(props) {
             >
               <span
                 className="btn btn-success d-inline-block w-100 radius-30"
-                style={{ fontSize: "14px", }}
-                
+                style={{ fontSize: "14px" }}
               >
                 {customerData[0].estimaitonStatus}
               </span>
