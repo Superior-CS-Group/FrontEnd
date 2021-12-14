@@ -48,6 +48,8 @@ export default function EstimationList({ toggleAddNew, fetched: fetche }) {
   const [filteredData, setFilteredData] = useState([]);
   const [deleteModal, setDeleteModal] = useState(null);
   const [isDeleteing, setIsDeleteing] = useState(false);
+  const [tableLoad, setTableLoad] = useState(true);
+  
 
   async function fetchUserFormula() {
     const fetched = fetche;
@@ -76,9 +78,11 @@ export default function EstimationList({ toggleAddNew, fetched: fetche }) {
       });
       setData(newData);
       setFilteredData(newData);
+     
     } else {
       console.log("fetched: ", fetched);
     }
+    setTableLoad(false)
   }
 
   const handleDelete = async (e) => {
@@ -103,7 +107,9 @@ export default function EstimationList({ toggleAddNew, fetched: fetche }) {
   };
 
   useEffect(() => {
-    fetchUserFormula();
+  fetchUserFormula()
+  
+  
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetche]);
 
@@ -153,6 +159,7 @@ export default function EstimationList({ toggleAddNew, fetched: fetche }) {
             pagination={false}
             dataSource={filteredData}
             bordered={false}
+            loading={tableLoad}
             className="ant-table-estmating scroll-style"
             scroll={{ x: 400, y: 500 }}
           />

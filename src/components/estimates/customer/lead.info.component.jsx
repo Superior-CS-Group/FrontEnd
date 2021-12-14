@@ -204,8 +204,9 @@ export default function LeadInfo(props) {
             ? result.data.Data.spouse[0].otherInfo
             : "",
         });
+        setAddress(result.data.Data.address)
       };
-
+     
       fetchData();
     } else {
       setState({
@@ -494,6 +495,8 @@ export default function LeadInfo(props) {
     // console.log(key);
   }
 
+  console.log('add=======',state.address,state,address);
+
   if (state.isRedirect) {
     return <Navigate to="/estimating" />;
   }
@@ -573,6 +576,7 @@ export default function LeadInfo(props) {
                         placeholder="Minute"
                         value={state.distance}
                         onChange={handleAllChange}
+                        readOnly
                       />
                     </Form.Item>
                   </Col>{" "}
@@ -625,16 +629,21 @@ export default function LeadInfo(props) {
                     <Form.Item label="Address" className="googleapi">
                       <GooglePlacesAutocomplete
                         apiKey="AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU"
+                     
                         selectProps={{
+                        
+                           
                           isClearable: true,
-                          value: address,
+                          // value: ,
+                          
+                         placeholder: state.address?state.address:'Select..',
                           onChange: (val) => {
                             // console.log("val: ", val);
                             setAddress(val);
                           },
                         }}
                       />
-                      {state.address}
+                      {/* {state.address} */}
                       {/* <Input
                         className="radius-30"
                         size="large"
