@@ -204,9 +204,9 @@ export default function LeadInfo(props) {
             ? result.data.Data.spouse[0].otherInfo
             : "",
         });
-        setAddress(result.data.Data.address)
+        setAddress(result.data.Data.address);
       };
-     
+
       fetchData();
     } else {
       setState({
@@ -495,7 +495,7 @@ export default function LeadInfo(props) {
     // console.log(key);
   }
 
-  console.log('add=======',state.address,state,address);
+  console.log("add=======", state.address, state, address);
 
   if (state.isRedirect) {
     return <Navigate to="/estimating" />;
@@ -625,18 +625,17 @@ export default function LeadInfo(props) {
                   </Col>
                 </Row>
                 <Row gutter={[24, 0]}>
-                  <Col md={12}>
+                  <Col md={24}>
                     <Form.Item label="Address" className="googleapi">
                       <GooglePlacesAutocomplete
                         apiKey="AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU"
-                     
                         selectProps={{
-                        
-                           
                           isClearable: true,
                           // value: ,
-                          
-                         placeholder: state.address?state.address:'Select..',
+
+                          placeholder: state.address
+                            ? state.address
+                            : "Select..",
                           onChange: (val) => {
                             // console.log("val: ", val);
                             setAddress(val);
@@ -657,7 +656,7 @@ export default function LeadInfo(props) {
                       </div> */}
                     </Form.Item>
                   </Col>{" "}
-                  <Col md={12}>
+                  {/* <Col md={12}>
                     <Form.Item label="Zip code">
                       <Input
                         className="radius-30"
@@ -666,11 +665,9 @@ export default function LeadInfo(props) {
                         value={state.postalCode}
                         onChange={handleAllChange}
                       />
-                      {/* <div role="alert" class="text-danger">
-                        {state.errors.postalCode}
-                      </div> */}
+                      
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                 </Row>
               </Col>
               <Col md={24}>

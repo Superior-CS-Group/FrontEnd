@@ -6,7 +6,8 @@ import Auth from "./pages/auth.page";
 import Estimates from "./pages/home.pages";
 import ContractPdf from "./components/estimates/contractPdf.component";
 import PrivateRoute from "./utils/privateRoute";
-import ResetPassWord from "./components/auth/ResetPassword"
+import ResetPassWord from "./components/auth/ResetPassword";
+import Setup from "./components/auth/Setup";
 function App() {
   return (
     <div className="App">
@@ -22,7 +23,8 @@ function App() {
         />
         <Route path="/" element={<Navigate replace={true} to="/auth" />} />
         <Route path="/contract-pdf/:id" element={<ContractPdf />} />
-        <Route path="/reset-password/:id" element={<ResetPassWord/>}/>
+        <Route path="/reset-password/:id" element={<ResetPassWord />} />
+        <Route path="/setup" element={<Setup />} />
       </Routes>
     </div>
   );

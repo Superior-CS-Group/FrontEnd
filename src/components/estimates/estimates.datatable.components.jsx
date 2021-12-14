@@ -18,7 +18,7 @@ import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
-import {deleteCustomerLead} from "../../../src/api/delete.js"
+import { deleteCustomerLead } from "../../../src/api/delete.js";
 
 import FilterSorting from "./filter/filter.sorting.component";
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
@@ -163,6 +163,7 @@ export default function Datatable(props) {
             .toString()
             .localeCompare(b.daysItTookToSendEstimate),
       },
+
       // {
       //   title: (
       //     <>
@@ -285,6 +286,7 @@ export default function Datatable(props) {
         dataIndex: "keys",
         width: 50,
         // sorter: true,
+        fixed: "left",
       },
       {
         title: (
@@ -300,6 +302,7 @@ export default function Datatable(props) {
         sorter: (a, b) =>
           a.name.props.children.toString().localeCompare(b.name.props.children),
         //  sortDirections: ['descend','ascend'],
+        fixed: "left",
       },
       {
         title: (
@@ -402,7 +405,7 @@ export default function Datatable(props) {
         title: "Action",
         dataIndex: "action",
         width: 100,
-        fixed: "right",
+
         className: "text-center",
         sorter: true,
       },
@@ -459,7 +462,7 @@ export default function Datatable(props) {
     setCustomerId(customerData[0]._id);
   };
   const buildTable = async (result) => {
-    console.log('======buildTable',result)
+    console.log("======buildTable", result);
     let colOrder = props.currentTabData.columnOrder || [];
     let colRetian = state.colOrderRetain;
     let finalCol = [];
@@ -548,13 +551,13 @@ export default function Datatable(props) {
           estimaitonStatus: (
             <Popover
               content={content}
+              trigger="click"
               placement="bottom"
               onMouseEnter={() => popId(customerData)}
             >
               <span
-                className="btn btn-success d-inline-block w-100 radius-30"
-                style={{ fontSize: "14px", }}
-                
+                className="btn btn-outline-primary d-inline-block w-100 radius-30 "
+                style={{ fontSize: "14px" }}
               >
                 {customerData[0].estimaitonStatus}
               </span>
@@ -585,7 +588,7 @@ export default function Datatable(props) {
     });
     // console.log(estimateResults);
     //  await setResult(results)
-    setTableLoad(false)
+    setTableLoad(false);
     await buildTable(result);
   };
 
@@ -593,15 +596,20 @@ export default function Datatable(props) {
   const fetchList = async () => {
     const statusLis = await getData(`status/list`);
     console.log("hiiii", statusLis);
-    
+
     content = (
       <div style={{ width: "520px" }}>
         <Row gutter={[24, 0]}>
           {statusLis.data.Data.map((status, index) => (
             <Col span={12} key={index}>
               <span
-                className="w-100 mb-2 border-0 btn text-white  font-12 radius-30"
-                style={{ background: status.color }}
+                className="w-100 mb-2 d-block btn font-12 radius-30 btn-outline-light"
+                style={{
+                  borderColor: status.color,
+                  borderWidth: "1px !important",
+                  color: status.color,
+                  borderStyle: "solid !important",
+                }}
                 onClick={() => changeStatus(status)}
               >
                 {status.name}
@@ -614,21 +622,20 @@ export default function Datatable(props) {
     if (statusLis.data.Data) {
       setLeadTypes(statusLis.data.Data);
     }
-    console.log('conn==',content)
+    console.log("conn==", content);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
-   await fetchData();
-   await fetchList();
-   
+    await fetchData();
+    await fetchList();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     let obj = props.currentTabData.filterObject;
-    setTableLoad(true)
+    setTableLoad(true);
     if (obj)
       handleOk({
         leadSelected: obj.estimaitonStatus,
@@ -650,29 +657,28 @@ export default function Datatable(props) {
     console.log("filterData: ", filteredData);
     setState({ ...state, filteredData, filter: value });
   };
-  const DeleteModalEstimate = async(id, idx) => {
+  const DeleteModalEstimate = async (id, idx) => {
     setdeleteEstimateId(id);
     setdeleteEstimateIdx(idx);
     setShowDeleteModal(true);
-  
   };
-  const handleDeleteOk =async (id, idx) => {
+  const handleDeleteOk = async (id, idx) => {
     console.log("deleteId", id, idx);
     setShowDeleteModal(false);
     // deleteCustomerLead(body)
     message.success("Data Deleted", 5);
-    const result= await postData(`customer/delete-lead`,{id})
-    console.log("deleteIdx",state.filteredData, idx,result);
+    const result = await postData(`customer/delete-lead`, { id });
+    console.log("deleteIdx", state.filteredData, idx, result);
 
     let restultData = estimateResults.estimateResults.Data;
     // console.log(restultData);
     if (idx > -1) {
       restultData.splice(idx, 1);
     }
-    let resultss={data:{Data:[]}}
-    resultss.data.Data=restultData;
+    let resultss = { data: { Data: [] } };
+    resultss.data.Data = restultData;
     console.log(restultData);
-    buildTable(resultss)
+    buildTable(resultss);
     setdestimateResults({ estimateResults: restultData });
   };
   const handleDeleteClose = () => {
@@ -698,7 +704,7 @@ export default function Datatable(props) {
     //   "Lead Added",
     // ]
     await buildTable(result2);
-    setTableLoad(false)
+    setTableLoad(false);
     // setState({...state,columns:states.columns})
     setModalVisible(false);
     setAddColumnShow(false);
@@ -716,22 +722,22 @@ export default function Datatable(props) {
       id: customerId,
       estimaitonStatus: status.name,
     });
-    console.log("updated", result,customerId);
+    console.log("updated", result, customerId);
 
     let restultData = estimateResults.estimateResults.Data;
-    restultData.map(r=>{
-     if( r.customerLeadId[0]._id ===customerId){
-      r.customerLeadId[0].estimaitonStatus=status.name
-     }
-    })
+    restultData.map((r) => {
+      if (r.customerLeadId[0]._id === customerId) {
+        r.customerLeadId[0].estimaitonStatus = status.name;
+      }
+    });
     // console.log(restultData);
     // if (idx > -1) {
     //   restultData.splice(idx, 1);
     // }
-    let resultss={data:{Data:[]}}
-    resultss.data.Data=restultData;
+    let resultss = { data: { Data: [] } };
+    resultss.data.Data = restultData;
     console.log(restultData);
-    buildTable(resultss)
+    buildTable(resultss);
   };
   const onChange = async (customer, i) => {
     console.log(`switch to`, params);
@@ -796,8 +802,13 @@ export default function Datatable(props) {
         {leadTypes.map((status, index) => (
           <Col span={12} key={index}>
             <span
-              className="w-100 mb-2 border-0 text-white font-12 radius-30"
-              style={{ background: status.color, color: status.textcolor }}
+              className="w-100 mb-2 font-12 radius-30 d-block btn btn-outline-light"
+              style={{
+                borderColor: status.color,
+                borderWidth: "1px !important",
+                color: status.color,
+                borderStyle: "solid !important",
+              }}
               onClick={() => changeStatus(status)}
             >
               {status.name}

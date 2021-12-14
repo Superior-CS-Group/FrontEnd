@@ -23,6 +23,7 @@ import TermsAndConditions from "../components/setting/termsandconditions/TermsAn
 import CompanySettings from "../components/setting/companysettings/CompanySettings";
 import ProductionRates from "../components/setting/productionrates/ProductionRates";
 
+
 const routes = [
   // {
   //   path: "/Catalog",
@@ -159,10 +160,11 @@ const routes = [
     component: <TermsAndConditions />,
   },
   {
-    path: "production-rates",
+    path: "/production-rates",
     exact: true,
     name: "productionrates",
     component: <ProductionRates />,
   },
+  
 ];
 export default routes;

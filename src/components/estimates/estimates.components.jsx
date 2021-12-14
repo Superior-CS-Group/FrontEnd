@@ -243,7 +243,7 @@ export default class MainEstimates extends Component {
                         }}
                       >
                         {" "}
-                        Upcoming Estimates
+                        Default View
                       </p>
                     </Nav.Link>
                   </Nav.Item>
