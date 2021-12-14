@@ -45,6 +45,7 @@ function FormulaV2() {
   async function getFormulaDetails(formulaId) {
     const formulaDetails = await getFormulaById(formulaId);
     if (formulaDetails.remote === "success") {
+      console.log("formulaDetails :", formulaDetails);
       setFormulaDetails(formulaDetails.data.data);
       setTitle(formulaDetails.data.data.title);
       const catalogs = formulaDetails.data.data?.catalogs || [];
@@ -149,7 +150,11 @@ function FormulaV2() {
     if (newMaterial) {
       const processed = processMaterial(newMaterial);
       newElementList[index].formula = [
-        ...new Set([...(newElementList[index].formula || []), ...processed]),
+        ...new Set([
+          ...(newElementList[index].formula || []),
+          ...processed,
+          ...(catalogs || []),
+        ]),
       ];
       setCatalogs([...(catalogs || []), ...processed]);
     }
@@ -202,7 +207,7 @@ function FormulaV2() {
     setMaterials([...newMaterials]);
   };
 
-  const handleHiddenValueChange = (e, index, isConditional) => {
+  const handleHiddenValueChange = (e, index, isConditional, newMaterial) => {
     const newHiddenValues = [...hiddenValues];
     if (newHiddenValues[index]) {
       if (isConditional) {
@@ -210,6 +215,13 @@ function FormulaV2() {
       } else {
         newHiddenValues[index][e.target.name] = e.target.value;
       }
+    }
+    if (newMaterial) {
+      let processed = processMaterial(newMaterial);
+      newHiddenValues[index].formula = [
+        ...new Set([...(newHiddenValues[index].formula || []), ...processed]),
+      ];
+      setCatalogs([...(catalogs || []), ...processed]);
     }
     setHiddenValues([...newHiddenValues]);
   };

@@ -31,7 +31,13 @@ import EstimateSettings from "./estimateSettings/estimateSettings.component";
 import PaymentTerms from "./paymentTerms/paymentTerms.component";
 import { currencyFormate } from "../../utils/currencyFormate";
 import regex from "../../utils/regex";
-import { processConditionalExpression } from "../../utils/formula/formula";
+import {
+  processConditionalExpression,
+  processElements,
+  processFormulaMaterials,
+  processHiddenValuesWithMaterials,
+  processNonConditionalHiddenValues,
+} from "../../utils/formula/formula";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -245,7 +251,6 @@ export default function AddEstimates(props) {
   function escapeRegExp(string) {
     return string.replace(regex.escapeRegex, "\\$&"); // $& means the whole matched string
   }
-
   function processFormula(
     formula,
     materials,
@@ -254,122 +259,54 @@ export default function AddEstimates(props) {
     multiplicationFactor,
     currentElement
   ) {
-    if (materials) {
-      const usedMaterials = materials.map((item) => {
-        return {
-          title: `@{{catalog||${item._id}||${item.name}}}`,
-          price: item.price,
-        };
-      });
-
-      usedMaterials.forEach((material) => {
-        const regex = new RegExp(escapeRegExp(material.title), "g");
-        formula = formula.replace(regex, material.price);
-        if (hiddenValues) {
-          hiddenValues = hiddenValues.map((item) => {
-            if (item.isConditional) {
-              const matchRegex = item.expression.condition.match(regex);
-              if (matchRegex) {
-                const tempValue = item.expression.condition.replace(
-                  regex,
-                  material.price
-                );
-                item.expression.tempValue = tempValue;
-              }
-            }
-            return item;
-          });
+    if (hiddenValues) {
+      let processedHiddenValues = hiddenValues.map((hiddenValue) => {
+        if (hiddenValue.isConditional && !hiddenValue.expression.tempValue) {
+          hiddenValue.expression.tempValue = processElements(
+            hiddenValue.expression.condition,
+            elements
+          );
         }
+        return processConditionalExpression(hiddenValue);
       });
+      processedHiddenValues = processedHiddenValues.map((hiddenValue) => {
+        return processNonConditionalHiddenValues(
+          hiddenValue,
+          processedHiddenValues
+        );
+      });
+      console.log("processedHiddenValues", processedHiddenValues);
+      formula = processHiddenValuesWithMaterials(
+        formula,
+        processedHiddenValues
+      );
+    }
+    console.log("hiddenFormula; ", formula);
+    if (materials) {
+      formula = processFormulaMaterials(formula, materials);
     }
 
     if (elements) {
-      const usedElements = elements.map((element) => {
-        return {
-          title: `@{{element||${element._id}||${element.name}}}`,
-          price:
-            element.finalCalculatedValue !== undefined
-              ? (
-                  element.finalCalculatedValue *
-                  (element.multiplicationFactor === undefined ||
-                  element.multiplicationFactor === null
-                    ? 1
-                    : Number(element.multiplicationFactor))
-                ).toString()
-              : `${element.value} * ${
-                  element.multiplicationFactor === undefined ||
-                  element.multiplicationFactor === null
-                    ? 1
-                    : element.multiplicationFactor
-                }`,
-          usedMaterials: element.formula,
-          customInput:
-            element.customInput?.map((customInput) => {
-              return {
-                title: `@{{custom||${customInput._id}||${customInput.name}}}`,
-                value: customInput.value,
-              };
-            }) || [],
-        };
-      });
-      usedElements.forEach((element) => {
-        const regex = new RegExp(escapeRegExp(element.title), "g");
-        try {
-          formula = formula.replace(regex, element.price);
-          if (element.customInput) {
-            element.customInput.forEach((customInput) => {
-              const regex = new RegExp(escapeRegExp(customInput.title), "g");
-              formula = formula.replace(regex, customInput.value);
-            });
-          }
-          if (hiddenValues) {
-            hiddenValues = hiddenValues.map((item) => {
-              if (item.isConditional) {
-                const matchRegex = item.expression.condition.match(regex);
-                if (matchRegex) {
-                  const tempValue = item.expression.condition.replace(
-                    regex,
-                    element.price
-                  );
-                  item.expression.tempValue = tempValue;
-                }
-              }
-              return item;
-            });
-          }
-        } catch (error) {
-          console.log("error: ", error);
-        }
-      });
+      formula = processElements(formula, elements);
     }
-    if (hiddenValues) {
-      const processedHiddenValues = hiddenValues.map((hiddenValue) => {
-        return processConditionalExpression(hiddenValue);
-      });
 
-      let usedHiddenValues = processedHiddenValues.map((item) => {
-        const newExpression = processConditionalExpression(item);
-        // console.log("newExpressiON: ", newExpression, item, formula);s
-        return {
-          title: `@{{hidden||${newExpression._id}||${newExpression.name}}}`,
-          price: item.value,
-        };
-      });
+    // if (formula.match(regex.materialInput)) {
+    //   //   // formula;
+    //   formula = processFormulaMaterials(formula, materials);
+    //   formula = processElements(formula, elements);
+    // }
 
-      usedHiddenValues.forEach((hiddenValue) => {
-        const regex = new RegExp(escapeRegExp(hiddenValue.title), "g");
-        formula = formula.replace(regex, hiddenValue.price);
-      });
-    }
+    console.log("formula: ", formula);
 
     try {
       multiplicationFactor =
         multiplicationFactor === undefined || multiplicationFactor === null
           ? 1
           : multiplicationFactor;
-      if (formula.match(regex.materialInput)) {
-        formula = processFormula(formula, materials, elements, hiddenValues);
-      }
+      // if (formula.match(regex.materialInput)) {
+      // formula = processFormula(formula, materials, elements, hiddenValues);
+      // console.log("formulaMatch: ", formula);
+      // }
 
       const result =
         Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
@@ -389,14 +326,23 @@ export default function AddEstimates(props) {
     const materials = [...formula.materials].map((material) => {
       let quantity = processFormula(
         material.quantity || "",
-        [...(formula.catalog || []), ...material.formula],
+        [
+          ...(formula.catalog || []),
+          ...material.formula,
+          ...(formula.catalogs || []),
+        ],
         elements,
         formula.hiddenValues || []
       );
       const materialCost = material.cost?.replace(/\{Quantity\}/g, quantity);
+      // console.log("formula.catalog: ", formula.catalogs, formula);
       let cost = processFormula(
         materialCost || "",
-        formula.catalogs || [],
+        [
+          ...(formula.catalog || []),
+          ...material.formula,
+          ...(formula.catalogs || []),
+        ],
         elements,
         formula.hiddenValues || []
       );
@@ -404,7 +350,11 @@ export default function AddEstimates(props) {
       materialCharge = materialCharge?.replace(/\{Cost\}/, cost);
       let charge = processFormula(
         materialCharge,
-        [...(formula.catalog || []), ...material.formula],
+        [
+          ...(formula.catalog || []),
+          ...material.formula,
+          ...(formula.catalogs || []),
+        ],
         elements,
         formula.hiddenValues || []
       );

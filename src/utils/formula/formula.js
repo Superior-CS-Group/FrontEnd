@@ -1,6 +1,10 @@
 /* eslint-disable no-eval */
 import regex from "../regex";
 
+function escapeRegExp(string) {
+  return string.replace(regex.escapeRegex, "\\$&"); // $& means the whole matched string
+}
+
 export const generateRandomId = () => {
   return Date.now() + Math.floor(Math.random() * 100000);
 };
@@ -63,6 +67,7 @@ export const handleGenerateFormula = (formulaArray) => {
  */
 export const processConditionalExpression = (expression) => {
   const newExpression = { ...(expression || {}) };
+  console.log("processing: ", expression.expression.tempValue);
   if (
     expression.isConditional &&
     regex.conditionalExpression.test(expression.expression.tempValue)
@@ -81,6 +86,24 @@ export const processConditionalExpression = (expression) => {
     }
   }
   return newExpression;
+};
+export const processNonConditionalHiddenValues = (
+  hiddenValue,
+  hiddenValueList
+) => {
+  const usedHiddenValueList = hiddenValueList.map((item) => {
+    console.log("hiddenValue: ", hiddenValue);
+    return {
+      title: `@{{hidden||${item._id}||${item.name}}}`,
+      value: item.value,
+    };
+  });
+  console.log("usedHiddenValueList", usedHiddenValueList, hiddenValue);
+  usedHiddenValueList.forEach((item) => {
+    const newReg = new RegExp(escapeRegExp(item.title), "g");
+    hiddenValue.value = hiddenValue.value.replace(newReg, item.value);
+  });
+  return hiddenValue;
 };
 /**
  *  @description this function will evaluate the expression
@@ -165,3 +188,173 @@ const validateSign = (str) => {
   }
   return { isValid: true };
 };
+
+export const processElements = (formula, elements) => {
+  const usedElements = elements.map((element) => {
+    return {
+      title: `@{{element||${element._id}||${element.name}}}`,
+      price:
+        element.finalCalculatedValue !== undefined
+          ? (
+              element.finalCalculatedValue *
+              (element.multiplicationFactor === undefined ||
+              element.multiplicationFactor === null
+                ? 1
+                : Number(element.multiplicationFactor))
+            ).toString()
+          : `${element.value} * ${
+              element.multiplicationFactor === undefined ||
+              element.multiplicationFactor === null
+                ? 1
+                : element.multiplicationFactor
+            }`,
+      usedMaterials: element.formula,
+      customInput:
+        element.customInput?.map((customInput) => {
+          return {
+            title: `@{{custom||${customInput._id}||${customInput.name}}}`,
+            value: customInput.value,
+          };
+        }) || [],
+    };
+  });
+
+  usedElements.forEach((element) => {
+    const regex = new RegExp(escapeRegExp(element.title), "g");
+    try {
+      formula = formula.replace(regex, element.price);
+      if (element.customInput) {
+        element.customInput.forEach((customInput) => {
+          const regex = new RegExp(escapeRegExp(customInput.title), "g");
+          formula = formula.replace(regex, `(${customInput.value})`);
+        });
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  });
+  // console.log("element: ", formula);
+  return formula;
+};
+
+/**
+ * User Elements:
+ *  const usedElements = elements.map((element) => {
+        return {
+          title: `@{{element||${element._id}||${element.name}}}`,
+          price:
+            element.finalCalculatedValue !== undefined
+              ? (
+                  element.finalCalculatedValue *
+                  (element.multiplicationFactor === undefined ||
+                  element.multiplicationFactor === null
+                    ? 1
+                    : Number(element.multiplicationFactor))
+                ).toString()
+              : `${element.value} * ${
+                  element.multiplicationFactor === undefined ||
+                  element.multiplicationFactor === null
+                    ? 1
+                    : element.multiplicationFactor
+                }`,
+          usedMaterials: element.formula,
+          customInput:
+            element.customInput?.map((customInput) => {
+              return {
+                title: `@{{custom||${customInput._id}||${customInput.name}}}`,
+                value: customInput.value,
+              };
+            }) || [],
+        };
+      });
+      usedElements.forEach((element) => {
+        const regex = new RegExp(escapeRegExp(element.title), "g");
+        try {
+          formula = formula.replace(regex, element.price);
+          if (element.customInput) {
+            element.customInput.forEach((customInput) => {
+              const regex = new RegExp(escapeRegExp(customInput.title), "g");
+              formula = formula.replace(regex, customInput.value);
+            });
+          }
+          if (hiddenValues) {
+            hiddenValues = hiddenValues.map((item) => {
+              if (item.isConditional) {
+                const matchRegex = item.expression.condition.match(regex);
+                if (matchRegex) {
+                  const tempValue = item.expression.condition.replace(
+                    regex,
+                    element.price
+                  );
+                  item.expression.tempValue = tempValue;
+                }
+              }
+              return item;
+            });
+          }
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      });
+ */
+
+export const processFormulaMaterials = (formula, materials) => {
+  const usedMaterials = materials.map((item) => {
+    return {
+      title: `@{{catalog||${item._id}||${item.name}}}`,
+      price: item.price,
+    };
+  });
+  // console.log("usedMateriasl: ", formula);
+  usedMaterials.forEach((material) => {
+    const regex = new RegExp(escapeRegExp(material.title), "g");
+    formula = formula.replace(regex, `(${material.price})`);
+  });
+  // console.log("material: ", formula);
+  return formula;
+};
+
+export const processHiddenValuesWithMaterials = (formula, hiddenValues) => {
+  const usedHiddenValues = hiddenValues.map((item) => {
+    return {
+      title: `@{{hidden||${item._id}||${item.name}}}`,
+      price: item.value,
+    };
+  });
+  console.log("usedHiddenValues: ", usedHiddenValues);
+  usedHiddenValues.forEach((hiddenValue) => {
+    const regex = new RegExp(escapeRegExp(hiddenValue.title), "g");
+    formula = formula.replace(regex, `(${hiddenValue.price})`);
+  });
+  // console.log("usedHiddenValues: ", formula, usedHiddenValues);
+  return formula;
+};
+
+/**
+ * const usedMaterials = materials.map((item) => {
+        return {
+          title: `@{{catalog||${item._id}||${item.name}}}`,
+          price: item.price,
+        };
+      });
+
+      usedMaterials.forEach((material) => {
+        const regex = new RegExp(escapeRegExp(material.title), "g");
+        formula = formula.replace(regex, material.price);
+        if (hiddenValues) {
+          hiddenValues = hiddenValues.map((item) => {
+            if (item.isConditional) {
+              const matchRegex = item.expression.condition.match(regex);
+              if (matchRegex) {
+                const tempValue = item.expression.condition.replace(
+                  regex,
+                  material.price
+                );
+                item.expression.tempValue = tempValue;
+              }
+            }
+            return item;
+          });
+        }
+      });
+ */
