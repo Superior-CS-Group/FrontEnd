@@ -31,6 +31,7 @@ import EstimateSettings from "./estimateSettings/estimateSettings.component";
 import PaymentTerms from "./paymentTerms/paymentTerms.component";
 import { currencyFormate } from "../../utils/currencyFormate";
 import regex from "../../utils/regex";
+import { processConditionalExpression } from "../../utils/formula/formula";
 const { Panel } = Collapse;
 
 function callback(key) {
@@ -249,6 +250,7 @@ export default function AddEstimates(props) {
     formula,
     materials,
     elements,
+    hiddenValues,
     multiplicationFactor,
     currentElement
   ) {
@@ -263,6 +265,21 @@ export default function AddEstimates(props) {
       usedMaterials.forEach((material) => {
         const regex = new RegExp(escapeRegExp(material.title), "g");
         formula = formula.replace(regex, material.price);
+        if (hiddenValues) {
+          hiddenValues = hiddenValues.map((item) => {
+            if (item.isConditional) {
+              const matchRegex = item.expression.condition.match(regex);
+              if (matchRegex) {
+                const tempValue = item.expression.condition.replace(
+                  regex,
+                  material.price
+                );
+                item.expression.tempValue = tempValue;
+              }
+            }
+            return item;
+          });
+        }
       });
     }
 
@@ -305,9 +322,43 @@ export default function AddEstimates(props) {
               formula = formula.replace(regex, customInput.value);
             });
           }
+          if (hiddenValues) {
+            hiddenValues = hiddenValues.map((item) => {
+              if (item.isConditional) {
+                const matchRegex = item.expression.condition.match(regex);
+                if (matchRegex) {
+                  const tempValue = item.expression.condition.replace(
+                    regex,
+                    element.price
+                  );
+                  item.expression.tempValue = tempValue;
+                }
+              }
+              return item;
+            });
+          }
         } catch (error) {
           console.log("error: ", error);
         }
+      });
+    }
+    if (hiddenValues) {
+      const processedHiddenValues = hiddenValues.map((hiddenValue) => {
+        return processConditionalExpression(hiddenValue);
+      });
+
+      let usedHiddenValues = processedHiddenValues.map((item) => {
+        const newExpression = processConditionalExpression(item);
+        // console.log("newExpressiON: ", newExpression, item, formula);s
+        return {
+          title: `@{{hidden||${newExpression._id}||${newExpression.name}}}`,
+          price: item.value,
+        };
+      });
+
+      usedHiddenValues.forEach((hiddenValue) => {
+        const regex = new RegExp(escapeRegExp(hiddenValue.title), "g");
+        formula = formula.replace(regex, hiddenValue.price);
       });
     }
 
@@ -316,14 +367,12 @@ export default function AddEstimates(props) {
         multiplicationFactor === undefined || multiplicationFactor === null
           ? 1
           : multiplicationFactor;
-
-      if (formula.match(regex.materialInput) && materials.length) {
-        formula = processFormula(formula, materials);
+      if (formula.match(regex.materialInput)) {
+        formula = processFormula(formula, materials, elements, hiddenValues);
       }
 
       const result =
         Number(eval(formula).toFixed(2)) * Number(multiplicationFactor);
-      // console.log("currentELelemt: ", currentElement);
       if (currentElement) {
         currentElement.finalCalculatedValue = result;
       }
@@ -341,27 +390,27 @@ export default function AddEstimates(props) {
       let quantity = processFormula(
         material.quantity || "",
         [...(formula.catalog || []), ...material.formula],
-        elements
+        elements,
+        formula.hiddenValues || []
       );
       const materialCost = material.cost?.replace(/\{Quantity\}/g, quantity);
       let cost = processFormula(
         materialCost || "",
         formula.catalogs || [],
-        elements
+        elements,
+        formula.hiddenValues || []
       );
       let materialCharge = material.charge?.replace(/\{Quantity\}/g, quantity);
-      console.log("materialCharge1: ", materialCharge);
       materialCharge = materialCharge?.replace(/\{Cost\}/, cost);
-      console.log("materialCharge2: ", materialCharge);
       let charge = processFormula(
         materialCharge,
         [...(formula.catalog || []), ...material.formula],
-        elements
+        elements,
+        formula.hiddenValues || []
       );
       material.quantityValue = quantity;
       material.costValue = cost;
       material.chargeValue = charge;
-      console.log("material: ", material);
       material.unitToShow = material.unit?.name;
       processClientContract(
         formula,
@@ -408,7 +457,6 @@ export default function AddEstimates(props) {
       if (response.remote === "success") {
         setEstimationId(response.data.userEstimation._id);
         setPaymentTerms(response.data.userEstimation.paymentTerms);
-        console.log("payment: ", response.data.userEstimation.paymentTerms);
       }
     }
   }
@@ -840,6 +888,7 @@ export default function AddEstimates(props) {
                                         element.value,
                                         element.formula || [],
                                         formula.elements,
+                                        formula.hiddenValues || [],
                                         element.multiplicationFactor,
                                         element
                                       )}

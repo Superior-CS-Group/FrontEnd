@@ -10,6 +10,7 @@ function MaterialCard({
   elementList,
   onFocusOut,
   handleRemoveMaterial,
+  hiddenValueList,
 }) {
   const [manualCharge, setManualCharge] = React.useState(false);
   const [showDeleteModal, setShowDeleteModal] = React.useState(null);
@@ -65,6 +66,10 @@ function MaterialCard({
               elementList={elementList.map((element) => ({
                 display: element.name,
                 id: element._id,
+              }))}
+              hiddenInputList={hiddenValueList.map((hiddenValue, index) => ({
+                display: hiddenValue.name,
+                id: hiddenValue._id,
               }))}
               onChange={(e, newValue) => {
                 e = { target: { ...e.target, name: "quantity" } };
@@ -124,6 +129,10 @@ function MaterialCard({
                 value={material.cost}
                 onBlur={onFocusOut}
                 isMaterialInput
+                hiddenInputList={hiddenValueList.map((hiddenValue, index) => ({
+                  display: hiddenValue.name,
+                  id: hiddenValue._id,
+                }))}
               />
             </div>
           </Col>
@@ -181,6 +190,10 @@ function MaterialCard({
               onBlur={onFocusOut}
               disabled={!manualCharge}
               isMaterialInput
+              hiddenInputList={hiddenValueList.map((hiddenValue, index) => ({
+                display: hiddenValue.name,
+                id: hiddenValue._id,
+              }))}
             />
           </Col>
         </Row>

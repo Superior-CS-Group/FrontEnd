@@ -66,6 +66,7 @@ function FormulaV2() {
       const body = {
         elements: elementList,
         materials: materials,
+        hiddenValues: hiddenValues,
         clientContract: clientContract,
         title: title,
         catalogs: catalogs.filter((item, pos) => {
@@ -92,24 +93,35 @@ function FormulaV2() {
 
   React.useEffect(() => {
     if (Object.keys(formulaDetails).length) {
-      const newElements = formulaDetails.elements.map((element, index) => {
-        const newElement = { ...(elementList[index] || {}) };
-        return {
-          ...element,
-          ...newElement,
-        };
-      });
-      const newMaterials = formulaDetails.materials.map((material, index) => {
-        const newMaterial = { ...(materials[index] || {}) };
-        return {
-          ...material,
-          ...newMaterial,
-        };
-      });
-      setMaterials([...newMaterials]);
-      setElementList([...newElements]);
-      // setElementList([...formulaDetails.elements]);
-      // setMaterials([...formulaDetails.materials]);
+      // const newElements = formulaDetails.elements.map((element, index) => {
+      //   const newElement = { ...(elementList[index] || {}) };
+      //   return {
+      //     ...element,
+      //     ...newElement,
+      //   };
+      // });
+      // const newMaterials = formulaDetails.materials.map((material, index) => {
+      //   const newMaterial = { ...(materials[index] || {}) };
+      //   return {
+      //     ...material,
+      //     ...newMaterial,
+      //   };
+      // });
+      // const newHiddenValues = formulaDetails.hiddenValues
+      //   ? formulaDetails.hiddenValues.map((hiddenValue, index) => {
+      //       const newHiddenValue = { ...(hiddenValues[index] || {}) };
+      //       return {
+      //         ...hiddenValue,
+      //         ...newHiddenValue,
+      //       };
+      //     })
+      //   : [];
+      // setMaterials([...newMaterials]);
+      // setElementList([...newElements]);
+      // setHiddenValues([...newHiddenValues]);
+      setElementList([...formulaDetails.elements]);
+      setMaterials([...formulaDetails.materials]);
+      setHiddenValues([...(formulaDetails.hiddenValues || [])]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formulaDetails]);
@@ -230,6 +242,7 @@ function FormulaV2() {
       expression: { condition: "", fullfill: "", fail: "" },
     };
     setHiddenValues([...hiddenValues, newHiddenValue]);
+    setIsUpdated("Update");
   };
 
   const handleRemoveElement = (index) => {
@@ -308,6 +321,7 @@ function FormulaV2() {
                   elementList={elementList}
                   onFocusOut={onFocusOut}
                   handleRemoveElement={handleRemoveElement}
+                  hiddenValueList={hiddenValues}
                 />
               );
             })}
@@ -330,6 +344,7 @@ function FormulaV2() {
                   elementList={elementList}
                   onFocusOut={onFocusOut}
                   handleRemoveMaterial={handleRemoveMaterial}
+                  hiddenValueList={hiddenValues}
                 />
               ))}
             </tbody>
@@ -357,6 +372,9 @@ function FormulaV2() {
                     handleChange={handleHiddenValueChange}
                     key={index}
                     elementList={elementList}
+                    hiddenValueList={hiddenValues.filter(
+                      (hidden) => hidden._id !== hiddenValue._id
+                    )}
                   />
                 );
               })}

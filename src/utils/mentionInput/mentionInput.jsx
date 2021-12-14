@@ -3,6 +3,7 @@ import { searchCatalogByName } from "../../api/catalogue";
 
 function ReactMentionInput({
   elementList,
+  hiddenInputList,
   customInput,
   onChange,
   value,
@@ -11,6 +12,7 @@ function ReactMentionInput({
   onBlur,
   noMaterial,
   noElement,
+  noHiddenInput,
   isCustomInput,
   isMaterialInput,
 }) {
@@ -48,12 +50,22 @@ function ReactMentionInput({
           />
         )}
         <Mention
+          trigger="$"
+          markup="@{{hidden||__id__||__display__}}"
+          data={!noHiddenInput ? hiddenInputList || [] : []}
+          displayTransform={(id, title) => `{HiddenValue: "${title}"}`}
+        />
+        <Mention
           markup="{__display__}"
           trigger="{"
-          data={[
-            { display: "Quantity", id: "quantity" },
-            { display: "Cost", id: "cost" },
-          ]}
+          data={
+            isMaterialInput
+              ? [
+                  { display: "Quantity", id: "quantity" },
+                  { display: "Cost", id: "cost" },
+                ]
+              : []
+          }
           displayTransform={(id, title) => `{${title}}`}
         />
         {!noMaterial && (

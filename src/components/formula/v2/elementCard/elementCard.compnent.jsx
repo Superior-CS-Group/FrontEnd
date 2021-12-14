@@ -25,6 +25,7 @@ function ElementCard({
   elementList,
   onFocusOut,
   handleRemoveElement,
+  hiddenValueList,
 }) {
   const { Option } = Select;
   // const [unit, setUnit] = React.useState([]);
@@ -243,6 +244,12 @@ function ElementCard({
                     e = { target: { ...e.target, name: "value" } };
                     handleChange(e.target.value, e.target.name, idx, newValue);
                   }}
+                  hiddenInputList={hiddenValueList.map(
+                    (hiddenValue, index) => ({
+                      display: hiddenValue.name,
+                      id: hiddenValue._id,
+                    })
+                  )}
                   placeholder="Enter Formula use '@' or '#' for the dynamic values"
                   value={element.value}
                   onBlur={onFocusOut}
@@ -276,6 +283,12 @@ function ElementCard({
                     e = { target: { ...e.target, name: "value" } };
                     handleChange(e.target.value, e.target.name, idx, newValue);
                   }}
+                  hiddenInputList={hiddenValueList.map(
+                    (hiddenValue, index) => ({
+                      display: hiddenValue.name,
+                      id: hiddenValue._id,
+                    })
+                  )}
                   placeholder="Enter Formula use '@' or '#' for the dynamic values"
                   value={element.value}
                   onBlur={onFocusOut}

@@ -2935,3 +2935,7 @@ tr.ant-table-measure-row {
 }
 .googleapi .css-1pahdxg-control{border-radius: 30px;}
 .googleapi .css-1gtu0rj-indicatorContainer:first-child{display: none;}
+.select-formula .ant-select-selector {
+  border-radius: 5px !important;
+}
+.w-120{width: 133px;}

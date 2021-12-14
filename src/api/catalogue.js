@@ -88,7 +88,7 @@ export async function createVariation(data) {
 
 export async function searchCatalogByName(name, type) {
   const response = await api.request({
-    url: `/v2/catalog/search-catalog-by-name/${name}?searchFor=${type}`,
+    url: `/v2/catalog/search-catalog-by-name?searchFor=${type}&catalogName=${name}`,
     method: "GET",
   });
   return response;

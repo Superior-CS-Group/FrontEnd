@@ -2,7 +2,13 @@ import { Col, Row, Input, Select } from "antd";
 import React, { useEffect } from "react";
 import ReactMentionInput from "../../../../utils/mentionInput/mentionInput";
 
-function HiddenValueCard({ hiddenValue, index, handleChange, elementList }) {
+function HiddenValueCard({
+  hiddenValue,
+  index,
+  handleChange,
+  elementList,
+  hiddenValueList,
+}) {
   const [isConditional, setIsConditional] = React.useState(false);
   useEffect(() => {
     if (hiddenValue.isConditional) {
@@ -12,13 +18,14 @@ function HiddenValueCard({ hiddenValue, index, handleChange, elementList }) {
   }, []);
   return (
     <tr>
-      <td>
+      <td width="33.333%">
         <Row className="align-items-center">
           <Col md={24}>
             <label>Name Value:</label>
           </Col>
           <Col md={24}>
             <Input
+              size="large"
               className="ant-furmulla-input"
               name="name"
               value={hiddenValue.name}
@@ -27,13 +34,15 @@ function HiddenValueCard({ hiddenValue, index, handleChange, elementList }) {
           </Col>
         </Row>
       </td>
-      <td>
+      <td width="33.333%">
         <Row md={24}>
           <Col md={24}>
             <label>Type:</label>
           </Col>
           <Col md={24}>
             <Select
+              className="select-formula"
+              size="large"
               style={{ width: "100%" }}
               value={isConditional}
               onChange={(value) => {
@@ -50,7 +59,7 @@ function HiddenValueCard({ hiddenValue, index, handleChange, elementList }) {
           </Col>
         </Row>
       </td>
-      <td>
+      <td width="33.333%">
         <Row md={24}>
           {isConditional ? (
             <>
@@ -58,84 +67,86 @@ function HiddenValueCard({ hiddenValue, index, handleChange, elementList }) {
                 <label>Enter Condition:</label>
               </Col>
               <Col md={24}>
-                <div>
-                  IF(
-                  <ReactMentionInput
-                    className="ant-furmulla-input"
-                    elementList={elementList.map((element) => ({
-                      display: element.name,
-                      id: element._id,
-                    }))}
-                    onChange={(e, newValue) => {
-                      handleChange(
-                        { target: { ...e.target, name: "condition" } },
-                        index,
-                        true,
-                        newValue
-                      );
-                    }}
-                    placeholder="Condition"
-                    value={hiddenValue.expression.condition}
-                  />
-                  {/* <Input
-                    name="condition"
-                    placeholder="Condition"
-                    style={{ width: "15%" }}
-                    value={hiddenValue.expression.condition}
-                    onChange={(e) => handleChange(e, index)}
-                  /> */}
-                  ,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <ReactMentionInput
-                    className="ant-furmulla-input"
-                    elementList={elementList.map((element) => ({
-                      display: element.name,
-                      id: element._id,
-                    }))}
-                    onChange={(e, newValue) => {
-                      handleChange(
-                        { target: { ...e.target, name: "fullfill" } },
-                        index,
-                        true,
-                        newValue
-                      );
-                    }}
-                    placeholder="Condition"
-                    value={hiddenValue.expression.fullfill}
-                  />
-                  {/* <Input
-                    name="fullfill"
-                    placeholder="Fullfill"
-                    style={{ width: "15%" }}
-                    value={hiddenValue.expression.fullfill}
-                    onChange={(e) => handleChange(e, index)}
-                  /> */}
-                  ,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <ReactMentionInput
-                    className="ant-furmulla-input"
-                    elementList={elementList.map((element) => ({
-                      display: element.name,
-                      id: element._id,
-                    }))}
-                    onChange={(e, newValue) => {
-                      handleChange(
-                        { target: { ...e.target, name: "fail" } },
-                        index,
-                        true,
-                        newValue
-                      );
-                    }}
-                    placeholder="Condition"
-                    value={hiddenValue.expression.fail}
-                  />
-                  {/* <Input
-                    name="fail"
-                    placeholder="Fail"
-                    style={{ width: "15%" }}
-                    value={hiddenValue.expression.fail}
-                    onChange={(e) => handleChange(e, index)}
-                  /> */}
-                  )
-                </div>
+                <Row gutter={[24, 0]}>
+                  <Col lg={8} className="d-flex align-items-center">
+                    <span className="me-2">IF(</span>
+                    <ReactMentionInput
+                      className="ant-furmulla-input w-120"
+                      elementList={elementList.map((element) => ({
+                        display: element.name,
+                        id: element._id,
+                      }))}
+                      onChange={(e, newValue) => {
+                        handleChange(
+                          { target: { ...e.target, name: "condition" } },
+                          index,
+                          true,
+                          newValue
+                        );
+                      }}
+                      placeholder="Condition"
+                      value={hiddenValue.expression.condition}
+                    />
+
+                    <span className="ms-2">,</span>
+                  </Col>
+                  <Col lg={8} className="d-flex align-items-center">
+                    {/* <ReactMentionInput
+                      className="ant-furmulla-input w-120"
+                      elementList={elementList.map((element) => ({
+                        display: element.name,
+                        id: element._id,
+                      }))}
+                      onChange={(e, newValue) => {
+                        handleChange(
+                          { target: { ...e.target, name: "fullfill" } },
+                          index,
+                          true,
+                          newValue
+                        );
+                      }}
+                      placeholder="Condition"
+                      value={hiddenValue.expression.fullfill}
+                    /> */}
+                    <Input
+                      name="fullfill"
+                      className="ant-furmulla-input w-120"
+                      placeholder="Fullfill"
+                      value={hiddenValue.expression.fullfill}
+                      onChange={(e) => handleChange(e, index, true)}
+                      type="number"
+                    />
+                    <span className="ms-2">,</span>
+                  </Col>
+                  <Col lg={8} className="d-flex align-items-center">
+                    {/* <ReactMentionInput
+                      className="ant-furmulla-input w-120"
+                      elementList={elementList.map((element) => ({
+                        display: element.name,
+                        id: element._id,
+                      }))}
+                      onChange={(e, newValue) => {
+                        handleChange(
+                          { target: { ...e.target, name: "fail" } },
+                          index,
+                          true,
+                          newValue
+                        );
+                      }}
+                      placeholder="Condition"
+                      value={hiddenValue.expression.fail}
+                    /> */}
+                    <Input
+                      name="fail"
+                      className="ant-furmulla-input w-120"
+                      placeholder="Fail"
+                      value={hiddenValue.expression.fail}
+                      onChange={(e) => handleChange(e, index, true)}
+                      type="number"
+                    />
+                    <span className="ms-2">)</span>{" "}
+                  </Col>
+                </Row>
               </Col>
             </>
           ) : (
@@ -144,10 +155,28 @@ function HiddenValueCard({ hiddenValue, index, handleChange, elementList }) {
                 <label>Enter Value:</label>
               </Col>
               <Col md={24}>
-                <Input
-                  className="ant-furmulla-input px-2 outline w-200"
-                  name="condition"
+                <ReactMentionInput
+                  className="ant-furmulla-input"
+                  elementList={elementList.map((element) => ({
+                    display: element.name,
+                    id: element._id,
+                  }))}
+                  onChange={(e, newValue) => {
+                    handleChange(
+                      { target: { ...e.target, name: "value" } },
+                      index,
+                      false,
+                      newValue
+                    );
+                  }}
+                  placeholder="Value"
                   value={hiddenValue.value}
+                  hiddenInputList={hiddenValueList.map(
+                    (hiddenValue, index) => ({
+                      display: hiddenValue.name,
+                      id: hiddenValue._id,
+                    })
+                  )}
                 />
               </Col>
             </>

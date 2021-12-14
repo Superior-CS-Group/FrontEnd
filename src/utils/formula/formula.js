@@ -1,3 +1,6 @@
+/* eslint-disable no-eval */
+import regex from "../regex";
+
 export const generateRandomId = () => {
   return Date.now() + Math.floor(Math.random() * 100000);
 };
@@ -45,6 +48,71 @@ export const handleGenerateFormula = (formulaArray) => {
   return "";
 };
 
+/**
+ * @description this function will evaluate the hidden values of the formula
+ * @param {object} expression - the expression object = {
+ *          name: string,
+ *          value: string?,
+ *          isConditional: boolean,
+ *          expression: {
+ *            condition: string,
+ *            fullfill: string,
+ *            fail: string
+ *         }
+ *       }
+ */
+export const processConditionalExpression = (expression) => {
+  const newExpression = { ...(expression || {}) };
+  if (
+    expression.isConditional &&
+    regex.conditionalExpression.test(expression.expression.tempValue)
+  ) {
+    const condition = expression.expression.tempValue;
+    const splited = condition.split(regex.operationRegex);
+    let operation = condition.match(regex.operationRegex);
+    operation = operation ? operation[0].trim() : null;
+    const num1 = Number(eval(splited[0]));
+    const num2 = Number(eval(splited[1]));
+    const result = evaluateCondition(num1, num2, operation);
+    if (result) {
+      newExpression.value = expression.expression.fullfill;
+    } else {
+      newExpression.value = expression.expression.fail;
+    }
+  }
+  return newExpression;
+};
+/**
+ *  @description this function will evaluate the expression
+ * @param {number} num1
+ * @param {number} num2
+ * @param {string} operation
+ * @returns boolean
+ */
+function evaluateCondition(num1, num2, operation) {
+  let res = false;
+  switch (operation) {
+    case "<":
+      res = num1 < num2;
+      break;
+    case ">":
+      res = num1 > num2;
+      break;
+    case ">=":
+      res = num1 >= num2;
+      break;
+    case "<=":
+      res = num1 <= num2;
+      break;
+    case "=":
+      res = num1 === num2;
+      break;
+    default:
+      res = false;
+      break;
+  }
+  return res;
+}
 const sign = ["+", "-", "*", "/"];
 export const validateArthmaticString = (str) => {
   if (!str) {
