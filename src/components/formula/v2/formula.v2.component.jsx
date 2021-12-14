@@ -190,9 +190,15 @@ function FormulaV2() {
     setMaterials([...newMaterials]);
   };
 
-  const handleHiddenValueChange = (e, index) => {
+  const handleHiddenValueChange = (e, index, isConditional) => {
     const newHiddenValues = [...hiddenValues];
-    newHiddenValues[index][e.target.name] = e.target.value;
+    if (newHiddenValues[index]) {
+      if (isConditional) {
+        newHiddenValues[index].expression[e.target.name] = e.target.value;
+      } else {
+        newHiddenValues[index][e.target.name] = e.target.value;
+      }
+    }
     setHiddenValues([...newHiddenValues]);
   };
 
@@ -220,7 +226,7 @@ function FormulaV2() {
     const newHiddenValue = {
       name: "",
       value: "",
-      isCondition: true,
+      isConditional: true,
       expression: { condition: "", fullfill: "", fail: "" },
     };
     setHiddenValues([...hiddenValues, newHiddenValue]);
@@ -232,6 +238,7 @@ function FormulaV2() {
     setElementList([...newElementList]);
     setIsUpdated("Update");
   };
+
   const handleRemoveMaterial = (index, toggleFun) => {
     const newMaterialList = [...materials];
     newMaterialList.splice(index, 1);
@@ -344,7 +351,13 @@ function FormulaV2() {
             <tbody>
               {hiddenValues.map((hiddenValue, index) => {
                 return (
-                  <HiddenValueCard hiddenValue={hiddenValue} index={index} />
+                  <HiddenValueCard
+                    hiddenValue={hiddenValue}
+                    index={index}
+                    handleChange={handleHiddenValueChange}
+                    key={index}
+                    elementList={elementList}
+                  />
                 );
               })}
             </tbody>
