@@ -191,6 +191,7 @@ export default function CompanySettings() {
                 <Col lg={24}>
                   <Form.Item label="Name">
                     <Input
+                      className="radius-30"
                       type="text"
                       size="large"
                       placeholder="Enter Company Name"
@@ -203,7 +204,7 @@ export default function CompanySettings() {
                   </Form.Item>
                 </Col>
                 <Col lg={24}>
-                  <Form.Item label="Address">
+                  <Form.Item label="Address" className="googleapi">
                     <GooglePlacesAutocomplete
                       apiKey="AIzaSyBC9O1b8JhFyUiE2kAU-ULbcio2siKePYU"
                       selectProps={{
@@ -214,16 +215,16 @@ export default function CompanySettings() {
                         },
                       }}
                     />
-                    <Input
+                    {/* <Input
                       type="text"
                       size="large"
                       placeholder="Enter Company Address"
                       name="address"
                       value={companyDetails.address}
-                      // onChange={(e) =>
-                      //   handleChange(e.target.value, e.target.name)
-                      // }
-                    />
+                      onChange={(e) =>
+                        handleChange(e.target.value, e.target.name)
+                      }
+                    /> */}
                   </Form.Item>
                 </Col>
               </Row>
@@ -245,7 +246,12 @@ export default function CompanySettings() {
           );
         })}
         <Col span={24} className="text-end">
-          <Button type="primary" size="large"  onClick={handleSubmit} disabled={isLoading}>
+          <Button
+            type="primary"
+            size="large"
+            onClick={handleSubmit}
+            disabled={isLoading}
+          >
             {isLoading ? "Updating..." : "Update"}
           </Button>
         </Col>
