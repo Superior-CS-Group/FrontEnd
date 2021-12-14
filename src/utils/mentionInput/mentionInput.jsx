@@ -39,6 +39,14 @@ function ReactMentionInput({
         placeholder={placeholder}
         onBlur={onBlur}
       >
+        {!noElement && (
+          <Mention
+            trigger="@"
+            markup="@{{element||__id__||__display__}}"
+            data={elementList || []}
+            displayTransform={(id, title) => `{Element: "${title}"}`}
+          />
+        )}
         {isMaterialInput && (
           <Mention
             markup="{__display__}"
@@ -48,14 +56,6 @@ function ReactMentionInput({
               { display: "Cost", id: "cost" },
             ]}
             displayTransform={(id, title) => `{${title}}`}
-          />
-        )}
-        {!noElement && (
-          <Mention
-            trigger="@"
-            markup="@{{element||__id__||__display__}}"
-            data={elementList || []}
-            displayTransform={(id, title) => `{Element: "${title}"}`}
           />
         )}
         {!noMaterial && (
