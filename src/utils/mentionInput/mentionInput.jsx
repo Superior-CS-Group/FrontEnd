@@ -47,17 +47,15 @@ function ReactMentionInput({
             displayTransform={(id, title) => `{Element: "${title}"}`}
           />
         )}
-        {isMaterialInput && (
-          <Mention
-            markup="{__display__}"
-            trigger="{"
-            data={[
-              { display: "Quantity", id: "quantity" },
-              { display: "Cost", id: "cost" },
-            ]}
-            displayTransform={(id, title) => `{${title}}`}
-          />
-        )}
+        <Mention
+          markup="{__display__}"
+          trigger="{"
+          data={[
+            { display: "Quantity", id: "quantity" },
+            { display: "Cost", id: "cost" },
+          ]}
+          displayTransform={(id, title) => `{${title}}`}
+        />
         {!noMaterial && (
           <Mention
             markup="@{{catalog||__id__||__display__}}"
