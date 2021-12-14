@@ -2923,3 +2923,15 @@ tr.ant-table-measure-row {
   line-height: 22px;
   text-transform: capitalize;
 }
+
+.googleapi .css-yk16xz-control {
+    border-radius: 30px;
+}
+
+.googleapi .css-tlfecz-indicatorContainer:first-child {display: none;}
+
+.googleapi .css-1okebmr-indicatorSeparator {
+    display: none;
+}
+.googleapi .css-1pahdxg-control{border-radius: 30px;}
+.googleapi .css-1gtu0rj-indicatorContainer:first-child{display: none;}

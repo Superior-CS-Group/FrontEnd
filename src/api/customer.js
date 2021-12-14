@@ -34,3 +34,19 @@ export async function isExistsLeadEmail(email) {
     data: false,
   };
 }
+
+
+export async function getDistance(data) {
+  const response = await api.request({
+    url: "/customer/google-address",
+    method: "POST",
+    data,
+  });
+  if (response.remote === "success") {
+    return {
+      remote: response.remote,
+      data: response.data,
+    };
+  }
+  return response;
+}

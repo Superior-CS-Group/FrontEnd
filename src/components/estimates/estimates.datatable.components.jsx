@@ -18,6 +18,7 @@ import { drag, Datel } from "../../utils/svg.file";
 import { useParams } from "react-router-dom";
 import { getData, postData } from "../../utils/fetchApi.js";
 import DeleteModal from "../modal/deleteModal.component";
+import {deleteCustomerLead} from "../../../src/api/delete.js"
 
 import FilterSorting from "./filter/filter.sorting.component";
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
@@ -34,6 +35,7 @@ export default function Datatable(props) {
   const [customerId, setCustomerId] = useState("");
 
   const [AddColumnShow, setAddColumnShow] = useState(false);
+  const [tableLoad, setTableLoad] = useState(true);
 
   let [leadTypes, setLeadTypes] = useState([]);
   const { Option } = Select;
@@ -458,6 +460,7 @@ export default function Datatable(props) {
     setCustomerId(customerData[0]._id);
   };
   const buildTable = async (result) => {
+    console.log('======buildTable',result)
     let colOrder = props.currentTabData.columnOrder || [];
     let colRetian = state.colOrderRetain;
     let finalCol = [];
@@ -487,7 +490,7 @@ export default function Datatable(props) {
           // eslint-disable-next-line no-unused-vars
           followRemind = "No";
         }
-        console.log("f", customerData[0].autoReminderEmail);
+        // console.log("f", customerData[0].autoReminderEmail);
         data.push({
           keys: (
             <Checkbox
@@ -582,7 +585,7 @@ export default function Datatable(props) {
     });
     // console.log(estimateResults);
     //  await setResult(results)
-
+    setTableLoad(false)
     await buildTable(result);
   };
 
@@ -590,9 +593,7 @@ export default function Datatable(props) {
   const fetchList = async () => {
     const statusLis = await getData(`status/list`);
     console.log("hiiii", statusLis);
-    if (statusLis.data.Data) {
-      setLeadTypes(statusLis.data.Data);
-    }
+    
     content = (
       <div style={{ width: "520px" }}>
         <Row gutter={[24, 0]}>
@@ -610,19 +611,24 @@ export default function Datatable(props) {
         </Row>
       </div>
     );
+    if (statusLis.data.Data) {
+      setLeadTypes(statusLis.data.Data);
+    }
+    console.log('conn==',content)
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
-    fetchData();
-    fetchList();
+   await fetchData();
+   await fetchList();
+   
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     let obj = props.currentTabData.filterObject;
-
+    setTableLoad(true)
     if (obj)
       handleOk({
         leadSelected: obj.estimaitonStatus,
@@ -644,24 +650,29 @@ export default function Datatable(props) {
     console.log("filterData: ", filteredData);
     setState({ ...state, filteredData, filter: value });
   };
-  const DeleteModalEstimate = (id, idx) => {
+  const DeleteModalEstimate = async(id, idx) => {
     setdeleteEstimateId(id);
     setdeleteEstimateIdx(idx);
     setShowDeleteModal(true);
-    console.log("deleteIdx", idx);
+  
   };
-  const handleDeleteOk = (id, idx) => {
+  const handleDeleteOk =async (id, idx) => {
     console.log("deleteId", id, idx);
     setShowDeleteModal(false);
     // deleteCustomerLead(body)
     message.success("Data Deleted", 5);
+    const result= await postData(`customer/delete-lead`,{id})
+    console.log("deleteIdx",state.filteredData, idx,result);
 
     let restultData = estimateResults.estimateResults.Data;
-    console.log(restultData);
+    // console.log(restultData);
     if (idx > -1) {
       restultData.splice(idx, 1);
     }
+    let resultss={data:{Data:[]}}
+    resultss.data.Data=restultData;
     console.log(restultData);
+    buildTable(resultss)
     setdestimateResults({ estimateResults: restultData });
   };
   const handleDeleteClose = () => {
@@ -687,6 +698,7 @@ export default function Datatable(props) {
     //   "Lead Added",
     // ]
     await buildTable(result2);
+    setTableLoad(false)
     // setState({...state,columns:states.columns})
     setModalVisible(false);
     setAddColumnShow(false);
@@ -704,7 +716,22 @@ export default function Datatable(props) {
       id: customerId,
       estimaitonStatus: status.name,
     });
-    console.log("updated", result);
+    console.log("updated", result,customerId);
+
+    let restultData = estimateResults.estimateResults.Data;
+    restultData.map(r=>{
+     if( r.customerLeadId[0]._id ===customerId){
+      r.customerLeadId[0].estimaitonStatus=status.name
+     }
+    })
+    // console.log(restultData);
+    // if (idx > -1) {
+    //   restultData.splice(idx, 1);
+    // }
+    let resultss={data:{Data:[]}}
+    resultss.data.Data=restultData;
+    console.log(restultData);
+    buildTable(resultss)
   };
   const onChange = async (customer, i) => {
     console.log(`switch to`, params);
@@ -770,7 +797,7 @@ export default function Datatable(props) {
           <Col span={12} key={index}>
             <span
               className="w-100 mb-2 border-0 text-white font-12 radius-30"
-              style={{ background: "orange", color: status.textcolor }}
+              style={{ background: status.color, color: status.textcolor }}
               onClick={() => changeStatus(status)}
             >
               {status.name}
@@ -781,8 +808,9 @@ export default function Datatable(props) {
     </div>
   );
   console.log("state===", state);
-  console.log("types===", leadTypes);
-  console.log("st col===", state.columns);
+  console.log("colId===", customerId);
+  // console.log("types===", leadTypes);
+  // console.log("st col===", state.columns);
   return (
     <>
       <div className="p-3 card-shadow pe-4 ps-5">
@@ -828,6 +856,7 @@ export default function Datatable(props) {
             pagination={false}
             dataSource={state.filteredData}
             bordered={false}
+            loading={tableLoad}
             className="ant-table-estmating scroll-style vertical-align"
             scroll={{ x: 400, y: 500 }}
             onChange={onChangeTable}
