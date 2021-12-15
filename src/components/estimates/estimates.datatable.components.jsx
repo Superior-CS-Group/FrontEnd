@@ -26,6 +26,7 @@ import ColumnModal from "../modal/columnModal.component";
 import fillter from "../../images/fillter.png";
 
 export default function Datatable(props) {
+ let customerIdvar='';
   const params = useParams();
   const [ShowDeleteModal, setShowDeleteModal] = useState(false);
   const [ModalVisible, setModalVisible] = useState(false);
@@ -33,7 +34,7 @@ export default function Datatable(props) {
   const [deleteEstimateIdx, setdeleteEstimateIdx] = useState();
   const [estimateResults, setdestimateResults] = useState([]);
   const [customerId, setCustomerId] = useState("");
-
+let estimateResultss={};
   const [AddColumnShow, setAddColumnShow] = useState(false);
   const [tableLoad, setTableLoad] = useState(true);
 
@@ -459,6 +460,7 @@ export default function Datatable(props) {
   };
   const popId = (customerData) => {
     console.log("hi 22", customerData[0]._id);
+    customerIdvar=customerData[0]._id;
     setCustomerId(customerData[0]._id);
   };
   const buildTable = async (result) => {
@@ -553,7 +555,7 @@ export default function Datatable(props) {
               content={content}
               trigger="click"
               placement="bottom"
-              onMouseEnter={() => popId(customerData)}
+              onClick={() => popId(customerData)}
             >
               <span
                 className="btn btn-outline-primary d-inline-block w-100 radius-30 "
@@ -583,7 +585,8 @@ export default function Datatable(props) {
   const fetchData = async () => {
     const result = await getData(`estimation/upcoming-estimation`);
     console.log("res=>", result);
-    setdestimateResults({
+    estimateResultss['estimateResults']=result.data;
+  await  setdestimateResults({
       estimateResults: result.data,
     });
     // console.log(estimateResults);
@@ -594,7 +597,9 @@ export default function Datatable(props) {
 
   let content;
   const fetchList = async () => {
-    const statusLis = await getData(`status/list`);
+    // const statusLis = await getData(`status/list`);
+    // console.log("hiiii", statusLis);
+    const statusLis = JSON.parse(localStorage.getItem('leadTypes'));
     console.log("hiiii", statusLis);
 
     content = (
@@ -624,7 +629,33 @@ export default function Datatable(props) {
     }
     console.log("conn==", content);
   };
+  
+  // useEffect(async () => {
+  //   content = (
+  //     <div style={{ width: "520px" }}>
+  //       <Row gutter={[24, 0]}>
+  //         {leadTypes.map((status, index) => (
+  //           <Col span={12} key={index}>
+  //             <span
+  //               className="w-100 mb-2 font-12 radius-30 d-block btn btn-outline-light"
+  //               style={{
+  //                 borderColor: status.color,
+  //                 borderWidth: "1px !important",
+  //                 color: status.color,
+  //                 borderStyle: "solid !important",
+  //               }}
+  //               onClick={() => changeStatus(status)}
+  //             >
+  //               {status.name}
+  //             </span>
+  //           </Col>
+  //         ))}
+  //       </Row>
+  //     </div>
+  //   );
 
+  
+  // }, [leadTypes]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     await fetchData();
@@ -717,16 +748,16 @@ export default function Datatable(props) {
   };
 
   const changeStatus = async (status) => {
-    console.log(status.name, customerId);
+    console.log(status.name, customerIdvar);
     const result = await postData(`customer/update-info`, {
-      id: customerId,
+      id: customerIdvar,
       estimaitonStatus: status.name,
     });
-    console.log("updated", result, customerId);
+    console.log("updated", result, customerIdvar,estimateResults);
 
-    let restultData = estimateResults.estimateResults.Data;
+    let restultData = estimateResultss.estimateResults.Data;
     restultData.map((r) => {
-      if (r.customerLeadId[0]._id === customerId) {
+      if (r.customerLeadId[0]._id === customerIdvar) {
         r.customerLeadId[0].estimaitonStatus = status.name;
       }
     });

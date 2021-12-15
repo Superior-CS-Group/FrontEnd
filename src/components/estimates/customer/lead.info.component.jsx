@@ -79,7 +79,8 @@ export default function LeadInfo(props) {
     return address;
   };
 
-  useEffect(() => {
+  useEffect(async() => {
+    setIsFarnessLoading(true)
     const func = async () => {
       const geocodeObj =
         address &&
@@ -89,11 +90,12 @@ export default function LeadInfo(props) {
         geocodeObj && getAddressObject(geocodeObj[0].address_components);
       setAddressObj(addressObject);
     };
-    func();
+   await func();
 
     // console.log("addressObjectCustomer", address);
     // console.log(companyDetails.address, "Organization address");
-    if (companyDetails.address != "" && address != "") {
+    console.log('aaa',address)
+    if (companyDetails.address !== "" && address !== ""&&address !== null) {
       const body = {
         origins: companyDetails.address,
         destinations: address.label,
@@ -110,8 +112,9 @@ export default function LeadInfo(props) {
           });
         }
       };
-      func2();
+    await  func2();
     }
+    setIsFarnessLoading(false);
   }, [address]);
 
   const [state, setState] = useState({
@@ -149,6 +152,7 @@ export default function LeadInfo(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingWarning, setIsLoadingWarning] = useState(false);
   const [isWarning, setIsWarning] = useState(false);
+  const [isFarnessLoading, setIsFarnessLoading] = useState(false);
 
   const fetchEmailSettingData = async () => {
     const response = await getEmailSetting();
@@ -173,6 +177,7 @@ export default function LeadInfo(props) {
 
     const id = params.id;
     if (id) {
+      console.log('byid==',props.result)
       const fetchData = async () => {
         const result = props.result;
 
@@ -219,11 +224,17 @@ export default function LeadInfo(props) {
         states: "",
         city: "",
         postalCode: "",
+        distance:"",
         address: "",
         otherNote: "",
         otherInformation: "",
       });
     }
+
+    return function cleanup() {
+      setState({...state,distance:''});
+      setAddress('')
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
@@ -248,18 +259,18 @@ export default function LeadInfo(props) {
     //   errors.country = "Country is required";
     //   message.error(errors.country, 5);
     // }
-    if (!state.states) {
-      errors.states = "State is required";
-      message.error(errors.states, 5);
-    }
-    if (!state.city) {
-      errors.city = "City is required";
-      message.error(errors.city, 5);
-    }
-    if (!state.postalCode) {
-      errors.postalCode = "Postal Code is required";
-      message.error(errors.postalCode, 5);
-    }
+    // if (!state.states) {
+    //   errors.states = "State is required";
+    //   message.error(errors.states, 5);
+    // }
+    // if (!state.city) {
+    //   errors.city = "City is required";
+    //   message.error(errors.city, 5);
+    // }
+    // if (!state.postalCode) {
+    //   errors.postalCode = "Postal Code is required";
+    //   message.error(errors.postalCode, 5);
+    // }
     // if (!state.address) {
     //   errors.address = "Address is required";
     //   message.error(errors.address, 5);
@@ -495,7 +506,7 @@ export default function LeadInfo(props) {
     // console.log(key);
   }
 
-  console.log("add=======", state.address, state, address);
+  console.log("add=======", state, address);
 
   if (state.isRedirect) {
     return <Navigate to="/estimating" />;
@@ -569,13 +580,14 @@ export default function LeadInfo(props) {
                   </Col>
                   <Col md={12}>
                     <Form.Item label="Job Farness">
-                      <Input
+                      <Input.Search
                         className="radius-30"
                         size="large"
                         name="distance"
                         placeholder="Minute"
                         value={state.distance}
-                        onChange={handleAllChange}
+                        // onChange={handleAllChange}
+                        loading={isFarnessLoading}
                         readOnly
                       />
                     </Form.Item>
@@ -594,8 +606,8 @@ export default function LeadInfo(props) {
                   />
                   
                 </Form.Item> */}
-                <Row gutter={[24, 0]}>
-                  <Col md={12}>
+                {/* <Row gutter={[24, 0]}> */}
+                  {/* <Col md={12}>
                     <Form.Item label="City ">
                       <Input
                         className="radius-30"
@@ -604,9 +616,7 @@ export default function LeadInfo(props) {
                         value={state.city}
                         onChange={handleAllChange}
                       />
-                      {/* <div role="alert" class="text-danger">
-                        {state.errors.city}
-                      </div> */}
+                     
                     </Form.Item>
                   </Col>{" "}
                   <Col md={12}>
@@ -618,12 +628,10 @@ export default function LeadInfo(props) {
                         value={state.states}
                         onChange={handleAllChange}
                       />
-                      {/* <div role="alert" class="text-danger">
-                        {state.errors.states}
-                      </div> */}
+                   
                     </Form.Item>
-                  </Col>
-                </Row>
+                  </Col> */}
+                {/* </Row> */}
                 <Row gutter={[24, 0]}>
                   <Col md={24}>
                     <Form.Item label="Address" className="googleapi">
@@ -632,6 +640,7 @@ export default function LeadInfo(props) {
                         selectProps={{
                           isClearable: true,
                           // value: ,
+                          noOptionsMessage:()=>"Type the location like 'Miami' ",
 
                           placeholder: state.address
                             ? state.address
@@ -639,6 +648,7 @@ export default function LeadInfo(props) {
                           onChange: (val) => {
                             // console.log("val: ", val);
                             setAddress(val);
+                            setState({...state,address:val});
                           },
                         }}
                       />
