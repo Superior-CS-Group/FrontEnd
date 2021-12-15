@@ -6,6 +6,7 @@ import Menubar from "../components/navbar/menubar";
 import DashboardNavbar from "../components/navbar/DashboardNavbar";
 import Error from "../components/Error";
 import logo from "../images/mount-sky.png";
+import { getData } from "../utils/fetchApi";
 const { Header, Sider, Content } = Layout;
 export default class Estimates extends Component {
   state = {
@@ -14,7 +15,10 @@ export default class Estimates extends Component {
     sidebarProps: {},
   };
 
-  componentDidMount() {
+  componentDidMount=async()=> {
+    const leadTypes = await getData(`status/list`);
+    console.log("hiiii home", leadTypes);
+    localStorage.setItem('leadTypes',JSON.stringify(leadTypes))
     this.setState({
       sidebarProps: {
         ...this.state.sidebarProps,
