@@ -2941,10 +2941,6 @@ tr.ant-table-measure-row {
 .googleapi .css-1gtu0rj-indicatorContainer:first-child {
   display: none;
 }
-.ant-table-cell-fix-left,
-.ant-table-cell-fix-right {
-  background: #e8f1fd;
-}
 
 .ant-table-column-sort {
   background: transparent !important;
@@ -2982,4 +2978,42 @@ tr.ant-table-measure-row {
 }
 .w-120 {
   width: 133px;
+}
+
+.ant-table-estmating
+  .ant-table-tbody
+  tr:nth-child(even)
+  .ant-table-cell-fix-left {
+  background: #fff;
+}
+.ant-table-estmating
+  .ant-table-tbody
+  tr:nth-child(odd)
+  .ant-table-cell-fix-left {
+  background: #e8f1fd;
+}
+
+textarea.ant-input.h-150 {
+  height: 150px;
+  resize: none;
+}
+
+.profile-set {
+  width: 150px;
+  height: 150px;
+}
+
+.profile-set img {
+  width: 150px;
+  border-radius: 100%;
+  height: 150px;
+}
+
+.step-cricle .ant-steps-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.role-user.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-radius: 9px;
 }
